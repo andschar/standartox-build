@@ -1,0 +1,628 @@
+---
+title: "EC50 calculation + calculation and upload"
+author: "Andreas Scharmüller"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+editor_options:
+  chunk_output_type: console
+---
+
+The following script collects different ecotoxicological tests and extracts EC50 values for multiple organisms for different pesticide compounds. The compounds found in the __psm-data.frame__ are compiled in the EC50sensitivity_data.Rmd script and loaded here in a first step. As a first source for ecotoxicological test data the EPA ECOTOX data base is queried (data-epa). The data itself is stored in a PostgreSQL data base built accoring to [this guide](http://edild.github.io/localecotox/). Secondly the bfg_monitoring data-base is queried specifically for values of __Daphnia magna__ tests. The vast amount of test therein was collected by Eduard Szöcs. In a third step data from the [PPDB](https://sitem.herts.ac.uk/aeru/ppdb/en/search.htm) is queried. This is not in accordance to their data policy, but it works. After quering the different data bases, habitat information on family level which was compiled by Verena, Gesa and me is added to the test data set (epa1). The acquire test data is then aggregated (min, percentile, mean) for single substances (aggregate-ec50-all) over all organisms and over freshwater organisms only (aggregate-ec50-freshwater). In a last step the aggregated test data is uploaded to a PostgreSQL data base.
+
+# Setup
+
+```{r setup}
+#rm(list = ls())
+# switches
+online = FALSE
+local = FALSE # have you built the EPA ECOTOX DB locally?
+plots = FALSE
+
+# packages
+require(data.table)
+require(RPostgreSQL)
+require(taxize)
+require(webchem)
+require(ggplot2)
+require(ggrepel)
+require(vegan)
+
+# variables
+cachedir = '/home/andreas/Documents/Projects/species-sensitivity/cache'
+fundir = '/home/andreas/Documents/Projects/species-sensitivity/functions'
+plotdir = '/home/andreas/Documents/Projects/species-sensitivity/plots'
+srcdir = '/home/andreas/Documents/Projects/species-sensitivity/src'
+
+# source
+source('/home/andreas/Documents/UBA/Project/R/src/DB_access.R')
+source(file.path(fundir, 'ppdb-0-0-5.R'))
+source(file.path(fundir, 'ppdb_own_functions.R'))
+source(file.path(fundir, 'casconv.R'))
+source(file.path(fundir, 'functions.R')) # contains gm_mean(), ksource()
+source(file.path(fundir, 'agg_group.R'))
+source(file.path(fundir, 'plot_outlier.R'))
+```
+
+# Load substances
+```{r subst1}
+## load data
+psm = readRDS(file.path(cachedir, 'psm1.rds')) # created in EC50sensitivity_data.Rmd
+psm = psm[ !is.na(casnr) ] # only metabolite and sumed pesticides
+psm = psm[ !subst_name %in% c('Desethylsimazin') ] # casnr: 1007289; duplicated with Desethylsimazin
+
+## for Nadin and verena
+# psm = fread('/home/andreas/Documents/data/romania/det_compounds_with_CAS.csv')
+# psm[ , casnr := gsub('-', '', cas) ]
+# psm[ , `:=`
+#      (variable_id = NA,
+#       subst_name = NA,
+#       psm_type = NA)]
+
+## CHECKs
+cas_check = 
+  psm[ is.na(casnr) | casnr == '' | 
+       is.na(cas) | cas == '' ]
+
+if (nrow(cas_check) != 0) {
+  warning(nrow(cas_check), 'missing CAS or CASNR entries.')
+}
+
+rm(cas_check)
+```
+
+# PubChem
+```{r cas-resolver}
+## pubchem
+cas = psm$cas
+
+if (online) {
+
+  cid = get_cid(cas)
+  
+  pc_l = list()
+  for (i in 1:length(cid)) {
+    cas1 = names(cid[i])
+    cid1 = cid[[i]]
+    message('Querying: CAS:', cas1, '; CID:', cid1)
+    
+    pc1 = pc_prop(cid1)
+    
+    pc_l[[i]] = pc1
+    names(pc_l)[i] = cas1
+  } 
+
+  saveRDS(pc_l, file.path(cachedir, 'pc_l.rds'))
+  saveRDS(cid, file.path(cachedir, 'cid.rds'))
+
+} else {
+  pc_l = readRDS(file.path(cachedir, 'pc_l.rds'))
+  cir = readRDS(file.path(cachedir, 'cid.rds'))
+}
+
+# convert NAs from negative results to data.tables to be able to bind 'em
+pc_l[ is.na(pc_l) ] = lapply(pc_l[ is.na(pc_l) ], data.table)
+
+pubchem = rbindlist(pc_l, fill = TRUE, idcol = 'cas')
+
+# cleaning
+rm(cir)
+
+# how to handle duplicated CAS
+# test = pubchem[ , .(N = .N,
+#              InChI = paste0(InChIKey),
+#              IUPACName), by = cas][ N > 1]
+```
+
+As some CAS are duplicated the Pubchem data base is queried to get InChikeys and IUPAC names to be able to identify unique substances.
+```{r subst2}
+psm[pubchem, on = 'cas', iupac_name := i.IUPACName ]
+# replacing missing subst_name with IUPAC names
+psm[ , subst_name := ifelse(is.na(subst_name), iupac_name, subst_name)]
+saveRDS(psm, file.path(cachedir, 'psm2.rds'))
+```
+
+# Ecotox test data
+
+## Source EPA ECOTOX data
+```{r SOURCE-epa}
+ksource(file.path(srcdir, 'source_epa.Rmd'))
+```
+
+## Source bfg_monitoring data
+Not needed anymore.
+
+## Source PPDB data
+```{r SOURCE-ppdb}
+ksource(file.path(srcdir, 'source_ppdb.Rmd'))
+# data cleaning
+ppdb_dt[ latin_BIname %in% c('A4', 'A5', 'Cyanobacteria', 'Cyprinidae', 'Green algae', 'P4'),
+         latin_BIname := 'Unknown species' ]
+```
+
+## Source Malaj data
+```{r SOURCE-mlaj}
+ksource(file.path(srcdir, 'source_malaj.Rmd'))
+```
+
+## Bind test reults
+```{r tests-bind}
+# bind the results from different sources
+tests = rbindlist(list(epa2, ppdb_dt, malaj_m), fill = TRUE) # dm, 
+```
+
+## Errata
+```{r tests-errata}
+tests[ latin_BIname == 'Notropis ludibundis', `:=`
+       (latin_BIname = 'Notropis ludibundus',
+        latin_short = 'N. ludibundus')]
+
+## remove hybrid X marking
+tests[ , latin_BIname := gsub('\\sX\\s', ' ', latin_BIname) ]
+## remove sp.
+tests[ , latin_BIname := gsub('\\ssp\\.', '', latin_BIname) ]
+## change species names
+tests[ latin_BIname == 'Paratelphusa masoniana', latin_BIname := 'Parathelphusa masoniana' ]
+tests[ latin_BIname == 'Tresus nuttalli', latin_BIname := 'Tresus nuttallii' ]
+tests[ latin_BIname == 'Mysidopsis bahia', latin_BIname := 'Americamysis bahia' ]
+tests[ latin_BIname == 'Planaria gonocephala', latin_BIname := 'Dugesia gonocephala' ]
+
+## change family names
+tests[ latin_BIname == 'Tubifex', family_epa := 'Naididae' ]
+## change species and family names
+tests[ latin_BIname == 'Chlorella fusca', `:=`
+       (latin_BIname = 'Scenedesmus fuscus',
+         family_epa = 'Scenedesmaceae ') ] # according to worms
+
+
+## save the results locally
+saveRDS(tests, file.path(cachedir, 'tests1.rds'))
+```
+
+# Taxonomic data
+
+```{r MERGE-taxonomic-data}
+#### Taxonomic data ----
+ksource(file.path(srcdir, 'speciesinfo.Rmd'))
+
+# Merge
+tests = merge(tests, tx_dt, on = 'latin_BIname', all = TRUE)
+
+#### Check taxize family classification ----
+# tests[ source == 'epa_ecotox' & family != family_epa,
+#        c('latin_BIname', 'family', 'family_epa', 'source_tax') ][ , .N, .(latin_BIname, family, family_epa, source_tax)][order(-N)]
+use_epa_fam = c('Lemna minor', 'Lemna gibba', 'Lemna aequinoctialis', 'Viviparus bengalensis', 'Rattus rattus', 'Phytophthora capsici', 'Ganaspidium utilis', 'Indonaia caerulea', 'Phytophthora citricola', 'Rutilus rutilus', 'Sigara substriata', 'Stenonema candidum', 'Eriophyes datura', 'Hyalella curvispina', 'Neopanope texana', 'Paecilomyces farinosus', 'Melanopsis dufouri', 'Thiara lineata', 'Phytophthora cactorum', 'Waitea circinata', 'Culex melanurus', 'Lithodes antarcticus', 'Meloidogyne incognita', 'Paratelphusa masoniana', 'Physalaemus biligonigerus', 'Stethorus japonicus', 'Aphanizomenon flos-aquae', 'Caridina rajadhari', 'Palaemonetes africanus', 'Plea atomaria', 'Anacystis alpicola', 'Anisops bouvieri', 'Clibanarius africanus', 'Katelysia opima', 'Palustra laboulbeni', 'Physalaemus centralis', 'Tresus nuttalli', 'Anticarsia gemmatalis', 'Elasmopus bampo', 'Physalaemus santafecinus', 'Planaria gonocephala', 'Podisus nigrispinus', 'Ranatra elongata', 'Zonotrichia albicollis', 'Oziotelphusa senex',
+'Perca', 'Nitzschia', 'Lemna', 'Libellula', 'Opius', 'Hydra', 'Asellus', 'Cyclops', 'Cypria', 'Sphaerium', 'Crangon', 'Danio', 'Lucifer', 'Micronecta', 'Sagitta', 'Alona', 'Ameletus', 'Amphora', 'Colpoda', 'Lestes', 'Micropterus', 'Physella', 'Ulnaria', 'Choristoneura rosaceana', 'Cydia pomonella', 'Epiphyas postvittana', 'Helicoverpa armigera', 'Pholetesor ornigis', 'Phthorimaea operculella', 'Plodia interpunctella', 'Plutella xylostella', 'Sclerotinia sclerotiorum', 'Spodoptera littoralis')
+
+#### final family classification ----
+## by taxize wrongly classified columns
+tests[ , family := ifelse(latin_BIname %in% use_epa_fam, family_epa, family_tax) ]
+
+## family errata
+tests[ latin_BIname == 'Pseudokirchneriella subcapitata',
+       family := 'Selenastraceae']
+
+
+#! INTERMEDIATE: They are not yet classified in speciesinfo.org
+#! were added when time span was expanded to 360h
+tests[ source == 'epa_ecotox' & is.na(family),
+       family := 'family_epa' ]
+
+# save the results locally
+saveRDS(tests, file.path(cachedir, 'tests2.rds'))
+```
+
+# Habitat data
+```{r MERGE-habitat-data}
+#### Habitat data ----
+# self compiled list
+ksource(file.path(srcdir, 'familylookup.Rmd'))
+# worms
+ksource(file.path(srcdir, 'habitat_classification.Rmd'))
+# freshwaterecology.info
+#! todo
+# algaebase
+#! scraping is against their terms of use
+
+## Merge
+tests = merge(tests, lookup, by = 'family', all.x = TRUE)
+tests = merge(tests, lookup_worms_sp, by = 'latin_BIname', all.x = TRUE)
+
+#### Create isFre final column ----
+# Freshwater
+tests[ , 
+       isFre_sum := rowSums(sapply(.SD, as.numeric), na.rm = TRUE),
+       .SDcols = c('isFre', 'isFre_w') ]
+tests[ , isFre_fin := ifelse(isFre_sum >= 1, '1', '0') ][ , isFre_sum := NULL ]
+# Marine
+tests[ , 
+       isMar_sum := rowSums(sapply(.SD, as.numeric), na.rm = TRUE),
+       .SDcols = c('isMar', 'isMar_w') ]
+tests[ , isMar_fin := ifelse(isMar_sum >= 1, '1', '0') ][ , isMar_sum := NULL ]
+# Terrestrial
+tests[ , 
+       isTer_sum := rowSums(sapply(.SD, as.numeric), na.rm = TRUE),
+       .SDcols = c('isTer', 'isTer_w') ]
+tests[ , isTer_fin := ifelse(isTer_sum >= 1, '1', '0') ][ , isTer_sum := NULL ]
+
+#### Classify Invertebrates ----
+#invertebrates_phylum = c("Annelida", "Bryozoa", "Chaetognatha", "Ciliophora", "Cnidaria", "Gastrotricha", "Echinodermata", "Mollusca", "Nematoda", "Nemertea", "Platyhelminthes", "Porifera", "Rotifera")
+inv_makro_phylum = c('Annelida', 'Echinodermata', 'Mollusca', 'Nemertea', 'Platyhelminthes', 'Porifera')
+
+inv_mikro_phylum = c('Bryozoa', 'Chaetognatha', 'Ciliophora', 'Cnidaria', 'Gastrotricha', 'Nematoda', 'Rotifera')
+
+#invertebrates_subphylum = c('Crustacea') # phylum: Arthropoda, Chordata
+inv_makro_subphylum = c('Crustacea')
+inv_makro_class = c('Arachnida', 'Diplopoda', 'Entognatha', 'Insecta') # phylum: Arthropoda
+
+invertebrates_makro = c(inv_makro_phylum, inv_makro_subphylum, inv_makro_class)
+invertebrates_mikro = inv_mikro_phylum
+
+tests[ , supgroup2 := ifelse(supgroup %in% invertebrates_makro, 'Makro_Inv',
+                      ifelse(supgroup %in% invertebrates_mikro, 'Mikro_Inv', supgroup)) ]
+
+#### Classify trophic level
+autotrophs = c('Plants', 'Algae', 'Bryophyta')
+tests[ , trophic_lvl := ifelse(supgroup2 %in% autotrophs,
+                               'autotrophic', 'heterotrophic') ]
+# cleaning
+rm(list = grep('inv_', ls(), value = TRUE))
+```
+
+# Checks and save
+
+Check whether al entries have CAS, CASNR and substance and species names.
+```{r checks}
+subst_check = 
+  tests[ is.na(casnr) | casnr == '' |
+         is.na(cas) | cas == '' |
+         is.na(subst_name) | subst_name == '' ]
+tax_check = 
+  tests[ is.na(latin_BIname) | latin_BIname == '' |
+         is.na(group) | group == '' |
+         is.na(supgroup) | supgroup == '' |
+         is.na(supgroup2) | supgroup == '' ]
+value_check = 
+  tests[ is.na(value) | value == '' ]
+fresh_check =
+  tests[ is.na(isFre_fin) | isFre_fin == '' ]
+marin_check = 
+  tests[ is.na(isMar_fin) | isMar_fin == '' ]
+terre_check = 
+  tests[ is.na(isTer_fin) | isTer_fin == '' ]
+
+if (nrow(subst_check) != 0) {
+  warning(nrow(subst_check), ' missing CAS, CASNR or substance names.')
+}
+if (nrow(tax_check) != 0)  {
+  warning(nrow(tax_check), ' missing latin_BIname, group, supgroup or supgroup2 entry.')
+}
+if (nrow(value_check) != 0) {
+  warning(nrow(value_check), ' missing value entries.')
+}
+if (nrow(fresh_check) != 0) {
+  warning(nrow(value_check), ' missing freshwater classifications.')
+}
+if (nrow(marin_check) != 0) {
+  warning(nrow(marin_check), ' missing marine classifications.')
+}
+if (nrow(terre_check) != 0) {
+  warning(nrow(terre_check), ' missing terrestrial classifications.')
+}
+
+# cleaning
+rm(list = grep('check', ls(), value = TRUE))
+
+# write to cache
+saveRDS(tests, file.path(cachedir, 'tests3.rds'))
+```
+
+# Overview table
+
+```{r overview-table}
+taxa_fresh = tests[ isFre_fin == '1' , .N, .(supgroup2, supgroup, group) ][order(supgroup2, supgroup, group)]
+taxa_marin = tests[ isMar_fin == '1' , .N, .(supgroup2, supgroup, group) ][order(supgroup2, supgroup, group)]
+taxa_terre = tests[ isTer_fin == '1' , .N, .(supgroup2, supgroup, group) ][order(supgroup2, supgroup, group)]
+
+taxa_fresh
+taxa_marin
+taxa_terre
+
+# cleaning
+rm(list = grep('taxa', ls(), value = TRUE))
+```
+
+# EC50 aggregation
+
+```{r read-tests-data}
+tests3 = readRDS(file.path(cachedir, 'tests3.rds'))
+tests3[ str_count(tests3$latin_BIname, '\\S+') < 2, 
+        latin_BIname := paste0(latin_BIname, ' sp.') ]
+```
+
+
+## Malaj aggregate
+```{r AGGREGATE-malaj}
+# aggregating by casnr
+malaj_agg =
+  tests3[ source == 'malaj',
+          j = .(mj50f_al4896_vl = min(.SD[latin_BIname == 'Pseudokirchneriella subcapitata']$value),
+                mj50f_da48_vl = min(.SD[latin_BIname == 'Daphnia magna']$value),
+                mj50f_fi96_vl = min(.SD[latin_BIname == 'Pimephales promelas']$value)),
+          by = .(casnr) ]
+
+# Inf to NA
+for (i in names(malaj_agg)) {
+  malaj_agg[get(i) == Inf, (i) := NA]
+}
+
+# add info column
+malaj_agg[ , mj50f_al4896_tax := ifelse(!is.na(mj50f_al4896_vl), 'Pseudokirchneriella subcapitata', NA) ]
+malaj_agg[ , mj50f_da48_tax := ifelse(!is.na(mj50f_da48_vl), 'Daphnia magna', NA) ]
+malaj_agg[ , mj50f_fi96_tax := ifelse(!is.na(mj50f_fi96_vl), 'Pimephales promelas', NA) ]
+
+# add test count column (careful, some are estimated!)
+malaj_agg[ , mj50f_al4896_n := ifelse(!is.na(mj50f_al4896_vl), 1, NA) ]
+malaj_agg[ , mj50f_da48_n := ifelse(!is.na(mj50f_da48_vl), 1, NA) ]
+malaj_agg[ , mj50f_fi96_n := ifelse(!is.na(mj50f_fi96_vl), 1, NA) ]
+
+# colorder
+setcolorder(malaj_agg, c('casnr',
+                         'mj50f_al4896_vl', 'mj50f_al4896_tax', 'mj50f_al4896_n',
+                         'mj50f_da48_vl', 'mj50f_da48_tax', 'mj50f_da48_n',
+                         'mj50f_fi96_vl', 'mj50f_fi96_tax', 'mj50f_fi96_n'))
+```
+
+## PPDB aggregate
+```{r AGGREGATE-ppdb}
+ppdb_agg = 
+  tests3[ source == 'ppdb',
+          j = .(# algae
+                pp50f_al72_vl = min(.SD[ppdb_group == 'algae']$value),
+                pp50f_al72_tax = .SD[ppdb_group == 'algae' & which.min(value)]$latin_BIname,
+                # aquatic plants
+                pp50f_pl168_vl = min(.SD[ppdb_group == 'aquatic plants']$value),
+                pp50f_pl168_tax = .SD[ppdb_group == 'aquatic plants' & which.min(value)]$latin_BIname,
+                # Daphnia
+                pp50f_da48_vl = min(.SD[latin_BIname %like% '(?i)daphnia']$value),
+                pp50f_da48_tax = .SD[latin_BIname %like% '(?i)daphnia' & which.min(value)]$latin_BIname,
+                # crustaceans
+                pp50f_cr96_vl = min(.SD[ppdb_group == 'aquatic crustaceans']$value),
+                pp50f_cr96_tax = .SD[ppdb_group == 'aquatic crustaceans' & which.min(value)]$latin_BIname,
+                # sediment dwelling organisms (mostly Chironomidae)
+                pp50f_ch96_vl = min(.SD[ppdb_group == 'sediment dwelling organisms']$value),
+                pp50f_ch96_tax = .SD[ppdb_group == 'sediment dwelling organisms' & which.min(value)]$latin_BIname,
+                # fish
+                pp50f_fi96_vl = min(.SD[ppdb_group == 'fish']$value),
+                pp50f_fi96_tax = .SD[ppdb_group == 'fish' & which.min(value)]$latin_BIname),
+          by = .(casnr) ]
+
+# cleaning
+for (i in names(ppdb_agg)) {
+  ppdb_agg[get(i) == Inf, (i) := NA]
+}
+
+# add count column
+ppdb_agg[ , pp50f_al72_n := ifelse(!is.na(pp50f_al72_vl), 1, NA) ]
+ppdb_agg[ , pp50f_pl168_n := ifelse(!is.na(pp50f_pl168_vl), 1, NA) ]
+ppdb_agg[ , pp50f_da48_n := ifelse(!is.na(pp50f_da48_vl), 1, NA) ]
+ppdb_agg[ , pp50f_cr96_n := ifelse(!is.na(pp50f_cr96_vl), 1, NA) ]
+ppdb_agg[ , pp50f_ch96_n := ifelse(!is.na(pp50f_ch96_vl), 1, NA) ]
+ppdb_agg[ , pp50f_fi96_n := ifelse(!is.na(pp50f_fi96_vl), 1, NA) ]
+
+#### Combine Invertebrates ----
+ppdb_agg_m = 
+  melt(ppdb_agg, id.vars = 'casnr',
+  measure.vars = list(c('pp50f_da48_vl', 'pp50f_cr96_vl', 'pp50f_ch96_vl'),
+                      c('pp50f_da48_tax', 'pp50f_cr96_tax', 'pp50f_ch96_tax'),
+                      c('pp50f_da48_n', 'pp50f_cr96_n', 'pp50f_ch96_n')))
+ppdb_agg_m_agg =
+  ppdb_agg_m[ !is.na(value1) & !is.infinite(value1),
+              .(pp50f_iv4896_min = min(value1),
+                pp50f_iv4896_tax = .SD[which.min(value1)]$value2,
+                pp50f_iv4896_info = paste0(.SD[order(value1)]$value2, ' (',
+                                           .SD[order(value1)]$value1, 'ug/L)',
+                                           collapse = ' - '),
+                pp50f_iv4896_n = sum(.SD[!is.na(value1)]$value3)),
+              casnr ]
+
+ppdb_agg = ppdb_agg[ppdb_agg_m_agg, on = 'casnr']
+# removing Inf and (µg/L)
+for (i in names(ppdb_agg)) {
+  ppdb_agg[get(i) == ' (ug/L)', (i) := NA]
+}
+
+# col order
+names(ppdb_agg)
+setcolorder(ppdb_agg, c('casnr',
+                        'pp50f_al72_vl', 'pp50f_al72_tax', 'pp50f_al72_n',
+                        'pp50f_pl168_vl', 'pp50f_pl168_tax', 'pp50f_pl168_n',
+                        'pp50f_da48_vl', 'pp50f_da48_tax', 'pp50f_da48_n',
+                        'pp50f_cr96_vl', 'pp50f_cr96_tax', 'pp50f_cr96_n',
+                        'pp50f_ch96_vl', 'pp50f_ch96_tax', 'pp50f_ch96_n',
+                        'pp50f_fi96_vl', 'pp50f_fi96_tax', 'pp50f_fi96_n',
+                        'pp50f_iv4896_min', 'pp50f_iv4896_tax', 'pp50f_iv4896_info', 'pp50f_iv4896_n'))
+```
+
+### Malaj-PPDB check
+```{r malaj-ppdb-check}
+# check
+malj_check = length(which(duplicated(malaj_agg$casnr)))
+ppdb_check = length(which(duplicated(ppdb_agg$casnr)))
+
+if (malj_check != 0) {
+  stop(malj_check, ' duplicated CAS entries.')
+}
+if (ppdb_check != 0) {
+  stop(ppdb_check, ' duplicated CAS entries.')
+}
+
+# cleaning
+rm(malj_check, ppdb_check)
+```
+
+## EPA aggregate
+```{r AGGREGATE-epa1, eval=FALSE}
+# ksource(file.path(srcdir, 'EC50aggregation_epa1.Rmd'))
+```
+
+## EPA aggregate 2
+```{r AGGREGATE-epa2}
+ksource(file.path(srcdir, 'EC50aggregation_epa2.Rmd'))
+```
+
+# Merge
+```{r MERGE-ec50}
+source_l = list(malaj_agg, ppdb_agg, ep50f_agg)
+ec50 = Reduce(function(...) merge(..., on = 'casnr', all = TRUE), source_l)
+ec50[tests3, on = 'casnr', subst_name := i.subst_name]
+setcolorder(ec50, c(1, ncol(ec50), 3:ncol(ec50)-1))
+```
+
+## Check
+```{r ec50-check}
+na_check = ec50[ is.na(casnr) | is.na(subst_name) ]
+if (nrow(na_check) != 0) {
+  warning(nrow(na_check), ' missing CAS, CASNR or substance names.')
+}
+rm(na_check)
+```
+
+# Write to database
+```{r disclaimer}
+su = length(unique(tests3$casnr)) # substances
+sp = length(as.character(unique(tests3$latin_BIname))) # species
+fa = length(unique(tests3$family)) # families
+ha = nrow(lookup)
+```
+
+```{r WRITE-postgres, eval=FALSE}
+drv = dbDriver("PostgreSQL")
+con = dbConnect(drv, user = DBuser, dbname = DBname_1, host = DBhost, port = DBport, password = DBpassword)
+
+schema = 'phch'
+table = 'phch_ec50'
+
+## upload
+dbSendQuery(con, paste0("DROP TABLE IF EXISTS  ", schema, ".", table, ";"))
+dbWriteTable(con, ec50,
+             name = c(schema, table), row.names = FALSE)
+
+## User rights
+dbSendQuery(con, paste0("GRANT ALL ON TABLE ", schema, ".", table, " TO scharmueller;
+                  GRANT ALL ON TABLE ", schema, ".", table, " TO bfg;
+                  GRANT SELECT ON TABLE ", schema, ".", table, " TO bfg_read;"))
+
+## Primary Key
+# dbSendQuery(con, paste0("ALTER TABLE ", schema, ".", table, " ADD PRIMARY KEY (variable_id);"))
+
+## COMMENT ON
+dbSendQuery(con, paste0("COMMENT ON TABLE  ", schema, ".", table, "  IS '
+pesticide ec50 table fo specific organism groups per CASNR:
+
+#### Malaj et al. (2014) data ----
+(1) mj50_<ps|dm|pp> = EC50 values from Malaj for dm-Daphnia magna, pp-Pimephales promelas, ps-Pseudokirchneriella subcapitata (Already aggregated).
+(2) mj50_<dm_type|pp_type|ps_type> = value type used by Malaj et al.:
+(B-Baseline toxicity, E-Empirical, P1-4-Predictet(3,4-trustworthy;1,2-not))
+
+#### PPDB data ----
+(1) pp50f_<al|pl|da|cr|ch|fi>
+EC50 vlaues from PPDB for iv-Invertebrates, al-Algae and fi-Fish (the minimum per CASNR and tax. group was taken).
+(2) pp50f_<al|pl|da|cr|ch|fi>_info
+string containing all EC50 values per CASNR and tax. group.
+
+#### EPA data ----
+(1) n<f|m|t|n>_<al|pl|iv|da|cr|ch|in|fi|am><48|72|96|168>
+number of tests for specific substance and organism group (here: algae).
+(2) ep50<f|m|t|n>_<al|pl|iv|da|cr|ch|in|fi|am><48|72|96|168>_<min|gm|mn>
+e.g:
+ep50_al72_min = ec50_algae72h_minimum_value
+ep50_da48_gm = ec50_Daphniidae48h_geometric mean (with deleted ouliers)
+ep50f_al4896_mn = ec50freshwater_algae48h-96h_mean
+! For those w/o time specification tests with a duration from 24 to 120h (for plants: 360h) were used.
+(3) ep50<f|m|t|n>_<al|pl|iv|da|cr|ch|in|fi|am><48|72|96|168>_info
+info column which taxa wered used (orderd by value), the EPA ecotox ref. number and the value (separated by comma)
+e.g Daphnia magna-(984)-50ugL,Daphnia magna-(984)-50ugL
+(4) ep50<f|m|t|n>_<al|pl|iv|da|cr|ch|in|fi|am><48|72|96|168>_out
+colum which denotes test results that were excluded based on outlier detection
+
+Aggregated EPA taxa:
+", freshw_grp[ ,1], "
+", freshw_grp[ ,2], "
+", freshw_grp[ ,3], "
+", freshw_grp[ ,4], "
+
+---
+Abbreviations:
+value types:
+vl = value (there was only one value, hence no aggregation)
+min = minimum
+gm = geometric mean
+mn = mean
+md = median
+
+habitat types:
+f = freshwater
+m = marine
+t = terrestrial
+n = non
+
+taxa groups:
+pl = Plants
+al = Algae
+fu = Fungi
+ma = Makro-Invertebrates (", paste0(invertebrates_makro, collapse = ' + '),")
+mi = Mikro-Invertebrates (", paste0(invertebrates_mikro, collapse = ' + '),")
+da = Daphniidae (Fam.)
+cr = Crustacea
+ch = Chrionomidae (Fam.)
+in = Insects
+mo = Molluscs
+fi = Fish
+ar = Araneae
+au = autotroph organisms (", paste0(autotrophs, collapse = ' + '),")
+he = heterotroph organisms
+
+You can look up the reference number, casnr, etc. here:
+https://cfpub.epa.gov/ecotox/quick_query.htm
+
+---
+All values are in ug/L.
+---
+
+Note:
+In order to build this table, ecological test data on ", su, " substances and ", sp, " species (from ", fa, " families) were processed.\nThe test data were mainly obtained through the EPA ECOTOX data base and some scientific articles and the PPDB.\nIn order to properly classify taxonomic ranks and habitat preferences, the ITIS, NCBI, COL, EOL, NBN and WORMS data bases were queried.\nFor ", ha, " families, additional habitat information (freshwater, marine, terretrial) was collected by hand. No guarantee for perfectness.\nEspecially habitat information can still have wrong classifications.
+
+---
+Uploaded: ", Sys.Date(), "';"))
+
+
+## Maintainance
+dbSendQuery(con, paste0("VACUUM ANALYZE  ", schema, ".", table, ";"))
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
+
+message('Written to DB:'); freshw_grp
+```
+
+```{r cleaning}
+rm(su, sp, fa, ha)
+```
+
+# Problems
+```{r problems. eval=FALSE}
+ppdb_epoxi = '135319732' # Kein EPA-Eintrag
+ppdb_epoxi_cas = '135319-73-2' # Kein EPA-Eintrag
+ppdb_epoxi_cas_old = '106325-08-0'
+epa_epoxi = '133855988'
+
+tests[ casnr %in% c(ppdb_epoxi, epa_epoxi) ]
+ppdb_l[[ppdb_epoxi_cas]]$etox
+```
+
+# Misc
+```{r misc, eval=FALSE}
+daphnia = tests[ latin_BIname %like% '(?i)Daphnia', .N, latin_BIname ][order(-N)]
+fwrite(daphnia, file.path(tempdir(), 'daphnia.csv'))
+```
+

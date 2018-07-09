@@ -1,0 +1,87 @@
+---
+title: "Source Malaj data"
+author: "Andreas Scharmüller"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+editor_options:
+  chunk_output_type: console
+---
+
+# Setup
+```{r setup}
+# packages
+require(data.table)
+
+# variables
+cachedir = '/home/andreas/Documents/Projects/species-sensitivity/cache'
+fundir = '/home/andreas/Documents/Projects/species-sensitivity/functions'
+
+# source
+source(file.path(fundir, 'casconv.R'))
+```
+
+# Load PSM data
+```{r load-psm}
+psm = readRDS(file.path(cachedir, 'psm2.rds'))
+```
+
+# Load Malaj data
+```{r load-malaj}
+malaj = fread('/home/andreas/Documents/data/malaj2014/Toxicity_data_malaj_2014.csv')
+```
+
+## Data cleaning
+```{r malaj-cleaning}
+names(malaj) = tolower(names(malaj))
+malaj = malaj[ ,c('casnumber', 'cas', 'lc50 dm', 'source details_dm', 'type of data_dm', 'lc50 pim', 'source details_pim', 'type of data_pim', 'lc50 sele', 'source details_sele', 'type of data_sele', 'code', 'determinand_hazsubs')]
+setnames(malaj, c('casnr', 'cas', 'lc50_dm', 'lc50_dm_source', 'lc50_dm_type', 'lc50_pim', 'lc50_pim_source', 'lc50_pim_type', 'lc50_sel', 'lc50_sel_source', 'lc50_sel_type', 'psm_type', 'subst_name'))
+
+# cas
+malaj = malaj[ !is.na(casnr) ] # no single pesticides
+malaj[ , cas := casconv(casnr) ]
+
+# replace '' with NA
+for(i in names(malaj)) {
+  malaj[get(i) == '', (i) := NA ]
+}
+
+# taxa
+malaj[ , `:=` (dm = 'Daphnia magna',
+               pp = 'Pimephales promelas',
+               ps = 'Pseudokirchneriella subcapitata')]
+
+# melt
+malaj_m = melt(malaj,
+               id.vars = c('casnr', 'cas', 'psm_type', 'subst_name'),
+               measure.vars = list(
+                 c('dm', 'pp', 'ps'),
+                 c('lc50_dm', 'lc50_pim', 'lc50_sel'),
+                 c('lc50_dm_source', 'lc50_pim_source', 'lc50_sel_source'),
+                 c('lc50_dm_type', 'lc50_pim_type', 'lc50_sel_type')),
+               value.name = c('latin_BIname', 'value', 'source', 'type'))
+
+# other variables
+malaj_m[ , `:=` (endpoint = 'lc50',
+                 variable_id = NA,
+                 unit = 'ug/L',
+                 duration = ifelse(latin_BIname == 'Daphnia magna', 48,
+                            ifelse(latin_BIname == 'Pimephales promelas', 96,
+                            ifelse(latin_BIname == 'Pseudokirchneriella subcapitata', 4896, NA))),
+                 source = 'malaj')]
+malaj_m[ , variable := NULL]
+
+malaj_m = malaj_m[ !is.na(value) ]
+
+# column order
+setcolorder(malaj_m, c('variable_id', 'subst_name', 'casnr', 'cas', 'value', 'unit', 'psm_type', 'source', 'type', 'duration', 'endpoint', 'latin_BIname'))
+```
+
+## Filter
+```{r filter}
+malaj_m = malaj_m[ !type %in% c('B', 'P/1', 'P/2') ] 
+```
+
+# Cleaning
+```{r cleaning}
+rm(malaj, psm)
+```

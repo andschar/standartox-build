@@ -1,0 +1,144 @@
+---
+title: "Untitled"
+author: "AS"
+date: "April 5, 2018"
+output: html_document
+---
+# Setup
+```{r setup}
+# packages
+require(data.table)
+
+# cachedir
+cachedir = '/home/andreas/Documents/Projects/species-sensitivity/cache'
+fundir = '/home/andreas/Documents/Projects/species-sensitivity/functions'
+plotdir = '/home/andreas/Documents/Projects/species-sensitivity/plots'
+
+# functions
+source(file.path(fundir, 'agg_group.R'))
+```
+
+```{r load}
+tests3 = readRDS(file.path(cachedir, 'tests3.rds'))
+```
+
+```{r epa}
+epa3 = tests3[ source == 'epa_ecotox' ]
+```
+Change: now the steps are merged
+In a first step aggregate tests on the same species and compounds. Ocasion where only one such combination was found couldn't be aggregated. For ocasions, where the number of combinations was lower than 10 and their range (i.e. min to max) was above 20 the geometric mean was calculated. However as the values are verying strongly, they are difficult to assess and should be checked manually. For species compound combinations with 10 or more ocasions and a range below 20 the geometric mean was calculated. For ocasions where more than 10 tests could be found, [SSD](https://edild.github.io/ssd/) were built and an estimated vlaue derived. Though SSD is the wrong terminus in this case. It should rather be TSD - Tests sensivity distribution, as SSD would mean differen species. This was only done for EPA data as Malaj and PPDB are already aggregated.
+
+#### Freshwater organism groups
+##### Input data
+```{r AGGREGATE-epa-fresh-todo}
+## create variable parameter list
+tol_f =
+  list(grp_names = c('Plants', 'Plants168', 'Algae', 'Algae72', 'Algae4896', 'Fish96', 'Makro_Inv24', 'Makro_Inv48', 'Makro_Inv96', 'Makro_Inv', 'Mikro_Inv', 'Daphnia', 'Daphnia48', 'Chironomidae', 'Chironomidae96', 'Insecta24', 'Crustacea96', 'Mollusca4896', 'Amphibia'),
+       
+       grp_par = c(rep('supgroup2', 11), rep('family', 4), rep('supgroup', 3), 'supgroup2'),
+       
+       grp_arg = c(rep('Plants', 2), rep('Algae', 3), 'Fish', 'Makro_Inv', 'Makro_Inv', 'Makro_Inv', 'Makro_Inv', 'Mikro_Inv', rep('Daphniidae', 2), rep('Chironomidae', 2), 'Insecta24', 'Crustacea', 'Mollusca', 'Amphibia'),
+       
+       dur_arg = list(c(24,360), 168, c(24,120), 72, c(48,96), 96, 24, 48, 96, c(24,120), c(24,120), c(24,120), 48, c(24,120), 96, 24, 96, c(48,96), c(24,120)))
+
+freshw_grp = as.data.table(tol_f); freshw_grp
+fwrite(freshw_grp, file.path(tempdir(), 'EC50_freshwater_groups.csv'))
+```
+
+##### Output data
+```{r AGGREGATE-epa-fresh-mapply-data}
+ep50f_l =
+  mapply(agg_group,
+         grp_par = tol_f$grp_par, grp_arg = tol_f$grp_arg, dur_arg = tol_f$dur_arg, # variable arguments
+         MoreArgs = list(dt = epa3, habi = 'fresh', dur_par = 'duration2',
+                         outl_rm = TRUE, stat = 'iqr', lim = 1.5), # fixed arguments
+         SIMPLIFY = FALSE)
+names(ep50f_l) = tol_f$grp_names
+
+ep50f_agg = Reduce(function(...) merge(..., by = 'casnr', all = T), ep50f_l)
+ep50f_agg[ ep50f_agg == Inf ] = NA; ep50f_agg[ ep50f_agg == NaN ] = NA;
+```
+
+##### Plots
+```{r AGGREGATE-epa-fresh-mapply-plots}
+if (plots) {
+  ep50f_plots =
+    mapply(agg_group,
+           grp_par = tol_f$grp_par, grp_arg = tol_f$grp_arg, dur_arg = tol_f$dur_arg, # variable arguments
+           MoreArgs = list(dt = epa3, habi = 'fresh', dur_par = 'duration2',
+                           outl_rm = TRUE, stat = 'iqr', lim = 1.5,
+                           plot = 'all'), # fixed arguments
+           SIMPLIFY = FALSE)
+  names(ep50f_plots) = tol_f$grp_names
+  
+  ## save plots (takes some time!)
+  subf = 'box' #! change this structures!
+  plotdir2 = '/home/andreas/Documents/ownCloud'
+  system(paste0('rm ', plotdir2, '/outl_plots/fresh/', subf, '/*'))
+  for (i in names(ep50f_plots)) {
+    plts = ep50f_plots[[i]]
+    message('Saving ', i, ' plots:')
+    for (j in names(plts)) {
+      plt = plts[[j]]
+      ggsave(plt, filename =
+               file.path(plotdir2, 'outl_plots', 'fresh', subf, paste0(i, '_', j, '.png')),
+                         width = 10, height = 7)
+      message(j)
+    }
+  }
+}
+```
+
+#### No habitat organism groups
+##### Input data
+```{r AGGREGATE-epa-fresh-todo}
+## create variable parameter list
+tol_n = 
+  list(grp_names = c('Algae', 'Fungi'),
+       grp_par = c(rep('supgroup2', 2)),
+       grp_arg = c('Algae', 'Fungi'),
+       dur_arg = list(c(24,120), c(24,120)))
+```
+
+##### Output data
+```{r AGGREGATE-epa-fresh-mapply-data}
+ep50n_l =
+  mapply(agg_group,
+         grp_par = tol_n$grp_par, grp_arg = tol_n$grp_arg, dur_arg = tol_n$dur_arg, # variable arguments
+         MoreArgs = list(dt = epa3, habi = NULL, dur_par = 'duration2',
+                         outl_rm = TRUE, stat = 'iqr', lim = 1.5), # fixed arguments
+         SIMPLIFY = FALSE)
+names(ep50n_l) = tol_n$grp_names
+
+ep50n_agg = Reduce(function(...) merge(..., by = 'casnr', all = T), ep50n_l)
+ep50n_agg[ ep50n_agg == Inf ] = NA; ep50n_agg[ ep50n_agg == NaN ] = NA;
+```
+
+##### Plots
+```{r AGGREGATE-epa-fresh-mapply-plots}
+if (plots) {
+  ep50n_plots =
+    mapply(agg_group,
+           grp_par = tol_n$grp_par, grp_arg = tol_n$grp_arg, dur_arg = tol_n$dur_arg, # variable arguments
+           MoreArgs = list(dt = epa3, habi = NULL, dur_par = 'duration2',
+                           outl_rm = TRUE, stat = 'iqr', lim = 1.5,
+                           plot = T), # fixed arguments
+           SIMPLIFY = FALSE)
+  names(ep50n_plots) = tol_n$grp_names
+  
+  ## save plots (takes some time!)
+  plotdir2 = '/home/andreas/Documents/ownCloud'
+  system(paste0('rm ', plotdir2, '/outl_plots/nohab/*'))
+  for (i in names(ep50n_plots)) {
+    plts = ep50n_plots[[i]]
+    message('Saving ', i, ' plots:')
+    for (j in names(plts)) {
+      plt = plts[[j]]
+      ggsave(plt, filename =
+               file.path(plotdir2, 'outl_plots', 'nohab', paste0(i, '_', j, '.png')),
+                         width = 10, height = 7)
+      message(j)
+    }
+  }
+}
+```

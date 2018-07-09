@@ -1,0 +1,255 @@
+---
+title: "Untitled"
+author: "AS"
+date: "March 29, 2018"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+This script creates the table phch_ec50_fin on the basis of phch_ec50 and loads it into the data base.
+
+# Setup
+```{r setup}
+# packages
+require(RPostgreSQL)
+require(data.table)
+require(stringr)
+
+# variables
+cachedir = '/home/andreas/Documents/Projects/species-sensitivity/cache'
+plotdir = '/home/andreas/Documents/Projects/species-sensitivity'
+
+# source
+source('/home/andreas/Documents/UBA/Project/R/src/DB_access.R')
+```
+
+# Load ec50-table
+```{r load}
+drv = dbDriver("PostgreSQL")
+con = dbConnect(drv, user = DBuser, dbname = DBname_1, host = DBhost, port = DBport, password = DBpassword)
+
+ec50 = dbGetQuery(con, "SELECT * FROM phch.phch_ec50")
+setDT(ec50)
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
+```
+
+# Final EC50 columns
+
+## Hierachical partition
+
+### Daphniidae
+```{r daphniidae}
+ec50_da48_fin = 
+  ec50[ ,
+        .(casnr = casnr,
+          ec50f_da48_fin = ifelse(!is.na(mj50f_da48_vl), mj50f_da48_vl,
+                           ifelse(!is.na(pp50f_da48_vl), pp50f_da48_vl,
+                           ifelse(!is.na(ep50f_da48_md), ep50f_da48_md, NA))),
+          ec50f_da48_tax = ifelse(!is.na(mj50f_da48_vl), mj50f_da48_tax,
+                           ifelse(!is.na(pp50f_da48_vl), pp50f_da48_tax,
+                           ifelse(!is.na(ep50f_da48_md), ep50f_da48_tax, NA))),
+          ec50f_da48_n = ifelse(!is.na(mj50f_da48_vl), mj50f_da48_n,
+                         ifelse(!is.na(pp50f_da48_vl), pp50f_da48_n,
+                         ifelse(!is.na(ep50f_da48_md), ep50f_da48_n, NA))),
+          ec50f_da48_src = ifelse(!is.na(mj50f_da48_vl), 'malaj',
+                           ifelse(!is.na(pp50f_da48_vl), 'ppdb',
+                           ifelse(!is.na(ep50f_da48_md), 'epa', NA))))]
+
+# keep only the first part of the string (until '-'): This is the minimum value
+ec50_da48_fin[ , ec50f_da48_tax := sapply(strsplit(ec50f_da48_tax, '_'), '[', 1)]
+```
+
+## Minimum partition
+
+### Algae
+```{r algae}
+ec50_al_m = 
+  melt(ec50, id.vars = 'casnr',
+       measure.vars = list(c('mj50f_al4896_vl', 'pp50f_al72_vl', 'ep50f_al4896_min'),
+                           c('mj50f_al4896_tax', 'pp50f_al72_tax', 'ep50f_al4896_tax'),
+                           c('mj50f_al4896_n', 'pp50f_al72_n', 'ep50f_al4896_n')))
+
+ec50_al_m[ , value4 := ifelse(variable == '1', 'malaj',
+                       ifelse(variable == '2', 'ppdb',
+                       ifelse(variable == '3', 'epa', NA))) ] #! careful with the order
+
+ec50_al4896_fin = 
+  ec50_al_m[ ,
+             .(min(value1, na.rm = TRUE),
+               .SD[which.min(value1)]$value2,
+               .SD[which.min(value1)]$value3,
+               .SD[which.min(value1)]$value4),
+             casnr  ] 
+
+setnames(ec50_al4896_fin, c('casnr', 'ec50f_al4896_fin', 'ec50f_al4896_tax', 'ec50f_al4896_n', 'ec50f_al4896_src'))
+
+# keep only the first part of the string (until '-'): This is the minimum value
+ec50_al4896_fin[ , ec50f_al4896_tax := sapply(strsplit(ec50f_al4896_tax, ' - '), '[', 1)]
+#ec50_al4896_fin[ , ec50f_al4896_dur := gsub('[^0-9]', '', ec50_al4896_fin$ec50f_al4896_tax) ]
+ec50_al4896_fin[ , ec50f_al4896_tax := sapply(strsplit(ec50f_al4896_tax, '_'), '[', 1)]
+ec50_al4896_fin[ , ec50f_al4896_tax := sapply(strsplit(ec50f_al4896_tax, '_'), '[', 1)]
+ec50_al4896_fin[ , ec50f_al4896_tax := ifelse(str_count(ec50f_al4896_tax, '\\S+') == 1,
+                                              paste0(ec50f_al4896_tax, ' sp.'),
+                                              ec50f_al4896_tax)]
+
+for (i in names(ec50_al4896_fin)) {
+  ec50_al4896_fin[ get(i) == Inf, (i) := NA ]
+  ec50_al4896_fin[ get(i) == '', (i) := NA ]
+}
+rm(ec50_al_m)
+```
+
+### Invertebrates
+```{r makro-invertebrates}
+ec50_ma_m = 
+  melt(ec50, id.vars = 'casnr',
+       measure.vars = list(c('mj50f_da48_vl', 'pp50f_iv4896_min', 'ep50f_ma4896_min'),
+                           c('mj50f_da48_tax', 'pp50f_iv4896_tax', 'ep50f_ma4896_tax'),
+                           c('mj50f_da48_n', 'pp50f_iv4896_n', 'ep50f_ma4896_n')))
+
+ec50_ma_m[ , value4 := ifelse(variable == '1', 'malaj',
+                       ifelse(variable == '2', 'ppdb',
+                       ifelse(variable == '3', 'epa', NA))) ] #! careful with the order
+
+ec50_ma4896_fin = 
+  ec50_ma_m[ ,
+             .(min(value1, na.rm = TRUE),
+               .SD[which.min(value1)]$value2,
+               .SD[which.min(value1)]$value3,
+               .SD[which.min(value1)]$value4),
+             casnr  ] 
+
+setnames(ec50_ma4896_fin, c('casnr', 'ec50f_ma4896_fin', 'ec50f_ma4896_tax', 'ec50f_ma4896_n', 'ec50f_ma4896_src'))
+
+# keep only the first part of the string (until '-'): This is the minimum value
+ec50_ma4896_fin[ , ec50f_ma4896_tax := sapply(strsplit(ec50f_ma4896_tax, ' - '), '[', 1)]
+#ec50_ma4896_fin[ , ec50f_ma4896_dur := gsub('[^0-9]', '', ec50_ma4896_fin$ec50f_ma4896_tax) ]
+ec50_ma4896_fin[ , ec50f_ma4896_tax := sapply(strsplit(ec50f_ma4896_tax, '_'), '[', 1)]
+ec50_ma4896_fin[ , ec50f_ma4896_tax := ifelse(str_count(ec50f_ma4896_tax, '\\S+') == 1,
+                                              paste0(ec50f_ma4896_tax, ' sp.'),
+                                              ec50f_ma4896_tax)]
+
+for (i in names(ec50_ma4896_fin)) {
+  ec50_ma4896_fin[ get(i) == Inf, (i) := NA ]
+  ec50_ma4896_fin[ get(i) == '', (i) := NA ]
+}
+rm(ec50_ma_m)
+```
+
+### Fish
+```{r fish}
+ec50_fi_m = 
+  melt(ec50, id.vars = 'casnr',
+       measure.vars = list(c('mj50f_fi96_vl', 'pp50f_fi96_vl', 'ep50f_fi96_min'),
+                           c('mj50f_fi96_tax', 'pp50f_fi96_tax', 'ep50f_fi96_tax'),
+                           c('mj50f_fi96_n', 'pp50f_fi96_n', 'ep50f_fi96_n')))
+
+ec50_fi_m[ , value4 := ifelse(variable == '1', 'malaj',
+                       ifelse(variable == '2', 'ppdb',
+                       ifelse(variable == '3', 'epa', NA))) ] #! careful with the order
+
+ec50_fi96_fin = 
+  ec50_fi_m[ ,
+             .(min(value1, na.rm = TRUE),
+               .SD[which.min(value1)]$value2,
+               .SD[which.min(value1)]$value3,
+               .SD[which.min(value1)]$value4),
+             casnr  ] 
+
+setnames(ec50_fi96_fin, c('casnr', 'ec50f_fi96_fin', 'ec50f_fi96_tax', 'ec50f_fi96_n', 'ec50f_fi96_src'))
+
+# keep only the first part of the string (until '-'): This is the minimum value
+ec50_fi96_fin[ , ec50f_fi96_tax := sapply(strsplit(ec50f_fi96_tax, ' - '), '[', 1)]
+#ec50_fi96_fin[ , ec50f_fi96_dur := gsub('[^0-9]', '', ec50_fi96_fin$ec50f_fi96_tax) ]
+ec50_fi96_fin[ , ec50f_fi96_tax := sapply(strsplit(ec50f_fi96_tax, '_'), '[', 1)]
+ec50_fi96_fin[ , ec50f_fi96_tax := ifelse(str_count(ec50f_fi96_tax, '\\S+') == 1,
+                                              paste0(ec50f_fi96_tax, ' sp.'),
+                                              ec50f_fi96_tax)]
+
+for (i in names(ec50_fi96_fin)) {
+  ec50_fi96_fin[ get(i) == Inf, (i) := NA ]
+  ec50_fi96_fin[ get(i) == '', (i) := NA ]
+}
+rm(ec50_fi_m)
+```
+
+## Merge 1
+```{r merge1}
+fin_dts = grep('_fin', ls(), value = TRUE, ignore.case = TRUE)
+fin_l = lapply(fin_dts, get)
+names(fin_l) = fin_dts
+
+ec50f_grp = Reduce(function(...) merge(..., on = 'casnr', all = TRUE), fin_l)
+ec50f_grp[ec50, on = 'casnr', subst_name := i.subst_name]
+setcolorder(ec50f_grp, c(1, ncol(ec50f_grp), 3:ncol(ec50f_grp)-1))
+```
+
+# Write to data base
+
+```{r write-ec50f_fin}
+drv = dbDriver("PostgreSQL")
+con = dbConnect(drv, user = DBuser, dbname = DBname_1, host = DBhost, port = DBport, password = DBpassword)
+
+schema = 'phch'
+table = 'phch_ec50_fin'
+
+## upload
+dbSendQuery(con, paste0("DROP TABLE IF EXISTS  ", schema, ".", table, ";"))
+dbWriteTable(con, ec50f_grp,
+             name = c(schema, table), row.names = FALSE)
+
+## User rights
+dbSendQuery(con, paste0("GRANT ALL ON TABLE ", schema, ".", table, " TO scharmueller;
+                  GRANT ALL ON TABLE ", schema, ".", table, " TO bfg;
+                  GRANT SELECT ON TABLE ", schema, ".", table, " TO bfg_read;"))
+
+## Primary Key
+# dbSendQuery(con, paste0("ALTER TABLE ", schema, ".", table, " ADD PRIMARY KEY (variable_id);"))
+
+## COMMENT ON
+dbSendQuery(con, paste0("COMMENT ON TABLE  ", schema, ".", table, "  IS '
+final ec50 table with aggregated Invertebrate values based on phch.phch_ec50
+
+(1) ec50f_al4896_fin = minimum from mj50f_al4896_vl, pp50f_al72_vl, ep50f_al4896_min
+(2) ec50f_da48_fin = if present: mj50f_al4896_vl, pp50f_al72_vl, ep50f_al4896_md
+(3) ec50f_fi96_fin = minimum from mj50f_da48_vl, pp50f_ma48_min, ep50f_ma4896_min
+(4) ec50f_ma4896_fin = minimum from mj50f_da48_vl, pp50f_ma48_min, ep50f_ma4896_min
+
+---
+Abbreviations:
+suffixes:
+_fin = final aggregated value
+_tax = Taxon corresponding to _fin value
+_n = number of vlaues/tests that were used in the aggregation
+_src = source (malaj, ppdb or epa)
+
+taxa groups:
+pl = Plants
+al = Algae
+fu = Fungi
+ma = Makro-Invertebrates (Annelida + Echinodermata + Mollusca + Nemertea + Platyhelminthes + Porifera + Crustacea + Arachnida + Diplopoda + Entognatha + Insecta)
+mi = Mikro-Invertebrates (Bryozoa + Chaetognatha + Ciliophora + Cnidaria + Gastrotricha + Nematoda + Rotifera)
+da = Daphniidae (Fam.)
+cr = Crustacea
+ch = Chrionomidae (Fam.)
+in = Insects
+mo = Molluscs
+fi = Fish
+ar = Araneae
+au = autotroph organisms (Plants + Algae + Bryophyta)
+he = heterotroph organisms
+
+---
+All values are in ug/L.
+
+Uploaded: ", Sys.Date(), "';"))
+
+## Maintainance
+dbSendQuery(con, paste0("VACUUM ANALYZE  ", schema, ".", table, ";"))
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
+```

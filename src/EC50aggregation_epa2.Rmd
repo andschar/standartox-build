@@ -1,0 +1,69 @@
+---
+title: "Untitled"
+author: "AS"
+date: "April 5, 2018"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+This script is loaded by EC50aggregation.Rmd and aggregates the EPA data. There is also EC50aggregation_epa.Rmd which does the aggregation differently, by excluding outliers and not taking the median.
+
+# Setup
+```{r setup}
+# packages
+require(data.table)
+
+# cachedir
+cachedir = '/home/andreas/Documents/Projects/species-sensitivity/cache'
+fundir = '/home/andreas/Documents/Projects/species-sensitivity/functions'
+plotdir = '/home/andreas/Documents/Projects/species-sensitivity/plots'
+
+# functions
+source(file.path(fundir, 'agg_group2.R'))
+```
+
+# Load
+```{r load}
+tests3 = readRDS(file.path(cachedir, 'tests3.rds'))
+```
+
+# Filter
+```{r epa}
+epa3 = tests3[ source == 'epa_ecotox' ]
+epa3 = epa3[ !supgroup %in% c('Entognatha', 'Arachnida') ]
+```
+
+# Aggregate
+
+## Freshwater organism groups
+### Input data
+```{r AGGREGATE-epa-fresh-todo}
+## create variable parameter list
+tol_f =
+  list(grp_names = c('Chironomidae96', 'Daphnia48', 'Insecta4896', 'Crustacea4896', 'Annelida4896', 'Platyhelminthes4896', 'Mollusca4896', 'Makro_Inv4896', 'Fish96', 'Algae4896', 'Plants168'),
+       
+       grp_par = c(rep('family', 2), rep('supgroup', 5), rep('supgroup2', 4)),
+       
+       grp_arg = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Plants'),
+       
+       dur_par = rep('duration', 11),
+       
+       dur_arg = list(96, 48, c(48,96), c(48,96), c(48,96), c(48,96), c(48,96), c(48,96), 96, c(48,96), 168))
+
+freshw_grp = as.data.table(tol_f); freshw_grp
+```
+
+##### Output data
+```{r AGGREGATE-epa-fresh-mapply-data}
+ep50f_l =
+  mapply(agg_group2,
+         grp_par = tol_f$grp_par, grp_arg = tol_f$grp_arg, dur_arg = tol_f$dur_arg, # variable arguments
+         MoreArgs = list(dt = epa3, habi = 'fresh', dur_par = 'duration'), # fixed arguments
+         SIMPLIFY = FALSE)
+names(ep50f_l) = tol_f$grp_names
+
+ep50f_agg = Reduce(function(...) merge(..., by = 'casnr', all = TRUE), ep50f_l)
+ep50f_agg[ ep50f_agg == Inf ] = NA; ep50f_agg[ ep50f_agg == NaN ] = NA;
+fwrite(ep50f_agg, file.path(tempdir(), 'ep50f_agg.csv')) # debuging
+```

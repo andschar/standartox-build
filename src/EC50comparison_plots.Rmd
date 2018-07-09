@@ -1,0 +1,159 @@
+---
+title: "Untitled"
+author: "AS"
+date: "April 2, 2018"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup}
+# packages
+require(data.table)
+require(RPostgreSQL)
+require(ggplot2)
+
+# variables
+cachedir = '/home/andreas/Documents/Projects/species-sensitivity/cache'
+plotdir = '/home/andreas/Documents/Projects/species-sensitivity/plots'
+
+# source
+source('/home/andreas/Documents/UBA/Project/R/src/DB_access.R')
+```
+
+# Load test results
+```{r load-tests}
+tests3 = readRDS(file.path(cachedir, 'tests3.rds'))
+psm = readRDS(file.path(cachedir, 'psm2.rds'))
+```
+
+```{r load-ec50s}
+drv = dbDriver("PostgreSQL")
+con = dbConnect(drv, user = DBuser, dbname = DBname_1, host = DBhost, port = DBport, password = DBpassword)
+
+ec50 = dbGetQuery(con, "SELECT * FROM phch.phch_ec50")
+setDT(ec50)
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
+
+ec50[psm, on = 'casnr', psm_type := i.psm_type]
+ec50 = ec50[psm_type %in% c('fungicide', 'herbicide', 'insecticide')]
+```
+
+# Test durations per organism groups
+```{r duration-taxon}
+tests_epa = tests3[ source == 'epa_ecotox' & isFre_fin == '1' ]
+
+# merging taxa that are lower than supgroup2:
+dt_ch = tests_epa[ family == 'Chironomidae' , .N, duration2][, grp := 'Chironomidae']
+setnames(dt_ch, c('dur', 'N', 'grp'))
+dt_da = tests_epa[ family == 'Daphniidae' , .N, duration2][, grp := 'Daphniidae']
+setnames(dt_da, c('dur', 'N', 'grp'))
+dt_cr = tests_epa[ supgroup == 'Crustacea' , .N, duration2][, grp := 'Crustacea']
+setnames(dt_cr, c('dur', 'N', 'grp'))
+dt_mo = tests_epa[ supgroup == 'Mollusca' , .N, duration2][, grp := 'Mollusca']
+setnames(dt_mo, c('dur', 'N', 'grp'))
+dt_in = tests_epa[ supgroup == 'Insecta' , .N, duration2][, grp := 'Insecta']
+setnames(dt_in, c('dur', 'N', 'grp'))
+
+dt_dur = tests_epa[ , .N, .(supgroup2, duration2)]
+setnames(dt_dur, c('grp', 'dur', 'N'))
+
+dt_dur = rbindlist(list(dt_dur, dt_ch, dt_da, dt_cr, dt_mo, dt_in), use.names = TRUE)
+
+# plot
+gg_dur = ggplot(dt_dur[ !grp %in% c('Aves', 'Mammalia', NA)], aes(y = N, x = dur)) +
+  geom_label(aes(label = dur)) +
+  facet_wrap( ~ grp, scales = 'free') +
+  labs(title = 'Duration of tests per taxon',
+       subtitle = 'freshwater organisms') +
+  theme_bw()
+
+ggsave(gg_dur, filename = file.path(plotdir, 'duration-taxon.png'),
+       width = 10, height = 7)
+
+# Why are there NAs???!!
+# 'cause it's not yet classified in the lookup table
+tests3[ source == 'epa_ecotox' & is.na(supgroup2)][ , .N, latin_BIname]
+```
+
+# Effect endpoint per taxon
+```{r effect-taxon}
+dt_eff = tests_epa[ , .N, .(supgroup2, effect)]
+setnames(dt_eff, c('grp', 'effect', 'N'))
+
+gg_eff = ggplot(dt_eff[ !grp %in% c('Mammalia', 'Aves', NA) ], aes(y = N, x = effect)) +
+  geom_point() +
+  facet_wrap( ~ grp, scales = 'free') +
+  labs(title = 'Effect numbers per taxon',
+       subtitle = 'freshwater organisms') +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1.1))
+
+ggsave(gg_eff, filename = file.path(plotdir, 'effect-taxon.png'),
+       width = 10, height = 7)
+```
+
+# Compare 24-120 tests to specific times
+```{r comparison-plots2}
+## Algae
+# data
+al_cols = grep('al.+(vl|gm)', names(ec50), value = TRUE)
+
+ec50al = ec50[ , .SD, .SDcols = c('casnr', 'psm_type', al_cols)]
+ec50al = ec50al[ psm_type %in% c('fungicide', 'herbicide', 'insecticide')]
+ec50al_m = melt(ec50al, id.var = c('casnr', 'psm_type')) # melt
+ec50al_m72 = melt(ec50al[ ,!c('psm_type')], id.vars = c('casnr', 'pp50f_al72_vl')) # range per duratiion group
+
+# plot 1 [doesn't help much]
+ggplot(ec50al_m, aes(y = reorder(casnr, value), x = value, col = variable)) +
+  geom_point() +
+  scale_x_log10() +
+  facet_wrap( ~ variable, scales = 'free_x', ncol = 3)
+
+# plpt 2 [doesn't help much]
+ec50al_m_rng = ec50al_m[ , .(rng = range(value, na.rm = TRUE)[2] -
+                               range(value, na.rm = TRUE)[1]),
+                         casnr]
+ec50al_m_rng[ is.infinite(rng), rng := NA ]
+
+ggplot(ec50al_m_rng, aes(y = reorder(casnr, rng), x = rng)) +
+  geom_point() +
+  coord_cartesian(xlim = c(0,1000))
+  #scale_x_log10()
+
+# plot 3 [doesn't help much]
+# sum per psm_type and variable
+ec50al_m_sum = ec50al_m[ , .(mn = mean(value, na.rm = TRUE),
+                             sd = sd(value, na.rm = TRUE)), .(variable, psm_type) ]
+
+ggplot(ec50al_m_sum, aes(y = mn, variable)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = mn-sd, ymax = mn+sd)) +
+  facet_wrap( ~ psm_type) +
+  coord_flip() +
+  theme_bw()
+
+# plot 4 [doesn't help much]
+cols = grep('casnr|al.+(vl|gm)', names(ec50), value = TRUE)#, 'pp50f_al72_vl')
+ec50al = ec50[ , .SD, .SDcols = cols]
+cols = setdiff(cols, c('pp50f_al72_vl', 'casnr'))
+ec50al_diff = copy(ec50al)[ , (cols) := abs(pp50f_al72_vl - .SD), .SDcols = cols]
+
+ec50al_diff_m = melt(ec50al_diff, id.vars = 'casnr')
+
+ggplot(ec50al_diff_m, aes(y = casnr, x = value)) +
+  geom_point() +
+  facet_wrap( ~ variable)
+
+
+```
+
+
+
+
+
+
+
+

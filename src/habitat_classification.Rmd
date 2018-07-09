@@ -1,0 +1,128 @@
+---
+title: "Untitled"
+author: "AS"
+date: "March 5, 2018"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Setup
+```{r setup}
+## packages
+require(data.table)
+# devtools::install_github("ropensci/taxizesoap") # install
+require(taxizesoap)
+
+## switches
+online = F
+
+## variables
+cachedir = '/home/andreas/Documents/Projects/species-sensitivity/cache'
+```
+
+# Load data
+```{r data}
+tests2 = readRDS(file.path(cachedir, 'tests2.rds'))
+```
+
+## WORMS
+
+In order to test whether the retrieved EPA ECOTOX test results comprise only limnic species multiple databases are used for cross-checking. The [WORMS](http://www.marinespecies.org/index.php) database lists taxonomic information mainly on marine taxa. However as taxa not always make only use of marine habitats (e.g. eels which live both in marine and limnic habitats) the database also comprises taxa from limnic and estuarine environments. This is coded in the varaiable __Environment__ in the WORMS database. To query the database the [taxizesoap](https://github.com/ropensci/taxizesoap) package and its function `worms_records()` is used.
+
+### Family
+
+```{r worms-family, echo=TRUE}
+# installation of taxizesoap: https://github.com/ropensci/taxizesoap
+# install.packages(c("XMLSchema", "SSOAP"), repos = c("http://packages.ropensci.org", "http://cran.rstudio.com"))
+# devtools::install_github("ropensci/taxizesoap")
+if (online) {
+  message('online = TRUE')
+  family_todo = sort(unique(tests2$family))
+  # family_todo = family_todo[1:2]
+  
+  worms_family_l = list()
+  for (i in 1:length(family_todo)) {
+    family = family_todo[i]
+    
+    message('Querying (', i, '/', length(family_todo), '): ', family)
+    time = Sys.time()
+    worms_data = taxizesoap::worms_records(scientific = family, marine_only = FALSE)
+    Sys.time() - time
+    
+    if (nrow(worms_data) > 0) {
+      worms_data = cbind(worms_data, latin_BIname = family)
+    } else {
+      worms_data = worms_data
+    }
+    
+    worms_family_l[[i]] = worms_data
+  }
+  saveRDS(worms_family_l, file.path(cachedir, 'worms_family_list.rds'))
+
+} else {
+  message('online = FALSE')
+  worms_family_l = readRDS(file.path(cachedir, 'worms_family_list.rds'))
+}
+
+worms_fam = rbindlist(worms_family_l)
+worms_fam = worms_fam[ , c('family', 'isFreshwater', 'isMarine', 'isTerrestrial')]
+# Take minimum 'cause some fmailies have mulitple entries (e.g Bopyridae)
+lookup_worms_fam = worms_fam[ , lapply(.SD, function(x) min(as.numeric(x))),
+                              by = family, .SDcols = c('isFreshwater', 'isMarine', 'isTerrestrial')]
+setnames(lookup_worms_fam, c('family', 'isFre_w', 'isMar_w', 'isTer_w'))
+```
+
+### Species
+
+```{r worms-species, echo=TRUE}
+# installation of taxizesoap: https://github.com/ropensci/taxizesoap
+# install.packages(c("XMLSchema", "SSOAP"), repos = c("http://packages.ropensci.org", "http://cran.rstudio.com"))
+# devtools::install_github("ropensci/taxizesoap")
+if (online) {
+  message('online = TRUE')
+  species_todo = sort(unique(tests2$latin_BIname))
+  # species_todo = species_todo[1:2] # debug me!
+  
+  worms_species_l = list()
+  for (i in 1:length(species_todo)) {
+    species = species_todo[i]
+    
+    message('Querying (', i, '/', length(species_todo), '): ', species)
+    time = Sys.time()
+    worms_data = taxizesoap::worms_records(scientific = species, marine_only = FALSE)
+    Sys.time() - time
+    
+    if (nrow(worms_data) > 0) {
+      worms_data = cbind(worms_data, latin_BIname = species)
+    } else {
+      worms_data = worms_data
+    }
+    
+    worms_species_l[[i]] = worms_data
+  }
+  saveRDS(worms_species_l, file.path(cachedir, 'worms_species_list.rds'))
+
+} else {
+  message('online = FALSE')
+  worms_species_l = readRDS(file.path(cachedir, 'worms_species_list.rds'))
+}
+
+worms_sp = rbindlist(worms_species_l)
+# Sometimes there are more results for the input (lain_BIname) that's why 
+lookup_worms_sp = worms_sp[ , lapply(.SD, function(x) min(as.numeric(x))),
+                            by = latin_BIname, .SDcols = c('isFreshwater', 'isMarine', 'isTerrestrial')]
+setnames(lookup_worms_sp, c('latin_BIname', 'isFre_w', 'isMar_w', 'isTer_w'))
+```
+
+## Freshwaterecology.info
+
+```{r cleaning}
+rm(worms_sp, worms_species_l)
+rm(worms_fam, worms_family_l)
+rm(tests2)
+```
+
+
+
+
