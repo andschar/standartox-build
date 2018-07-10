@@ -40,10 +40,10 @@ if (online) {
 pc_l = lapply(pc_l, data.table)
 
 pc = rbindlist(pc_l, fill = TRUE, idcol = 'cas')
+pc[ , V1 := NULL ] # not needed
 
 # cleaning ----------------------------------------------------------------
 rm(list = ls()[!ls() %in% c('pc', 'pc_l')])
-
 
 
 
