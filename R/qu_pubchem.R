@@ -7,12 +7,12 @@ online = online
 # online = TRUE
 
 # data --------------------------------------------------------------------
-cas_l = readRDS(file.path(cachedir, 'cas_l.rds'))
+psm = readRDS(file.path(cachedir, 'psm.rds'))
 
 # query -------------------------------------------------------------------
 if (online) {
   
-  cid = get_cid(cas_l$cas)
+  cid = get_cid(psm$cas)
 
   pc_l = list()
   for (i in 1:length(cid)) {
