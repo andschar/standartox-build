@@ -43,8 +43,7 @@ pp[ , V1 := NULL ]
 setcolorder(pp, c('cas', 'cname'))
 
 # cleaning ----------------------------------------------------------------
-rm(list = ls()[!ls() %in% c('pp_l', 'pp')])
-
+rm(psm)
 
 
 

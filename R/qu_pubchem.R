@@ -43,7 +43,8 @@ pc = rbindlist(pc_l, fill = TRUE, idcol = 'cas')
 pc[ , V1 := NULL ] # not needed
 
 # cleaning ----------------------------------------------------------------
-rm(list = ls()[!ls() %in% c('pc', 'pc_l')])
+rm(cir, psm)
+#rm(list = ls()[!ls() %in% c('pc', 'pc_l')])
 
 
 

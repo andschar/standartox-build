@@ -34,8 +34,7 @@ pan = rbindlist(pan_l, fill = TRUE, idcol = 'cas')
 pan[ , V1 := NULL ]
 
 # cleaning ----------------------------------------------------------------
-rm(list = ls()[!ls() %in% c('pan_l', 'pan')])
-
+rm(psm)
 
 
 
