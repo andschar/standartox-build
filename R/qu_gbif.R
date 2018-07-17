@@ -1,0 +1,97 @@
+# script to scrap occurrence data from the Global Biodiversity Information Facility (GBIF)
+
+# setup -------------------------------------------------------------------
+source('R/setup.R')
+# switches
+online = online
+# online = TRUE
+
+# data --------------------------------------------------------------------
+epa = readRDS(file.path(cachedir, 'epa.rds'))
+
+# query -------------------------------------------------------------------
+todo_gbif = sort(unique(epa$latin_BIname))
+# todo_gbif = todo_gbif[1:5] # debug me!
+
+if (online) {
+#! takes 1.7h for 1500 taxa
+  time = Sys.time()
+  gbif_l = list()
+  for (i in seq_along(todo_gbif)) {
+    taxon = todo_gbif[i]
+    key = name_backbone(taxon)$speciesKey
+    message('Querying (', i, '/', length(todo_gbif), '): ', taxon)
+    
+    if (!is.null(key)) {
+      gbif = occ_search(taxonKey = key)
+    } else {
+      gbif = NA
+    }
+    
+    gbif_l[[i]] = gbif
+    names(gbif_l)[i] = taxon
+  }
+  Sys.time() - time
+  
+  # some preparation steps are done here and saved locally due to the size of gbif_l
+  gbif_ccode_l = lapply(gbif_l, 
+                        function(x) if (!is.na(x)) data.table(unique(x$data$countryCode))
+                                    else data.table(NA))
+  
+  saveRDS(gbif_l, file.path(cachedir, 'gbif_l.rds'))
+  saveRDS(gbif_ccode_l, file.path(cachedir, 'gbif_ccode_l.rds'))
+  
+} else {
+  gbif_l = readRDS(file.path(cachedir, 'gbif_l.rds')) # takes time!
+  gbif_ccode_l = readRDS(file.path(cachedir, 'gbif_ccode_l.rds'))
+}
+
+# preparation -------------------------------------------------------------
+gbif_ccode = rbindlist(gbif_ccode_l, idcol = 'taxon')
+setnames(gbif_ccode, old = 'V1', new = 'ccode')
+gbif_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode')
+
+# cleaning ----------------------------------------------------------------
+rm(epa, i, key, taxon, todo_gbif, time, gbif_l, gbif_ccode_l)
+
+
+# misc --------------------------------------------------------------------
+
+
+# 
+# # Search for many species
+# splist <- c('Accipiter sp.', 'Junco', 'Aix sponsa')
+# 
+# keys = sapply(splist, function(x) name_backbone(name = x)$speciesKey, USE.NAMES = FALSE)
+# 
+# x = map_fetch(search = 'taxonKey', id = keys[1])
+# 
+# class(x)
+# plot(x)
+# mapview::mapview(x)
+# 
+# 
+# key <- name_backbone(name='Helianthus annuus', kingdom='plants')$speciesKey
+# res = occ_search(taxonKey=key)
+# res_data = as.data.table(res$data)
+# View(res_data[10,])
+# 
+# 
+# # Options
+# # example: Helianthus annuus
+# 
+# # (1) Geo-data intersection
+# 
+# # (2) country code
+# dt = res$data
+# unique(dt$countryCode)
+# unique(dt$country)
+# unique(dt$continent)
+# 
+# names(dt)
+# unique(dt$habitat)
+# unique(dt$elevation)
+# unique(dt$occurrenceStatus)
+# 
+# 
+# 
