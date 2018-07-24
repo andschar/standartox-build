@@ -4,17 +4,16 @@
 source('R/setup.R')
 # switches
 online = online
-online = TRUE
-local = TRUE
+online = FALSE
+local = FALSE
 
 # data --------------------------------------------------------------------
-cas_l = readRDS(file.path(cachedir, 'cas_l.rds'))
-# psm = readRDS(file.path(cachedir, 'psm.rds')) ## DEPR?
+psm = readRDS(file.path(cachedir, 'psm.rds')) ## DEPR?
 
 # query -------------------------------------------------------------------
 
 if (online) {
-  todo = unique(cas_l$casnr) # CASNR for query
+  todo = unique(psm$casnr) # CASNR for query
   # todo = '122349' # debuging!
   # todo = '15972608' # debuging
   # todo = '15972608' # debug me
@@ -139,7 +138,7 @@ if (online) {
     # message('testing casnr: ', casnr, '\nname: ', d$chemical_name,
     #         '\npsm_type: ', d$psm_type, '\n nobs: ', nrow(d)) # timestamp(quiet = TRUE)
     ### END
-    message('Returning ', '(', i, '): ', casnr, ' (n = ', nrow(d), ')')
+    message('Returning ', '(', i, '/', length(todo), '): ', casnr, ' (n = ', nrow(d), ')')
     
     epa1_list[[i]] <- d
     names(epa1_list)[i] <- casnr
@@ -160,6 +159,7 @@ epa1 = rbindlist(epa1_list)
 
 
 # preparation -------------------------------------------------------------
+
 ## refine effect indices
 effect = epa1[ , .N, effect][order(-N)]
 effect[ , effect := gsub('~|/', '', effect) ]
@@ -238,13 +238,14 @@ for (i in names(epa1)) {
 }
 
 # delete columnms & change order
-setcolorder(epa1, c('variable_id', 'casnr', 'cas', 'subst_name', 'chemical_name', 'psm_type', 'chemical_group', 'conc1_conv', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'endpoint', 'effect', 'conc1_type', 'organism_habitat', 'subhabitat',  'latin_name', 'latin_BIname', 'latin_short', 'genus', 'family', 'source', 'reference_number'))
+# 'variable_id', 'psm_type'
+setcolorder(epa1, c('casnr', 'cas', 'subst_name', 'chemical_name', 'chemical_group', 'conc1_conv', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'endpoint', 'effect', 'conc1_type', 'organism_habitat', 'subhabitat',  'latin_name', 'latin_BIname', 'latin_short', 'genus', 'family', 'source', 'reference_number'))
 
 # change names
-setnames(epa1, c('variable_id', 'casnr', 'cas', 'subst_name', 'chemical_name', 'psm_type','chemical_group', 'value', 'unit', 'duration', 'duration_unit', 'endpoint', 'effect', 'conc_type', 'habitat', 'subhabitat',  'latin_name', 'latin_BIname', 'latin_short', 'genus', 'family_epa', 'source', 'ref_num'))
+setnames(epa1, c('casnr', 'cas', 'subst_name', 'chemical_name', 'chemical_group', 'value', 'unit', 'duration', 'duration_unit', 'endpoint', 'effect', 'conc_type', 'habitat', 'subhabitat',  'latin_name', 'latin_BIname', 'latin_short', 'genus', 'family_epa', 'source', 'ref_num'))
 
 # Reduce columns to match PPDB and bfg_monitoring cols:
-epa2 = epa1[ , c('variable_id', 'subst_name', 'casnr', 'cas', 'value', 'unit', 'psm_type', 'source', 'ref_num', 'duration', 'endpoint', 'effect', 'latin_BIname', 'family_epa') ]
+epa2 = epa1[ , c('subst_name', 'casnr', 'cas', 'value', 'unit', 'source', 'ref_num', 'duration', 'endpoint', 'effect', 'latin_BIname', 'family_epa') ]
 
 # checks
 subst_check = 
@@ -255,3 +256,16 @@ subst_check =
 if (nrow(subst_check) != 0) {
   warning(nrow(subst_check), ' missing CAS, CASNR or substance names.')
 }
+
+
+# saving ------------------------------------------------------------------
+saveRDS(epa2, file.path(cachedir, 'epa.rds'))
+
+# cleaning ----------------------------------------------------------------
+rm()
+
+
+
+
+
+
