@@ -190,8 +190,9 @@ if (nrow(cas_check) != 0) {
 
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
-taxa = sort(unique(epa1$latin_BIname))
+taxa = epa1[ , .SD, .SDcols = c('latin_BIname', 'family_epa')]
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
+
 
 # cleaning ----------------------------------------------------------------
 rm(cas_check, local, taxa, psm)
