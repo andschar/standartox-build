@@ -5,6 +5,7 @@ source('R/setup.R')
 # switches
 online = online
 # online = TRUE
+full_list = FALSE # loads the full result list if online=FALSE (900 MB!)
 
 # data --------------------------------------------------------------------
 epa = readRDS(file.path(cachedir, 'epa.rds'))
@@ -42,7 +43,9 @@ if (online) {
   saveRDS(gbif_ccode_l, file.path(cachedir, 'gbif_ccode_l.rds'))
   
 } else {
-  gbif_l = readRDS(file.path(cachedir, 'gbif_l.rds')) # takes time!
+  if (full_list) {
+    gbif_l = readRDS(file.path(cachedir, 'gbif_l.rds')) # takes time!  
+  }
   gbif_ccode_l = readRDS(file.path(cachedir, 'gbif_ccode_l.rds'))
 }
 
@@ -52,8 +55,12 @@ setnames(gbif_ccode, old = 'V1', new = 'ccode')
 gbif_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode')
 
 # cleaning ----------------------------------------------------------------
-rm(epa, i, key, taxon, todo_gbif, time, gbif_l, gbif_ccode_l)
+oldw = getOption("warn")
+options(warn = -1) # shuts off warnings
 
+rm(epa, i, key, taxon, todo_gbif, time, full_list, gbif_l, gbif_ccode_l)
+
+options(warn = oldw); rm(oldw)
 
 # misc --------------------------------------------------------------------
 
