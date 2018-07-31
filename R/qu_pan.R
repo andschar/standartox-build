@@ -32,6 +32,7 @@ for (i in 1:length(pan_l)) {
 
 pan = rbindlist(pan_l, fill = TRUE, idcol = 'cas')
 pan[ , V1 := NULL ]
+pan = pan[!is.na(cas)] # TODO why are NAs created in the first place?
 
 # cleaning ----------------------------------------------------------------
 rm(psm)

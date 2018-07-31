@@ -40,6 +40,7 @@ pp_l[is.na(pp_l)] = lapply(pp_l[is.na(pp_l)], data.table)
 
 pp = rbindlist(pp_l, fill = TRUE, idcol = 'cas')
 pp[ , V1 := NULL ]
+pp = pp[!is.na(cas)] # TODO why are NAs created in the first place?
 setcolorder(pp, c('cas', 'cname'))
 
 # cleaning ----------------------------------------------------------------
