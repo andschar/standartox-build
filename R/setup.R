@@ -24,6 +24,8 @@ require(raster)
 require(rgbif)
 require(taxize)
 require(taxizesoap)
+require(countrycode)
+
 # installation of taxizesoap: https://github.com/ropensci/taxizesoap
 # install.packages(c("XMLSchema", "SSOAP"), repos = c("http://packages.ropensci.org", "http://cran.rstudio.com"))
 # devtools::install_github("ropensci/taxizesoap")
