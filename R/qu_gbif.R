@@ -52,7 +52,8 @@ if (online) {
 # preparation -------------------------------------------------------------
 gbif_ccode = rbindlist(gbif_ccode_l, idcol = 'taxon')
 setnames(gbif_ccode, old = 'V1', new = 'ccode')
-gbif_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode')
+gbif_ccode = gbif_ccode[ ccode != 'none' ] # delete 'none' entries
+gbif_ccode_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode', fun.aggregate = length, fill = NA)
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
