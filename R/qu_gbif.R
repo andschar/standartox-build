@@ -53,7 +53,24 @@ if (online) {
 gbif_ccode = rbindlist(gbif_ccode_l, idcol = 'taxon')
 setnames(gbif_ccode, old = 'V1', new = 'ccode')
 gbif_ccode = gbif_ccode[ ccode != 'none' ] # delete 'none' entries
-gbif_ccode_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode', fun.aggregate = length, fill = NA)
+
+# add continents ----------------------------------------------------------
+cciso = as.data.table(countrycode::codelist[ ,c('iso2c', 'iso.name.en', 'region', 'continent')])
+missing_ccode = data.table(iso2c = c('AQ', 'ZZ', 'UM', 'IO', 'TF', 'CC', 'XK'),
+                           iso.name.en = c('Antarctica', 'Unknown Country', 'United States Minor Outlying Islands', 'Indian Ocean', 'French Southern Territories', 'COCOS (KEELING) ISLANDS', 'Kosovo'),
+                           region = rep(NA, 7),
+                           continent = c('Antarctica', 'ZZ', 'Pacific', 'Indian Ocean', 'Atlantic', 'Indian Ocean', 'Europe'))
+cciso = rbindlist(list(cciso, missing_ccode))
+
+gbif_ccode[cciso, on = c(ccode = 'iso2c'), continent := i.continent]
+
+
+# preparation 2 -----------------------------------------------------------
+gbif_ccode_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode',
+                      fun.aggregate = function(x) as.numeric(length(x) > 1), fill = NA)
+gbif_conti_dc = dcast(gbif_ccode, taxon ~ continent, value.var = 'ccode',
+                      fun.aggregate = function(x) as.numeric(length(x) > 1), fill = NA)
+gbif_conti_dc[ , c('Atlantic', 'Indian Ocean', 'Pacific', 'ZZ') := NULL ]
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
