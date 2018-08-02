@@ -30,6 +30,11 @@ source('R/qu_gbif.R')
 # Variables to merge ------------------------------------------------------
 
 
+# Test data ---------------------------------------------------------------
+setnames(epa1, paste0('ep_', names(epa1)))
+setnames(epa1, old = c('ep_casnr', 'ep_cas', 'ep_taxon', 'ep_family'),
+         new = c('casnr', 'cas', 'taxon', 'family'))
+
 # Chemical Information ----------------------------------------------------
 # pubchem ----
 # https://pubchemdocs.ncbi.nlm.nih.gov/about
@@ -45,20 +50,25 @@ setnames(aw2, c('cas', paste0('aw_', tolower(names(aw2[ ,2:length(names(aw2))]))
 # Pesticide Action Network ----
 pan2 = pan[ , .SD, .SDcols = c('cas', 'Chemical Class')]
 pan2[ , .N, cas][order(-N)] # no duplicates
-setnames(pan2, c('cas', paste0('pan_', tolower(names(pan2[ ,2:length(names(pan2))])))))
+setnames(pan2, c('cas', paste0('pa_', tolower(names(pan2[ ,2:length(names(pan2))])))))
 # Physprop Data Base ----
 pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'Log P (octanol-water)', 'Water Solubility')]
 pp2[ , .N, cas][order(-N)] # no duplicates
-setnames(pp2, c('cas', paste0('pp2_', tolower(names(pp2[ ,2:length(names(pp2))])))))
+setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))])))))
 # Merge ----
 ch_info = Reduce(function(...) merge(..., by = 'cas', all = TRUE), list(pc2, aw2, pan2, pp2)) # id: cas
 
 # Habitat information -----------------------------------------------------
+setnames(lookup_worms_fam, c('family',
+                             paste0('wo_', tolower(names(lookup_worms_fam)[2:length(lookup_worms_fam)]))))
+setnames(lookup_man_fam, c('family',
+                           paste0('ma_', tolower(names(lookup_man_fam)[2:length(lookup_man_fam)]))))
 ha_info = merge(lookup_worms_fam, lookup_man_fam, by = 'family', all = TRUE) # id: family
 
 # Region information ------------------------------------------------------
 re_info = gbif_conti_dc
-setnames(re_info, 'taxon', 'latin_BIname')
+setnames(re_info, c('taxon',
+                    paste0('gb_', names(re_info)[2:length(re_info)])))
 
 # Duplicate cas and txon check --------------------------------------------
 chck_cas_dupl = rbindlist(list(epa1[is.na(cas)],
@@ -67,8 +77,8 @@ chck_cas_dupl = rbindlist(list(epa1[is.na(cas)],
 chck_fam_dupl = data.table()
 # chck_fam_dupl = rbindlist(list(epa1_)) # TODO Where are the families in the habitat queries taken from?
 
-chck_tax_dupl = rbindlist(list(epa1[is.na(latin_BIname)],
-                               re_info[is.na(latin_BIname)]), fill = TRUE)
+chck_tax_dupl = rbindlist(list(epa1[is.na(taxon)],
+                               re_info[is.na(taxon)]), fill = TRUE)
 
 
 if (sum(sapply(list(chck_cas_dupl, chck_fam_dupl, chck_tax_dupl), nrow)) != 0) {
@@ -82,91 +92,16 @@ tests = copy(epa1)
 
 tests = Reduce(function(...) merge(..., by = 'cas', all = TRUE), list(tests, ch_info))
 
-tests = Reduce(function(...) merge(..., by = 'latin_BIname', all = TRUE), list(tests, re_info))
+tests = Reduce(function(...) merge(..., by = 'taxon', all = TRUE), list(tests, re_info))
 
-habi_res = Reduce(function(...) merge(..., by = 'family', all = TRUE), list(tests))
+habi_res = Reduce(function(...) merge(..., by = 'family', all = TRUE), list(tests, ha_info))
 
+# final table
+setcolorder(tests, c('cas', 'casnr', 'taxon', 'family'))
 
-names(tests)
-
-names(ch_info)
-names(epa1)
-
-names(tests)
-
-
-list(epa1, ch_info)
-
-# Family
-names(ha_info)
-# latin_BIname
-names(re_info)
-
-
-
-Reduce
+# Save --------------------------------------------------------------------
+saveRDS(tests, file.path(cachedir, 'test_results.rds'))
 
 
 
 
-# TODO continue here!!
-
-nrow(epa1)
-epa1[is.na(latin_BIname)]
-
-tests = merge(epa1, re_info, by = 'latin_BIname', all.x = TRUE) # id: latin_BIname
-tests[ , .N, .(latin_BIname, Asia)]$Asia
-
-
-names(epa1)
-re_info = NA # id: taxon (same as latin_BIname)
-re_info = gbif_ccode_dc
-test = gbif_ccode[ , .(ccode = paste0(ccode, collapse = '-')), taxon]
-
-epa1[test, on = c(latin_BIname = 'taxon'), bgif_ccode := i.ccode]
-
-
-
-
-# EPA ECOTOX information --------------------------------------------------
-epa1[ , .N, habitat] # FW: exclude: Soil; TR: exclude: Water
-epa1[ , .N, subhabitat] # not helping leave out
-
-anyNA(epa1$cas)
-epa1[ , .N, obs_duration_conv]
-epa1[ , .N, obs_duration_unit_conv]
-
-toxtest = merge(epa1, ch_info, by = 'cas')
-
-
-
-# playing around ----------------------------------------------------------
-
-aw
-names(aw)
-aw2 = aw[ , .SD, .SDcols = c('cas', 'subactivity', 'subactivity1', 'subactivity2', 'subactivity3')]
-
-aw2$subactivity
-aw2$subactivity1
-
-names(pan)
-pan$`Use Type` # 
-pan$`Chemical name`
-length(which(is.na(pan$`Use Type`))) # 404 NAs
-length(which(is.na(pan$`Chemical Class`))) # 413 NAs
-pan[ , .N, `Ground Water Contaminant`] # not needed
-pan[ , .N, `Dirty Dozen`]
-length(which(is.na(pan$`Water Solubility (Avg, mg/L)`))) # 428 NAs
-
-# pp
-length(which(is.na(pp$`Water Solubility`))) # 247 NAs
-names(pp)
-pp$cname
-# pc
-names(pc)
-pc$XLogP
-pc$InChIKey
-
-
-setwd('/home/andreas/Documents/Projects/etox-base')
-list.files('/R', pattern = 'qu_')
