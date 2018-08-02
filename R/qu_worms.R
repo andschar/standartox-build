@@ -44,7 +44,7 @@ worms_fam = rbindlist(worms_family_l)
 # Take minimum 'cause some fmailies have mulitple entries (e.g Bopyridae)
 lookup_worms_fam = worms_fam[ , lapply(.SD, function(x) min(as.numeric(x))),
                               by = family, .SDcols = c('isFreshwater', 'isBrackish', 'isMarine', 'isTerrestrial')]
-setnames(lookup_worms_fam, c('family', 'isFre_w', 'isBra_w', 'isMar_w', 'isTer_w'))
+setnames(lookup_worms_fam, c('family', 'isFre', 'isBra', 'isMar', 'isTer'))
 
 
 # Species query -----------------------------------------------------------
@@ -82,7 +82,7 @@ worms_sp = rbindlist(worms_species_l)
 # Sometimes there are more results for the input (lain_BIname) that's why 
 lookup_worms_sp = worms_sp[ , lapply(.SD, function(x) min(as.numeric(x))),
                             by = latin_BIname, .SDcols = c('isFreshwater', 'isBrackish', 'isMarine', 'isTerrestrial')]
-setnames(lookup_worms_sp, c('latin_BIname', 'isFre_w', 'isBra_w', 'isMar_w', 'isTer_w'))
+setnames(lookup_worms_sp, c('latin_BIname', 'isFre', 'isBra', 'isMar', 'isTer'))
 
 # Cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
