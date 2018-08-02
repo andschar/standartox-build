@@ -42,11 +42,13 @@ if (online) {
   aw_l = readRDS(file.path(cachedir, 'aw_l.rds'))
 }
 
+
+# preparation -------------------------------------------------------------
 # convert all entries to data.tables
 for (i in 1:length(aw_l)) {
   cas = names(aw_l[i])
   if (!is.list(aw_l[[i]])) {
-    aw_l[[i]] = data.table(aw_l[[i]])
+    aw_l[[i]] = data.table(aw_l[[i]]) #!adapt it in the way it was done in species-sensitivity!
     names(aw_l)[i] = cas
   } else if (is.list(aw_l[[i]])) {
     aw_l[[i]] = bind_frame_dcast(aw_l[[i]])

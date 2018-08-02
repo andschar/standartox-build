@@ -8,7 +8,7 @@ online = online
 # online = TRUE
 
 # data --------------------------------------------------------------------
-todo_taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
+todo_taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))$taxon
 todo_taxa = trimws(gsub('sp.', '', todo_taxa)) # remove sp. as it shows no results
 
 # queries -----------------------------------------------------------------
@@ -202,15 +202,15 @@ tx_list = list()
 for (i in 1:length(result_taxize)) {
   dt = as.data.table(result_taxize[[i]], stringsAsFactors = FALSE)
   dt[ , source := as.character(source) ]
-  latin_BIname = names(result_taxize[i])
+  taxon = names(result_taxize[i])
   
   if (nrow(dt[ rank == 'family' ]) == 0) {
-    tx = data.table(latin_BIname = latin_BIname,
+    tx = data.table(taxon = taxon,
                     family = 'NOT',
                     source_tax = unlist(dt[ nrow(dt), 'source' ]),
                     stringsAsFactors = FALSE)
   } else {
-    tx = data.table(latin_BIname = latin_BIname,
+    tx = data.table(taxon = taxon,
                     family = unlist(dt[ rank == 'family', 'name' ]),
                     source_tax = unlist(dt[ nrow(dt), 'source' ]),
                     stringsAsFactors = FALSE)
@@ -219,13 +219,13 @@ for (i in 1:length(result_taxize)) {
 }
 
 tx_dt = rbindlist(tx_list)
-setnames(tx_dt, c("latin_BIname", "family_tax", "source_tax"))
+setnames(tx_dt, c("taxon", "family_tax", "source_tax"))
 
 
 
 # Checks ------------------------------------------------------------------
 # Not found taxa
-not_found = todo_taxa[!todo_taxa %in% tx_dt$latin_BIname]
+not_found = todo_taxa[!todo_taxa %in% tx_dt$taxon]
 if (length(not_found) > 0) {
   warning('The following taxas have not been found by taxize:\n',
           paste0(not_found, collapse = '\n'))
@@ -244,32 +244,32 @@ if (nrow(family_check) != 0) {
 
 # Errata ------------------------------------------------------------------
 # COL: 'not assigned'
-tx_dt[ latin_BIname == 'Ceriodaphnia silvestrii', `:=`
+tx_dt[ taxon == 'Ceriodaphnia silvestrii', `:=`
        (family_tax = 'Daphniidae',
          source_tax = 'by_hand')]
-tx_dt[ latin_BIname == 'Daphnia spinulata', `:=`
+tx_dt[ taxon == 'Daphnia spinulata', `:=`
        (family_tax = 'Daphniidae',
          source_tax = 'by_hand')]
-tx_dt[ latin_BIname == 'Oculimacula yallundae', `:=`
+tx_dt[ taxon == 'Oculimacula yallundae', `:=`
        (family_tax = 'Dermateaceae',
          source_tax = 'by_hand')]
-tx_dt[ latin_BIname == 'Pseudosida ramosa', `:=`
+tx_dt[ taxon == 'Pseudosida ramosa', `:=`
        (family_tax = 'Sididae',
          source_tax = 'by_hand')] 	
-tx_dt[ latin_BIname == 'Simocephalus elizabethae', `:=`
+tx_dt[ taxon == 'Simocephalus elizabethae', `:=`
        (family_tax = 'Daphniidae',
          source_tax = 'by_hand')]
-tx_dt[ latin_BIname == 'Tipula', `:=`
+tx_dt[ taxon == 'Tipula', `:=`
        (family_tax = 'Tipulidae',
          source_tax = 'by_hand')]
 
 # Wrongly classified by taxize (from PPDB or Malaj)
-tx_dt[ latin_BIname == 'Navicula seminulum', `:=`
+tx_dt[ taxon == 'Navicula seminulum', `:=`
        (family_tax = 'Naviculaceae',
          source_tax = 'by_hand')]
 
 # Not found:
-tx_dt[ latin_BIname == 'Westiellopsis', `:=`
+tx_dt[ taxon == 'Westiellopsis', `:=`
        (family_tax = 'Hapalosiphonaceae',
          source_tax = 'by_hand')]
 
@@ -301,7 +301,7 @@ options(warn = -1)
 rm(dt, family_check, tx_list, tx,
    leftovers, result_itis, result_col, result_nbn, result_tol,
    list = grep('todo', ls(), value = TRUE),
-   latin_BIname, online, time_tot, i)
+   taxon, online, time_tot, i)
 
 options(warn = oldw)
 
