@@ -11,7 +11,7 @@ full_list = FALSE # loads the full result list if online=FALSE (900 MB!)
 epa = readRDS(file.path(cachedir, 'epa.rds'))
 
 # query -------------------------------------------------------------------
-todo_gbif = sort(unique(epa$latin_BIname))
+todo_gbif = sort(unique(epa$taxon))
 # todo_gbif = todo_gbif[1:5] # debug me!
 
 if (online) {

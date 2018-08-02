@@ -26,7 +26,7 @@ if (online) {
     Sys.time() - time
     
     if (nrow(worms_data) > 0) {
-      worms_data = cbind(worms_data, latin_BIname = family)
+      worms_data = cbind(worms_data, family = family)
     } else {
       worms_data = worms_data
     }
@@ -50,7 +50,7 @@ setnames(lookup_worms_fam, c('family', 'isFre', 'isBra', 'isMar', 'isTer'))
 # Species query -----------------------------------------------------------
 if (online) {
   message('online = TRUE')
-  species_todo = sort(unique(todo_worms$latin_BIname))
+  species_todo = sort(unique(todo_worms$taxon))
   species_todo = trimws(gsub('sp.', '', species_todo)) # remove sp. as it shows no results
   # species_todo = species_todo[1:2] # debug me!
   
@@ -64,7 +64,7 @@ if (online) {
     Sys.time() - time
     
     if (nrow(worms_data) > 0) {
-      worms_data = cbind(worms_data, latin_BIname = species)
+      worms_data = cbind(worms_data, taxon = species)
     } else {
       worms_data = worms_data
     }
@@ -81,8 +81,8 @@ if (online) {
 worms_sp = rbindlist(worms_species_l)
 # Sometimes there are more results for the input (lain_BIname) that's why 
 lookup_worms_sp = worms_sp[ , lapply(.SD, function(x) min(as.numeric(x))),
-                            by = latin_BIname, .SDcols = c('isFreshwater', 'isBrackish', 'isMarine', 'isTerrestrial')]
-setnames(lookup_worms_sp, c('latin_BIname', 'isFre', 'isBra', 'isMar', 'isTer'))
+                            by = taxon, .SDcols = c('isFreshwater', 'isBrackish', 'isMarine', 'isTerrestrial')]
+setnames(lookup_worms_sp, c('taxon', 'isFre', 'isBra', 'isMar', 'isTer'))
 
 # Cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
