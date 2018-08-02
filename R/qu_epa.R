@@ -176,7 +176,7 @@ fwrite(epa1, '/tmp/epa1.csv')
 setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'reference_number', 'title', 'author', 'publication_year'))
 
 # change names
-setnames(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'subst_type', 'endpoint', 'effect', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family_epa', 'source', 'ref_num', 'title', 'author', 'publication_year'))
+setnames(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'subst_type', 'endpoint', 'effect', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'ref_num', 'title', 'author', 'publication_year'))
 
 # checks ------------------------------------------------------------------
 cas_check = 
@@ -187,10 +187,9 @@ if (nrow(cas_check) != 0) {
   warning(nrow(cas_check), ' missing CAS or CASNR.')
 }
 
-
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
-taxa = epa1[ , .SD, .SDcols = c('latin_BIname', 'family_epa')]
+taxa = epa1[ , .SD, .SDcols = c('latin_BIname', 'family')]
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 
 
