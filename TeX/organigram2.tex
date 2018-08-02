@@ -1,0 +1,136 @@
+\documentclass{article}
+%\usepackage{graphicx} % includegraphics
+\usepackage{tikz}
+\usetikzlibrary{trees, arrows, shapes.geometric} % TikZ libraries
+\usepackage{lscape}
+
+
+\begin{document}
+	
+\thispagestyle{empty} % removes the 1
+
+% tree styles (defined by template)
+\tikzstyle{every node}=[draw=black,thick,anchor=west]
+\tikzstyle{selected}=[draw=red,fill=red!30]
+\tikzstyle{optional}=[dashed,fill=gray!50]
+% self defined
+\tikzstyle{io}=[rectangle, rounded corners, minimum width = 2cm, minimum height = 1cm, text centered, draw = black, fill = blue!10]
+\tikzstyle{main}=[rectangle, rounded corners, minimum width = 3cm, minimum height = 1cm, text centered, draw = black, fill = red!30]
+\tikzstyle{ids}=[diamond, minimum width = 3cm, minimum height = 1cm, text centered, draw = black, fill = green!30]
+\tikzstyle{res}=[rectangle, rounded corners, minimum width = 2cm, minimum height = 1cm, text centered, draw = black, fill = blue!30]
+
+%arrows
+\tikzstyle{arrow} = [thick, ->, > = stealth]
+
+
+\begin{landscape}
+%\parindent=0pt % extra spaces towards the edges
+%\eject\null
+%\vfill
+%\hspace*{-4cm}
+
+
+\begin{tikzpicture}[
+  grow via three points={one child at (0.5,-1) and
+  two children at (0.5,-1) and (0.5,-1.7)},
+  edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)},
+  remember picture, overlay, % r.p. save picture size in the picture, o. puts picture out of text segm.
+  inner sep = 0pt, outer sep = 0pt
+]
+
+
+%%% nodes %%%
+%% input
+% TODO coordinates (-3,4) is strange. Also rectangle around current page seems wrong
+\node[text=red] (io) [io, align = left] at (-3,4) {Table of Chemicals \\ CAS, Compound name}; % coordinates: (current page.east)
+
+\draw[thick] (current page.south west) rectangle (current page.north east); % debuging
+
+%% chemicals
+% id nodes
+\node (cas) [ids, below of=io, yshift = -4cm] {CAS};
+% main nodes
+\node (epa) [main, right of=cas, yshift=1cm, xshift=3cm] {EPA ectox tests}
+	child { node { qu\_epa.R} };
+\node (chemscr) [main, right of=cas, yshift=-1cm, xshift=3cm] {Chemical scripts ch}
+	child { node { Alan Wood Pesticide Compendium - \textbf{qu\_aw.R } }}
+	child { node { Pesticide Action Network - \textbf{ch\_pp.R} }}
+	child { node { PhysProp - \textbf{ch\_pp.R} }}
+	child { node { PubChem - \textbf{qu\_pubchem.R} }
+		child { node { Variable - InchiKey }} };
+% result nodes
+\node (toxres) [res, right of=cas, yshift=0cm, xshift=7cm] {ETOX Test Results}; % result
+%\includegraphics{/home/andreas/Documents/Projects/etox-base/data/pubchemlogo2017.png};
+
+%\animategraphics{https://cfpub.epa.gov/ecotox/epafiles/images/logo_epaseal.gif}
+
+%% organisms
+% id nodes
+\node (taxon) [ids, below of=cas, yshift=-9cm, align = center] {Taxon}; % \\ {(Genus or Species)}}; % escape brackets usin curly brackets
+% main nodes
+\node (taxonquery) [main, right of=taxon, xshift=3cm, yshift=0cm] {Taxonomic data};
+\node (habitat) [main, right of=taxon, xshift=3cm, yshift=1.5cm] {Habitat data}
+	child { node { WORMS data base - \textbf{tx\_worms.R} }
+		child { node { Family }}
+		child { node { Species }} }
+	child [dashed] { node { Freshwaterecology.info data }} ;
+\node (region) [main, right of = taxon, xshift=3cm, yshift=-1.5cm] {Regional data};
+% result nodes
+\node (taxres) [res, right of=taxon, xshift=7cm] {Taxon and Habitat Result}; % result
+
+%% final result
+\node (testres) [res] at (15,-5) {Final result};
+
+
+
+%%% arrows %%%
+\draw [arrow] (io) -- (cas);
+\draw [->] (cas) -- node[anchor = east] {receive} (chemscr);
+\draw [->, dashed] (cas) -- node[anchor = south] {receive} (epa);
+\draw [->] (epa) -- (toxres);
+\draw [->] (chemscr) -- (toxres);
+\draw [->] (toxres) .. controls (5,-6) and (1,-4) .. (taxon);
+\draw [->] (taxon) -- (habitat);
+\draw [->] (taxon) -- (region);
+\draw [->] (taxon) -- (taxonquery);
+\draw [->] (habitat) -- (taxres);
+\draw [->] (taxonquery) -- (taxres);
+\draw [->] (region) -- (taxres);
+\draw [->] (toxres) -- (testres);
+\draw [->] (taxres) -- (testres);
+\draw [->, dashed] (testres) -- (20,-5);
+
+\end{tikzpicture}
+\hfill
+\vfill
+\end{landscape}
+
+
+\clearpage
+
+
+\begin{landscape}
+\begin{tikzpicture}
+
+%% entities
+\node [res] (clean) at (-5,5) {Cleaning};
+\node (filter) [res, right of = clean, xshift = 3cm] {Filter};
+\node (agg1) [res, right of = filter, xshift = 3cm] {Aggregation 1};
+\node (agg2) [res, right of = agg1, xshift = 3cm] {Aggregation 2};
+
+%% arrows
+\draw [->, dashed] (-5,8) -- (clean);
+
+%% boxes
+\draw [dashed] (1,6) rectangle (3,-11);
+\draw [dashed] (4,5) rectangle (7,-11);
+\draw [dashed] (9,5) rectangle (11,-11);
+\draw [dashed] (14,5) rectangle (15,-11);
+
+
+\end{tikzpicture}
+\end{landscape}
+
+
+
+\end{document}
