@@ -32,6 +32,7 @@ cachedir = '/home/andreas/Documents/Projects/species-sensitivity/cache'
 fundir = '/home/andreas/Documents/Projects/species-sensitivity/functions'
 plotdir = '/home/andreas/Documents/Projects/species-sensitivity/plots'
 srcdir = '/home/andreas/Documents/Projects/species-sensitivity/src'
+datadir = '/home/andreas/Documents/Projects/etox-base/data'
 
 # source
 source('/home/andreas/Documents/UBA/Project/R/src/DB_access.R')
@@ -45,18 +46,28 @@ source(file.path(fundir, 'plot_outlier.R'))
 
 # Load substances
 ```{r subst1}
-## load data
-psm = readRDS(file.path(cachedir, 'psm1.rds')) # created in EC50sensitivity_data.Rmd
-psm = psm[ !is.na(casnr) ] # only metabolite and sumed pesticides
-psm = psm[ !subst_name %in% c('Desethylsimazin') ] # casnr: 1007289; duplicated with Desethylsimazin
+## (1) bfg_monitoring pesticides
+psm_bfg = readRDS(file.path(cachedir, 'psm1.rds')) # created in EC50sensitivity_data.Rmd
+psm_bfg = psm_bfg[ !is.na(casnr) ] # only metabolite and sumed pesticides
+psm_bfg = psm_bfg[ !subst_name %in% c('Desethylsimazin') ] # casnr: 1007289; duplicated with Desethylsimazin
+psm_bfg[205, cas := '72490-01-8'] # bug (instead of 72490-0-1--8)
 
-## for Nadin and verena
+## (2) French pesticides
+# obtained from Mira
+psm_mi = fread(file.path(datadir, 'missingVal.FR.csv'))
+psm_mi[ , cas := casconv(casnr)] # convert to CAS
+psm_mi = psm_mi[!cas %in% psm_bfg$cas]
+
+## (3) for Nadin and verena
 # psm = fread('/home/andreas/Documents/data/romania/det_compounds_with_CAS.csv')
 # psm[ , casnr := gsub('-', '', cas) ]
 # psm[ , `:=`
 #      (variable_id = NA,
 #       subst_name = NA,
 #       psm_type = NA)]
+
+# combine data.frame
+psm = rbindlist(list(psm_bfg, psm_mi), fill = TRUE)
 
 ## CHECKs
 cas_check = 
