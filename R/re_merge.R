@@ -26,6 +26,10 @@ lookup_man_fam = fread(file.path(cachedir, 'family_lookup_list.csv'))
 # Region scripts
 source('R/qu_gbif.R')
 
+
+# Variables to merge ------------------------------------------------------
+
+
 # Chemical Information ----------------------------------------------------
 # pubchem ----
 # https://pubchemdocs.ncbi.nlm.nih.gov/about
@@ -46,7 +50,6 @@ setnames(pan2, c('cas', paste0('pan_', tolower(names(pan2[ ,2:length(names(pan2)
 pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'Log P (octanol-water)', 'Water Solubility')]
 pp2[ , .N, cas][order(-N)] # no duplicates
 setnames(pp2, c('cas', paste0('pp2_', tolower(names(pp2[ ,2:length(names(pp2))])))))
-
 # Merge ----
 ch_info = Reduce(function(...) merge(..., by = 'cas', all = TRUE), list(pc2, aw2, pan2, pp2)) # id: cas
 
@@ -57,7 +60,54 @@ ha_info = merge(lookup_worms_fam, lookup_man_fam, by = 'family', all = TRUE) # i
 re_info = gbif_conti_dc
 setnames(re_info, 'taxon', 'latin_BIname')
 
+# Duplicate cas and txon check --------------------------------------------
+chck_cas_dupl = rbindlist(list(epa1[is.na(cas)],
+                               ch_info[is.na(cas)]), fill = TRUE)
+
+chck_fam_dupl = data.table()
+# chck_fam_dupl = rbindlist(list(epa1_)) # TODO Where are the families in the habitat queries taken from?
+
+chck_tax_dupl = rbindlist(list(epa1[is.na(latin_BIname)],
+                               re_info[is.na(latin_BIname)]), fill = TRUE)
+
+
+if (sum(sapply(list(chck_cas_dupl, chck_fam_dupl, chck_tax_dupl), nrow)) != 0) {
+  stop('NAs in the key columns!')
+}
+
+
 # Merge with test data ----------------------------------------------------
+# CAS
+tests = copy(epa1)
+
+tests = Reduce(function(...) merge(..., by = 'cas', all = TRUE), list(tests, ch_info))
+
+tests = Reduce(function(...) merge(..., by = 'latin_BIname', all = TRUE), list(tests, re_info))
+
+habi_res = Reduce(function(...) merge(..., by = 'family', all = TRUE), list(tests))
+
+
+names(tests)
+
+names(ch_info)
+names(epa1)
+
+names(tests)
+
+
+list(epa1, ch_info)
+
+# Family
+names(ha_info)
+# latin_BIname
+names(re_info)
+
+
+
+Reduce
+
+
+
 
 # TODO continue here!!
 
