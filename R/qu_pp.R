@@ -43,6 +43,9 @@ pp[ , V1 := NULL ]
 pp = pp[!is.na(cas)] # TODO why are NAs created in the first place?
 setcolorder(pp, c('cas', 'cname'))
 
+# names
+setnames(pp, c('Water Solubility', 'Log P (octanol-water)'), c('water_solubility', 'p_log'))
+
 # cleaning ----------------------------------------------------------------
 rm(psm)
 

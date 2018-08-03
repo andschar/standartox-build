@@ -48,11 +48,11 @@ aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', 'activity', 'subactivity', paste0('
 aw2[ , .N, cas][order(-N)] # no duplicates
 setnames(aw2, c('cas', paste0('aw_', tolower(names(aw2[ ,2:length(names(aw2))])))))
 # Pesticide Action Network ----
-pan2 = pan[ , .SD, .SDcols = c('cas', 'Chemical Class')]
+pan2 = pan[ , .SD, .SDcols = c('cas', 'chemical_class')]
 pan2[ , .N, cas][order(-N)] # no duplicates
 setnames(pan2, c('cas', paste0('pa_', tolower(names(pan2[ ,2:length(names(pan2))])))))
 # Physprop Data Base ----
-pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'Log P (octanol-water)', 'Water Solubility')]
+pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
 pp2[ , .N, cas][order(-N)] # no duplicates
 setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))])))))
 # Merge ----
