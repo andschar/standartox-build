@@ -13,7 +13,7 @@ todo_worms = readRDS(file.path(cachedir, 'epa_taxa.rds'))
 # Family query ------------------------------------------------------------
 if (online) {
   message('online = TRUE')
-  family_todo = unique(todo_worms$family_epa)
+  family_todo = unique(todo_worms$family)
   # family_todo = family_todo[1:2]
   
   worms_family_l = list()
