@@ -47,5 +47,22 @@ rm(cir, psm)
 #rm(list = ls()[!ls() %in% c('pc', 'pc_l')])
 
 
+# most likely cas ---------------------------------------------------------
+# It happens that multiple substances have the same cas. E.g. Propiconazole 
+
+# pc[ , .N, InChIKey][order(-N)]
+# pc[ , .N, InChI][order(-N)]
+# pc[ , .N, CanonicalSMILES][order(-N)]
+# pc[ , .N, ][order(-N)]
+# 
+# sort(names(pc))
+
+
+
+
+
+
+
+
 
 
