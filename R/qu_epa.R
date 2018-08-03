@@ -5,7 +5,7 @@ source('R/setup.R')
 # switches
 online = online
 online = FALSE
-local = TRUE
+local = FALSE
 
 # data --------------------------------------------------------------------
 psm = readRDS(file.path(cachedir, 'psm.rds')) ## DEPR?
@@ -81,6 +81,8 @@ if (online) {
                                 --species.subphylum_div,
                                 --species.phylum_division,
                                 --species.kingdom,
+                                tests.exposure_type,
+                                tests.media_type,
                                 tests.organism_habitat AS habitat, -- ('soil')
                                 tests.subhabitat, -- ('P', 'R', 'L', 'E', 'D', 'F', 'G', 'M') -- Palustrine, Riverine, Lacustrine, Estuarine
                             -- references
@@ -148,6 +150,10 @@ epa1[ , latin_short :=
                gsub('([a-z]+)\\s([a-z]+)', '\\2', latin_BIname, ignore.case = TRUE)) ]
 # Endpoint
 epa1[ , endpoint := gsub('/|\\*|(\\*/)', '', endpoint) ]
+# Exposure typpe
+epa1[ , exposure_type := gsub('/|\\*|(\\*/)', '', exposure_type) ]
+# Media type
+epa1[ , media_type := gsub('/|\\*|(\\*/)', '', media_type) ]
 # CAS
 epa1[ , cas := casconv(casnr) ]
 # Source column
@@ -173,10 +179,10 @@ names(epa1)
 fwrite(epa1, '/tmp/epa1.csv')
 
 # final columns -----------------------------------------------------------
-setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'reference_number', 'title', 'author', 'publication_year'))
+setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'reference_number', 'title', 'author', 'publication_year'))
 
 # change names
-setnames(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'subst_type', 'endpoint', 'effect', 'habitat', 'subhabitat',  'taxon', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'ref_num', 'title', 'author', 'publication_year'))
+setnames(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'subst_type', 'endpoint', 'effect',  'exposure_type', 'media_type', 'habitat', 'subhabitat',  'taxon', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'ref_num', 'title', 'author', 'publication_year'))
 
 # checks ------------------------------------------------------------------
 cas_check = 
