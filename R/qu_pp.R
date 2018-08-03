@@ -35,6 +35,8 @@ pp_resolve = function(l) {
   return(dt)
 }
 
+
+# preparation -------------------------------------------------------------
 pp_l[!is.na(pp_l)] = lapply(pp_l[!is.na(pp_l)], pp_resolve)
 pp_l[is.na(pp_l)] = lapply(pp_l[is.na(pp_l)], data.table)
 
@@ -44,7 +46,10 @@ pp = pp[!is.na(cas)] # TODO why are NAs created in the first place?
 setcolorder(pp, c('cas', 'cname'))
 
 # names
-setnames(pp, c('Water Solubility', 'Log P (octanol-water)'), c('water_solubility', 'p_log'))
+setnames(pp, c('Water Solubility', 'Log P (octanol-water)'), c('solubility_water', 'p_log'))
+
+# conversions
+pp[ , solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 
 # cleaning ----------------------------------------------------------------
 rm(psm)
