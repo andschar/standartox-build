@@ -20,7 +20,7 @@ tests[ , chck_solub := ifelse(ep_value < pp_solubility_water, TRUE, FALSE)] # TO
 # cleaning ----------------------------------------------------------------
 tests_cl = copy(tests)
 tests_cl = tests_cl[ !is.na(ep_value) ] # NAs due to merge
-tests_cl = tests_cl[ !ep_subst_type %in% c('F')] # F-Formulation, A-Active Ingredient, T-? , U-?
+tests_cl = tests_cl[ !ep_subst_type %in% c('F')] # F-Formulation, A-Active Ingredient, T-Total (Heavy metals, & single elements; 56 entries) , U-Un-Ionized (1 entry)
 tests_cl = tests_cl[ chck_solub != FALSE ]
 
 

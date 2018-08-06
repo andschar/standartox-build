@@ -4,7 +4,7 @@
 source('R/setup.R')
 # switches
 online = online
-# online = TRUE
+online = FALSE
 
 # source scripts ----------------------------------------------------------
 # Additional chemical data
@@ -17,7 +17,8 @@ source('R/qu_pp.R')
 source('R/qu_epa.R')
 
 # Taxon scripts
-source('R/qu_classification.R')
+# source('R/qu_classification.R') 
+# TODO 55 taxa to query! also check whether there is habitat data for all the taxa in self defined!
 # Habitat scripts
 source('R/qu_worms.R')
 # source('R/qu_habitat_self_defined.R') # self defined script
@@ -94,7 +95,7 @@ tests = Reduce(function(...) merge(..., by = 'cas', all = TRUE), list(tests, ch_
 
 tests = Reduce(function(...) merge(..., by = 'taxon', all = TRUE), list(tests, re_info))
 
-habi_res = Reduce(function(...) merge(..., by = 'family', all = TRUE), list(tests, ha_info))
+tests = Reduce(function(...) merge(..., by = 'family', all = TRUE), list(tests, ha_info))
 
 # final table
 setcolorder(tests, c('cas', 'casnr', 'taxon', 'family'))
