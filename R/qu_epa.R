@@ -184,17 +184,8 @@ setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'conc1_me
 # change names
 setnames(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'subst_type', 'endpoint', 'effect',  'exposure_type', 'media_type', 'habitat', 'subhabitat',  'taxon', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'ref_num', 'title', 'author', 'publication_year'))
 
-# checks ------------------------------------------------------------------
-cas_check = 
-  epa1[ is.na(casnr) | casnr == '' |
-        is.na(cas) | cas == '' ]
-
-if (nrow(cas_check) != 0) {
-  warning(nrow(cas_check), ' missing CAS or CASNR.')
-}
-
 # errata ------------------------------------------------------------------
-# not accepted:
+# not accepted (anymore):
 epa1[family == 'Aphidiidae', family := 'Braconidae']
 epa1[family == 'Callitrichaceae', family := 'Plantaginaceae']
 epa1[family == 'Cypridopsidae', family := 'Cypridopsinae']
@@ -202,7 +193,40 @@ epa1[family == 'Filiniidae', family := 'Trochosphaeridae']
 epa1[family == 'Najadaceae', family := 'Hydrocharitaceae']
 epa1[family == 'Platymonadaceae', family := 'Volvocaceae']
 epa1[family == 'Pseudocalanidae', family := 'Clausocalanidae']
+epa1[family == 'Heligmosomatidae', family := 'Trychostrongylidae']
+epa1[family == 'Lymantriidae', family := 'Erebidae']
 
+# spelling:
+epa1[family == 'Diplostomatidae', family := 'Diplostomidae']
+epa1[family == 'Haliotididae', family := 'Haliotidae']
+
+# wrong classification:
+epa1[family == 'Tetracneminae', family := 'Encyrtidae'] # is sub-family
+
+# no family entry:
+epa1[taxon == 'Storeatula major', family := 'Pyrenomonadaceae' ]
+epa1[taxon == 'Pochonia chlamydosporia', family := 'Clavicipitaceae' ]
+epa1[taxon == 'Triaenophorus nodulosus', family := 'Triaenophoridae' ]
+epa1[taxon == 'Bryconamericus iheringii', family := 'Characidae' ]
+# delete entries with no information on actual Genus or Species
+epa1 = epa1[!taxon %in% c('Hyperamoeba sp.', 'Algae', 'Aquatic Community', 'Plankton') ] # Hyperamoeba is a paraphyletic taxon
+
+# checks ------------------------------------------------------------------
+# cas
+cas_chck = 
+  epa1[ is.na(casnr) | casnr == '' |
+          is.na(cas) | cas == '' ]
+if (nrow(cas_chck) != 0) {
+  warning(nrow(cas_chck), ' missing CAS or CASNR.')
+}
+
+# family
+family_chck =
+  epa1[ is.na(family) ]
+if (nrow(family_chck)) {
+  warning('For the following taxa family entries are missing: ',
+          paste0(unique(family_chck$taxon), collapse = '\n'))
+}
 
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
@@ -211,7 +235,7 @@ saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 
 
 # cleaning ----------------------------------------------------------------
-rm(cas_check, local, taxa, psm)
+rm(cas_chck, family_chck, local, taxa, psm)
 
 
 # help --------------------------------------------------------------------
