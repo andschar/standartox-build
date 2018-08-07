@@ -15,9 +15,9 @@ todo_habitat = readRDS(file.path(cachedir, 'epa_taxa.rds'))
 
 # Plants ------------------------------------------------------------------
 # Family lookup list
-lookup = data.table(family = 'Poaceae', german_name = 'Suessgraeser',
+lookup_man_fam = data.table(family = 'Poaceae', german_name = 'Suessgraeser',
                     supgroup = 'Plants', group = 'Spermatophyta', group_rank = 'subdivision', isFre = '0', isMar = '0', isTer = '1') # some Macrophytes!
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         #### Spermatophyta (subdivision) ----
                         as.list(c('Alismataceae', NA, 'Plants', 'Froschlöffelgewaechse', 'class', '1', '0', '1')), # macrophytes
                         as.list(c('Restionaceae', NA, 'Plants', 'Magnoliopsida', 'class', '0', '0', '1')),
@@ -155,7 +155,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Bryophyta (division) - Mosses -------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Mielichhoferiaceae', NA, 'Bryophyta', 'Bryopsida', 'class', '0', '0', '1')),
                         as.list(c('Dicranaceae', NA, 'Bryophyta', 'Bryopsida', 'class', '0', '0', '1')),
                         as.list(c('Dumortieraceae', NA, 'Marchantiophyta', 'Marchantiopsida', 'class', '0', '0', '1'))
@@ -164,7 +164,7 @@ lookup = rbindlist(list(lookup,
 
 # Algae (monophyletic group) ----------------------------------------------
 # [Heterokonts](https://en.wikipedia.org/wiki/Heterokont) are distributed between Algae and Fungi chunks, although they aren't fungi but pseudofungi (usually water moulds). Generally Heterkonts seperate between Colored groups (alga-like):_Ochrophyta (phylum) and Colorless groups: Pseudofungi (unranked), Bigyra (unranked). 
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
 #### Bacteria (domain): Eubacteria (kingdom): Cyanobacteria (phylum)
 as.list(c('Nostocaceae', NA, 'Algae', 'Cyanobacteria', 'phylum', '1', '0', '0')),
 as.list(c('Pseudanabaenaceae', NA, 'Algae', 'Cyanobacteria', 'phylum', '0', '1', '0')),
@@ -184,6 +184,7 @@ as.list(c('Scytonemataceae', NA, 'Algae', 'Cyanobacteria', 'phylum', '1', '1', '
 as.list(c('Phormidiaceae', NA, 'Algae', 'Cyanobacteria', 'phylum', '0', '1', '0')),
 
 #### Eukaryota (domain): Chlorophyta (division) ----
+as.list(c('Polyblepharidaceae', NA, 'Algae', 'Chlorophyta', 'phylum', '0', '1', '0')),
 as.list(c('Pithophoraceae', NA, 'Algae', 'Chlorophyta', 'phylum', '0', '1', '0')),
 as.list(c('Haematococcaceae', NA, 'Algae', 'Chlorophyta', 'phylum', '1', '1', '0')),
 as.list(c('Ankistrodesmaceae', NA, 'Algae', 'Chlorophyta', 'phylum', '1', '1', '0')),
@@ -312,7 +313,7 @@ as.list(c('Cercomonadidae', NA, 'Algae', 'Cercozoa', 'phylum', '1', '1', '1'))
 
 
 # Euglenozoa (phylum) -----------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Euglenaceae', NA, 'Algae', 'Euglenozoa', 'phylum', '1', '1', '0')),
                         as.list(c('Paranemataceae', NA, 'Algae', 'Euglenozoa', 'phylum', '1', '1', '0')),
                         as.list(c('Bodinidae', NA, 'Algae', 'Euglenozoa', 'phylum', '1', '1', '0'))
@@ -321,7 +322,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Ciliophora (phylum) - Wimpertierchen ------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         #### Eukaryota (domain): SAR: Alveolata: Ciliophora (phylum) ----
                         as.list(c('Tetrahymenidae', NA, 'Ciliophora', 'Ciliophora', 'phylum', '1', '0', '0')), # some are parasitic like Ichthyophthirius multifillis (SAR) # feeds on bacteria
                         as.list(c('Parameciidae', NA, 'Ciliophora', 'Ciliophora', 'phylum', '1', '1', '1')),
@@ -333,7 +334,7 @@ lookup = rbindlist(list(lookup,
 ))
 
 # Rotifera (phylum) - Raedertierchen --------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Proalidae', NA, 'Rotifera', 'Rotifera', 'phylum', '0', '1', '0')),
                         as.list(c('Brachionidae', NA, 'Rotifera', 'Rotifera', 'phylum', '1', '1', '0')),
                         as.list(c('Synchaetidae', NA, 'Rotifera', 'Rotifera', 'phylum', '0', '1', '0')),
@@ -349,7 +350,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Fungi -------------------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         #### Heterokonts (infrakingdom): Colorless groups: Pseudofungi: Oomycetes: ----
                         #! not actually fungi but due to the lack of pigments also not photosysnthetically active
                         # https://en.wikipedia.org/wiki/Heterokont
@@ -359,6 +360,7 @@ lookup = rbindlist(list(lookup,
                         as.list(c('Pythiaceae', NA, 'Fungi', 'Oomycota', 'phylum', '0', '0', '1')),
                         #### Real Fungi: ----                        
                         ## Ascomycota (Schlauchpilze)
+                        as.list(c('Davidiellaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
                         as.list(c('Amphisphaeriaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
                         as.list(c('Massarinaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
                         as.list(c('Cladosporiaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
@@ -420,20 +422,20 @@ lookup = rbindlist(list(lookup,
 ))
 
 # Bryozoa (phylum) --------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Electridae', NA, 'Bryozoa', 'Bryozoa', 'phylum', '0', '1', '0'))
 ))
 
 
 # Amoebozoa (phylum) ------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Tubiferaceae', 'Blutmilchpilz', 'Amoebozoa', 'Amoebozoa', 'phylum', '0', '0', '1'))
 ))
 
 
 
 # Nematoda (phylum) - Fadenwuermer ----------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Hoplolaimidae', NA, 'Nematoda', 'Secernentea', 'class', '0', '0', '1')),
                         as.list(c('Mermithidae', NA, 'Nematoda', 'Adenophorea', 'class', '0', '0', '1')),
                         as.list(c('Rhabditidae', NA, 'Nematoda', 'Adenophorea', 'class', '0', '1', '0')),
@@ -446,14 +448,14 @@ lookup = rbindlist(list(lookup,
 
 
 # Nemertea (phylum) - Schnurwuermer ---------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Tubulanidae', NA, 'Nemertea', 'Anopla', 'class', '0', '1', '0'))
 ))
 
 
 
 # Annelida (phylum) - Ringelwuermer ---------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Arenicolidae', NA, 'Annelida', 'Polychaeta', 'class', '0', '1', '0')),
                         as.list(c('Capitellidae', NA, 'Annelida', 'Polychaeta', 'class', '0', '1', '0')),
                         as.list(c('Amphinomidae', NA, 'Annelida', 'Polychaeta', 'class', '0', '1', '0')),
@@ -475,7 +477,7 @@ lookup = rbindlist(list(lookup,
 ))
 
 # Fish --------------------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         ## Synbranchiformes 
                         as.list(c('Mastacembelidae', "Stachelaale", 'Fish', 'Synbranchiformes', 'order', '0', '1', '0')), # brakish
                         as.list(c('Synbranchidae', "Kiemenschlitzaale", 'Fish', 'Synbranchiformes', 'order', '0', '1', '0')), # brakish!!!
@@ -502,7 +504,8 @@ lookup = rbindlist(list(lookup,
                         ## Centrachiformes
                         as.list(c('Centrarchidae', 'Sonnenbarsche', 'Fish', 'Centrarchiformes', 'order', '1', '0', '0')), # Sonnenbarsche
                         as.list(c('Kyphosidae', 'Steuerbarsche', 'Fish', 'Centrarchiformes', 'order', '0', '1', '0')),
-                        as.list(c('Terapontidae', 'Grunzbarsche', 'Fish', 'Centrarchiformes', 'order', '1', '0', '0')),
+                        as.list(c('Terapontidae', 'Grunzbarsche', 'Fish', 'Centrarchiformes', 'order', '1', '1', '0')),
+                        as.list(c('Teraponidae', 'Grunzbarsche', 'Fish', 'Centrarchiformes', 'order', '1', '1', '0')), # same as Terapontidae
                         ## Cyprinodontiformes
                         as.list(c('Cyprinodontidae', 'Zahnkaerpflinge', 'Fish', 'Cyprinodontiformes', 'order', '1', '0', '0')),
                         as.list(c('Poeciliidae', 'Zahnkaerpflinge', 'Fish', 'Cyprinodontiformes', 'order', '1', '0', '0')),
@@ -522,6 +525,7 @@ lookup = rbindlist(list(lookup,
                         as.list(c('Loricariidae', 'Harnischwelse', 'Fish', 'Cyprinodontiformes', 'order', '1', '0', '0')),
                         as.list(c('Pangasiidae', "Haiwelse", 'Fish', 'Siluriformes', 'order', '1', '1', '0')),
                         ## Perciformes
+                        as.list(c('Nototheniidae', "Antaktisdorsche", 'Fish', 'Perciformes', 'order', '0', '1', '0')),
                         as.list(c('Nototheniidae', "Antaktisdorsche", 'Fish', 'Perciformes', 'order', '0', '1', '0')),
                         as.list(c('Haemulidae', 'Süßlippen und Grunzer', 'Fish', 'Perciformes', 'order', '1', '1', '0')),
                         as.list(c('Cichlidae', 'Buntbarsche', 'Fish', 'Perciformes', 'order', '1', '0', '0')), # Mittel u. Suedamerika, Afrika
@@ -560,6 +564,7 @@ lookup = rbindlist(list(lookup,
                         as.list(c('Mormyridae', 'Nilhechte', 'Fish', 'Osteoglossiformes', 'order', '1', '0', '0')),
                         
                         ## Pleuronectiformes
+                        as.list(c('Bothidae', 'Butte', 'Fish', 'Pleuronectiformes', 'order', '0', '1', '0')),
                         as.list(c('Pleuronectidae', 'Schollen', 'Fish', 'Pleuronectiformes', 'order', '1', '1', '0')),
                         as.list(c('Soleidae', 'Seezungen', 'Fish', 'Pleuronectiformes', 'order', '1', '1', '0')),
                         as.list(c('Scophthalmidae', 'Steinbutte', 'Fish', 'Pleuronectiformes', 'order', '0', '1', '0')),
@@ -583,6 +588,7 @@ lookup = rbindlist(list(lookup,
                         as.list(c('Petromyzontidae', NA, 'Fish', 'Petromyzontiformes', 'order', '1', '1', '0')),
                         ## Clupeiformes
                         as.list(c('Clupeidae', NA, 'Fish', 'Clupeiformes', 'order', '1', '1', '0')),
+                        as.list(c('Engraulidae', 'Sardellen', 'Fish', 'Clupeiformes', 'order', '1', '1', '0')), # mostly in marine envrionments
                         ## Lepisosteiformes
                         as.list(c('Lepisosteidae', NA, 'Fish', 'Clupeiformes', 'order', '1', '1', '0'))
                         
@@ -590,7 +596,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Amphibia ----------------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Pelobatidae', NA, 'Amphibia', 'Urodela', 'order', '0', '0', '1')),
                         as.list(c('Plethodontidae', 'Lungenlose Salamander', 'Amphibia', 'Urodela', 'order', '0', '0', '1')),
                         as.list(c('Alytidae', NA, 'Amphibia', 'Anura', 'order', '1', '0', '1')),
@@ -616,7 +622,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Reptilia ----------------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Eublepharidae', NA, 'Reptilia', 'Squamata', 'order', '1', '0', '1')),
                         as.list(c('Scincidae', NA, 'Reptilia', 'Squamata', 'order', '0', '0', '1'))
                         
@@ -624,7 +630,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Crustacea (subphylum) ---------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Triopsidae', 'Rückenschaler', 'Crustacea', 'Notostraca', 'order', '1', '0', '0')),
                         as.list(c('Thamnocephalidae', NA, 'Crustacea', 'Anostraca', 'order', '1', '0', '0')),
                         as.list(c('Streptocephalidae', NA, 'Crustacea', 'Anostraca', 'order', '1', '0', '0')),
@@ -700,6 +706,7 @@ lookup = rbindlist(list(lookup,
                         
                         
                         ## Ostracoda (class)
+                        as.list(c('Cypridopsinae', NA, 'Crustacea', 'Ostracoda', 'class', '1', '0', '0')),
                         as.list(c('Cyprididae', NA, 'Crustacea', 'Ostracoda', 'class', '1', '0', '0')), # the most diverse group of freshwater ostracods
                         as.list(c('Ilyocyprididae', NA, 'Crustacea', 'Ostracoda', 'class', '1', '0', '0')),
                         as.list(c('Notodromadidae', NA, 'Crustacea', 'Ostracoda', 'class', '0', '1', '0')),
@@ -728,13 +735,13 @@ lookup = rbindlist(list(lookup,
 
 
 # Diplopoda (class) -------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Julidae', NA, 'Diplopoda', 'Julida', 'order', '0', '1', '1'))
 ))
 
 
 # Insecta (class) ---------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         ## Dermaptera (order)
                         as.list(c('Forficulidae', NA, 'Insecta', 'Dermaptera', 'order', '0', '0', '1')),
                         ## Megaloptera (order)
@@ -939,7 +946,7 @@ lookup = rbindlist(list(lookup,
 
 # Entognatha --------------------------------------------------------------
 # class: Entognatha, sunclass: Collembola
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Isotomidae', NA, 'Entognatha', 'Collembola', 'subclass', '0', '0', '1')),
                         as.list(c('Onychiuridae', NA, 'Entognatha', 'Collembola', 'subclass', '0', '0', '1')),
                         as.list(c('Sminthuridae', NA, 'Entognatha', 'Collembola', 'subclass', '0', '0', '1')),
@@ -954,7 +961,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Arachnida (class) -------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         ## Acari (Milben) (subclass)
                         as.list(c('Suctobelbidae', NA, 'Arachnida', 'Acari', 'subclass', '0', '0', '1')),
                         as.list(c('Polyaspididae', NA, 'Arachnida', 'Acari', 'subclass', '0', '0', '1')),
@@ -990,7 +997,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Mollusca ----------------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         ## Bivalvia (Muscheln)
                         as.list(c('Ostreidae', 'Austern', 'Mollusca', 'bivalvia', 'class', '0', '1', '0')),
                         as.list(c('Veneridae', 'Venusmuscheln', 'Mollusca', 'bivalvia', 'class', '0', '1', '0')),
@@ -1009,6 +1016,7 @@ lookup = rbindlist(list(lookup,
                         ## Polyplacophora (class) - 
                         as.list(c('Leptochitonidae', NA, 'Mollusca', 'Polyplacophora', 'class', '0', '1', '0')),
                         ## Gastropoda (Schnecken)
+                        as.list(c('Helicidae', NA, 'Mollusca', 'gastropoda', 'class', '0', '0', '1')),
                         as.list(c('Naticidae', NA, 'Mollusca', 'gastropoda', 'class', '0', '1', '0')),
                         as.list(c('Bulinidae', NA, 'Mollusca', 'gastropoda', 'class', '1', '0', '0')),
                         as.list(c('Pleuroceridae', NA, 'Mollusca', 'gastropoda', 'class', '1', '0', '0')),
@@ -1045,7 +1053,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Aves (class) - Voegel ---------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Anatidae', 'Entenvoegel', 'Aves', 'Anseriformes', 'order', '1', '0', '1')),
                         as.list(c('Odontophoridae', 'Zahnwachteln', 'Aves', 'Galliformes', 'order', '1', '0', '1')),
                         as.list(c('Phasianidae', 'Fasanenartige', 'Aves', 'Galliformes', 'order', '1', '0', '1')),
@@ -1062,7 +1070,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Tunicata - Manteltiere (subphylum) --------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Cionidae', NA, 'Tunicata', 'Tunicata', 'subphylum', '0', '1', '0')),
                         as.list(c('Doliolidae', NA, 'Tunicata', 'Tunicata', 'subphylum', '0', '1', '0'))
 ))
@@ -1070,7 +1078,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Echinodermata - Stachehaeuter (phylum) ----------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         ## Crinoidea (class) - Seelilien / Haarsterne
                         as.list(c('Antedonidae', NA, 'Echinodermata', 'Crinoidea', 'class', '0', '1', '0')),
                         ## Ophiuroidea (class) - Schlangensterne
@@ -1086,7 +1094,10 @@ lookup = rbindlist(list(lookup,
 
 
 # Platyhelminthes (phylum) - Plattwuermer ---------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
+                        as.list(c('Paramphistomidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '1', '0')),
+                        as.list(c('Echinostomatidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '1', '1')), #according to WORMS
+                        as.list(c('Diplostomidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '1', '0')),
                         as.list(c('Hemiuridae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '1', '0')),
                         as.list(c('Apocreadiidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '1', '0')),
                         as.list(c('Dugesiidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '0', '0')),
@@ -1096,20 +1107,20 @@ lookup = rbindlist(list(lookup,
 
 
 # Gastrotricha (phylum) - Bauchhaerlinge ----------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Chaetonotidae', NA , 'Gastrotricha', 'Gastrotricha', 'phylum', '1', '1', '0'))
 ))
 
 
 # Chaetognatha (phylum) ---------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Sagittidae', NA , 'Chaetognatha', 'Chaetognatha', 'phylum', '1', '1', '0'))
 ))
 
 
 # Cnidaria - Nesseltiere (phylum) -----------------------------------------
 # Heterotrophi. Mostly in marine envrionments. Rarely by use of endosymbionts.
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Antipathidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
                         as.list(c('Hydridae', 'Suesswasserpolypen', 'Cnidaria', 'Hydrozoa', 'class', '1', '0', '0')),
                         as.list(c('Dendrophylliidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
@@ -1121,13 +1132,13 @@ lookup = rbindlist(list(lookup,
 
 
 # Porifera (phylum) - Schwaemme -------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Halichondriidae', NA, 'Porifera', 'Porifera', 'phylum', '0', '1', '0')),
                         as.list(c('Raspailiidae', NA, 'Porifera', 'Porifera', 'phylum', '0', '1', '0'))
 ))
 
 # Viruses -----------------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Polydnaviridae', NA, 'Viruses', 'Viruses', 'viruses', '0', '0', '1')),
                         as.list(c('Baculoviridae', NA, 'Viruses', 'Viruses', 'viruses', '0', '0', '1')),
                         as.list(c('Alphaflexiviridae', NA, 'Viruses', 'Viruses', 'viruses', '0', '0', '1'))
@@ -1135,7 +1146,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Mammalia (class) --------------------------------------------------------
-lookup = rbindlist(list(lookup,
+lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Caviidae', 'Meerschweinchen', 'Mammalia', 'Rodentia', 'order', '0', '0', '1')),
                         as.list(c('Muridae', 'Langschwanzmäuse', 'Mammalia', 'Rodentia', 'order', '0', '0', '1')),
                         as.list(c('Cricetidae', 'Wühler', 'Mammalia', 'Rodentia', 'order', '0', '0', '1'))
@@ -1144,7 +1155,7 @@ lookup = rbindlist(list(lookup,
 
 
 # Checks ------------------------------------------------------------------
-if (length(which(isTRUE(duplicated(lookup$family)))) < 1) {
+if (length(which(isTRUE(duplicated(lookup_man_fam$family)))) < 1) {
   message('No duplicates.')
 } else {
   warning('Duplicates!')
@@ -1153,21 +1164,21 @@ if (length(which(isTRUE(duplicated(lookup$family)))) < 1) {
 
 # Write to file + Todo ----------------------------------------------------
 # Classified taxa
-fwrite(lookup, file.path(cachedir, 'family_lookup_list.csv'))
+fwrite(lookup_man_fam, file.path(cachedir, 'lookup_man_fam_list.csv'))
 
 # to do
 chck_habitat =
-  unique(todo_habitat[ !family_epa %in% lookup$family, ][order(family_epa)]$family_epa)
+  unique(todo_habitat[ !family %in% lookup_man_fam$family, ][order(family)]$family)
 if (length(chck_habitat) == 0) {
   message('All entries classified.')
 } else {
-  message('The following taxa are still to be classified:\n', paste0(todo_habitat, '\n'))
-  fwrite(data.table(todo_habitat),
-         file.path(tempdir(), 'family_lookup_todo.csv'))
+  message('The following taxa are still to be classified:\n', paste0(chck_habitat, '\n'))
+  fwrite(data.table(chck_habitat),
+         file.path(tempdir(), 'lookup_man_fam_todo.csv'))
 }
 
 # Cleaning ----------------------------------------------------------------
-rm(tests2, todo_habitat)
+rm(todo_habitat)
 
 # Macrophytes [OWN FILE, TO GENUS LEVEL] ----------------------------------
 # Maybe create an own list as they often don't form own families.
