@@ -59,6 +59,9 @@ for (i in 1:length(aw_l)) {
 aw = rbindlist(aw_l, fill = TRUE, idcol = 'cas')
 aw[ , V1 := NULL ]
 setcolorder(aw, c('cas', 'cname'))
+names(aw)
+aw[ , pest_type :=
+gsub('(.+)?(fungicide|herbicide|insecticide|rodenticide|acaricide|nematicide)(.+)?', '\\2', aw$subactivity)]
 
 # cleaning ----------------------------------------------------------------
 rm(psm)
