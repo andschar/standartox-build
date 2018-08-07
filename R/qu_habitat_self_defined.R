@@ -20,7 +20,8 @@ lookup_man_fam = data.table(family = 'Poaceae', german_name = 'Suessgraeser',
 lookup_man_fam = rbindlist(list(lookup_man_fam,
                         #### Spermatophyta (subdivision) ----
                         as.list(c('Alismataceae', NA, 'Plants', 'Froschlöffelgewaechse', 'class', '1', '0', '1')), # macrophytes
-                        as.list(c('Restionaceae', NA, 'Plants', 'Magnoliopsida', 'class', '0', '0', '1')),
+                        as.list(c('Restionaceae', NA, 'Plants', 'Magnoliopsida', 'class', '0', '1', '1')),
+                        as.list(c('Ruppiaceae', 'Saldengewächse', 'Plants', 'Magnoliopsida', 'class', '1', '1', '0')), # Macrophytes auch brackwasser (selten süßwasser)
                         as.list(c('Ceratophyllaceae', "Hornblattgewächse", 'Plants', 'Magnoliopsida', 'class', '1', '0', '0')),
                         as.list(c('Zosteraceae', "Seegrasgewächse", 'Plants', 'Magnoliopsida', 'class', '0', '1', '0')),
                         as.list(c('Nothofagaceae', "Scheinbuchen", 'Plants', 'Magnoliopsida', 'class', '0', '0', '1')),
@@ -145,6 +146,7 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
                         
                         
                         #### Polypodiopsida (echte Farne) (class) ----
+                        as.list(c('Salviniaceae', 'Schwimmfarngewächse', 'Plants', 'Polypodiopsida', 'class', '1', '0', '0')),
                         as.list(c('Dryopteridaceae', 'Wurmfarngewaechse', 'Plants', 'Polypodiopsida', 'class', '0', '0', '1')),
                         as.list(c('Lomariopsidaceae', NA, 'Plants', 'Polypodiopsida', 'clade', '1', '0', '1')),
                         as.list(c('Pteridaceae', 'Saumfarngewaechse', 'Plants', 'Polypodiopsida', 'class', '0', '0', '1')),
@@ -267,6 +269,7 @@ as.list(c('Chordariaceae', NA, 'Algae', 'Phaeophyceae', 'class', '0', '1', '0'))
 as.list(c('Lessoniaceae', NA, 'Algae', 'Phaeophyceae', 'class', '0', '1', '0')),
 as.list(c('Hormosiraceae', NA, 'Algae', 'Phaeophyceae', 'class', '0', '1', '0')),
 ## Bacillariophyceae (class)
+as.list(c('Rhopalodiaceae', NA, 'Algae', 'Bacillariophyceae', 'class', '0', '1', '0')),
 as.list(c('Pinnulariaceae', NA, 'Algae', 'Bacillariophyceae', 'class', '0', '1', '0')),
 as.list(c('Cocconeidaceae', NA, 'Algae', 'Bacillariophyceae', 'class', '0', '1', '0')),
 as.list(c('Entomoneidaceae', NA, 'Algae', 'Bacillariophyceae', 'class', '0', '1', '0')),
@@ -295,6 +298,7 @@ as.list(c('Eunotiaceae', NA, 'Algae', 'Bacillariophyceae', 'class', '1', '0', '0
 as.list(c('Melosiraceae', NA, 'Algae', 'Bacillariophyceae', 'class', '0', '1', '0')),
 as.list(c('Ulnariaceae', NA, 'Algae', 'Bacillariophyceae', 'class', '1', '0', '0')),
 ## Chrysophyceae (class) - Golden algae
+as.list(c('Chromulinaceae', NA, 'Algae', 'Chrysophyceae', 'class', '0', '1', '0')),
 as.list(c('Synuraceae', NA, 'Algae', 'Chrysophyceae', 'class', '1', '0', '0')),
 as.list(c('Chromulinales', NA, 'Algae', 'Chrysophyceae', 'class', '1', '0', '0')),
 as.list(c('Ochromonadaceae', 'Goldalgen', 'Algae', 'Chrysophyceae', 'class', '1','0', '0')),
@@ -303,6 +307,7 @@ as.list(c('Chrysococcaceae', NA, 'Algae', 'Chrysophyceae', 'class', '0', '1', '0
 as.list(c('Mallomonadaceae', NA, 'Algae', 'Synurophyceae', 'class', '1', '0', '0')),
 as.list(c('Dinobryaceae', NA, 'Algae', 'Synurophyceae', 'class', '1', '0', '0')),
 ## Raphidophyceae
+as.list(c('Vacuolariaceae', NA, 'Algae', 'Raphidophyceae', 'class', '0', '1', '0')),
 as.list(c('Chattonellaceae', NA, 'Algae', 'Raphidophyceae', 'class', '0', '1', '0')),
 ## Eustigmatophyceae
 as.list(c('Monodopsidaceae', NA, 'Algae', 'Eustigmatophyceae', 'class', '0', '1', '0')),
@@ -324,6 +329,7 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
 # Ciliophora (phylum) - Wimpertierchen ------------------------------------
 lookup_man_fam = rbindlist(list(lookup_man_fam,
                         #### Eukaryota (domain): SAR: Alveolata: Ciliophora (phylum) ----
+                        as.list(c('Didiniidae', NA, 'Ciliophora', 'Ciliophora', 'phylum', '0', '1', '0')),
                         as.list(c('Tetrahymenidae', NA, 'Ciliophora', 'Ciliophora', 'phylum', '1', '0', '0')), # some are parasitic like Ichthyophthirius multifillis (SAR) # feeds on bacteria
                         as.list(c('Parameciidae', NA, 'Ciliophora', 'Ciliophora', 'phylum', '1', '1', '1')),
                         as.list(c('Euplotidae', NA, 'Ciliophora', 'Ciliophora', 'phylum', '1', '1', '1')),
@@ -350,75 +356,79 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
 
 
 # Fungi -------------------------------------------------------------------
-lookup_man_fam = rbindlist(list(lookup_man_fam,
-                        #### Heterokonts (infrakingdom): Colorless groups: Pseudofungi: Oomycetes: ----
-                        #! not actually fungi but due to the lack of pigments also not photosysnthetically active
-                        # https://en.wikipedia.org/wiki/Heterokont
-                        as.list(c('Saprolegniaceae', NA, 'Fungi', 'Oomycota', 'phylum', '0', '1', '0')),
-                        as.list(c('Peronosporaceae', NA, 'Fungi', 'Oomycota', 'phylum', '0', '1', '0')),
-                        as.list(c('Lagenidiaceae', NA, 'Fungi', 'Oomycota', 'phylum', '0', '0', '1')),
-                        as.list(c('Pythiaceae', NA, 'Fungi', 'Oomycota', 'phylum', '0', '0', '1')),
-                        #### Real Fungi: ----                        
-                        ## Ascomycota (Schlauchpilze)
-                        as.list(c('Davidiellaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
-                        as.list(c('Amphisphaeriaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
-                        as.list(c('Massarinaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
-                        as.list(c('Cladosporiaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
-                        as.list(c('Gnomoniaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
-                        as.list(c('Phlogicylindriaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '1', '0')),
-                        as.list(c('Pleosporaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Sclerotiniaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Trichocomaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Nectriaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Glomerellaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Herpotrichiellaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Togniniaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Hypocreaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Halosphaeriaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Botryosphaeriaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Erysiphaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Mycosphaerellaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Valsaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Dothioraceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Aspergillaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Saccotheciaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '1', '0')), # listed in WORMS
-                        as.list(c('Cordycipitaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Leotiaceae', 'Gallertkaeppchenverwandte', 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Phyllostictaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '1', '0')),
-                        as.list(c('Phaeomoniellaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Parmeliaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Megalariaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Acarosporaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Discinaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Laboulbeniaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Dermateaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Hyponectriaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
-                        as.list(c('Rhizinaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '1', '0')),
-                        as.list(c('Montagnulaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '1', '0')),
-                        
-                        ## Basidiomycota (Staenderpilze)
-                        as.list(c('Meruliaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Polyporaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Pleurotaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Bankeraceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Entolomataceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Pucciniaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Corticiaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Ceratobasidiaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Agaricaceae', 'Champignonverwandten', 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Quambalariaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        as.list(c('Atheliaceae', 'Gewebehautverwandte', 'Fungi', 'Basidiomycota', 'division', '0', '1', '1')), #eigentlich terretrisch, aber eine Art bevorzugt salzwasser habitate
-                        as.list(c('Phanerochaetaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '1', '1')),
-                        as.list(c('Physalacriaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
-                        
-                        ## Zygomycota
-                        as.list(c('Neozygitaceae', NA, 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),  
-                        as.list(c('Ustilaginaceae', 'Brandpilzverwandte', 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),  
-                        as.list(c('Suillaceae', 'Schmierroehrlingsverwandte', 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),  
-                        as.list(c('Venturiaceae', NA, 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),  
-                        as.list(c('Clavicipitaceae', 'Mutterkornpilzverwandte', 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),
-                        ## Glomeromycota
-                        as.list(c('Glomeraceae', NA, 'Fungi',  'Glomeromycota', 'division', '0', '0', '1'))
+lookup_man_fam =
+  rbindlist(list(lookup_man_fam,
+                #### Heterokonts (infrakingdom): Colorless groups: Pseudofungi: Oomycetes: ----
+                #! not actually fungi but due to the lack of pigments also not photosysnthetically active
+                # https://en.wikipedia.org/wiki/Heterokont
+                as.list(c('Saprolegniaceae', NA, 'Fungi', 'Oomycota', 'phylum', '0', '1', '0')),
+                as.list(c('Peronosporaceae', NA, 'Fungi', 'Oomycota', 'phylum', '0', '1', '0')),
+                as.list(c('Lagenidiaceae', NA, 'Fungi', 'Oomycota', 'phylum', '0', '0', '1')),
+                as.list(c('Pythiaceae', NA, 'Fungi', 'Oomycota', 'phylum', '0', '0', '1')),
+                #### Real Fungi: ----                        
+                ## Ascomycota (Schlauchpilze)
+                as.list(c('Phaeosphaeriaceae', 'Knopfbecherchenverwandte', 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
+                as.list(c('Orbiliaceae', 'Knopfbecherchenverwandte', 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
+                as.list(c('Davidiellaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
+                as.list(c('Amphisphaeriaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
+                as.list(c('Massarinaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
+                as.list(c('Cladosporiaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
+                as.list(c('Gnomoniaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '0', '1')),
+                as.list(c('Phlogicylindriaceae', NA, 'Fungi', 'Ascomycota', 'phylum', '0', '1', '0')),
+                as.list(c('Pleosporaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Sclerotiniaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Trichocomaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Nectriaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Glomerellaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Herpotrichiellaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Togniniaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Hypocreaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Halosphaeriaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Botryosphaeriaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Erysiphaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Mycosphaerellaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Valsaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Dothioraceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Aspergillaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Saccotheciaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '1', '0')), # listed in WORMS
+                as.list(c('Cordycipitaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Leotiaceae', 'Gallertkaeppchenverwandte', 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Phyllostictaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '1', '0')),
+                as.list(c('Phaeomoniellaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Parmeliaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Megalariaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Acarosporaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Discinaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Laboulbeniaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Dermateaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Hyponectriaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '0', '1')),
+                as.list(c('Rhizinaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '1', '0')),
+                as.list(c('Montagnulaceae', NA, 'Fungi', 'Ascomycota', 'division', '0', '1', '0')),
+                
+                ## Basidiomycota (Staenderpilze)
+                as.list(c('Meruliaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Polyporaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Pleurotaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Bankeraceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Entolomataceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Pucciniaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Corticiaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Ceratobasidiaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Agaricaceae', 'Champignonverwandten', 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Quambalariaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                as.list(c('Atheliaceae', 'Gewebehautverwandte', 'Fungi', 'Basidiomycota', 'division', '0', '1', '1')), #eigentlich terretrisch, aber eine Art bevorzugt salzwasser habitate
+                as.list(c('Phanerochaetaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '1', '1')),
+                as.list(c('Physalacriaceae', NA, 'Fungi', 'Basidiomycota', 'division', '0', '0', '1')),
+                
+                ## Zygomycota
+                as.list(c('Mucoraceae', NA, 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),
+                as.list(c('Neozygitaceae', NA, 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),
+                as.list(c('Ustilaginaceae', 'Brandpilzverwandte', 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),  
+                as.list(c('Suillaceae', 'Schmierroehrlingsverwandte', 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),  
+                as.list(c('Venturiaceae', NA, 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),  
+                as.list(c('Clavicipitaceae', 'Mutterkornpilzverwandte', 'Fungi',  'Zygomycota', 'division', '0', '0', '1')),
+                ## Glomeromycota
+                as.list(c('Glomeraceae', NA, 'Fungi',  'Glomeromycota', 'division', '0', '0', '1'))
 ))
 
 # Bryozoa (phylum) --------------------------------------------------------
@@ -435,15 +445,20 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
 
 
 # Nematoda (phylum) - Fadenwuermer ----------------------------------------
-lookup_man_fam = rbindlist(list(lookup_man_fam,
-                        as.list(c('Hoplolaimidae', NA, 'Nematoda', 'Secernentea', 'class', '0', '0', '1')),
-                        as.list(c('Mermithidae', NA, 'Nematoda', 'Adenophorea', 'class', '0', '0', '1')),
-                        as.list(c('Rhabditidae', NA, 'Nematoda', 'Adenophorea', 'class', '0', '1', '0')),
-                        as.list(c('Heteroderidae', 'Ruebenzystennematode', 'Nematoda', 'Adenophorea', 'class', '0', '0', '1')),
-                        as.list(c('Enoplidae', NA, 'Nematoda', 'Enoplea', 'class', '0', '1', '0')),
-                        as.list(c('Monhysteridae', NA, 'Nematoda', 'Chromadorea', 'class', '0', '1', '0')),
-                        as.list(c('Meloidogynidae', NA, 'Nematoda', 'Adenophorea', 'class', '0', '0', '1')),
-                        as.list(c('Panagrolaimidae', NA, 'Nematoda', 'Rhabditida', 'class', '1', '1', '1'))
+lookup_man_fam =
+  rbindlist(list(lookup_man_fam,
+                 as.list(c('Trichostrongylidae', NA, 'Nematoda', 'Secernentea', 'class', '0', '0', '1')),
+                 as.list(c('Oxyuridae', NA, 'Nematoda', 'Secernentea', 'class', '0', '0', '1')),
+                 as.list(c('Heteroxynematidae', NA, 'Nematoda', 'Secernentea', 'class', '0', '0', '1')),
+                 as.list(c('Trychostrongylidae', NA, 'Nematoda', 'Secernentea', 'class', '0', '0', '1')), # parasite
+                 as.list(c('Hoplolaimidae', NA, 'Nematoda', 'Secernentea', 'class', '0', '0', '1')),
+                 as.list(c('Mermithidae', NA, 'Nematoda', 'Adenophorea', 'class', '0', '0', '1')),
+                 as.list(c('Rhabditidae', NA, 'Nematoda', 'Adenophorea', 'class', '0', '1', '0')),
+                 as.list(c('Heteroderidae', 'Ruebenzystennematode', 'Nematoda', 'Adenophorea', 'class', '0', '0', '1')),
+                 as.list(c('Enoplidae', NA, 'Nematoda', 'Enoplea', 'class', '0', '1', '0')),
+                 as.list(c('Monhysteridae', NA, 'Nematoda', 'Chromadorea', 'class', '0', '1', '0')),
+                 as.list(c('Meloidogynidae', NA, 'Nematoda', 'Adenophorea', 'class', '0', '0', '1')),
+                 as.list(c('Panagrolaimidae', NA, 'Nematoda', 'Rhabditida', 'class', '1', '1', '1'))
 ))
 
 
@@ -514,6 +529,7 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Aplocheilidae', NA, 'Fish', 'Cyprinodontiformes', 'order', '1', '0', '0')),
                         as.list(c('Anablepidae', NA, 'Fish', 'Cyprinodontiformes', 'order', '1', '0', '0')), # freshwater and brackish
                         ## Siluriformes
+                        as.list(c('Pimelodidae', 'Antennenwelse', 'Fish', 'Siluriformes', 'order', '1', '0', '0')),
                         as.list(c('Schilbeidae', 'Glaswelse', 'Fish', 'Siluriformes', 'order', '1', '0', '0')),
                         as.list(c('Ictaluridae', 'Katzenwelse', 'Fish', 'Siluriformes', 'order', '1', '0', '0')), # endemisch in Nordamerika
                         as.list(c('Clariidae', 'Kiemensackwelse', 'Fish', 'Siluriformes', 'order', '1', '0', '0')),
@@ -637,6 +653,7 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
                         # Crustacea (subphylum)
                         ## Branchiopoda (class)
                         ### Cladocera (order)
+                        as.list(c('Holopediidae', 'Wasserfloehe', 'Crustacea', 'Cladocera', 'order', '1', '1', '0')),
                         as.list(c('Daphniidae', 'Wasserfloehe', 'Crustacea', 'Cladocera', 'order', '1', '0', '0')),
                         as.list(c('Artemiidae', 'Salzwasserkrebse', 'Crustacea', 'Cladocera', 'order', '1', '0', '0')), # Binnensalzgewaesser, nicht im Meer!
                         as.list(c('Macrothricidae', NA, 'Crustacea', 'Cladocera', 'order', '1', '0', '0')),
@@ -664,6 +681,7 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Aoridae', NA, 'Crustacea', 'Amphipoda', 'order', '0', '1', '0')),
                         
                         ### Decapoda
+                        as.list(c('Potamidae', NA, 'Crustacea', 'Decapoda', 'order', '1', '0', '0')),
                         as.list(c('Palaemonidae', 'Felsen- und Partnergarnelen', 'Crustacea', 'Decapoda', 'order', '1', '1', '0')),
                         as.list(c('Cancridae', 'Taschenkrebse', 'Crustacea', 'Decapoda', 'order', '0', '1', '0')),
                         as.list(c('Portunidae', 'Schwimmkrabben', 'Crustacea', 'Decapoda', 'order', '1', '1', '0')),
@@ -823,6 +841,7 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
                         
                         
                         ## Hymenoptera
+                        as.list(c('Halictidae', NA, 'Insecta', 'Hymenoptera', 'order', '0', '0', '1')),
                         as.list(c('Aphidiinae', NA, 'Insecta', 'Hymenoptera', 'order', '0', '0', '1')),
                         as.list(c('Eumenidae', 'Solitäre Faltenwespen', 'Insecta', 'Hymenoptera', 'order', '0', '0', '1')),
                         as.list(c('Apidae', 'Bienen', 'Insecta', 'Hymenoptera', 'order', '0', '0', '1')),
@@ -848,6 +867,7 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
                         
                         
                         ## Coleoptera (Kaefer)
+                        as.list(c('Cucujidae', 'Plattkaefer', 'Insecta', 'Coleoptera', 'order', '0', '0', '1')),
                         as.list(c('Lymexylidae', 'Werftkaefer', 'Insecta', 'Coleoptera', 'order', '0', '0', '1')),
                         as.list(c('Cetoniidae', 'Rosenkaefer', 'Insecta', 'Coleoptera', 'order', '0', '0', '1')),
                         as.list(c('Coccinellidae', 'Marienkaefer', 'Insecta', 'Coleoptera', 'order', '0', '0', '1')),
@@ -893,10 +913,13 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
                         ## Thripidae
                         as.list(c('Thripidae', NA, 'Insecta', 'Thysanoptera', 'order', '0', '0', '1')), # probably paraphyletic group
                         ## Blattodea (Schaben)
+                        as.list(c('Kalotermitidae', NA, 'Insecta', 'Blattodea', 'order', '0', '0', '1')),
                         as.list(c('Blattellidae', NA, 'Insecta', 'Blattodea', 'order', '0', '0', '1')),
                         as.list(c('Ectobiidae', NA, 'Insecta', 'Blattodea', 'order', '0', '0', '1')), # new name of Blattellidae
-                        as.list(c('Termitidae', NA, 'Insecta', 'Blattodea', 'order', '0', '0', '1')), # Termiten  (infraorder, Isoptera)
                         as.list(c('Blattidae', 'Schaben', 'Insecta', 'Blattodea', 'order', '0', '0', '1')),
+                        ## Isoptera
+                        as.list(c('Termitidae', NA, 'Insecta', 'Isoptera', 'order', '0', '0', '1')),
+                        as.list(c('Rhinotermitidae', NA, 'Insecta', 'Isoptera', 'order', '0', '0', '1')),
                         ## Ephemeroptera (Eintagsfliegen) larval aquatisch, adult terrestrisch
                         as.list(c('Baetidae', NA, 'Insecta', 'Ephemeroptera', 'order', '1', '0', '1')),
                         as.list(c('Heptageniidae', NA, 'Insecta', 'Ephemeroptera', 'order', '1', '0', '1')),
@@ -1053,26 +1076,30 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
 
 
 # Aves (class) - Voegel ---------------------------------------------------
-lookup_man_fam = rbindlist(list(lookup_man_fam,
-                        as.list(c('Anatidae', 'Entenvoegel', 'Aves', 'Anseriformes', 'order', '1', '0', '1')),
-                        as.list(c('Odontophoridae', 'Zahnwachteln', 'Aves', 'Galliformes', 'order', '1', '0', '1')),
-                        as.list(c('Phasianidae', 'Fasanenartige', 'Aves', 'Galliformes', 'order', '1', '0', '1')),
-                        as.list(c('Emberizidae', 'Ammern', 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
-                        as.list(c('Icteridae', 'Stärlinge', 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
-                        as.list(c('Rallidae', "Rallen", 'Aves', 'Gruiformes', 'order', '0', '0', '1')),
-                        as.list(c('Fringillidae', "Finken", 'Aves', 'Gruiformes', 'order', '0', '0', '1')),
-                        as.list(c('Muscicapidae', NA, 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
-                        as.list(c('Passeridae', NA, 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
-                        as.list(c('Cardinalidae', NA, 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
-                        as.list(c('Corvidae', NA, 'Aves', 'Passeriformes', 'order', '0', '0', '1'))
-                        
+lookup_man_fam =
+  rbindlist(list(lookup_man_fam,
+                 as.list(c('Columbidae', 'Tauben', 'Aves', 'Columbiformes', 'order', '0', '0', '1')),
+                 as.list(c('Anatidae', 'Entenvoegel', 'Aves', 'Anseriformes', 'order', '1', '0', '1')),
+                 as.list(c('Odontophoridae', 'Zahnwachteln', 'Aves', 'Galliformes', 'order', '1', '0', '1')),
+                 as.list(c('Phasianidae', 'Fasanenartige', 'Aves', 'Galliformes', 'order', '1', '0', '1')),
+                 as.list(c('Emberizidae', 'Ammern', 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
+                 as.list(c('Icteridae', 'Stärlinge', 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
+                 as.list(c('Rallidae', "Rallen", 'Aves', 'Gruiformes', 'order', '0', '0', '1')),
+                 as.list(c('Fringillidae', "Finken", 'Aves', 'Gruiformes', 'order', '0', '0', '1')),
+                 as.list(c('Muscicapidae', NA, 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
+                 as.list(c('Passeridae', NA, 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
+                 as.list(c('Cardinalidae', NA, 'Aves', 'Passeriformes', 'order', '0', '0', '1')),
+                 as.list(c('Corvidae', NA, 'Aves', 'Passeriformes', 'order', '0', '0', '1'))
+                
 ))
 
 
 # Tunicata - Manteltiere (subphylum) --------------------------------------
-lookup_man_fam = rbindlist(list(lookup_man_fam,
-                        as.list(c('Cionidae', NA, 'Tunicata', 'Tunicata', 'subphylum', '0', '1', '0')),
-                        as.list(c('Doliolidae', NA, 'Tunicata', 'Tunicata', 'subphylum', '0', '1', '0'))
+lookup_man_fam =
+  rbindlist(list(lookup_man_fam,
+                 as.list(c('Styelidae', NA, 'Tunicata', 'Tunicata', 'subphylum', '0', '1', '0')),
+                 as.list(c('Cionidae', NA, 'Tunicata', 'Tunicata', 'subphylum', '0', '1', '0')),
+                 as.list(c('Doliolidae', NA, 'Tunicata', 'Tunicata', 'subphylum', '0', '1', '0'))
 ))
 
 
@@ -1094,15 +1121,19 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
 
 
 # Platyhelminthes (phylum) - Plattwuermer ---------------------------------
-lookup_man_fam = rbindlist(list(lookup_man_fam,
-                        as.list(c('Paramphistomidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '1', '0')),
-                        as.list(c('Echinostomatidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '1', '1')), #according to WORMS
-                        as.list(c('Diplostomidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '1', '0')),
-                        as.list(c('Hemiuridae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '1', '0')),
-                        as.list(c('Apocreadiidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '1', '0')),
-                        as.list(c('Dugesiidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '0', '0')),
-                        as.list(c('Schistosomatidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'order', '1', '1', '1')), # parasite
-                        as.list(c('Planariidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '1', '0'))
+lookup_man_fam =
+  rbindlist(list(lookup_man_fam,
+                 as.list(c('Triaenophoridae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '1', '0')),
+                 as.list(c('Fasciolidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '0', '1')),
+                 as.list(c('Paramphistomatidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '0', '1')),
+                 as.list(c('Diplostomidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '0', '1')),
+                 as.list(c('Paramphistomidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '1', '0')),
+                 as.list(c('Echinostomatidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '1', '1')), #according to WORMS
+                 as.list(c('Hemiuridae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '0', '1', '0')),
+                 as.list(c('Apocreadiidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '1', '0')),
+                 as.list(c('Dugesiidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '0', '0')),
+                 as.list(c('Schistosomatidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'order', '1', '1', '1')), # parasite
+                 as.list(c('Planariidae', NA, 'Platyhelminthes', 'Platyhelminthes', 'phylum', '1', '1', '0'))
 ))
 
 
@@ -1120,14 +1151,17 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
 
 # Cnidaria - Nesseltiere (phylum) -----------------------------------------
 # Heterotrophi. Mostly in marine envrionments. Rarely by use of endosymbionts.
-lookup_man_fam = rbindlist(list(lookup_man_fam,
-                        as.list(c('Antipathidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
-                        as.list(c('Hydridae', 'Suesswasserpolypen', 'Cnidaria', 'Hydrozoa', 'class', '1', '0', '0')),
-                        as.list(c('Dendrophylliidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
-                        as.list(c('Acroporidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
-                        as.list(c('Aiptasiidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
-                        as.list(c('Campanulinidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
-                        as.list(c('Deltocyathidae', NA, 'Cnidaria', 'Anthozoa', 'class', '0', '1', '0'))
+lookup_man_fam = 
+  rbindlist(list(lookup_man_fam,
+                 as.list(c('Poritidae', NA, 'Cnidaria', 'Anthozoa', 'class', '0', '1', '0')),
+                 as.list(c('Pocilloporidae', NA, 'Cnidaria', 'Anthozoa', 'class', '0', '1', '0')),
+                 as.list(c('Antipathidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
+                 as.list(c('Hydridae', 'Suesswasserpolypen', 'Cnidaria', 'Hydrozoa', 'class', '1', '0', '0')),
+                 as.list(c('Dendrophylliidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
+                 as.list(c('Acroporidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
+                 as.list(c('Aiptasiidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
+                 as.list(c('Campanulinidae', NA, 'Cnidaria', 'Hydrozoa', 'class', '0', '1', '0')),
+                 as.list(c('Deltocyathidae', NA, 'Cnidaria', 'Anthozoa', 'class', '0', '1', '0'))
 ))
 
 
@@ -1146,10 +1180,12 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
 
 
 # Mammalia (class) --------------------------------------------------------
-lookup_man_fam = rbindlist(list(lookup_man_fam,
-                        as.list(c('Caviidae', 'Meerschweinchen', 'Mammalia', 'Rodentia', 'order', '0', '0', '1')),
-                        as.list(c('Muridae', 'Langschwanzmäuse', 'Mammalia', 'Rodentia', 'order', '0', '0', '1')),
-                        as.list(c('Cricetidae', 'Wühler', 'Mammalia', 'Rodentia', 'order', '0', '0', '1'))
+lookup_man_fam =
+  rbindlist(list(lookup_man_fam,
+                 as.list(c('Mustelidae', 'Marder', 'Mammalia', 'Rodentia', 'order', '0', '0', '1')),       
+                 as.list(c('Caviidae', 'Meerschweinchen', 'Mammalia', 'Rodentia', 'order', '0', '0', '1')),
+                 as.list(c('Muridae', 'Langschwanzmäuse', 'Mammalia', 'Rodentia', 'order', '0', '0', '1')),
+                 as.list(c('Cricetidae', 'Wühler', 'Mammalia', 'Rodentia', 'order', '0', '0', '1'))
 ))
 
 
