@@ -193,6 +193,17 @@ if (nrow(cas_check) != 0) {
   warning(nrow(cas_check), ' missing CAS or CASNR.')
 }
 
+# errata ------------------------------------------------------------------
+# not accepted:
+epa1[family == 'Aphidiidae', family := 'Braconidae']
+epa1[family == 'Callitrichaceae', family := 'Plantaginaceae']
+epa1[family == 'Cypridopsidae', family := 'Cypridopsinae']
+epa1[family == 'Filiniidae', family := 'Trochosphaeridae']
+epa1[family == 'Najadaceae', family := 'Hydrocharitaceae']
+epa1[family == 'Platymonadaceae', family := 'Volvocaceae']
+epa1[family == 'Pseudocalanidae', family := 'Clausocalanidae']
+
+
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
 taxa = epa1[ , .SD, .SDcols = c('taxon', 'family')]
