@@ -17,12 +17,12 @@ source('R/qu_pp.R')
 source('R/qu_epa.R')
 
 # Taxon scripts
-# source('R/qu_classification.R') 
+# source('R/qu_classification.R')
 # TODO 55 taxa to query! also check whether there is habitat data for all the taxa in self defined!
 # Habitat scripts
 source('R/qu_worms.R')
-# source('R/qu_habitat_self_defined.R') # self defined script
-lookup_man_fam = fread(file.path(cachedir, 'family_lookup_list.csv'))
+source('R/qu_habitat_self_defined.R') # self defined script
+#lookup_man_fam = fread(file.path(cachedir, 'lookup_man_fam_list.csv'))
 
 # Region scripts
 source('R/qu_gbif.R')
