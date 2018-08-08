@@ -19,7 +19,7 @@ lookup_man_fam = data.table(family = 'Poaceae', german_name = 'Suessgraeser',
                     supgroup = 'Plants', group = 'Spermatophyta', group_rank = 'subdivision', isFre = '0', isMar = '0', isTer = '1') # some Macrophytes!
 lookup_man_fam = rbindlist(list(lookup_man_fam,
                         #### Spermatophyta (subdivision) ----
-                        as.list(c('Alismataceae', NA, 'Plants', 'Froschlöffelgewaechse', 'class', '1', '0', '1')), # macrophytes
+                        as.list(c('Alismataceae', 'Froschlöffelgewaechse', 'Plants', 'Magnoliopsida', 'class', '1', '0', '1')), # macrophytes
                         as.list(c('Restionaceae', NA, 'Plants', 'Magnoliopsida', 'class', '0', '1', '1')),
                         as.list(c('Ruppiaceae', 'Saldengewächse', 'Plants', 'Magnoliopsida', 'class', '1', '1', '0')), # Macrophytes auch brackwasser (selten süßwasser)
                         as.list(c('Ceratophyllaceae', "Hornblattgewächse", 'Plants', 'Magnoliopsida', 'class', '1', '0', '0')),
