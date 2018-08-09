@@ -29,17 +29,6 @@
 
 %arrows
 \tikzstyle{arrow} = [->, > = stealth, draw = black, color = yellow!80, line width = 6pt]
-% TODO double colored arrows - don't know how it works
-\iffalse
-\tikzset{
-	darrow/.style args={#1 colored by #2 and #3}{
-		-stealth,line width=#1,#2, % first arrow
-		postaction={draw,-stealth,#3,line width=(#1)/3,
-			shorten <=(#1)/3,shorten >=2*(#1)/3}, % second arrow
-	}
-}
-\fi
-
 
 \begin{landscape}
 %\parindent=0pt % extra spaces towards the edges
@@ -58,7 +47,7 @@
 %%% nodes %%%
 %% input
 % TODO coordinates (-3,4) is strange. Also rectangle around current page seems wrong
-\node[text=red] (io) [io, align = left] at (-3,4) {Table of Chemicals \\ CAS, Compound name}; % coordinates: (current page.east)
+\node[text=red] (io) [io, align = left] at (-3cm,4cm) {Table of Chemicals \\ CAS, Compound name}; % coordinates: (current page.east)
 
 
 % \draw[thick] (current page.south west) rectangle (current page.north east); % debuging
@@ -72,7 +61,7 @@
 	child { node { qu\_epa.R} };
 \node (chemscr) [main, right of=cas, yshift=-1cm, xshift=4.5cm] {Chemical scripts ch}
 	child { node { Alan Wood Pesticide Compendium - \textbf{qu\_aw.R } }}
-	child { node { Pesticide Action Network - \textbf{ch\_pp.R} }}
+	child { node { Pesticide Action Network - \textbf{ch\_pan.R} }}
 	child { node { PhysProp - \textbf{ch\_pp.R} }}
 	child { node { PubChem - \textbf{qu\_pubchem.R} }};
 % result nodes
@@ -95,7 +84,7 @@
 \node (taxres) [resvariables, right of=taxon, xshift=17cm, align = left] {Results:\\Validation of taxonomic ranks\\Habitat information\\Marine, Bracksih, Freshwater, Terrestrial, Parasites\\Occurrence}; % result
 
 %% final result
-\node (testres) [res] at (16,-5) {Final result}
+\node (testres) [res] at (18,-5) {Final result}
 	child { node { re\_merge.R} };
 \iffalse
 node[anchor = south]
@@ -126,23 +115,25 @@ node[anchor = east]
 \draw [arrow] (toxres) -- (testres);
 \draw [arrow] (taxres) -- (testres);
 
-\draw [arrow, dashed] (testres) -- (20,-5);
+\draw [arrow] (testres) -- (22,-5);
 \end{pgfonlayer}
 
 
 \end{tikzpicture}
-\hfill
-\vfill
 \end{landscape}
 
-
 %\clearpage
+%\thispagestyle{empty} % removes the 1
 
 
 \begin{landscape}
 \begin{tikzpicture}
 
+%\draw[thick] (current page.south west) rectangle (current page.north east); % debuging
+
 %% entities
+\node (test) [res] at (-10,-10) {Test}; %debuging
+
 \node (clean) [res] at (-5,5) {Cleaning}
 	child { node { re\_clean.R} };
 \node (filter) [res, right of = clean, xshift = 3cm] {Filter}
@@ -176,7 +167,6 @@ node[anchor = east]
 
 \end{tikzpicture}
 \end{landscape}
-
 
 
 \end{document}
