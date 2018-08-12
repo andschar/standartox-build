@@ -101,7 +101,7 @@ tests = Reduce(function(...) merge(..., by = 'family', all = TRUE), list(tests, 
 setcolorder(tests, c('cas', 'casnr', 'taxon', 'family'))
 
 # Save --------------------------------------------------------------------
-saveRDS(tests, file.path(cachedir, 'test_results.rds'))
+saveRDS(tests, file.path(cachedir, 'tests.rds'))
 
 
 

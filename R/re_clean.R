@@ -10,7 +10,7 @@ online = FALSE
 if (online) {
   source('R/re_merge.R')
 } else {
-  tests = readRDS(file.path(cachedir, 'test_results.rds'))
+  tests = readRDS(file.path(cachedir, 'tests.rds'))
 }
 
 # varaibles ---------------------------------------------------------------
