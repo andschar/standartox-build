@@ -6,15 +6,30 @@ source('R/setup.R')
 online = online
 online = FALSE
 
+# plot theme
+theme_set(theme_bw())
+
 # data --------------------------------------------------------------------
-if (online) {
-  source('R/re_merge.R')
-} else {
-  tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
-}
+tests = readRDS(file.path(cachedir, 'tests.rds'))
+tests_cl = readRDS(file.path(cachedir, 'tests_cl.rds'))
+tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
+
+# (1) merge plots ---------------------------------------------------------
+# substance type ----
+gg_subst_type = ggplot(subst_type_stats,
+                       aes(y = N, reorder(ep_subst_type, N))) +
+  geom_bar(stat = 'identity') +
+  labs(x = 'Substance type') +
+  coord_flip()
+
+ggsave(gg_subst_type, filename = file.path(plotdir, 'gg_subst_type.png'),
+       width = 8, height = 5)
+
+# (2) clean plots ---------------------------------------------------------
 
 
-# plot --------------------------------------------------------------------
+
+# (3) filter plots --------------------------------------------------------
 # habitats ----
 habitat_stats = tests_fl[ ,
                           .(N_tot = .N,
@@ -28,8 +43,7 @@ habitat_stats[ , perc := N / habitat_stats[variable == 'N_tot', N] * 100 ]
 gg_habitat_stats = ggplot(habitat_stats, aes(y = N, x = reorder(variable, N))) +
   geom_bar(stat = 'identity') +
   coord_flip() +
-  labs(x = NULL, y = 'N tests') +
-  theme_bw()
+  labs(x = NULL, y = 'N tests')
 
 ggsave(gg_habitat_stats, filename = file.path(plotdir, 'gg_habitat_stats.png'),
        width = 8, height = 5)
@@ -48,8 +62,7 @@ region_stats[ , perc := N / region_stats[variable == 'N_tot', N] * 100 ]
 gg_region_stats = ggplot(region_stats, aes(y = N, x = reorder(variable, N))) +
   geom_bar(stat = 'identity') +
   coord_flip() +
-  labs(x = NULL, y = 'N tests') +
-  theme_bw()
+  labs(x = NULL, y = 'N tests')
 
 ggsave(gg_region_stats, filename = file.path(plotdir, 'gg_region_stats.png'),
        width = 8, height = 5)
@@ -74,3 +87,9 @@ ggsave(gg_duration_stats1, filename = file.path(plotdir, 'gg_duration_stats1.png
        width = 8, height = 5)
 ggsave(gg_duration_stats2, filename = file.path(plotdir, 'gg_duration_stats2.png'),
        width = 8, height = 5)
+
+
+
+
+
+
