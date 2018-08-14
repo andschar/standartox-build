@@ -46,11 +46,11 @@ if (TRUE) {
   
   # TODO COMMENT ON
   
-  ## Maintainance
+  # maintainance
   dbSendQuery(con, paste0("VACUUM ANALYZE  ", schema, ".", table, ";"))
   
-  dbDisconnect(con)
-  dbUnloadDriver(drv)
+  # message
+  message('Writing columns to data base:\n', paste0(names(ep50f_agg), collapse = ', '))
   
   dbDisconnect(con)
   dbUnloadDriver(drv)
