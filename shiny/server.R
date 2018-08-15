@@ -50,7 +50,7 @@ server = function(input, output) {
   output$download = downloadHandler(
     filename = function() {'data.csv'}, 
     content = function(fname){
-      write.csv(thedata(), fname)
+      write.csv(thedata(), fname, row.names = FALSE)
     }
   )
   
