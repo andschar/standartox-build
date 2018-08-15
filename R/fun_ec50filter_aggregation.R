@@ -3,7 +3,7 @@
 require(data.table)
 
 ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_type = NULL,
-                       agg = NULL, duration = NULL, info = FALSE) {
+                       agg = NULL, duration = NULL, info = FALSE, cas = NULL) {
     
   # debug me!
   # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96)
@@ -143,10 +143,18 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
                by = casnr]
   # TODO round numeric values above 0
   
+
+
+# (0) output filters ------------------------------------------------------
+  ## info ----
   if (!info) {
     out = out[ , .SD, .SDcols = grep('info|vls', names(out), value = T, invert = T)]
   }
   
+  ## CAS filter ----
+  if (!is.null(cas)) {
+    out = out[ casnr %in% cas ]
+  }
   ## (0) Aggregate by casnr [directly aggregating by casnr] ----
   # out = dt[,
   #          j = .(min = min(ep_value, na.rm = TRUE),
