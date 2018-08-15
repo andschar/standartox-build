@@ -22,6 +22,7 @@ server = function(input, output) {
   ## reactive/observer object
   thedata = reactive({
     ec50_filagg(tests_fl,
+                subst_type = input$subst_type,
                 habitat = input$habitat,
                 continent = input$continent,
                 tax = input$tax,

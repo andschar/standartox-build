@@ -33,6 +33,10 @@ ui = fluidPage(
                            selected = c('min', 'md')),
         checkboxGroupInput(inputId = 'infocols', label = 'Information columns',
                            choices = c('info', 'vls', 'n'))
+      ),
+      splitLayout(
+        checkboxGroupInput(inputId = 'subst_type', label = 'Substance type',
+                           choices = c('A', 'F', 'T', 'U'))
       )),
     
     mainPanel(

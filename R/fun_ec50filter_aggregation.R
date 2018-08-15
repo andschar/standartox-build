@@ -6,7 +6,7 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
                        agg = NULL, duration = NULL, info = NULL, cas = NULL) {
     
   # debug me!
-  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max')
+  dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max')
   
   ## checks ----
   if (!is.data.frame(dt)) {
@@ -22,13 +22,12 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
   
   #### filters ----
   ## substance type ----
-  # TODO
-  # if (is.null(habitat)) {
-  #   dt = dt
-  # } else {
-  #   dt = dt
-  # }
-  
+  if (is.null(subst_type)) {
+    dt = dt
+  } else {
+    dt = dt[ep_subst_type %in% subst_type]
+  }
+
   ## habitat ----
   # TODO enable ticking two options
   if (is.null(habitat)) {
