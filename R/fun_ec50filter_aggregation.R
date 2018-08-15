@@ -3,10 +3,10 @@
 require(data.table)
 
 ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_type = NULL,
-                       agg = NULL, duration = NULL, info = FALSE, cas = NULL) {
+                       agg = NULL, duration = NULL, info = NULL, cas = NULL) {
     
   # debug me!
-  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96)
+  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max')
   
   ## checks ----
   if (!is.data.frame(dt)) {
@@ -17,11 +17,20 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
   ## variables ----
   habitat_vars = c('marine', 'brackish', 'freshwater', 'terrestrial')
   continent_vars = c('Africa', 'Americas', 'Antarctica', 'Asia', 'Europe', 'Oceania')
-  agg_vars = c('min', 'max', 'md', 'q95', 'q5', 'mn', 'sd')
+  agg_vars = c('min', 'max', 'md', 'mn', 'sd', 'q95', 'q5')
   #taxon_vars = c() # commonly used taxas in Ecotoxicology
   
   #### filters ----
+  ## substance type ----
+  # TODO
+  # if (is.null(habitat)) {
+  #   dt = dt
+  # } else {
+  #   dt = dt
+  # }
+  
   ## habitat ----
+  # TODO enable ticking two options
   if (is.null(habitat)) {
     dt = dt
     hab = 'n' # none
@@ -146,15 +155,20 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
 
 
 # (0) output filters ------------------------------------------------------
-  ## info ----
-  if (!info) {
-    out = out[ , .SD, .SDcols = grep('info|vls', names(out), value = T, invert = T)]
-  }
-  
   ## CAS filter ----
   if (!is.null(cas)) {
     out = out[ casnr %in% cas ]
   }
+  
+  ## Aggregate & info filter ----
+  if (!is.null(agg)) {
+    if (!is.null(info)) {
+      out = out[ , .SD, .SDcols = c('casnr', agg, info)]
+    } else {
+      out = out[ , .SD, .SDcols = c('casnr', agg)]
+    }
+  }
+
   ## (0) Aggregate by casnr [directly aggregating by casnr] ----
   # out = dt[,
   #          j = .(min = min(ep_value, na.rm = TRUE),
@@ -168,7 +182,6 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
   #          by = casnr]
   
   #### names ----
-  names(out)
   setnames(out, c('casnr',
                   paste0(paste0('ep50', hab, '_', tax_id, dur_id, '_'),
                          names(out)[2:length(out)])))
