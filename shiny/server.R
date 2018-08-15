@@ -17,9 +17,20 @@ server = function(input, output) {
     dat = ec50_filagg(tests_fl,
                       habitat = input$habitat,
                       continent = input$continent,
-                      tax = input$tax)
-    
-  })
+                      tax = input$tax,
+                      dur = c(input$dur1, input$dur2),
+                      cas = input$cas)},
+    options = list(
+      columnDefs = list(list(
+      #targets = 15,
+      render = JS(
+        "function(data, type, row, meta) {",
+        "return type === 'display' && data.length > 6 ?",
+        "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
+        "}"))
+      ),
+      dom = 't'),
+    callback = JS('table.page(3).draw(false);'))
   
   # # tutorial stuff:
   # output$hist = renderPlot({
