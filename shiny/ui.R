@@ -20,16 +20,18 @@ ui = fluidPage(
         numericInput(inputId = 'dur2', label = 'to (h)', value = 48)
         ),
       splitLayout(
-        checkboxGroupInput(inputId = 'habitat', label = 'Organism hatbitat',
-                           choices = c('marine', 'brackish', 'freshwater', 'terrestrial')),
-        checkboxGroupInput(inputId = 'continent', label = 'Continent',
-                           choices = c('Africa', 'Americas', 'Antarctica', 'Asia', 'Europe', 'Oceania'))
+        radioButtons(inputId = 'habitat', label = 'Organism hatbitat',
+                     choices = c('marine', 'brackish', 'freshwater', 'terrestrial'),
+                     selected = 'freshwater'),
+        radioButtons(inputId = 'continent', label = 'Continent',
+                     choices = c('Africa', 'Americas', 'Antarctica', 'Asia', 'Europe', 'Oceania'),
+                     selected = 'Europe')
       ),
       splitLayout(
         checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
                            choices = c('min', 'max', 'md', 'mn', 'sd', 'q95', 'q5'),
                            selected = c('min', 'md')),
-        checkboxGroupInput(inputId = 'infocols', label = 'Information',
+        checkboxGroupInput(inputId = 'infocols', label = 'Information columns',
                            choices = c('info', 'vls', 'n'))
       )),
     
