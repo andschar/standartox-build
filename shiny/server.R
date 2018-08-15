@@ -19,16 +19,18 @@ tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
 
 server = function(input, output) {
-  
+  ## reactive/observer object
   thedata = reactive({
     ec50_filagg(tests_fl,
                 habitat = input$habitat,
                 continent = input$continent,
                 tax = input$tax,
-                dur = c(input$dur1, input$dur2))#,
-                      #cas = input$cas)
+                dur = c(input$dur1, input$dur2),
+                agg = input$agg,
+                info = input$infocols)
   })
-  
+  ## output object
+  # data
   output$dat = DT::renderDataTable({thedata()},
     options = list(
       columnDefs = list(list(
@@ -39,20 +41,17 @@ server = function(input, output) {
         "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
         "}"))
       ),
-      dom = 't',
+      #dom = 't',
       row.names = FALSE),
     callback = JS('table.page(3).draw(false);'))
+  
   # download
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
-  output$download <- downloadHandler(
+  output$download = downloadHandler(
     filename = function() {'data.csv'}, 
     content = function(fname){
       write.csv(thedata(), fname)
     }
   )
   
-  # # tutorial stuff:
-  # output$hist = renderPlot({
-  #   hist(rnorm(input$n))
-  # })
 }

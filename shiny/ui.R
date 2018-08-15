@@ -24,13 +24,20 @@ ui = fluidPage(
                            choices = c('marine', 'brackish', 'freshwater', 'terrestrial')),
         checkboxGroupInput(inputId = 'continent', label = 'Continent',
                            choices = c('Africa', 'Americas', 'Antarctica', 'Asia', 'Europe', 'Oceania'))
+      ),
+      splitLayout(
+        checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
+                           choices = c('min', 'max', 'md', 'mn', 'sd', 'q95', 'q5'),
+                           selected = c('min', 'md')),
+        checkboxGroupInput(inputId = 'infocols', label = 'Information',
+                           choices = c('info', 'vls', 'n'))
       )),
+    
     mainPanel(
       tabsetPanel(
         tabPanel(
           'Table',
-          dataTableOutput(outputId = 'dat',
-                          width = 4, height = 4)
+          dataTableOutput(outputId = 'dat')
           ),
         tabPanel(
           'Plot',
@@ -40,10 +47,10 @@ ui = fluidPage(
           'Download',
           downloadButton(outputId = 'download', 'Download the data')
         )
-        )
       )
     )
   )
+)
 
 
 # # tutorial stuff:
