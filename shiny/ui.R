@@ -7,7 +7,8 @@ require(shiny)
 
 # User Interface ----------------------------------------------------------
 ui = fluidPage(
-
+  
+  titlePanel('Etox Base'),
   sidebarLayout(
     sidebarPanel(
       # textInput(inputId = 'cas', label = 'Put in CAS',
