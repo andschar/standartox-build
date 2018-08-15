@@ -1,13 +1,12 @@
 # function to filter EC50 data according to habitat, continent and subst_type
+
+require(data.table)
+
 ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_type = NULL,
-                       agg = NULL, duration = NULL) {
+                       agg = NULL, duration = NULL, info = FALSE) {
     
   # debug me!
-  # dt = tests_fl2
-  # tax = 'Algae'
-  # habitat = 'marine'
-  # continent = 'Europe'
-  ### END
+  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96)
   
   ## checks ----
   if (!is.data.frame(dt)) {
@@ -142,6 +141,11 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
                      info = paste0(info, collapse = ' - '),
                      vls = paste0(vls, collapse = '-')),
                by = casnr]
+  # TODO round numeric values above 0
+  
+  if (!info) {
+    out = out[ , .SD, .SDcols = grep('info|vls', names(out), value = T, invert = T)]
+  }
   
   ## (0) Aggregate by casnr [directly aggregating by casnr] ----
   # out = dt[,
