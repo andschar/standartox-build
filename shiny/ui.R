@@ -10,8 +10,8 @@ ui = fluidPage(
 
   sidebarLayout(
     sidebarPanel(
-      textInput(inputId = 'cas', label = 'Put in CAS',
-                value = NULL), # TODO allow for multiple entries
+      # textInput(inputId = 'cas', label = 'Put in CAS',
+      #           value = NULL), # TODO allow for multiple entries
       selectInput(inputId = 'tax', label = 'Choose a taxon',
                   choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
       numericInput(inputId = 'dur1', label = 'Enter test durations', value = 48),
@@ -21,14 +21,26 @@ ui = fluidPage(
       checkboxGroupInput(inputId = 'continent', label = 'Pick a continent',
                          choices = c('Africa', 'Americas', 'Antarctica', 'Asia', 'Europe', 'Oceania'))
       ),
-    tabsetPanel(
-      mainPanel(
-        dataTableOutput(outputId = 'dat',
-                        width = 4, height = 4)
+    mainPanel(
+      tabsetPanel(
+        tabPanel(
+          'Table',
+          dataTableOutput(outputId = 'dat',
+                          width = 4, height = 4)
+          ),
+        tabPanel(
+          'Plot',
+          'Test'
+          ),
+        tabPanel(
+          'Download',
+          downloadButton(outputId = 'download', 'Download the data')
+        )
+        )
       )
     )
   )
-)
+
 
 # # tutorial stuff:
 # numericInput(inputId = 'n',
