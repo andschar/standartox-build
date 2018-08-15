@@ -12,10 +12,10 @@ source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation.
 tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
 # debuging
-input = list(habitat = 'freshwater',
-             continent = 'Europe',
-             tax = 'Algae',
-             dur = c(48, 96))
+# input = list(habitat = 'freshwater',
+#              continent = 'Europe',
+#              tax = 'Algae',
+#              dur = c(48, 96))
 
 
 server = function(input, output) {
@@ -39,7 +39,8 @@ server = function(input, output) {
         "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
         "}"))
       ),
-      dom = 't'),
+      dom = 't',
+      row.names = FALSE),
     callback = JS('table.page(3).draw(false);'))
   # download
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table

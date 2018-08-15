@@ -15,13 +15,16 @@ ui = fluidPage(
       #           value = NULL), # TODO allow for multiple entries
       selectInput(inputId = 'tax', label = 'Choose a taxon',
                   choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
-      numericInput(inputId = 'dur1', label = 'Enter test durations', value = 48),
-      numericInput(inputId = 'dur2', label = 'Enter test durations', value = 48),
-      checkboxGroupInput(inputId = 'habitat', label = 'Pick an organism hatbitat',
-                         choices = c('marine', 'brackish', 'freshwater', 'terrestrial')),
-      checkboxGroupInput(inputId = 'continent', label = 'Pick a continent',
-                         choices = c('Africa', 'Americas', 'Antarctica', 'Asia', 'Europe', 'Oceania'))
-      ),
+      splitLayout(
+        numericInput(inputId = 'dur1', label = 'Test durations from (h)', value = 24),
+        numericInput(inputId = 'dur2', label = 'to (h)', value = 48)
+        ),
+      splitLayout(
+        checkboxGroupInput(inputId = 'habitat', label = 'Organism hatbitat',
+                           choices = c('marine', 'brackish', 'freshwater', 'terrestrial')),
+        checkboxGroupInput(inputId = 'continent', label = 'Continent',
+                           choices = c('Africa', 'Americas', 'Antarctica', 'Asia', 'Europe', 'Oceania'))
+      )),
     mainPanel(
       tabsetPanel(
         tabPanel(
