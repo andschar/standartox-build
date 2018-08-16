@@ -24,12 +24,12 @@ ui = fluidPage(
                      choices = c('marine', 'brackish', 'freshwater', 'terrestrial'),
                      selected = 'freshwater'),
         radioButtons(inputId = 'continent', label = 'Continent',
-                     choices = c('Africa', 'Americas', 'Antarctica', 'Asia', 'Europe', 'Oceania'),
+                     choices = c('Africa', 'Americas', 'Asia', 'Europe', 'Oceania'),
                      selected = 'Europe')
       ),
       splitLayout(
         checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
-                           choices = c('min', 'max', 'md', 'mn', 'sd', 'q95', 'q5'),
+                           choices = c('min', 'max', 'md', 'mn', 'sd'),
                            selected = c('min', 'md')),
         checkboxGroupInput(inputId = 'infocols', label = 'Information columns',
                            choices = c('info', 'vls', 'n'))
