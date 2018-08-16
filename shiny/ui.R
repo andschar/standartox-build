@@ -46,8 +46,18 @@ ui = fluidPage(
           dataTableOutput(outputId = 'dat')
           ),
         tabPanel(
-          'Plot',
-          plotOutput(outputId = 'plot')
+          'Plots',
+          tabsetPanel(
+            tabPanel(
+              'Sensitivity plots',
+              plotOutput(outputId = 'plot_sensitivity')
+            ),
+            tabPanel(
+              'Meta plots',
+              plotOutput(outputId = 'plot_meta')
+            )
+          )
+          
           ),
         tabPanel(
           'Download',

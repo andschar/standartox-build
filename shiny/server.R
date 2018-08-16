@@ -33,11 +33,12 @@ server = function(input, output) {
                 info = input$infocols)
   })
   # plot
-  theplot = reactive({
+  plot_sensitivity = reactive({
     ec50_filagg_plot(thedata())
   })
 
-  ## output object
+
+# output object -----------------------------------------------------------
   # data
   output$dat = DT::renderDataTable({thedata()},
     options = list(
@@ -52,8 +53,9 @@ server = function(input, output) {
       #dom = 't',
       row.names = FALSE),
     callback = JS('table.page(3).draw(false);'))
-  
-  output$plot = renderPlot({theplot()})
+  # plots
+  output$plot_sensitivity = renderPlot({plot_sensitivity()})
+  output$plot_meta = renderPlot({ggplot(iris)})
   
   # download
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
