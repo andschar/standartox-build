@@ -3,6 +3,7 @@
 # setup -------------------------------------------------------------------
 source('/home/andreas/Documents/Projects/etox-base/R/setup.R')
 require(shiny)
+require(knitr)
 
 
 # User Interface ----------------------------------------------------------
@@ -18,7 +19,7 @@ ui = fluidPage(
       splitLayout(
         numericInput(inputId = 'dur1', label = 'Test durations from (h)', value = 24),
         numericInput(inputId = 'dur2', label = 'to (h)', value = 48)
-        ),
+      ),
       splitLayout(
         radioButtons(inputId = 'habitat', label = 'Organism hatbitat',
                      choices = c('marine', 'brackish', 'freshwater', 'terrestrial'),
@@ -44,7 +45,7 @@ ui = fluidPage(
         tabPanel(
           'Table',
           dataTableOutput(outputId = 'dat')
-          ),
+        ),
         tabPanel(
           'Plots',
           tabsetPanel(
@@ -57,20 +58,19 @@ ui = fluidPage(
               plotOutput(outputId = 'plot_meta')
             )
           )
-          
-          ),
+        ),
         tabPanel(
           'Download',
           downloadButton(outputId = 'download', 'Download the data')
+        ),
+        tabPanel(
+          'README',
+          withMathJax(includeMarkdown('README.md'))
+          # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
         )
       )
     )
   )
 )
 
-
-# # tutorial stuff:
-# numericInput(inputId = 'n',
-#              label = 'sample size', value = 25),
-# plotOutput(outputId = 'hist')
 

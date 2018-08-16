@@ -1,26 +1,24 @@
 # script for a shiny app selecting EC50 values
-
 # setup -------------------------------------------------------------------
 source('/home/andreas/Documents/Projects/etox-base/R/setup.R')
 require(shiny)
+require(knitr)
 require(DT)
 
 # functions
 source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation.R')
 source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation_plots.R')
 
+# knit README beforehands
+rmdfiles = c('README.Rmd')
+sapply(rmdfiles, knit, quiet = TRUE)
+
 # data --------------------------------------------------------------------
 tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
-# debuging
-# input = list(habitat = 'freshwater',
-#              continent = 'Europe',
-#              tax = 'Algae',
-#              dur = c(48, 96))
-
-
+# shiny -------------------------------------------------------------------
 server = function(input, output) {
-  ## reactive/observer objects
+  #### reactive/observer objects ----
   # data
   thedata = reactive({
     ec50_filagg(tests_fl,
@@ -37,8 +35,7 @@ server = function(input, output) {
     ec50_filagg_plot(thedata())
   })
 
-
-# output object -----------------------------------------------------------
+  #### output objects ----
   # data
   output$dat = DT::renderDataTable({thedata()},
     options = list(
@@ -66,5 +63,7 @@ server = function(input, output) {
       write.csv(thedata(), fname, row.names = FALSE)
     }
   )
+
   
 }
+
