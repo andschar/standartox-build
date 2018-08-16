@@ -50,7 +50,7 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
       hab = 'f'
     }
     if (habitat == 'terrestrial') {
-      dt = dt[ isFre_fin == '1' ]
+      dt = dt[ isTer_fin == '1' ]
       hab = 't'
     }
     # TODO
