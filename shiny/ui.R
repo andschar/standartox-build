@@ -32,7 +32,7 @@ ui = fluidPage(
                            choices = c('min', 'max', 'md', 'mn', 'sd'),
                            selected = c('min', 'md')),
         checkboxGroupInput(inputId = 'infocols', label = 'Information columns',
-                           choices = c('info', 'vls', 'n'))
+                           choices = c('info', 'taxa', 'vls', 'n'))
       ),
       splitLayout(
         checkboxGroupInput(inputId = 'subst_type', label = 'Substance type',
@@ -47,7 +47,7 @@ ui = fluidPage(
           ),
         tabPanel(
           'Plot',
-          'Test'
+          plotOutput(outputId = 'plot')
           ),
         tabPanel(
           'Download',

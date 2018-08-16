@@ -7,6 +7,7 @@ require(DT)
 
 # functions
 source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation.R')
+source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation_plots.R')
 
 # data --------------------------------------------------------------------
 tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
@@ -19,7 +20,8 @@ tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
 
 server = function(input, output) {
-  ## reactive/observer object
+  ## reactive/observer objects
+  # data
   thedata = reactive({
     ec50_filagg(tests_fl,
                 subst_type = input$subst_type,
@@ -30,6 +32,11 @@ server = function(input, output) {
                 agg = input$agg,
                 info = input$infocols)
   })
+  # plot
+  theplot = reactive({
+    ec50_filagg_plot(thedata())
+  })
+
   ## output object
   # data
   output$dat = DT::renderDataTable({thedata()},
@@ -45,6 +52,8 @@ server = function(input, output) {
       #dom = 't',
       row.names = FALSE),
     callback = JS('table.page(3).draw(false);'))
+  
+  output$plot = renderPlot({theplot()})
   
   # download
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
