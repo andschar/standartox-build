@@ -6,7 +6,8 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
                        agg = NULL, duration = NULL, info = NULL, cas = NULL) {
     
   # debug me!
-  #dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max')
+  # tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
+  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max')
   
   ## checks ----
   if (!is.data.frame(dt)) {
@@ -127,6 +128,7 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
                                    '_', ep_duration, 'h_', ep_ref_num, '_(', sort(ep_value), 'ug/L)',
                                    collapse = ' - '),
                      vls = paste0(as.character(sort(ep_value)), collapse = '-'),
+                     taxa = paste0(unique(taxon), collapse = '-'),
                      md = median(ep_value, na.rm = TRUE),
                      min = min(ep_value, na.rm = TRUE),
                      n_tests = .N),
@@ -147,7 +149,8 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
                      sd = sd(vl, na.rm = TRUE),
                      n = sum(n_tests),
                      info = paste0(info, collapse = ' - '),
-                     vls = paste0(vls, collapse = '-')),
+                     vls = paste0(vls, collapse = '-'),
+                     taxa = paste0(unique(taxa), collapse = '-')),
                by = casnr]
   # TODO round numeric values above 0
   
@@ -197,4 +200,5 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
   # }
   
   return(out)
+  # fwrite(out, '/tmp/out.csv') # debug me!
 }
