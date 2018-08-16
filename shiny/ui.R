@@ -42,6 +42,7 @@ ui = fluidPage(
     
     mainPanel(
       tabsetPanel(
+        selected = 'README',
         tabPanel(
           'Table',
           dataTableOutput(outputId = 'dat')
@@ -67,6 +68,10 @@ ui = fluidPage(
           'README',
           withMathJax(includeMarkdown('README.md'))
           # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
+        ),
+        tabPanel(
+          'Help',
+          'Write the help pages'
         )
       )
     )
