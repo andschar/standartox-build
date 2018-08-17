@@ -3,17 +3,26 @@
 # setup -------------------------------------------------------------------
 source('/home/andreas/Documents/Projects/etox-base/R/setup.R')
 require(shiny)
+require(shinyjs)
 require(knitr)
 
 
 # User Interface ----------------------------------------------------------
 ui = fluidPage(
+  useShinyjs(), # Include shinyjs
   
   titlePanel('Etox Base'),
   sidebarLayout(
     sidebarPanel(
       # textInput(inputId = 'cas', label = 'Put in CAS',
       #           value = NULL), # TODO allow for multiple entries
+      splitLayout(
+        splitLayout(
+          fileInput(inputId = 'file_cas', label = NULL, #'.csv with CAS in one column',
+                    accept = '.csv'),
+          actionButton(inputId = 'reset', label = 'Reset Input')  
+        )
+      ),
       selectInput(inputId = 'tax', label = 'Choose a taxon',
                   choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
       splitLayout(
@@ -72,6 +81,10 @@ ui = fluidPage(
         tabPanel(
           'Help',
           'Write the help pages'
+        ),
+        tabPanel(
+          'Article',
+          withMathJax(includeMarkdown('article.md'))
         )
       )
     )

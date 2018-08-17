@@ -10,16 +10,38 @@ source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation.
 source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation_plots.R')
 
 # knit README beforehands
-rmdfiles = c('README.Rmd')
+rmdfiles = c('README.Rmd', 'article.Rmd')
 sapply(rmdfiles, knit, quiet = TRUE)
+# knit('shiny/README.Rmd', output = 'shiny/README.md', quiet = TRUE)
+# knit('shiny/article.Rmd', output = 'shiny/article.md', quiet = TRUE)
 
 # data --------------------------------------------------------------------
 tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
 # shiny -------------------------------------------------------------------
 server = function(input, output) {
-  #### reactive/observer objects ----
-  # data
+  
+  # read file + reset button ----
+  # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
+  rv = reactiveValues(
+    data = NULL,
+    reset = FALSE
+  )
+  
+  observe({
+    req(input$file_cas)
+    req(!rv$reset)
+    
+    rv$data = read.csv(input$file_cas$datapath) # $datapath not very intuitive
+  })
+  
+  observeEvent(input$reset, {
+    rv$data = NULL
+    rv$clear = TRUE
+    reset('file_cas')
+  }, priority = 1000) # priority?
+  
+  # data + function ----
   thedata = reactive({
     ec50_filagg(tests_fl,
                 subst_type = input$subst_type,
@@ -28,14 +50,16 @@ server = function(input, output) {
                 tax = input$tax,
                 dur = c(input$dur1, input$dur2),
                 agg = input$agg,
-                info = input$infocols)
+                info = input$infocols,
+                cas = rv$data)
   })
-  # plot
+  
+  # plots ----
   plot_sensitivity = reactive({
     ec50_filagg_plot(thedata())
   })
 
-  #### output objects ----
+  # output ----
   # data
   output$dat = DT::renderDataTable({thedata()},
     options = list(
