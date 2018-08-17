@@ -10,15 +10,26 @@ tocas = function (x) {
         sep = '-')
 }
 
-casconv = function (x) {
+casconv = function (x, direction = c('tocas', 'tocasnr')) {
+  dir = match.arg(direction)
   if (anyNA(x)) {
     warning('Careful with NAs.')
   }
-  if (all(grepl('-', x))) {
-    message('Converting from CAS to CASNR.')
-    gsub('-', '', x)
+  if (is.null(direction)) {
+    if (all(grepl('-', x))) {
+      message('Converting from CAS to CASNR.')
+      gsub('-', '', x)
+    } else {
+      message('Converting from CASNR to CAS.')
+      tocas(x)
+    }
   } else {
-    message('Converting from CASNR to CAS.')
-    tocas(x)
+    if (dir == 'tocas') {
+      message('Converting from CASNR to CAS.')
+      tocas(x)
+    } else if (dir == 'tocasnr') {
+      message('Converting from CAS to CASNR.')
+      gsub('-', '', x)
+    }
   }
 }
