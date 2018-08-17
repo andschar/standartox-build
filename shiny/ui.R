@@ -14,13 +14,10 @@ ui = fluidPage(
   titlePanel('Etox Base'),
   sidebarLayout(
     sidebarPanel(
-      # textInput(inputId = 'cas', label = 'Put in CAS',
-      #           value = NULL), # TODO allow for multiple entries
       splitLayout(
-        splitLayout(
-          fileInput(inputId = 'file_cas', label = '.csv with CAS in one column',
-                    accept = '.csv'),
-          actionButton(inputId = 'reset', label = 'Reset Input', style = 'margin-top:25px'))
+        fileInput(inputId = 'file_cas', label = 'Upload CAS',
+                  accept = '.csv', placeholder = 'one column .csv'),
+        actionButton(inputId = 'reset', label = 'Reset Input', style = 'margin-top:25px')
       ),
       selectInput(inputId = 'tax', label = 'Choose a taxon',
                   choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
@@ -53,7 +50,10 @@ ui = fluidPage(
         selected = 'README',
         tabPanel(
           'Table',
-          dataTableOutput(outputId = 'dat')
+          headerPanel('EC50 values'),
+          column(
+            dataTableOutput(outputId = 'dat'), width = 10, offset = 1
+          )
         ),
         tabPanel(
           'Summary',

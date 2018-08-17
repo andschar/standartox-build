@@ -32,7 +32,8 @@ server = function(input, output) {
     req(input$file_cas)
     req(!rv$reset)
     
-    rv$data = read.csv(input$file_cas$datapath) # $datapath not very intuitive
+    rv$data = read.csv(input$file_cas$datapath,
+                       header = FALSE, stringsAsFactors = FALSE) # $datapath not very intuitive
   })
   
   observeEvent(input$reset, {
@@ -64,7 +65,7 @@ server = function(input, output) {
   output$dat = DT::renderDataTable({thedata()},
     options = list(
       columnDefs = list(list(
-      #targets = 15,
+      # targets = 0:4,
       render = JS(
         "function(data, type, row, meta) {",
         "return type === 'display' && data.length > 6 ?",
