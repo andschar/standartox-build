@@ -4,18 +4,13 @@
 source('R/setup.R')
 # switches
 online = online
-online = FALSE
-local = FALSE
-
-# data --------------------------------------------------------------------
-psm = readRDS(file.path(cachedir, 'psm.rds')) ## DEPR?
+online_db = FALSE
+local = TRUE
+whole_db = FALSE
 
 # query -------------------------------------------------------------------
 
-if (online) {
-  todo_cas = unique(psm$casnr) # CASNR
-  #todo_cas = todo_cas[1:10] # debug me!
-  
+if (online_db) {
   drv = dbDriver("PostgreSQL")
   if (local) {
     con = dbConnect(drv, user = DBuserL, dbname = DBnameL, host = DBhostL, port = DBportL, password = DBpasswordL) # local  
@@ -23,7 +18,16 @@ if (online) {
     con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword) # on server  
   }
   
-  #epa1 <- data.table()
+  if (whole_db) {
+    res = dbGetQuery(con, 'SELECT DISTINCT ON (tests.test_cas) tests.test_cas
+                         FROM ecotox.tests')
+    todo_cas = res$test_cas # all the CAS in the EPA ECOTOX database
+  } else {
+    psm = readRDS(file.path(cachedir, 'psm.rds'))
+    todo_cas = unique(psm$casnr) # specific CASNR
+  }
+  # todo_cas = todo_cas[1:10] # debug me!
+  
   epa1_l <- list()
   for (i in seq_along(todo_cas)) {
     casnr <- todo_cas[i]
