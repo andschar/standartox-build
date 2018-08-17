@@ -18,10 +18,9 @@ ui = fluidPage(
       #           value = NULL), # TODO allow for multiple entries
       splitLayout(
         splitLayout(
-          fileInput(inputId = 'file_cas', label = NULL, #'.csv with CAS in one column',
+          fileInput(inputId = 'file_cas', label = '.csv with CAS in one column',
                     accept = '.csv'),
-          actionButton(inputId = 'reset', label = 'Reset Input')  
-        )
+          actionButton(inputId = 'reset', label = 'Reset Input', style = 'margin-top:25px'))
       ),
       selectInput(inputId = 'tax', label = 'Choose a taxon',
                   choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
