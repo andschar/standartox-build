@@ -31,10 +31,10 @@ ui = fluidPage(
       ),
       splitLayout(
         radioButtons(inputId = 'habitat', label = 'Organism hatbitat',
-                     choices = c('marine', 'brackish', 'freshwater', 'terrestrial'),
+                     choices = c('all', 'marine', 'brackish', 'freshwater', 'terrestrial'),
                      selected = 'freshwater'),
         radioButtons(inputId = 'continent', label = 'Continent',
-                     choices = c('Africa', 'Americas', 'Asia', 'Europe', 'Oceania'),
+                     choices = c('World', 'Africa', 'Americas', 'Asia', 'Europe', 'Oceania'),
                      selected = 'Europe')
       ),
       splitLayout(

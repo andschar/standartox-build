@@ -35,7 +35,7 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
 
   ## habitat ----
   # TODO enable ticking two options
-  if (is.null(habitat)) {
+  if (is.null(habitat) | habitat == 'all') {
     dt = dt
     hab = 'n' # none
   } else {
@@ -65,7 +65,7 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
     # }
   }
   ## continent ----
-  if (is.null(continent)) {
+  if (is.null(continent) | continent == 'World') {
     dt = dt
   } else {
     if (!continent %in% continent_vars) {
