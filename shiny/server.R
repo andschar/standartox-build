@@ -74,6 +74,10 @@ server = function(input, output) {
       #dom = 't',
       row.names = FALSE),
     callback = JS('table.page(3).draw(false);'))
+  # summary
+  output$summary_chem = renderPrint({ unique(thedata()$casnr) })
+  output$summary_taxa = renderPrint({ thedata()$taxa })
+  
   # plots
   output$plot_sensitivity = renderPlot({plot_sensitivity()})
   output$plot_meta = renderPlot({ggplot(iris)})
