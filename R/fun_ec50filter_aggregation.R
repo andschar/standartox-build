@@ -7,10 +7,11 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
     
   # debug me!
   # tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
-  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max')
+  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); cas = c("1071836", "122145",  "121755",  NA); subst_type = NULL; info = 'n'
+  
   if (!is.null(cas)) {
-    casnr_todo = casconv(cas)
-    st = dt[ casnr %in% casnr_todo ]
+    casnr_todo = casconv(cas, direction = 'tocasnr')
+    dt = dt[ casnr %in% casnr_todo ]
   }
   
   ## checks ----
@@ -157,15 +158,8 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
                      taxa = paste0(unique(taxa), collapse = '-')),
                by = casnr]
   # TODO round numeric values above 0
-  
-
 
 # (0) output filters ------------------------------------------------------
-  ## CAS filter ----
-  if (!is.null(cas)) {
-    out = out[ casnr %in% cas ]
-  }
-  
   ## Aggregate & info filter ----
   if (!is.null(agg)) {
     if (!is.null(info)) {

@@ -32,8 +32,10 @@ server = function(input, output) {
     req(input$file_cas)
     req(!rv$reset)
     
-    rv$data = read.csv(input$file_cas$datapath,
-                       header = FALSE, stringsAsFactors = FALSE) # $datapath not very intuitive
+    data = read.csv(input$file_cas$datapath,
+                    header = FALSE, stringsAsFactors = FALSE) # $datapath not very intuitive
+    data = data[ ,1]
+    rv$data = data
   })
   
   observeEvent(input$reset, {
