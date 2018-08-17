@@ -8,6 +8,10 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
   # debug me!
   # tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
   # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max')
+  if (!is.null(cas)) {
+    casnr_todo = casconv(cas)
+    st = dt[ casnr %in% casnr_todo ]
+  }
   
   ## checks ----
   if (!is.data.frame(dt)) {
