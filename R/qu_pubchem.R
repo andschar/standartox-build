@@ -16,14 +16,14 @@ if (online) {
 
   pc_l = list()
   for (i in 1:length(cid)) {
-    cas_qu = names(cid[i])
-    cid_qu = cid[[i]]
-    message('Querying: CAS:', cas_qu, '; CID:', cid_qu, ' (', i, '/', length(cid), ')')
+    qu_cas = names(cid[i])
+    qu_cid = cid[[i]]
+    message('Querying: CAS:', qu_cas, '; CID:', qu_cid, ' (', i, '/', length(cid), ')')
     
-    pc_res = pc_prop(cid_qu)
+    pc_res = pc_prop(qu_cid)
     
     pc_l[[i]] = pc_res
-    names(pc_l)[i] = cas_qu
+    names(pc_l)[i] = qu_cas
   } 
   
   saveRDS(pc_l, file.path(cachedir, 'pc_l.rds'))
@@ -31,7 +31,7 @@ if (online) {
   
 } else {
   pc_l = readRDS(file.path(cachedir, 'pc_l.rds'))
-  cir = readRDS(file.path(cachedir, 'cid.rds'))
+  cid = readRDS(file.path(cachedir, 'cid.rds'))
 }
 
 # convert all entries to data.tables
