@@ -4,7 +4,7 @@
 source('R/setup.R')
 # switches
 online = online
-online_db = FALSE
+online_db = TRUE
 local = TRUE
 whole_db = FALSE
 
@@ -36,6 +36,7 @@ if (online_db) {
                             -- substances
                                 tests.test_cas::varchar AS casnr,
                                 chemicals.chemical_name,
+                                chemical_carriers.chem_name,
                                 chemicals.ecotox_group AS chemical_group,
                             -- concentration + unit conversion	
                                 CASE
@@ -98,6 +99,7 @@ if (online_db) {
                                 LEFT JOIN ecotox.results ON tests.test_id = results.test_id
                                 RIGHT JOIN ecotox.species ON tests.species_number = species.species_number
                                 LEFT JOIN ecotox.chemicals ON tests.test_cas = chemicals.cas_number
+                                LEFT JOIN ecotox.chemical_carriers ON tests.test_id = chemical_carriers.test_id
                                 LEFT JOIN ecotox.refs ON tests.reference_number = refs.reference_number
                                 LEFT JOIN lookup.unit_convert ON results.conc1_unit = unit_convert.unit
                                 LEFT JOIN lookup.duration_convert_as ON results.obs_duration_unit = duration_convert_as.unit
@@ -183,10 +185,10 @@ names(epa1)
 fwrite(epa1, '/tmp/epa1.csv')
 
 # final columns -----------------------------------------------------------
-setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'reference_number', 'title', 'author', 'publication_year'))
+setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chem_name', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'reference_number', 'title', 'author', 'publication_year'))
 
 # change names
-setnames(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'subst_type', 'endpoint', 'effect',  'exposure_type', 'media_type', 'habitat', 'subhabitat',  'taxon', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'ref_num', 'title', 'author', 'publication_year'))
+setnames(epa1, c('casnr', 'cas', 'chemical_name', 'carrier_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'subst_type', 'endpoint', 'effect',  'exposure_type', 'media_type', 'habitat', 'subhabitat',  'taxon', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'ref_num', 'title', 'author', 'publication_year'))
 
 # errata ------------------------------------------------------------------
 # not accepted (anymore):
