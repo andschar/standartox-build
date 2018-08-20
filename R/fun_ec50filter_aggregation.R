@@ -6,7 +6,7 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
     
   # debug me!
   # tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
-  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); cas = c("1071836", "122145",  "121755",  NA); subst_type = NULL; info = 'n'
+  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); cas = c("1071836", "122145",  "121755",  NA); subst_type = NULL; info = 'n'; comp = 'comp_name'; solub_chck = FALSE
   
   if (!is.null(cas)) {
     casnr_todo = casconv(cas, direction = 'tocasnr')
@@ -154,8 +154,9 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
                by = casnr]
   # TODO round numeric values above 0
   
-  out = merge(out, dt[ , .SD, .SDcols = c('casnr', comp)], by = 'casnr', all.x = TRUE)
-  
+  dt_merge = dt[ , .SD, .SDcols = c('casnr', comp)]
+  dt_merge = unique(dt_merge)
+  out = merge(out, dt_merge, by = 'casnr')
 
   # output filters ----------------------------------------------------------
   sdcols = c('casnr', comp, agg, info)
