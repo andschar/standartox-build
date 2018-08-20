@@ -43,12 +43,12 @@ if (length(na_type) > 0 ) {
 }
 
 # (3) water solubility ----
-tests[ , comp_solu := ifelse(!is.na(pp_solubility_water), pp_solubility_water, NA)]
+tests[ , comp_solub := ifelse(!is.na(pp_solubility_water), pp_solubility_water, NA)]
 # TODO add more resources to the solub_wat_fin creation
-tests[ , comp_solu_chck := ifelse(ep_value < solub_wat_fin, TRUE, FALSE)] # TODO check: unit of solubility concentrations
+tests[ , comp_solub_chck := ifelse(ep_value < comp_solub, TRUE, FALSE)] # TODO check: unit of solubility concentrations
 
 # checking
-na_solub = unique(tests[ is.na(comp_solu), casnr ])
+na_solub = unique(tests[ is.na(comp_solub), casnr ])
 if (length(na_solub) > 0 ) {
   message('For the following cas, water solubility values are missing:\n',
           paste0(na_solub, collapse = ', '))
