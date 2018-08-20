@@ -12,6 +12,7 @@ source('R/qu_pubchem.R')
 source('R/qu_aw.R')
 source('R/qu_pan.R')
 source('R/qu_pp.R')
+source('R/qu_frac.R')
 
 # EPA data
 source('R/qu_epa.R')
@@ -45,7 +46,7 @@ pc2 = pc[ , .SD, .SDcols = c('cas', 'CID', 'InChIKey', 'IUPACName', 'ExactMass')
 setnames(pc2, c('cas', paste0('pc_', tolower(names(pc2[ ,2:length(names(pc2))])))))
 pc2 = pc2[!duplicated(cas)] #! easy way out, although pubchem doesn't provide important information
 # Alan Wood Compendium ----
-aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', 'activity', 'subactivity', paste0('subactivity', 1:3))]
+aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', 'activity', 'pest_type', 'subactivity', paste0('subactivity', 1:3))]
 aw2[ , .N, cas][order(-N)] # no duplicates
 setnames(aw2, c('cas', paste0('aw_', tolower(names(aw2[ ,2:length(names(aw2))])))))
 # Pesticide Action Network ----
@@ -56,8 +57,14 @@ setnames(pan2, c('cas', paste0('pa_', tolower(names(pan2[ ,2:length(names(pan2))
 pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
 pp2[ , .N, cas][order(-N)] # no duplicates
 setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))])))))
+# FRAC data ----
+frac2 = frac[ , .SD, .SDcols = c('cas', 'casnr', 'cname', 'chemical_group', 'moa')]
+frac2[ , .N, cas][order(-N)] # 79956562 duplicated CAS
+frac2 = frac2[casnr != 79956562]
+setnames(frac2, c('cas', paste0('fr_', tolower(names(frac2[ ,2:length(names(frac2))])))))
 # Merge ----
-ch_info = Reduce(function(...) merge(..., by = 'cas', all = TRUE), list(pc2, aw2, pan2, pp2)) # id: cas
+ch_info = Reduce(function(...) merge(..., by = 'cas', all = TRUE),
+                 list(pc2, aw2, pan2, pp2, frac2)) # id: cas
 
 # Habitat information -----------------------------------------------------
 setnames(lookup_worms_fam, c('family',
@@ -91,11 +98,11 @@ if (sum(sapply(list(chck_cas_dupl, chck_fam_dupl, chck_tax_dupl), nrow)) != 0) {
 # CAS
 tests = copy(epa1)
 
-tests = Reduce(function(...) merge(..., by = 'cas', all = TRUE), list(tests, ch_info))
+tests = Reduce(function(...) merge(..., by = 'cas', all.x = TRUE), list(tests, ch_info))
 
-tests = Reduce(function(...) merge(..., by = 'taxon', all = TRUE), list(tests, re_info))
+tests = Reduce(function(...) merge(..., by = 'taxon', all.x = TRUE), list(tests, re_info))
 
-tests = Reduce(function(...) merge(..., by = 'family', all = TRUE), list(tests, ha_info))
+tests = Reduce(function(...) merge(..., by = 'family', all.x = TRUE), list(tests, ha_info))
 
 # final table
 setcolorder(tests, c('cas', 'casnr', 'taxon', 'family'))
