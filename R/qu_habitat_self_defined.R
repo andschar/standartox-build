@@ -542,7 +542,6 @@ lookup_man_fam = rbindlist(list(lookup_man_fam,
                         as.list(c('Pangasiidae', "Haiwelse", 'Fish', 'Siluriformes', 'order', '1', '1', '0')),
                         ## Perciformes
                         as.list(c('Nototheniidae', "Antaktisdorsche", 'Fish', 'Perciformes', 'order', '0', '1', '0')),
-                        as.list(c('Nototheniidae', "Antaktisdorsche", 'Fish', 'Perciformes', 'order', '0', '1', '0')),
                         as.list(c('Haemulidae', 'Süßlippen und Grunzer', 'Fish', 'Perciformes', 'order', '1', '1', '0')),
                         as.list(c('Cichlidae', 'Buntbarsche', 'Fish', 'Perciformes', 'order', '1', '0', '0')), # Mittel u. Suedamerika, Afrika
                         as.list(c('Percidae', 'Echte Barsche', 'Fish', 'Perciformes', 'order', '1', '0', '0')),
