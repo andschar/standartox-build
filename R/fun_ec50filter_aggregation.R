@@ -2,8 +2,7 @@
 
 require(data.table)
 
-ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_type = NULL,
-                       agg = NULL, duration = NULL, info = NULL, cas = NULL) {
+ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_type = NULL, comp = NULL, agg = NULL, duration = NULL, info = NULL, cas = NULL, solub_chck = FALSE) {
     
   # debug me!
   # tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
@@ -14,35 +13,33 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
     dt = dt[ casnr %in% casnr_todo ]
   }
   
-  ## checks ----
+
+  # checks ------------------------------------------------------------------
   if (!is.data.frame(dt)) {
     stop('Input object is not a data.frame!')
   }
   dt = as.data.table(dt)
   
-  ## variables ----
-  habitat_vars = c('marine', 'brackish', 'freshwater', 'terrestrial')
-  continent_vars = c('Africa', 'Americas', 'Antarctica', 'Asia', 'Europe', 'Oceania')
-  agg_vars = c('min', 'max', 'md', 'mn', 'sd', 'q95', 'q5')
-  #taxon_vars = c() # commonly used taxas in Ecotoxicology
-  
-  #### filters ----
+
+  # filters -----------------------------------------------------------------
   ## substance type ----
   if (is.null(subst_type)) {
     dt = dt
   } else {
     dt = dt[ep_subst_type %in% subst_type]
   }
-
+  
+  ## solubility check ----
+  if (solub_chck) {
+    dt = dt[ comp_solub_chck == TRUE ]
+  }
+  
   ## habitat ----
   # TODO enable ticking two options
   if (is.null(habitat) | habitat == 'all') {
     dt = dt
     hab = 'n' # none
   } else {
-    if (!habitat %in% habitat_vars) {
-      stop('Habitat has to be one of: ', paste(habitat_vars, collapse = ', '))
-    }
     if (habitat == 'marine') {
       dt = dt[ isMar_fin == '1' ]
       hab = 'm'
@@ -69,9 +66,6 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
   if (is.null(continent) | continent == 'World') {
     dt = dt
   } else {
-    if (!continent %in% continent_vars) {
-      stop('continent has to be one of: ', paste(continent_vars, collapse = ', '))
-    }
     if (continent == 'Africa') {
       dt = dt[ gb_Africa == '1' ]
       cont = 'af'
@@ -126,7 +120,8 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
   dur_id = paste0(dur, collapse = '')
   dt = dt[ ep_duration %between% dur ]
   
-  #### aggregation ----
+
+  # aggregation -------------------------------------------------------------
   ## (1a) Aggregate by casnr, taxon and duration ----
   dt_agg = dt[ ,
                j = .(info = paste0(unlist(lapply(strsplit(taxon, '\\s'), paste0, collapse = '_')),
@@ -158,45 +153,26 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
                      taxa = paste0(unique(taxa), collapse = '-')),
                by = casnr]
   # TODO round numeric values above 0
+  
+  out = merge(out, dt[ , .SD, .SDcols = c('casnr', comp)], by = 'casnr', all.x = TRUE)
+  
 
-# (0) output filters ------------------------------------------------------
-  ## Aggregate & info filter ----
+  # output filters ----------------------------------------------------------
+  sdcols = c('casnr', comp, agg, info)
+  out = out[ , .SD, .SDcols = sdcols ]
+
+
+  # names -------------------------------------------------------------------
+  #value_cols = names(out)[!names(out) %in% sdcols]
   if (!is.null(agg)) {
-    if (!is.null(info)) {
-      out = out[ , .SD, .SDcols = c('casnr', agg, info)]
-    } else {
-      out = out[ , .SD, .SDcols = c('casnr', agg)]
-    }
+    setnames(out,
+             old = agg,
+             new = paste0(paste0('ep50', hab, '_', tax_id, dur_id, '_'), agg))
   }
+  
 
-  ## (0) Aggregate by casnr [directly aggregating by casnr] ----
-  # out = dt[,
-  #          j = .(min = min(ep_value, na.rm = TRUE),
-  #                max = max(ep_value, na.rm = TRUE),
-  #                md = median(ep_value, na.rm = TRUE),
-  #                q95 = quantile(ep_value, 0.95, na.rm = TRUE),
-  #                q5 = quantile(ep_value, 0.05, na.rm = TRUE),
-  #                mn = mean(ep_value, na.rm = TRUE),
-  #                sd = sd(ep_value, na.rm = TRUE),
-  #                N = .N),
-  #          by = casnr]
-  
-  #### names ----
-  setnames(out, c('casnr',
-                  paste0(paste0('ep50', hab, '_', tax_id, dur_id, '_'),
-                         names(out)[2:length(out)])))
-  
-  # TODO agg - argument
-  # if (is.null(agg)) {
-  #   return(out)
-  # } else if (agg %in% agg_vars) {
-  #   out = out[ , .SD, .SDcols = c('casnr', grep(agg, names(out), ignore.case = TRUE, value = TRUE),
-  #                                 'N', 'info', 'vls')]
-  #   return(out)
-  # } else {
-  #   stop('Aggregation method not available.')
-  # }
-  
   return(out)
   # fwrite(out, '/tmp/out.csv') # debug me!
 }
+
+

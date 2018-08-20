@@ -14,36 +14,42 @@ ui = fluidPage(
   titlePanel('Etox Base'),
   sidebarLayout(
     sidebarPanel(
-      splitLayout(
-        fileInput(inputId = 'file_cas', label = 'Upload CAS',
-                  accept = '.csv', placeholder = 'one column .csv'),
-        actionButton(inputId = 'reset', label = 'Reset Input', style = 'margin-top:25px')
-      ),
-      selectInput(inputId = 'tax', label = 'Choose a taxon',
-                  choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
-      splitLayout(
-        numericInput(inputId = 'dur1', label = 'Test durations from (h)', value = 24),
-        numericInput(inputId = 'dur2', label = 'to (h)', value = 48)
-      ),
-      splitLayout(
-        radioButtons(inputId = 'habitat', label = 'Organism hatbitat',
-                     choices = c('all', 'marine', 'brackish', 'freshwater', 'terrestrial'),
-                     selected = 'freshwater'),
-        radioButtons(inputId = 'continent', label = 'Continent',
-                     choices = c('World', 'Africa', 'Americas', 'Asia', 'Europe', 'Oceania'),
-                     selected = 'Europe')
-      ),
-      splitLayout(
-        checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
-                           choices = c('min', 'max', 'md', 'mn', 'sd'),
-                           selected = c('min', 'md')),
-        checkboxGroupInput(inputId = 'infocols', label = 'Information columns',
-                           choices = c('info', 'taxa', 'vls', 'n'))
-      ),
-      splitLayout(
-        checkboxGroupInput(inputId = 'subst_type', label = 'Substance type',
-                           choices = c('A', 'F', 'T', 'U'))
-      )),
+      verticalLayout(
+        selectInput(inputId = 'tax', label = 'Choose a taxon',
+                    choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
+        splitLayout(
+          numericInput(inputId = 'dur1', label = 'Test durations from (h)', value = 24),
+          numericInput(inputId = 'dur2', label = 'to (h)', value = 48)
+        ),
+        splitLayout(
+          fileInput(inputId = 'file_cas', label = 'Upload CAS',
+                    accept = '.csv', placeholder = 'one column .csv'),
+          actionButton(inputId = 'reset', label = 'Reset Input', style = 'margin-top:25px')
+        ),
+        splitLayout(
+          radioButtons(inputId = 'habitat', label = 'Organism hatbitat',
+                       choices = c('all', 'marine', 'brackish', 'freshwater', 'terrestrial'),
+                       selected = 'freshwater'),
+          radioButtons(inputId = 'continent', label = 'Continent',
+                       choices = c('all', 'Africa', 'Americas', 'Asia', 'Europe', 'Oceania'),
+                       selected = 'Europe'),
+          checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
+        ),
+        splitLayout(
+          checkboxGroupInput(inputId = 'subst_type', label = 'Substance type',
+                             choices = c('A', 'F', 'T', 'U')),
+          checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
+                             choices = c('min', 'max', 'md', 'mn', 'sd'),
+                             selected = c('min', 'md'))
+        ),
+        splitLayout(
+          checkboxGroupInput(inputId = 'comp', label = 'Compound columns',
+                             choiceValues = c('comp_name', 'comp_type'),
+                             choiceNames = c('Compound name', 'Compound type'),
+                             selected = c('cas')),
+          checkboxGroupInput(inputId = 'infocols', label = 'Information columns',
+                             choices = c('info', 'taxa', 'vls', 'n'))
+        ))),
     
     mainPanel(
       tabsetPanel(
@@ -52,7 +58,7 @@ ui = fluidPage(
           'Table',
           headerPanel('EC50 values'),
           column(
-            dataTableOutput(outputId = 'dat'), width = 10, offset = 1
+            dataTableOutput(outputId = 'dat'), width = 11, offset = 0
           )
         ),
         tabPanel(

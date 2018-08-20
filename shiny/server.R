@@ -48,6 +48,8 @@ server = function(input, output) {
   thedata = reactive({
     ec50_filagg(tests_fl,
                 subst_type = input$subst_type,
+                comp = input$comp,
+                solub_chck = input$comp_solub_chck,
                 habitat = input$habitat,
                 continent = input$continent,
                 tax = input$tax,
@@ -67,15 +69,15 @@ server = function(input, output) {
   output$dat = DT::renderDataTable({thedata()},
     options = list(
       columnDefs = list(list(
-      # targets = 0:4,
-      render = JS(
-        "function(data, type, row, meta) {",
-        "return type === 'display' && data.length > 6 ?",
-        "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
-        "}"))
-      ),
+        # targets = 0:4,
+        render = JS(
+          "function(data, type, row, meta) {",
+          "return type === 'display' && data.length > 6 ?",
+          "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
+          "}"))
+      )),
       #dom = 't',
-      row.names = FALSE),
+      rownames = FALSE,
     callback = JS('table.page(3).draw(false);'))
   # summary
   output$summary_chem = renderPrint({ unique(thedata()$casnr) })
