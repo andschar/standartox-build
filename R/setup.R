@@ -12,12 +12,12 @@ local = FALSE # have you built the EPA ECOTOX DB locally?
 plots = FALSE
 
 # packages
+require(readxl)
 require(data.table)
 require(RPostgreSQL)
 require(ggplot2)
 require(ggrepel)
 require(vegan)
-require(rgbif)
 require(raster)
 
 # data bases
