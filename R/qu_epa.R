@@ -4,7 +4,7 @@
 source('R/setup.R')
 # switches
 online = online
-online_db = TRUE
+online_db = FALSE
 local = TRUE
 whole_db = FALSE
 

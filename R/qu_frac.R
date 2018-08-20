@@ -11,7 +11,8 @@ url = 'http://www.frac.info/docs/default-source/publications/frac-code-list/frac
 destfile = paste0(tempfile(), '.xlsx')
 download.file(url,
               destfile = destfile,
-              mode = 'wb')
+              mode = 'wb',
+              quiet = TRUE)
 
 
 # preparation -------------------------------------------------------------
@@ -28,7 +29,9 @@ frac$cname[197] = "teclofthalam" # (bactericide)
 frac$cname[213] = "copper" # (different salts)
 
 if (online) {
+  
   cir_frac = cir_query(frac$cname, 'cas')
+  saveRDS(cir_frac, file.path(cachedir, 'cir_frac.rds'))
   
 } else {
   cir_frac = readRDS(file.path(cachedir, 'cir_frac.rds'))

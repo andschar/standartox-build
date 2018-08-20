@@ -48,6 +48,9 @@ setcolorder(pp, c('cas', 'cname'))
 # names
 setnames(pp, c('Water Solubility', 'Log P (octanol-water)'), c('solubility_water', 'p_log'))
 
+# tolower
+pp[ , cname := tolower(cname) ]
+
 # conversions
 pp[ , solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 
