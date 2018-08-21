@@ -4,6 +4,7 @@
 source('/home/andreas/Documents/Projects/etox-base/R/setup.R')
 require(shiny)
 require(shinyjs)
+require(shinydashboard)
 require(knitr)
 
 
@@ -82,6 +83,16 @@ ui = fluidPage(
             tabPanel(
               'Sensitivity plots',
               headerPanel('Most sensitive EC50 values'),
+              fluidRow(
+                shinydashboard::box(width = 4,
+                splitLayout(
+                  numericInput(inputId = 'cutoff', label = 'Number of compounds', value = 25, width = '150px'),
+                  radioButtons(inputId = 'yaxis', label = 'Y-Axis',
+                               choiceValues = c('casnr', 'comp_name'),
+                               choiceNames = c('CAS', 'Compound name'),
+                               selected = 'casnr', inline = TRUE))
+                )
+              ),
               plotOutput(outputId = 'plot_sensitivity')
             ),
             tabPanel(

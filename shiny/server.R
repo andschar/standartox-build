@@ -16,7 +16,7 @@ sapply(rmdfiles, knit, quiet = TRUE)
 # knit('shiny/article.Rmd', output = 'shiny/article.md', quiet = TRUE)
 
 # data --------------------------------------------------------------------
-tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
+tests_data = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
 # shiny -------------------------------------------------------------------
 server = function(input, output) {
@@ -46,7 +46,7 @@ server = function(input, output) {
   
   # data + function ----
   thedata = reactive({
-    ec50_filagg(tests_fl,
+    ec50_filagg(tests_data,
                 subst_type = input$subst_type,
                 comp = input$comp,
                 solub_chck = input$comp_solub_chck,
@@ -61,7 +61,7 @@ server = function(input, output) {
   
   # plots ----
   plot_sensitivity = reactive({
-    ec50_filagg_plot(thedata())
+    ec50_filagg_plot(thedata(), input$yaxis, input$cutoff)
   })
 
   # output ----
@@ -84,8 +84,8 @@ server = function(input, output) {
   output$summary_taxa = renderPrint({ thedata()$taxa })
   
   # plots
-  output$plot_sensitivity = renderPlot({plot_sensitivity()})
-  output$plot_meta = renderPlot({ggplot(iris)})
+  output$plot_sensitivity = renderPlot({ plot_sensitivity() })
+  output$plot_meta = renderPlot({ ggplot(iris) })
   
   # download
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
