@@ -1,3 +1,6 @@
+# working directory (especially for shiny)
+# TODO find a solution for shin!!
+
 #rm(list = ls())
 # switches
 online = FALSE
@@ -15,10 +18,13 @@ plots = FALSE
 require(readxl)
 require(data.table)
 require(RPostgreSQL)
-require(ggplot2)
-require(ggrepel)
 require(vegan)
 require(raster)
+
+# ploting
+require(ggplot2)
+require(ggrepel)
+require(cowplot)
 
 # data bases
 require(rgbif)
@@ -47,7 +53,7 @@ source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
 # source(file.path(fundir, 'functions.R')) # contains gm_mean(), ksource()
 # source(file.path(fundir, 'agg_group.R'))
 # source(file.path(fundir, 'plot_outlier.R'))
-
+source('/home/andreas/Documents/Projects/etox-base/R/gg_theme.R')
 
 
 
