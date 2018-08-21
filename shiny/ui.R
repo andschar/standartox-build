@@ -46,9 +46,11 @@ ui = fluidPage(
           checkboxGroupInput(inputId = 'comp', label = 'Compound columns',
                              choiceValues = c('comp_name', 'comp_type'),
                              choiceNames = c('Compound name', 'Compound type'),
-                             selected = c('cas')),
+                             selected = c('cas', 'comp_name')),
           checkboxGroupInput(inputId = 'infocols', label = 'Information columns',
-                             choices = c('info', 'taxa', 'vls', 'n'))
+                             choiceValues = c('info', 'taxa', 'vls', 'n'),
+                             choiceNames = c('info', 'taxa', 'values', 'n'),
+                             selected = 'taxa')
         ))),
     
     mainPanel(
@@ -79,6 +81,7 @@ ui = fluidPage(
           tabsetPanel(
             tabPanel(
               'Sensitivity plots',
+              headerPanel('Most sensitive EC50 values'),
               plotOutput(outputId = 'plot_sensitivity')
             ),
             tabPanel(
