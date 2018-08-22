@@ -37,8 +37,10 @@ ui = fluidPage(
           checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
         ),
         splitLayout(
-          checkboxGroupInput(inputId = 'subst_type', label = 'Substance type',
-                             choices = c('A', 'F', 'T', 'U')),
+          checkboxGroupInput(inputId = 'conc_type', label = 'Concentration type',
+                             choiceValues = c('A', 'F'), # 'T', 'U'),
+                             choiceNames = c('Active ingredient', 'Formulation'),
+                             selected = c('A', 'F')),
           checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
                              choices = c('min', 'max', 'md', 'mn', 'sd'),
                              selected = c('min', 'md'))

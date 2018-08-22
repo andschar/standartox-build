@@ -87,11 +87,7 @@ tests_fl = copy(tests)
 saveRDS(tests_fl, file.path(cachedir, 'tests_fl.rds'))
 
 # cleaning ----------------------------------------------------------------
-
-# DO IN function
-tests_cl = tests_cl[ !ep_subst_type %in% c('F')] # F-Formulation, A-Active Ingredient, T-Total (Heavy metals, & single elements; 56 entries) , U-Un-Ionized (1 entry)
-tests_cl = tests_cl[ chck_solub != FALSE ]
-
+# TODO 
 
 # plot --------------------------------------------------------------------
 # TODO: DEPR and put into function

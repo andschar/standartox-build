@@ -1,12 +1,12 @@
-# function to filter EC50 data according to habitat, continent and subst_type
+# function to filter EC50 data according to habitat, continent and conc_type
 
 require(data.table)
 
-ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_type = NULL, comp = NULL, agg = NULL, duration = NULL, info = NULL, cas = NULL, solub_chck = FALSE) {
+ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, conc_type = NULL, comp = NULL, agg = NULL, duration = NULL, info = NULL, cas = NULL, solub_chck = FALSE) {
     
   # debug me!
   # tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
-  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); cas = c("1071836", "122145",  "121755",  NA); subst_type = NULL; info = 'n'; comp = 'comp_name'; solub_chck = FALSE
+  # dt = tests_fl; habitat = 'freshwater'; continent = 'Europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); cas = c("1071836", "122145",  "121755",  NA); conc_type = NULL; info = 'n'; comp = 'comp_name'; solub_chck = FALSE
   
   if (!is.null(cas)) {
     casnr_todo = casconv(cas, direction = 'tocasnr')
@@ -22,11 +22,11 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, subst_t
   
 
   # filters -----------------------------------------------------------------
-  ## substance type ----
-  if (is.null(subst_type)) {
+  ## concentration type ----
+  if (is.null(conc_type)) {
     dt = dt
   } else {
-    dt = dt[ep_subst_type %in% subst_type]
+    dt = dt[ep_conc_type %in% conc_type]
   }
   
   ## solubility check ----

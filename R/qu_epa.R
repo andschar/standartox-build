@@ -188,7 +188,7 @@ fwrite(epa1, '/tmp/epa1.csv')
 setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chem_name', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'reference_number', 'title', 'author', 'publication_year'))
 
 # change names
-setnames(epa1, c('casnr', 'cas', 'chemical_name', 'carrier_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'subst_type', 'endpoint', 'effect',  'exposure_type', 'media_type', 'habitat', 'subhabitat',  'taxon', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'ref_num', 'title', 'author', 'publication_year'))
+setnames(epa1, c('casnr', 'cas', 'chemical_name', 'carrier_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'conc_type', 'endpoint', 'effect',  'exposure_type', 'media_type', 'habitat', 'subhabitat',  'taxon', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'ref_num', 'title', 'author', 'publication_year'))
 
 # errata ------------------------------------------------------------------
 # not accepted (anymore):

@@ -47,7 +47,7 @@ server = function(input, output) {
   # data + function ----
   thedata = reactive({
     ec50_filagg(tests_data,
-                subst_type = input$subst_type,
+                conc_type = input$conc_type,
                 comp = input$comp,
                 solub_chck = input$comp_solub_chck,
                 habitat = input$habitat,
