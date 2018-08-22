@@ -103,11 +103,9 @@ gg_test
 
 * to separate the wheat from the chaff
 
-* EC50 values
-
 * improve filters
 
-* to aggreagte many test results
+* to aggreagte many test results --> EC50 values
 
 * usable and accessible
 
