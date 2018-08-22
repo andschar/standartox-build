@@ -1,7 +1,7 @@
-\documentclass[tikz, border={1000 750}]{standalone}
+\documentclass[border = 1.5cm]{standalone}
 %%%% packages
 \usepackage{tikz}
-\usetikzlibrary{trees, arrows, shapes.geometric} % TikZ libraries
+\usetikzlibrary{trees, arrows, shapes.geometric, positioning} % TikZ libraries
 %%%% layers
 \pgfdeclarelayer{bg1}    % declare background layer
 \pgfdeclarelayer{bg2}
@@ -9,26 +9,25 @@
 
 %%%% styles
 \tikzset{
-  every rectangle node/.style = {draw=black,thick,anchor=west},
-  io/.style = {rectangle, minimum width = 4cm, minimum height = 3cm, text centered, draw = black, fill = blue!10},
-  main/.style = {rectangle, rounded corners, minimum width = 3cm, text centered, fill = purple!30},
-  ids/.style = {diamond, minimum width = 3cm, minimum height = 2cm, text centered, draw = black, fill = green!30},
-  res/.style = {rectangle, rounded corners, minimum width = 2cm, minimum height = 1cm, text centered, draw = black, fill = blue!30},
-  resvariables/.style = {rectangle, minimum width = 2cm, minimum height = 1cm, text centered, draw = black},
-  steps/.style = {rectangle, minimum width = 1cm, text centered, fill = yellow},
-  arrow/.style = {->, > = stealth, draw = black, color = yellow!80, line width = 6pt}
+	every rectangle node/.style = {thick,anchor=west},
+	io/.style = {rectangle, minimum width = 4cm, minimum height = 3cm, text centered, draw = black, fill = blue!10},
+	main/.style = {rectangle, draw = black, rounded corners, minimum width = 3cm, minimum height = 1.25cm, text centered},
+	ids/.style = {diamond, minimum width = 3cm, minimum height = 2cm, text centered, draw = black, fill = green!30},
+	res/.style = {rectangle, rounded corners, minimum width = 2cm, minimum height = 1cm, text centered, draw = black, fill = blue!30},
+	resvariables/.style = {rectangle, minimum width = 2cm, minimum height = 1cm, text centered},
+	steps/.style = {rectangle, minimum width = 1cm, text centered, fill = yellow},
+	arrow/.style = {->, > = stealth, draw = black, color = gray!80, line width = 3pt}
 }
 
 \begin{document}
-	\begin{tikzpicture}[auto,
+	\begin{tikzpicture}[
 	grow via three points={one child at (0.5,-1) and
 		two children at (0.5,-1) and (0.5,-1.7)},
 	edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)},
-	remember picture, overlay, % r.p. save picture size in the picture, o. puts picture out of text segm.
 	inner sep = 0pt, outer sep = 0pt
 	]
 	
-		\node[text=red] (io) [io, align = left] at (0cm,0cm) {Table of Chemicals \\ CAS, Compound name};
+		\node (io) [io, align = left] at (0cm,0cm) {Table of Chemicals \\ CAS, Compound name};
 		%% chemicals
 		% id nodes
 
@@ -40,13 +39,13 @@
 		\node (chemprop) [main, dashed, right of=cas, xshift=4.5cm, yshift=3cm] {CHEMPROP};
 		\node (epa) [main, right of=cas, yshift=1cm, xshift=4.5cm] {EPA ectox tests}
 			child { node { qu\_epa.R} };
-		\node (chemscr) [main, right of=cas, yshift=-1cm, xshift=4.5cm] {Chemical scripts ch}
+		\node (chemscr) [main, right of=cas, yshift=-1cm, xshift=4.5cm] {Chemical scripts}
 			child { node { Alan Wood Pesticide Compendium - \textbf{qu\_aw.R } }}
 			child { node { Pesticide Action Network - \textbf{ch\_pan.R} }}
 			child { node { PhysProp - \textbf{ch\_pp.R} }}
 			child { node { PubChem - \textbf{qu\_pubchem.R} }};
 		% result nodes
-		\node (toxres) [resvariables, right of=cas, yshift=0cm, xshift=18cm, align = left] {Results\\Test results\\Substance type:\\pesticides, metals, etc.}; % result
+		\node (toxres) [resvariables, right of=cas, yshift=0cm, xshift=16cm, align = left] {Results\\Test results\\Substance type:\\pesticides, metals, etc.}; % result
 		%\includegraphics{/home/andreas/Documents/Projects/etox-base/data/pubchemlogo2017.png};
 	
 		%\animategraphics{https://cfpub.epa.gov/ecotox/epafiles/images/logo_epaseal.gif}
@@ -62,11 +61,13 @@
 		\node (region) [main, right of = taxon, xshift = 4.5cm, yshift = -2cm] {Regional data}
 			child { node { GBIF - \textbf{qu\_gbif.R} }};
 		% result nodes
-		\node (taxres) [resvariables, right of=taxon, xshift = 17cm, align = left] {Results:\\Validation of taxonomic ranks\\Habitat information\\Marine, Bracksih, Freshwater, Terrestrial, Parasites\\Occurrence}; % result
+		\node (taxres) [resvariables, right of=taxon, xshift = 14cm, align = left] {Results:\\Validation of taxonomic ranks\\Habitat information\\Marine, Bracksih, Freshwater, Terrestrial, Parasites\\Occurrence}; % result
 		
 		%% final result
-		\node (testres) [res, right of = cas, xshift = 22cm, yshift = -5cm] {Final result}
+		\node (testres) [res, right of = cas, xshift = 18cm, yshift = -5cm] {Result}
 			child { node { re\_merge.R} };
+		\node (filtres) [res, right of = testres, xshift = 2cm] {Filter};
+		\node (aggres) [res, right of = filtres, xshift = 2cm] {Aggregate};
 
 		%%% arrows %%%
 		\begin{pgfonlayer}{bg1}
@@ -76,6 +77,9 @@
 		\draw [arrow] (cas.east) -- (epa.west);
 		\draw [arrow] (epa.east) -- (toxres.west);
 		\draw [arrow] (chemscr.east) -- (toxres.west);
+		
+%		\draw [arrow] (epa.east) -| (testres.north);
+%		\draw [arrow] (chemscr.east) -| (testres.north);
 		
 		%\begin{scope}[on background layer]
 		\begin{pgfonlayer}{bg2}
@@ -92,7 +96,7 @@
 		\draw [arrow] (toxres) -- (testres.north);
 		\draw [arrow] (taxres) -- (testres.south);
 		
-		\draw [arrow, right of = testres] (testres) -- (20cm,-2cm);
+		\draw [arrow, right of = testres] (testres) -- ++(2cm,0cm);
 	
 		\end{pgfonlayer}
 	\end{tikzpicture}
