@@ -57,14 +57,14 @@
 		\node (habitat) [main, right of=taxon, xshift = 4.5cm, yshift = 1cm] {Habitats}
 			child { node { WORMS data base - \textbf{tx\_worms.R} }}
 			child { node { Manual Search - \textbf{ha\_manual.R} }};
-		\node (region) [main, right of = taxon, xshift = 4.5cm, yshift = -2cm] {Continents}
+		\node (region) [main, right of = taxon, xshift = 4.5cm, yshift = -2cm] {Regions}
 			child { node { GBIF - \textbf{qu\_gbif.R} }};
 		
 		%% final result
 		\begin{pgfonlayer}{bg3}
 			\node[rectangle, draw, rounded corners, minimum height = 2cm, minimum width = 7cm, fill = gray!10] (appbox) at (20.5cm,-10cm) {};
 		\end{pgfonlayer}
-		\node (apptext) [above of = appbox, yshift = 0.25cm, xshift = -3cm] {Etox-Base App}; 
+		\node (apptext) [above of = appbox, yshift = 0.25cm, xshift = -3cm] {Etox-Base Function}; 
 		\node (testres) [res, right of = cas, xshift = 14cm, yshift = -5cm] {Result};
 		\node (filtres) [res, right of = testres, xshift = 2cm] {Filter};
 		\node (aggres) [res, right of = filtres, xshift = 2cm] {Aggregate};
