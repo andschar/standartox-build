@@ -23,15 +23,21 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, conc_ty
 
   # filters -----------------------------------------------------------------
   ## concentration type ----
+  dt_counter = list()
+  dt_counter[[1]] = data.table(Variable = 'all',
+                               N = nrow(dt))
+  
   if (is.null(conc_type)) {
     dt = dt
   } else {
     dt = dt[ep_conc_type %in% conc_type]
+    dt_counter[[2]] = data.table('Concentration type', nrow(dt))
   }
   
   ## solubility check ----
   if (solub_chck) {
     dt = dt[ comp_solub_chck == TRUE ]
+    dt_counter[[3]] = data.table('Solubility check', nrow(dt))
   }
   
   ## habitat ----
@@ -43,18 +49,22 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, conc_ty
     if (habitat == 'marine') {
       dt = dt[ isMar_fin == '1' ]
       hab = 'm'
+      dt_counter[[4]] = data.table('Marine habitat', nrow(dt))
     }
     if (habitat == 'brackish') {
       dt = dt[ isBra_fin == '1' ]  
       hab = 'b'
+      dt_counter[[4]] = data.table('Brackish habitat', nrow(dt))
     }
     if (habitat == 'freshwater') {
       dt = dt[ isFre_fin == '1' ]
       hab = 'f'
+      dt_counter[[4]] = data.table('Freshwater habitat', nrow(dt))
     }
     if (habitat == 'terrestrial') {
       dt = dt[ isTer_fin == '1' ]
       hab = 't'
+      dt_counter[[4]] = data.table('Terrestrial habitat', nrow(dt))
     }
     # TODO
     # if (habitat == 'parasite') {
@@ -69,26 +79,32 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, conc_ty
     if (continent == 'Africa') {
       dt = dt[ gb_Africa == '1' ]
       cont = 'af'
+      dt_counter[[5]] = data.table('Africa', nrow(dt))
     }
     if (continent == 'Americas') {
       dt = dt[ gb_Americas == '1' ]
       cont = 'am'
+      dt_counter[[5]] = data.table('Americas', nrow(dt))
     }
     if (continent == 'Antarctica') {
       dt = dt[ gb_Antarctica == '1' ]
       cont = 'an'
+      dt_counter[[5]] = data.table('Antarctica', nrow(dt))
     }
     if (continent == 'Asia') {
       dt = dt[ gb_Asia == '1' ]
       cont = 'as'
+      dt_counter[[5]] = data.table('Asia', nrow(dt))
     }
     if (continent == 'Europe') {
       dt = dt[ gb_Europe == '1' ]
       cont = 'eu'
+      dt_counter[[5]] = data.table('Europe', nrow(dt))
     }
     if (continent == 'Oceania') {
       dt = dt[ gb_Oceania == '1' ]
       cont = 'oc'
+      dt_counter[[5]] = data.table('Oceania', nrow(dt))
     }
   }
   ## taxon ----
@@ -166,6 +182,10 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, conc_ty
   out = out[ , .SD, .SDcols = sdcols ]
 
 
+  # save --------------------------------------------------------------------
+  saveRDS(dt_counter, file.path(cachedir, 'dt_counter.rds'))
+  
+  
   # names -------------------------------------------------------------------
   #value_cols = names(out)[!names(out) %in% sdcols]
   # if (!is.null(agg)) {
