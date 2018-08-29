@@ -8,6 +8,7 @@ require(DT)
 # functions
 source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation.R')
 source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation_plots.R')
+source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_meta_plots.R')
 
 # knit README beforehands
 rmdfiles = c('README.Rmd', 'article.Rmd')
@@ -85,7 +86,7 @@ server = function(input, output) {
   
   # plots
   output$plot_sensitivity = renderPlot({ plot_sensitivity() })
-  output$plot_meta = renderPlot({ ggplot(iris) })
+  output$plot_meta = renderPlot({ gg_counter })
   
   # download
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table

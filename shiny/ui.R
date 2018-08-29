@@ -99,6 +99,7 @@ ui = fluidPage(
             ),
             tabPanel(
               'Meta plots',
+              headerPanel('Meta plot'),
               plotOutput(outputId = 'plot_meta')
             )
           )
