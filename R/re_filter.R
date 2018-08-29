@@ -23,23 +23,22 @@ tests[ , comp_name := ifelse(!is.na(pp_cname), pp_cname,
                       ifelse(is.na(comp_name) & !is.na(pc_iupacname), pc_iupacname, NA)))) ]
 
 # checking
-na_name = unique(tests[is.na(tests$comp_name), casnr])
-if (length(na_name) > 0 ) {
+na_name = tests[ is.na(comp_name), .N, by = c('casnr', 'comp_name') ][ , N := NULL]
+if (length(na_name$casnr) > 0 ) {
   message('For the following cas, compound names are missing:\n',
-          na_name)
+          paste0(na_name$casnr, collapse = ', '))
 }
 
 # (2) compound type ----
 tests[ , comp_type := NA ]
 tests[ , comp_type := ifelse(!is.na(aw_pest_type), aw_pest_type,
-                      ifelse(is.na(comp_type) & !is.na(ep_chemical_group), ep_chemical_group, NA)) ]
-tests[ , comp_type := ifelse(!is.na(fr_cname), 'fungicide', NA) ] # if FRAC, then fungicide
+                      ifelse(is.na(comp_type) & !is.na(ep_chemical_group), ep_chemical_group,
+                      ifelse(is.na(comp_type) & !is.na(fr_cname), fr_cname, NA))) ]
 
-# checking
-na_type = unique(tests[ is.na(comp_type), casnr ])
-if (length(na_type) > 0 ) {
+na_type = tests[ is.na(comp_type), .N, by = c('casnr', 'comp_name', 'comp_type') ][ , N := NULL]
+if (length(na_type$casnr) > 0 ) {
   message('For the following cas, compound types are missing:\n',
-          paste0(na_type, collapse = ', '))
+          paste0(na_type$casnr, collapse = ', '))
 }
 
 # (3) water solubility ----
@@ -48,10 +47,10 @@ tests[ , comp_solub := ifelse(!is.na(pp_solubility_water), pp_solubility_water, 
 tests[ , comp_solub_chck := ifelse(ep_value < comp_solub, TRUE, FALSE)] # TODO check: unit of solubility concentrations
 
 # checking
-na_solub = unique(tests[ is.na(comp_solub), casnr ])
-if (length(na_solub) > 0 ) {
+na_solub = tests[ is.na(comp_solub), .N, by = c('casnr', 'comp_name', 'comp_solub') ][ , N := NULL]
+if (length(na_solub$casnr) > 0 ) {
   message('For the following cas, water solubility values are missing:\n',
-          paste0(na_solub, collapse = ', '))
+          paste0(na_solub$casnr, collapse = ', '))
 }
 
 # (4) habitat column ----
@@ -61,10 +60,12 @@ tests[ , isMar_fin := ifelse(ep_media_type == 'SW' | wo_ismar == 1 | ma_ismar ==
 tests[ , isTer_fin := ifelse(ep_habitat == 'Soil' | wo_ister == 1 | ma_ister == 1, '1', NA)]
 
 # checking
-na_habi = unique(tests[ is.na(isFre_fin) & is.na(isBra_fin) & is.na(isMar_fin) & is.na(isTer_fin), taxon ])
-if (length(na_habi) > 0 ) {
+na_habi = tests[ is.na(isFre_fin) & is.na(isBra_fin) & is.na(isMar_fin) & is.na(isTer_fin),
+                 .N,
+                 by = c('casnr', 'comp_name', 'isFre_fin', 'isBra_fin', 'isMar_fin', 'isTer_fin') ][ , N := NULL]
+if (length(na_habi$casnr) > 0 ) {
   message('For the following taxa, habitat entries are missing:\n',
-          paste0(na_habi, collapse = ', '))
+          paste0(na_habi$casnr, collapse = ', '))
 }
 
 # (5) invertebrate classification ----
@@ -82,9 +83,24 @@ tests[ , trophic_lvl := ifelse(ma_supgroup2 %in% autotrophs, 'autotrophic', 'het
 
 # TODO create checking column
 
-# save --------------------------------------------------------------------
+# save data ---------------------------------------------------------------
 tests_fl = copy(tests)
+# TODO rm after presentation and change it in the right place
+tests_fl[comp_name == 'glyphosphate', comp_name := 'glyphosate']
 saveRDS(tests_fl, file.path(cachedir, 'tests_fl.rds'))
+
+
+# save missing values -----------------------------------------------------
+missing_l = list(na_name = na_name, na_type = na_type, na_solub = na_solub, na_habi = na_habi)
+for (i in 1:length(missing_l)) {
+    file = missing_l[[i]]
+    name = names(missing_l)[i]
+  
+  if (nrow(file) > 0) {
+    fwrite(file, file.path(missingdir, paste0(name, '.csv')))
+    message('Writing file with missing data: ', name)
+  }
+}
 
 # cleaning ----------------------------------------------------------------
 # TODO 
@@ -93,7 +109,7 @@ saveRDS(tests_fl, file.path(cachedir, 'tests_fl.rds'))
 # TODO: DEPR and put into function
 clean_stats = tests[ ,
                      .(N_tot = .N,
-                       N_subt_type = .SD[ !ep_subst_type %in% c('F'), .N ],
+                       N_subt_type = .SD[ !ep_conc_type %in% c('F'), .N ],
                        N_solu = .SD[ chck_solub != FALSE, .N ]),
                      ]
 clean_stats = melt(clean_stats, value.name = 'N')
@@ -108,6 +124,12 @@ gg_clean_stats = ggplot(clean_stats, aes(y = N, x = reorder(variable, N))) +
 
 ggsave(gg_clean_stats, filename = file.path(plotdir, 'gg_clean_stats.png'),
        width = 8, height = 5)
+
+
+
+
+
+
 
 
 

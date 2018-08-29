@@ -43,7 +43,7 @@ fundir = '/home/andreas/Documents/Projects/etox-base/functions'
 plotdir = '/home/andreas/Documents/Projects/etox-base/plots'
 srcdir = '/home/andreas/Documents/Projects/etox-base/R'
 datadir = '/home/andreas/Documents/Projects/etox-base/data'
-
+missingdir = '/home/andreas/Documents/Projects/etox-base/missing'
 
 # source
 source('/home/andreas/Documents/cred/DB_access.R') # data base credentials
@@ -55,6 +55,7 @@ source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
 # source(file.path(fundir, 'plot_outlier.R'))
 source('/home/andreas/Documents/Projects/etox-base/R/gg_theme.R')
 
-
+# system calls
+system('rm missing/*')
 
 
