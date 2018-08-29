@@ -54,8 +54,20 @@ ui = fluidPage(
                              choiceValues = c('info', 'taxa', 'vls', 'n'),
                              choiceNames = c('info', 'taxa', 'values', 'n'),
                              selected = 'taxa')
-        ))),
-    
+        ),
+        splitLayout(
+          checkboxGroupInput(inputId = 'effect_group', label = 'TODO Effect group',
+                             choiceValues = c('MOR', 'ITX', 'GRO'),
+                             choiceNames = c('MOR', 'ITX', 'GRO')),
+          checkboxGroupInput(inputId = 'endpoint', label = 'TODO Endpoints',
+                             choiceValues = c('EC50', 'LOEC', 'NOEC'),
+                             choiceNames = c('L/EC50', 'LOEC', 'NOEC'),
+                             selected = 'EC50')
+        )
+      )
+    ),
+
+# main panel --------------------------------------------------------------
     mainPanel(
       tabsetPanel(
         selected = 'README',
@@ -120,6 +132,11 @@ ui = fluidPage(
         tabPanel(
           'Article',
           withMathJax(includeMarkdown('article.md'))
+        ),
+        tabPanel(
+          'About',
+          'EPA ECOTOX cersion: Version: 7 Juli 2018',
+          'automate this on the server side!!'
         )
       )
     )
