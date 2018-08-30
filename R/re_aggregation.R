@@ -48,6 +48,14 @@ fil_l = list(
   dur = list(96, 48, c(48,96), c(48,96), c(48,96), c(48,96), c(48,96), c(48,96), 96, c(48,96), c(48,96), 168)
 )
 
+
+# debuging ----------------------------------------------------------------
+todo = c("126833178", "128639021")
+test = ec50_filagg(tests_fl, habitat = 'freshwater', continent = 'Europe', tax = 'Algae',
+                   duration = c(48,96), cas = todo)
+
+
+
 # alternative
 # tests_fl2_l = mapply(ec50_fil,
 #                      tax = fil_l$tax,
