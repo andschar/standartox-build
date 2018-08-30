@@ -103,34 +103,8 @@ for (i in 1:length(missing_l)) {
 }
 
 # cleaning ----------------------------------------------------------------
-# TODO 
-
-# plot --------------------------------------------------------------------
-# TODO: DEPR and put into function
-clean_stats = tests[ ,
-                     .(N_tot = .N,
-                       N_subt_type = .SD[ !ep_conc_type %in% c('F'), .N ],
-                       N_solu = .SD[ chck_solub != FALSE, .N ]),
-                     ]
-clean_stats = melt(clean_stats, value.name = 'N')
-clean_stats[ , perc := N / clean_stats[variable == 'N_tot', N] * 100 ]
-
-
-gg_clean_stats = ggplot(clean_stats, aes(y = N, x = reorder(variable, N))) +
-  geom_bar(stat = 'identity') +
-  coord_flip() +
-  labs(x = NULL, y = 'N tests') +
-  theme_bw()
-
-ggsave(gg_clean_stats, filename = file.path(plotdir, 'gg_clean_stats.png'),
-       width = 8, height = 5)
-
-
-
-
-
-
-
-
+rm(file, name, missing_l, i,
+   na_name, na_type, na_solub, na_habi,
+   autotrophs)
 
 
