@@ -31,73 +31,66 @@
 	inner sep = 0pt, outer sep = 0pt
 	]
 	
-		\node (io) [io, align = center] at (0cm,0cm) {.csv or .xlsx \\ CAS \\ Compound name};
-		%% chemicals
-		% id nodes
-
-
-		\node (cas) [ids, below of=io, yshift = -4cm] {CAS};
-
-
-		% main nodes
-		\node (chemprop) [main, dashed, right of=cas, xshift=4.5cm, yshift=3cm] {CHEMPROP};
-		\node (epa) [main, ultra thick, right of=cas, yshift=1cm, xshift=4.5cm] {EPA ECOTOX}
-			child { node { qu\_epa.R} };
-		\node (chemscr) [main, right of=cas, yshift=-1cm, xshift=4.5cm] {PHYS-CHEM}
-			child { node { Alan Wood Pesticide Compendium - \textbf{qu\_aw.R } }}
-			child { node { Pesticide Action Network - \textbf{ch\_pan.R} }}
-			child { node { PhysProp - \textbf{ch\_pp.R} }}
-			child { node { PubChem - \textbf{qu\_pubchem.R} }};
-		
-		%% organisms
-		% id nodes
-		\node (taxon) [ids, below of=cas, yshift=-9cm, align = center] {Taxon}; % \\ {(Genus or Species)}}; % escape brackets usin curly brackets
-		% main nodes
-		\node (taxonquery) [main, right of=taxon, xshift = 4.5cm, yshift = 3cm] {Taxonomy};
-		\node (habitat) [main, right of=taxon, xshift = 4.5cm, yshift = 1cm] {Habitats}
-			child { node { WORMS data base - \textbf{tx\_worms.R} }}
-			child { node { Manual Search - \textbf{ha\_manual.R} }};
-		\node (region) [main, right of = taxon, xshift = 4.5cm, yshift = -2cm] {Regions}
-			child { node { GBIF - \textbf{qu\_gbif.R} }};
-		
-		%% final result
-		\begin{pgfonlayer}{bg3}
-			\node[rectangle, draw, rounded corners, minimum height = 2cm, minimum width = 7cm, fill = gray!10] (appbox) at (20.5cm,-10cm) {};
-		\end{pgfonlayer}
-		\node (apptext) [above of = appbox, yshift = 0.25cm, xshift = -3cm] {Etox-Base Function}; 
-		\node (testres) [res, right of = cas, xshift = 14cm, yshift = -5cm] {Result};
-		\node (filtres) [res, right of = testres, xshift = 2cm] {Filter};
-		\node (aggres) [res, right of = filtres, xshift = 2cm] {Aggregate};
-
-
-
-		%%% arrows %%%
-		\begin{pgfonlayer}{bg1}
-		\draw [arrow, black] (io) -- (cas);
-		\draw [arrow, dashed] (cas.east) -- (chemprop.west);
-		\draw [arrow] (cas.east) -- (chemscr.west);
-		\draw [arrow] (cas.east) -- (epa.west);
-		
-		\draw [arrow] (epa.east) -| (testres.north);
-		\draw [arrow] (chemscr.east) -| (testres.north);
-		
-		%\begin{scope}[on background layer]
-		\begin{pgfonlayer}{bg2}
-			\draw [arrow, black] (epa) .. controls (3cm,-8cm) .. (taxon.north);
-		\end{pgfonlayer}
-		%\end{scope}
-		
-		\draw [arrow] (taxon.east) -- (habitat.west);
-		\draw [arrow] (taxon.east) -- (region.west);
-		\draw [arrow] (taxon.east) -- (taxonquery.west);
-		\draw [arrow] (taxonquery.east) -| (testres.south);
-		\draw [arrow] (habitat.east) -| (testres.south);
-		\draw [arrow] (region.east) -| (testres.south);
-
-		
-		\draw [arrow] (testres) -- (filtres); %++(2cm,0cm);
-		\draw [arrow] (filtres) -- (aggres); 
+	\node (io) [io, align = center] at (0cm,0cm) {EPA ECOTOX\\data base};
+	%% chemicals
+	% id nodes
 	
-		\end{pgfonlayer}
+	
+	\node (cas) [ids, below of=io, yshift = -4cm, xshift = 3cm] {CAS};
+	
+	
+	% main nodes
+	\node (chemprop) [main, dashed, right of=cas, xshift=4.5cm, yshift=1.5cm] {CHEMPROP};
+	\node (chemscr) [main, right of=cas, yshift=-1cm, xshift=4.5cm] {PHYS-CHEM}
+	child { node { Alan Wood Pesticide Compendium - \textbf{qu\_aw.R } }}
+	child { node { Pesticide Action Network - \textbf{ch\_pan.R} }}
+	child { node { PhysProp - \textbf{ch\_pp.R} }}
+	child { node { PubChem - \textbf{qu\_pubchem.R} }};
+	
+	%% organisms
+	% id nodes
+	\node (taxon) [ids, below of=cas, yshift=-9cm, align = center] {Taxon}; % \\ {(Genus or Species)}}; % escape brackets usin curly brackets
+	% main nodes
+	\node (taxonquery) [main, right of=taxon, xshift = 4.5cm, yshift = 3cm] {Taxonomy};
+	\node (habitat) [main, right of=taxon, xshift = 4.5cm, yshift = 1cm] {Habitats}
+	child { node { WORMS data base - \textbf{tx\_worms.R} }}
+	child { node { Manual Search - \textbf{ha\_manual.R} }};
+	\node (region) [main, right of = taxon, xshift = 4.5cm, yshift = -2cm] {Regions}
+	child { node { GBIF - \textbf{qu\_gbif.R} }};
+	
+	%% final result
+	\node (testres) [res, right of = cas, xshift = 14cm, yshift = -5cm] {Result};
+	\node (filtres) [res, right of = testres, xshift = 2cm] {Filter};
+	\node (aggres) [res, right of = filtres, xshift = 2cm] {Aggregate};
+	
+	\begin{pgfonlayer}{bg3}
+	\node[rectangle, draw, rounded corners, minimum height = 2cm, minimum width = 7cm, fill = gray!10, right of = testres, xshift = 1.5cm] (appbox) {};
+	\end{pgfonlayer}
+	
+	\node (apptext) [above of = appbox, yshift = 0.25cm, xshift = -3cm] {Etox-Base Function}; 
+	
+	
+	
+	%%% arrows %%%
+	\begin{pgfonlayer}{bg1}
+	\draw [arrow, black] (io) |- (cas.west);
+	\draw [arrow, dashed] (cas.east) -- (chemprop.west);
+	\draw [arrow] (cas.east) -- (chemscr.west);
+	\draw [arrow] (chemscr.east) -| (testres.north);
+	
+	\draw [arrow, black] (io) |- (taxon.west);
+	
+	\draw [arrow] (taxon.east) -- (habitat.west);
+	\draw [arrow] (taxon.east) -- (region.west);
+	\draw [arrow] (taxon.east) -- (taxonquery.west);
+	\draw [arrow] (taxonquery.east) -| (testres.south);
+	\draw [arrow] (habitat.east) -| (testres.south);
+	\draw [arrow] (region.east) -| (testres.south);
+	
+	
+	\draw [arrow] (testres) -- (filtres); %++(2cm,0cm);
+	\draw [arrow] (filtres) -- (aggres); 
+	
+	\end{pgfonlayer}
 	\end{tikzpicture}
 \end{document}
