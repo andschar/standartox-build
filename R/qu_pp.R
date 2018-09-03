@@ -5,10 +5,10 @@
 source('R/setup.R')
 
 # data --------------------------------------------------------------------
-psm = readRDS(file.path(cachedir, 'psm.rds'))
+chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
 # query -------------------------------------------------------------------
-todo_pp = psm$cas
+todo_pp = chem$cas
 # todo_pp = todo_pp[1:10] # debug me!
 
 if (online) {
@@ -52,7 +52,7 @@ pp[ , cname := tolower(cname) ]
 pp[ , solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 
 # cleaning ----------------------------------------------------------------
-rm(psm)
+rm(chem)
 
 
 

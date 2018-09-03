@@ -4,8 +4,7 @@
 source('R/setup.R')
 
 # data --------------------------------------------------------------------
-psm = readRDS(file.path(cachedir, 'psm.rds'))
-
+chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
 # function ----------------------------------------------------------------
 bind_frame_dcast = function(l) {
@@ -27,7 +26,7 @@ bind_frame_dcast = function(l) {
 }
 
 # query -------------------------------------------------------------------
-todo_aw = psm$cas
+todo_aw = chem$cas
 # todo_aw = '119446-68-3'
 # todo_aw = todo_aw[1:10] # debug me!
 
@@ -60,5 +59,5 @@ aw[ , pest_type :=
 gsub('(.+)?(fungicide|herbicide|insecticide|rodenticide|acaricide|nematicide)(.+)?', '\\2', aw$subactivity)]
 
 # cleaning ----------------------------------------------------------------
-rm(psm)
+rm(chem, cas, todo_aw)
 

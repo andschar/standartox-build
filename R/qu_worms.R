@@ -3,9 +3,6 @@
 
 # setup -------------------------------------------------------------------
 source('R/setup.R')
-# switches
-online = online
-# online = TRUE
 
 # data --------------------------------------------------------------------
 todo_worms = readRDS(file.path(cachedir, 'epa_taxa.rds'))

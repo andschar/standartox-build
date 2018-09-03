@@ -235,10 +235,10 @@ setnames(epa1, old = c('ep_casnr', 'ep_cas', 'ep_taxon', 'ep_family'),
 
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
-taxa = epa1[ , .SD, .SDcols = c('taxon', 'family')]
+taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'family') ])
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
-casnr = sort(unique(epa1$casnr))
-saveRDS(casnr, file.path(cachedir, 'casnr.rds'))
+chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'ep_chemical_name')])
+saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # cleaning ----------------------------------------------------------------
 rm(cas_chck, family_chck, local, taxa, psm, i)

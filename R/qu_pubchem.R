@@ -4,12 +4,12 @@
 source('R/setup.R')
 
 # data --------------------------------------------------------------------
-psm = readRDS(file.path(cachedir, 'psm.rds'))
+chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
 # query -------------------------------------------------------------------
 if (online) {
   
-  cid = get_cid(psm$cas)
+  cid = get_cid(chem$cas)
 
   pc_l = list()
   for (i in 1:length(cid)) {
@@ -40,7 +40,7 @@ pc = rbindlist(pc_l, fill = TRUE, idcol = 'cas')
 pc[ , V1 := NULL ] # not needed
 
 # cleaning ----------------------------------------------------------------
-rm(cir, psm)
+rm(cir, chem)
 #rm(list = ls()[!ls() %in% c('pc', 'pc_l')])
 
 

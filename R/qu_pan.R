@@ -4,10 +4,10 @@
 source('R/setup.R')
 
 # data --------------------------------------------------------------------
-psm = readRDS(file.path(cachedir, 'psm.rds'))
+chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
 # query -------------------------------------------------------------------
-todo_pan = psm$cas
+todo_pan = chem$cas
 # todo_pan = todo_pan[1:7] # debug me
 
 if (online) {
@@ -34,7 +34,7 @@ pan = pan[!is.na(cas)] # TODO why are NAs created in the first place?
 setnames(pan, 'Chemical Class', 'chemical_class')
 
 # cleaning ----------------------------------------------------------------
-rm(psm)
+rm(chem)
 
 
 
