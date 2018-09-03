@@ -3,20 +3,15 @@
 # setup -------------------------------------------------------------------
 source('R/setup.R')
 # switches
-online = online
-online_db = FALSE
-local = TRUE
-whole_db = FALSE
+whole_db = TRUE
+
+# data base
+DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
 
 # query -------------------------------------------------------------------
-
 if (online_db) {
   drv = dbDriver("PostgreSQL")
-  if (local) {
-    con = dbConnect(drv, user = DBuserL, dbname = DBnameL, host = DBhostL, port = DBportL, password = DBpasswordL) # local  
-  } else {
-    con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword) # on server  
-  }
+  con = dbConnect(drv, user = DBuserL, dbname = DBetox, host = DBhostL, port = DBportL, password = DBpasswordL)
   
   if (whole_db) {
     res = dbGetQuery(con, 'SELECT DISTINCT ON (tests.test_cas) tests.test_cas
@@ -138,6 +133,7 @@ epa1 = rbindlist(epa1_l)
 # clean and add -----------------------------------------------------------
 # Clean effect column
 epa1[ , effect := gsub('~|/|*', '', effect) ] # remove ~, /, or * from effect column
+
 # Add qualifier column
 epa1[ , qualifier := trimws(gsub('[0-9\\.]+|E\\+|E\\-', '', conc1_mean_conv)) ] # ading qualifier column
 epa1[ qualifier == '', qualifier := '=' ]
@@ -179,10 +175,8 @@ epa1 = epa1[ qualifier != '+' ] # delete + qualifier entries [deletes: 0.5% of e
 # (1) # unit conversions
 epa1 = epa1[ conc1_unit_conv %in% c('ug/L', 'ul/L') ] #! [deletes: 12% of entries] have a look at this soon! #! Maybe include the conversion in R
 # (2) refine to a certain concentraion type? A - Active ingredient, F = formulation
-epa1[ , .N, conc1_type] #! TODO
+epa1[ , .N, conc1_type] # TODO
 
-names(epa1)
-fwrite(epa1, '/tmp/epa1.csv')
 
 # final columns -----------------------------------------------------------
 setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chem_name', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'reference_number', 'title', 'author', 'publication_year'))
@@ -214,8 +208,14 @@ epa1[taxon == 'Storeatula major', family := 'Pyrenomonadaceae' ]
 epa1[taxon == 'Pochonia chlamydosporia', family := 'Clavicipitaceae' ]
 epa1[taxon == 'Triaenophorus nodulosus', family := 'Triaenophoridae' ]
 epa1[taxon == 'Bryconamericus iheringii', family := 'Characidae' ]
+epa1[taxon == 'Coenochloris sp.', family := 'Radiococcaceae' ]
+epa1[taxon == 'Girardia tigrina', family := 'Dugesiidae' ]
+epa1[taxon == 'Cenococcum geophilum', family := 'Gloniaceae' ]
+epa1[taxon == 'Acineria uncinata', family := 'Litonotidae' ]
+
+
 # delete entries with no information on actual Genus or Species
-epa1 = epa1[!taxon %in% c('Hyperamoeba sp.', 'Algae', 'Aquatic Community', 'Plankton') ] # Hyperamoeba is a paraphyletic taxon
+epa1 = epa1[!taxon %in% c('Hyperamoeba sp.', 'Algae', 'Aquatic Community', 'Plankton', 'Invertebrates') ] # Hyperamoeba is a paraphyletic taxon
 
 # checks ------------------------------------------------------------------
 # cas
@@ -230,9 +230,15 @@ if (nrow(cas_chck) != 0) {
 family_chck =
   epa1[ is.na(family) ]
 if (nrow(family_chck)) {
-  warning('For the following taxa family entries are missing: ',
+  warning('For the following taxa family entries are missing:\n',
           paste0(unique(family_chck$taxon), collapse = '\n'))
 }
+
+
+# names -------------------------------------------------------------------
+setnames(epa1, paste0('ep_', names(epa1)))
+setnames(epa1, old = c('ep_casnr', 'ep_cas', 'ep_taxon', 'ep_family'),
+         new = c('casnr', 'cas', 'taxon', 'family'))
 
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
