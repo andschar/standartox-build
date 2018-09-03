@@ -2,8 +2,6 @@
 
 # setup -------------------------------------------------------------------
 source('R/setup.R')
-# switches
-whole_db = TRUE
 
 # data base
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
@@ -13,14 +11,9 @@ if (online_db) {
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuserL, dbname = DBetox, host = DBhostL, port = DBportL, password = DBpasswordL)
   
-  if (whole_db) {
-    res = dbGetQuery(con, 'SELECT DISTINCT ON (tests.test_cas) tests.test_cas
+  res = dbGetQuery(con, 'SELECT DISTINCT ON (tests.test_cas) tests.test_cas
                          FROM ecotox.tests')
-    todo_cas = res$test_cas # all the CAS in the EPA ECOTOX database
-  } else {
-    psm = readRDS(file.path(cachedir, 'psm.rds'))
-    todo_cas = unique(psm$casnr) # specific CASNR
-  }
+  todo_cas = res$test_cas # all the CAS in the EPA ECOTOX database
   # todo_cas = todo_cas[1:10] # debug me!
   
   epa1_l <- list()
@@ -244,10 +237,11 @@ setnames(epa1, old = c('ep_casnr', 'ep_cas', 'ep_taxon', 'ep_family'),
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
 taxa = epa1[ , .SD, .SDcols = c('taxon', 'family')]
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
-
+casnr = sort(unique(epa1$casnr))
+saveRDS(casnr, file.path(cachedir, 'casnr.rds'))
 
 # cleaning ----------------------------------------------------------------
-rm(cas_chck, family_chck, local, taxa, psm)
+rm(cas_chck, family_chck, local, taxa, psm, i)
 
 
 # help --------------------------------------------------------------------
