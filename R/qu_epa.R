@@ -243,7 +243,7 @@ chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'ep_chemical_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # cleaning ----------------------------------------------------------------
-rm(cas_chck, family_chck, local, taxa, chem, i)
+rm(cas_chck, family_chck, taxa, chem, i)
 
 
 # help --------------------------------------------------------------------

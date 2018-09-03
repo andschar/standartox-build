@@ -33,9 +33,9 @@ if (online) {
   Sys.time() - time
   
   # some preparation steps are done here and saved locally due to the size of gbif_l
-  gbif_ccode_l = lapply(gbif_l, 
-                        function(x) if (!is.na(x)) data.table(unique(x$data$countryCode))
-                                    else data.table(NA))
+  gbif_ccode_l = lapply(gbif_l,
+                        function(x) if (length(x) == 1 & is.na(x)) data.table(NA)
+                                    else data.table(unique(x$data$countryCode)))
   
   saveRDS(gbif_l, file.path(cachedir, 'gbif_l.rds'))
   saveRDS(gbif_ccode_l, file.path(cachedir, 'gbif_ccode_l.rds'))
