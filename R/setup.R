@@ -37,23 +37,22 @@ require(countrycode)
 # devtools::install_github("ropensci/taxizesoap")
 require(webchem)
 
+# project path
+prj = '/home/andreas/Documents/Projects/etox-base' #! change to your project directory here!
+
 # variables
-cachedir = '/home/andreas/Documents/Projects/etox-base/cache'
-fundir = '/home/andreas/Documents/Projects/etox-base/functions'
-plotdir = '/home/andreas/Documents/Projects/etox-base/plots'
-srcdir = '/home/andreas/Documents/Projects/etox-base/R'
-datadir = '/home/andreas/Documents/Projects/etox-base/data'
-missingdir = '/home/andreas/Documents/Projects/etox-base/missing'
+cachedir = file.path(prj, 'cache')
+fundir = file.path(prj, 'functions')
+plotdir = file.path(prj, 'plots')
+srcdir = file.path(prj, 'R')
+datadir = file.path(prj, 'data')
+missingdir = file.path(prj, 'missing')
+lookupdir = file.path(prj, 'lookup')
 
 # source
-source('/home/andreas/Documents/cred/DB_access.R') # data base credentials
-# source(file.path(fundir, 'ppdb-0-0-5.R'))
-# source(file.path(fundir, 'ppdb_own_functions.R'))
+source(file.path(srcdir, 'credentials.R')) # data base credentials
 source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
-# source(file.path(fundir, 'functions.R')) # contains gm_mean(), ksource()
-# source(file.path(fundir, 'agg_group.R'))
-# source(file.path(fundir, 'plot_outlier.R'))
-source('/home/andreas/Documents/Projects/etox-base/R/gg_theme.R')
+source(file.path(srcdir, 'gg_theme.R'))
 
 # system calls
 system('rm missing/*')
