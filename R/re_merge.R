@@ -3,41 +3,38 @@
 # setup -------------------------------------------------------------------
 source('R/setup.R')
 # switches
-online = online
-online = FALSE
 
-# source scripts ----------------------------------------------------------
-# Additional chemical data
+
+# EPA test data -----------------------------------------------------------
+source('R/qu_epa.R')
+
+
+# chemical data -----------------------------------------------------------
 source('R/qu_pubchem.R')
 source('R/qu_aw.R')
 source('R/qu_pan.R')
 source('R/qu_pp.R')
 source('R/qu_frac.R')
 
-# EPA data
-source('R/qu_epa.R')
 
-# Taxon scripts
+# taxa scripts ------------------------------------------------------------
+# TODO deprecate?!?
 # source('R/qu_classification.R')
 # TODO 55 taxa to query! also check whether there is habitat data for all the taxa in self defined!
-# Habitat scripts
+
+
+# habitat scripts ---------------------------------------------------------
 source('R/qu_worms.R')
 source('R/qu_habitat_self_defined.R') # self defined script
 #lookup_man_fam = fread(file.path(cachedir, 'lookup_man_fam_list.csv'))
 
-# Region scripts
+
+# regional scripts --------------------------------------------------------
 source('R/qu_gbif.R')
 
 
-# Variables to merge ------------------------------------------------------
 
-
-# Test data ---------------------------------------------------------------
-setnames(epa1, paste0('ep_', names(epa1)))
-setnames(epa1, old = c('ep_casnr', 'ep_cas', 'ep_taxon', 'ep_family'),
-         new = c('casnr', 'cas', 'taxon', 'family'))
-
-# Chemical Information ----------------------------------------------------
+# Merge Chemical Information ----------------------------------------------------
 # pubchem ----
 # https://pubchemdocs.ncbi.nlm.nih.gov/about
 # CID - non-zero integer PubChem ID
@@ -66,14 +63,14 @@ setnames(frac2, c('cas', paste0('fr_', tolower(names(frac2[ ,2:length(names(frac
 ch_info = Reduce(function(...) merge(..., by = 'cas', all = TRUE),
                  list(pc2, aw2, pan2, pp2, frac2)) # id: cas
 
-# Habitat information -----------------------------------------------------
+# Merge habitat information -----------------------------------------------------
 setnames(lookup_worms_fam, c('family',
                              paste0('wo_', tolower(names(lookup_worms_fam)[2:length(lookup_worms_fam)]))))
 setnames(lookup_man_fam, c('family',
                            paste0('ma_', tolower(names(lookup_man_fam)[2:length(lookup_man_fam)]))))
 ha_info = merge(lookup_worms_fam, lookup_man_fam, by = 'family', all = TRUE) # id: family
 
-# Region information ------------------------------------------------------
+# Merge regional information ------------------------------------------------------
 re_info = gbif_conti_dc
 setnames(re_info, c('taxon',
                     paste0('gb_', names(re_info)[2:length(re_info)])))
