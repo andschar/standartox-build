@@ -2,9 +2,6 @@
 
 # setup -------------------------------------------------------------------
 source('R/setup.R')
-# switches
-online = online
-# online = TRUE
 
 # data --------------------------------------------------------------------
 psm = readRDS(file.path(cachedir, 'psm.rds'))

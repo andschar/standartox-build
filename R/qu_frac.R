@@ -2,9 +2,6 @@
 
 # setup -------------------------------------------------------------------
 source('R/setup.R')
-# switches
-online = online
-# online = TRUE
 
 # data --------------------------------------------------------------------
 url = 'http://www.frac.info/docs/default-source/publications/frac-code-list/frac-code-list-2018-final-v2.xlsx?sfvrsn=33684b9a_2'
