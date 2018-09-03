@@ -236,12 +236,14 @@ setnames(epa1, old = c('ep_casnr', 'ep_cas', 'ep_taxon', 'ep_family'),
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
 taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'family') ])
+# taxa = taxa[1:5, ] # debuging
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'ep_chemical_name')])
+# chem = chem[1:5, ] # debuging
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # cleaning ----------------------------------------------------------------
-rm(cas_chck, family_chck, local, taxa, psm, i)
+rm(cas_chck, family_chck, local, taxa, chem, i)
 
 
 # help --------------------------------------------------------------------
