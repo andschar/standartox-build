@@ -12,7 +12,18 @@ todo_pp = chem$cas
 # todo_pp = todo_pp[1:10] # debug me!
 
 if (online) {
-  pp_l = pp_query(todo_pp)
+  
+  pp_l = list()
+  for (i in seq_along(todo_pp)) {
+    
+    todo = todo_pp[i]
+    pp_res = tryCatch({ pp_query(todo)
+    }, error = function(e) {cat('ERROR: ', conditionMessage(e), '\n')
+      return(NA)})
+  
+    pp_l[[i]] = pp_res[[1]]
+    names(pp_l)[i] = todo
+  }
   
   saveRDS(pp_l, file.path(cachedir, 'pp_l.rds'))
 } else {
