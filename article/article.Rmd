@@ -1,0 +1,73 @@
+---
+title: "Etox-Base - A tool and data set in ecotoxicology"
+author: "Andreas Scharmüller"
+date: "August 29, 2018"
+output: html_document
+bibliography: references-etox-base.bib
+---
+
+# Abstract
+
+
+
+# Introduction
+
+Chemical pollutants in the environment, such as pesticides, heavy metals, (?? main pollutant groups ??) belong after @rockstrom_safe_2009 to one of nine planetary boundary groups that should not exceed certain thresholds. Yet, the influence of chemical pollutants is not sufficiently studied to circumvent this boundary. 
+
+
+"Currently, pesticide use is wide-spread in agriculture all over the world, but still only very few countries have established wildlife poisoning surveillance programs (2). As a result, many data on pesticides remain scattered and/or
+not publicly available" [@kohler_wildlife_2013]
+
+what is really new and an improvement of the ECOTOX data base is the querying of regional and habitat data and automated checking!!
+
+
+The EPA ECOTOX data base !citation! is a valuable resource for ecotoxicological test data. When it was last updated (June 7, 2018) it contained 910,465 test results of 11,583 different chemicals that were tested on 12,599 organisms.
+
+
+# Methods
+
+The EPA ECOTOX data base was downloaded (version: June 7, 2018) and built into a local PostgreSQL data base [@szoecs_build_2016]. The data base is subsequently queried for EC50 values
+
+The whole process is automated and scheduled to be re-run four times a year.
+
+Building the the data base is updated quaterly whenever a new version from the EPA can be downloaded. Based on the EPA ECOTOX data base CAS and taxa information are extracted and queried against other online available data bases to retrieve information which is lackign in the ECOTOX data base. 
+
+## Habitat data
+
+## Regionl data
+
+## Additional chemical parameters
+
+water solubility
+
+maybe also include degredation (water and soil) ?
+information for the classification of chemicals
+
+Data is stored at a [github repository](https://github.com/andreasLD/etox-base).
+
+
+
+
+```{r organigram-conversion, echo=FALSE, include=TRUE, eval=FALSE}
+# TODO can this be done at the end of the TiX file?
+pdf_file = '/home/andreas/Documents/Projects/etox-base/TeX/organigram1.pdf'
+png_file = '/home/andreas/Documents/Projects/etox-base/TeX/organigram1.png'
+
+system(sprintf('convert -density 300 %s %s', pdf_file, png_file))
+```
+
+![Figure](/home/andreas/Documents/Projects/etox-base/TeX/organigram1.png)
+
+
+# Discussion
+
+quality of data in GBIF for instance in Africa is low. Continental refinement should be used with caution.
+
+some ecotox test results might be flawed
+
+Generally information on habitats is not easy to find. Only worms, algaebase and some others provide it, therefore own list.
+
+it would be valuable to include other resources such as PPDB and algaebase. however they are proprietary.
+
+
+# References
