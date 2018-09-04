@@ -17,6 +17,8 @@ if (online) {
   for (i in seq_along(todo_pp)) {
     
     todo = todo_pp[i]
+    message('Querying (', i, '/', length(todo_pp), '): ', todo)
+    
     pp_res = tryCatch({ pp_query(todo)
     }, error = function(e) {cat('ERROR: ', conditionMessage(e), '\n')
       return(NA)})
