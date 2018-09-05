@@ -63,6 +63,10 @@ ui = fluidPage(
                              choiceValues = c('EC50', 'LOEC', 'NOEC'),
                              choiceNames = c('L/EC50', 'LOEC', 'NOEC'),
                              selected = 'EC50')
+        ),
+        splitLayout(
+          checkboxGroupInput(inputId = 'chemical_class', label = 'Chemical class',
+                             choices = c('Metals', 'Pesticides', 'what else???'))
         )
       )
     ),
@@ -130,8 +134,8 @@ ui = fluidPage(
           'Write the help pages'
         ),
         tabPanel(
-          'Article',
-          withMathJax(includeMarkdown('article.md'))
+          'Article'
+          #withMathJax(includeMarkdown('article.md'))
         ),
         tabPanel(
           'About',

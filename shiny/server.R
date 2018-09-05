@@ -1,6 +1,8 @@
 # script for a shiny app selecting EC50 values
 # setup -------------------------------------------------------------------
 source('/home/andreas/Documents/Projects/etox-base/R/setup.R')
+articledir = file.path(prj, 'article')
+
 require(shiny)
 require(knitr)
 require(DT)
@@ -11,7 +13,7 @@ source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_aggregation_
 source('/home/andreas/Documents/Projects/etox-base/R/fun_ec50filter_meta_plots.R')
 
 # knit README beforehands
-rmdfiles = c('README.Rmd', 'article.Rmd')
+rmdfiles = c('README.Rmd', file.path(articledir, 'article.Rmd'))
 sapply(rmdfiles, knit, quiet = TRUE)
 # knit('shiny/README.Rmd', output = 'shiny/README.md', quiet = TRUE)
 # knit('shiny/article.Rmd', output = 'shiny/article.md', quiet = TRUE)
