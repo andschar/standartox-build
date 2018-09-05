@@ -65,10 +65,7 @@ pp[ , cname := tolower(cname) ]
 pp[ , solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 
 # cleaning ----------------------------------------------------------------
-rm(chem)
-
-
-
+rm(chem, todo_pp)
 
 
 
