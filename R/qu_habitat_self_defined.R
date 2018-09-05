@@ -2,9 +2,6 @@
 
 # setup -------------------------------------------------------------------
 source('R/setup.R')
-# switches
-online = online
-# online = TRUE
 
 # data --------------------------------------------------------------------
 todo_habitat = readRDS(file.path(cachedir, 'epa_taxa.rds'))
@@ -1207,7 +1204,7 @@ chck_habitat =
 if (length(chck_habitat) == 0) {
   message('All entries classified.')
 } else {
-  message('The following taxa are still to be classified:\n', paste0(chck_habitat, '\n'))
+  message('The following ', length(chck_habitat), ' taxa are still to be classified:\n', paste0(chck_habitat, '\n'))
   fwrite(data.table(chck_habitat),
          file.path(tempdir(), 'lookup_man_fam_todo.csv'))
 }
