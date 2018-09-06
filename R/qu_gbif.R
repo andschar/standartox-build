@@ -132,61 +132,7 @@ rm(epa, i, key, taxon, todo_gbif, time, full_list, gbif_l, gbif_ccode_l)
 
 options(warn = oldw); rm(oldw)
 
-# remove
 
 
 
 
-# countrycode package
-
-gbif_conti_dc = dcast(gbif_ccode, taxon ~ continent, value.var = 'ccode',
-                      fun.aggregate = function(x) as.numeric(length(x) > 1), fill = NA)
-gbif_conti_dc[ , c('Atlantic', 'Indian Ocean', 'Pacific', 'ZZ') := NULL ]
-
-cciso = as.data.table(countrycode::codelist[ ,c('iso2c', 'iso.name.en', 'region', 'continent')])
-missing_ccode = data.table(iso2c = c('AQ', 'ZZ', 'UM', 'IO', 'TF', 'CC', 'XK'),
-                           iso.name.en = c('Antarctica', 'Unknown Country', 'United States Minor Outlying Islands', 'Indian Ocean', 'French Southern Territories', 'COCOS (KEELING) ISLANDS', 'Kosovo'),
-                           region = rep(NA, 7),
-                           continent = c('Antarctica', 'ZZ', 'Pacific', 'Indian Ocean', 'Atlantic', 'Indian Ocean', 'Europe'))
-cciso = rbindlist(list(cciso, missing_ccode))
-
-gbif_ccode[cciso, on = c(ccode = 'iso2c'), continent := i.continent]
-
-
-# 
-# # Search for many species
-# splist <- c('Accipiter sp.', 'Junco', 'Aix sponsa')
-# 
-# keys = sapply(splist, function(x) name_backbone(name = x)$speciesKey, USE.NAMES = FALSE)
-# 
-# x = map_fetch(search = 'taxonKey', id = keys[1])
-# 
-# class(x)
-# plot(x)
-# mapview::mapview(x)
-# 
-# 
-# key <- name_backbone(name='Helianthus annuus', kingdom='plants')$speciesKey
-# res = occ_search(taxonKey=key)
-# res_data = as.data.table(res$data)
-# View(res_data[10,])
-# 
-# 
-# # Options
-# # example: Helianthus annuus
-# 
-# # (1) Geo-data intersection
-# 
-# # (2) country code
-# dt = res$data
-# unique(dt$countryCode)
-# unique(dt$country)
-# unique(dt$continent)
-# 
-# names(dt)
-# unique(dt$habitat)
-# unique(dt$elevation)
-# unique(dt$occurrenceStatus)
-# 
-# 
-# 
