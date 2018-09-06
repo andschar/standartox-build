@@ -3,14 +3,14 @@
 # setup -------------------------------------------------------------------
 source('R/setup.R')
 # switches
-full_list = TRUE # loads the full result list if online=FALSE (900 MB!)
+full_list = TRUE # loads the full result list if online=FALSE
 
 # data --------------------------------------------------------------------
 todo_gbif = readRDS(file.path(cachedir, 'epa_taxa.rds'))
 
 # query -------------------------------------------------------------------
 todo_gbif = sort(unique(todo_gbif$taxon))
-# todo_gbif = todo_gbif[1:10] # debug me!
+# todo_gbif = todo_gbif[818:820] # debug me!
 
 if (online) {
 #! takes 1.7h for 1500 taxa
@@ -18,11 +18,14 @@ if (online) {
   gbif_l = list()
   for (i in seq_along(todo_gbif)) {
     taxon = todo_gbif[i]
-    key = name_backbone(taxon)$speciesKey
     message('Querying (', i, '/', length(todo_gbif), '): ', taxon)
     
+    key = name_backbone(taxon)$speciesKey
+    
     if (!is.null(key)) {
-      gbif = occ_search(taxonKey = key)
+      gbif = tryCatch({
+        occ_search(taxonKey = key)
+      }, error = function(e) { cat('ERROR: ', conditionMessage(e), '\n'); return(NA) })
     } else {
       gbif = NA
     }
