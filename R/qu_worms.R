@@ -9,7 +9,6 @@ todo_worms = readRDS(file.path(cachedir, 'epa_taxa.rds'))
 
 # Family query ------------------------------------------------------------
 if (online) {
-  message('online = TRUE')
   family_todo = unique(todo_worms$family)
   # family_todo = family_todo[1:2]
   
@@ -33,7 +32,7 @@ if (online) {
   saveRDS(worms_family_l, file.path(cachedir, 'worms_family_list.rds'))
   
 } else {
-  message('online = FALSE')
+  
   worms_family_l = readRDS(file.path(cachedir, 'worms_family_list.rds'))
 }
 
@@ -46,7 +45,6 @@ setnames(lookup_worms_fam, c('family', 'isFre', 'isBra', 'isMar', 'isTer'))
 
 # Species query -----------------------------------------------------------
 if (online) {
-  message('online = TRUE')
   species_todo = sort(unique(todo_worms$taxon))
   species_todo = trimws(gsub('sp.', '', species_todo)) # remove sp. as it shows no results
   # species_todo = species_todo[1:2] # debug me!
@@ -71,7 +69,6 @@ if (online) {
   saveRDS(worms_species_l, file.path(cachedir, 'worms_species_list.rds'))
   
 } else {
-  message('online = FALSE')
   worms_species_l = readRDS(file.path(cachedir, 'worms_species_list.rds'))
 }
 
