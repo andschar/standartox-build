@@ -10,7 +10,7 @@ todo_gbif = readRDS(file.path(cachedir, 'epa_taxa.rds'))
 
 # query -------------------------------------------------------------------
 todo_gbif = sort(unique(todo_gbif$taxon))
-# todo_gbif = todo_gbif[1:5] # debug me!
+# todo_gbif = todo_gbif[1:10] # debug me!
 
 if (online) {
 #! takes 1.7h for 1500 taxa
@@ -100,14 +100,14 @@ gbif_ccode = rbindlist(gbif_ccode_l, idcol = 'taxon')
 setnames(gbif_ccode, old = 'V1', new = 'ccode')
 gbif_ccode = gbif_ccode[ ccode != 'none' ] # delete 'none' entries
 gbif_ccode_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode',
-                      fun.aggregate = function(x) as.numeric(length(x) > 1), fill = NA)
+                      fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
 
 # continent ---------------------------------------------------------------
 gbif_continent = rbindlist(gbif_continent_l, idcol = 'taxon')
 setnames(gbif_continent, old = 'V1', new = 'continent')
 gbif_continent[ , continent := tolower(continent) ]
 gbif_conti_dc = dcast(gbif_continent, taxon ~ continent, value.var = 'continent',
-                      fun.aggregate = function(x) as.numeric(length(x) > 1), fill = NA)
+                      fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
 
 # habitat -----------------------------------------------------------------
 gbif_habitat = rbindlist(gbif_habitat_l, idcol = 'taxon')
