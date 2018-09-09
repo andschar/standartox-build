@@ -67,6 +67,11 @@ ui = fluidPage(
         splitLayout(
           checkboxGroupInput(inputId = 'chemical_class', label = 'Chemical class',
                              choices = c('Metals', 'Pesticides', 'what else???'))
+        ),
+        splitLayout(
+          checkboxGroupInput(inputId = 'authorization', label = 'Authorized in',
+                             choiceValues = c('afr', 'asi', 'eur', 'nam', 'sam', 'aus'),
+                             choiceNames = c('Afirca', 'Asia', 'Europe', 'North America', 'South America', 'Australia'))
         )
       )
     ),
