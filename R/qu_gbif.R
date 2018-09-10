@@ -3,7 +3,7 @@
 # setup -------------------------------------------------------------------
 source('R/setup.R')
 # switches
-full_list = TRUE # loads the full result list if online=FALSE
+full_list = FALSE # loads the full result list if online=FALSE
 
 # data --------------------------------------------------------------------
 todo_gbif = readRDS(file.path(cachedir, 'epa_taxa.rds'))
@@ -111,30 +111,74 @@ setnames(gbif_continent, old = 'V1', new = 'continent')
 gbif_continent[ , continent := tolower(continent) ]
 gbif_conti_dc = dcast(gbif_continent, taxon ~ continent, value.var = 'continent',
                       fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
+gbif_conti_dc[ , 'NA' := NULL]
 
 # habitat -----------------------------------------------------------------
 gbif_habitat = rbindlist(gbif_habitat_l, idcol = 'taxon')
 setnames(gbif_habitat, 'V1', 'habitat')
 gbif_habitat[ , habitat := tolower(habitat) ]
+gbif_habitat_dc = dcast(gbif_habitat, taxon ~ ., value.var = 'habitat',
+                        fun.aggregate = function(x) paste0(x, collapse=' '), fill = NA)
+setnames(gbif_habitat_dc, '.', 'habitat')
 # match habitat variables
-fresh = c('brook', 'stream', 'river', 'tributary', 'lake', 'freshwater')
-brack = c('estuary')
-marin = c('ocean', 'atlantic', 'pcaific')
-#terre = NULL
+fresh = c('bach', 'weiher', 'fluss', 'strom', 'teich', 'estanque', 'puddle', 'water body', 'gravel', 'cobble', 'aquarium', 'spring', 'ditch', 'bog','peat', 'swamp', 'myr', 'fresh', 'creek', 'riffle', 'current', 'rapid', 'brook', 'canal', 'channel', 'kanal', 'stream', '^å$', 'river', 'r.', 'reservoir', 'riparian', 'marginal vegetation', 'río', 'rio', 'tributary', 'lago', 'lac', 'lake', 'pool', 'pond', 'freshwater', 'floodplain', 'flood plain', 'wetland', 'humedal', 'sumpskog', 'waterhole', 'damm', 'doce', 'douce', 'vattendrag', 'léntico', 'marsh', 'marais', 'dulce', 'lótico', 'ruisseau', 'fleuve', 'cours', 'epiliton', 'inundable', 'bäck', 'cenote', 'grunt vatten', 'kärr', 'stagnant water',
+          'ganges', 'nil', 'danube', 'volga')
+brack = c('estuar', 'brackish', 'brackvatten', 'intermareal', 'saumâtre', 'saumatre')
+marin = c('sandstrand', 'sea', 'ocean', 'marin', 'litoral', 'littoral', 'pelágico', 'intertidal', 'gulf', 'indian', 'atlantic', 'mediterranean', 'pacific', 'laguna', 'havsstrand', 'cotier', 'coster', 'coast', 'lagoon', 'sand', 'strand', 'playa', 'beach', 'seagrass', 'bay', 'intermareal', 'hällkar', 'manglar', 'mangrov', 'reef', 'tide', 'salée', 'mer', 'meer')
+terre = c('terre', 'bush', 'wood', 'palma', 'spruce', 'birch', 'forest', 'foret', 'skog', 'barrskog', 'lövskog', 'hagmark', 'skogsmark', 'skräpmark', 'pasture', 'mud', 'jordhög', 'grassland', 'ruderat', 'ruderatmark', 'trädgård', 'marsh', 'vägkant', 'garden', 'kompost', 'bosque', 'åkerkant', 'roadside', 'meadow', 'culture', 'soil', 'urban', 'dunes', 'epifiton', 'soptipp', 'inomhus', 'åker', 'park', 'jordtipp', 'vägren', 'grustag', 'rock', 'industriavfall', 'tipp', 'farm', 'arboretum', 'greenhouse', 'savan', 'sabana', 'filed', 'grass', 'indoors')
 
-gbif_habitat[ , isFre_gbif := ifelse(habitat %like% paste0(fresh, collapse = '|'), 1, NA) ]
-gbif_habitat[ , isBra_gbif := ifelse(habitat %like% paste0(brack, collapse = '|'), 1, NA) ]
-gbif_habitat[ , isMar_gbif := ifelse(habitat %like% paste0(marin, collapse = '|'), 1, NA) ]
-#gbif_habitat[ , isTer_gbif := ifelse(habitat %like% paste0(terre, collapse = '|'), 1, NA) ]
+# waterBody ---------------------------------------------------------------
+gbif_waterbody = rbindlist(gbif_waterBody_l, idcol = 'taxon')
+setnames(gbif_waterbody, 'V1', 'waterbody')
+gbif_waterbody_dc = dcast(gbif_waterbody, taxon ~ ., value.var = 'waterbody',
+                    fun.aggregate = function(x) paste0(x, collpase = ' '), fill = NA)
+setnames(gbif_waterbody_dc, '.', 'waterbody')
+
+# merge + classify --------------------------------------------------------
+gbif_hab_wat_dc = merge(gbif_habitat_dc, gbif_waterbody_dc, by = 'taxon', all = TRUE)
+gbif_hab_wat_dc[ , isFre_gbif := ifelse(tolower(habitat) %like% paste0(fresh, collapse = '|') |
+                                            tolower(waterbody) %like% paste0(fresh, collapse = '|'), 1, NA) ]
+gbif_hab_wat_dc[ , isBra_gbif := ifelse(tolower(habitat) %like% paste0(brack, collapse = '|') |
+                                            tolower(waterbody) %like% paste0(brack, collapse = '|'), 1, NA) ]
+gbif_hab_wat_dc[ , isMar_gbif := ifelse(tolower(habitat) %like% paste0(marin, collapse = '|') |
+                                            tolower(waterbody) %like% paste0(marin, collapse = '|'), 1, NA) ]
+gbif_hab_wat_dc[ , isTer_gbif := ifelse(tolower(habitat) %like% paste0(terre, collapse = '|'), 1, NA) ]
+
+
+# evaluation --------------------------------------------------------------
+# continent
+gbif_conti_dc[ , count := sum(.SD, na.rm = TRUE),
+                 .SDcols = c('africa', 'antarctica', 'asia', 'europe', 'north_america', 'oceania', 'south_america'),
+                 by = 1:nrow(gbif_conti_dc) ]
+missing_conti = nrow(gbif_conti_dc[count == 0])
+message('GBIF: For ', missing_conti, ' taxa no continent information was found.')
+gbif_conti_dc[ , count := NULL]
+# habitat
+gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
+                   .SDcols = c('isFre_gbif', 'isBra_gbif', 'isMar_gbif', 'isTer_gbif'),
+                   by = 1:nrow(gbif_hab_wat_dc) ]
+missing_habi = nrow(gbif_hab_wat_dc[ count == 0])
+message('GBIF: For ', missing_habi, ' taxa no habitat information was found.')
+gbif_hab_wat_dc[ , count := NULL]
+
+# save missing list
+saveRDS(
+  list(gbif_missing_conti = list(missing = missing_conti, total = nrow(gbif_conti_dc)),
+       gbif_missing_habitat = list(missing = missing_habi, total = nrow(gbif_hab_wat_dc))),
+  file.path(cachedir, 'missing_gbif.rds')
+)
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings
 
-rm(epa, i, key, taxon, todo_gbif, time, full_list, gbif_l, gbif_ccode_l)
+rm(epa, i, key, taxon, todo_gbif, time, full_list, gbif_l,
+   missing_conti, missing_habi,
+   gbif_ccode_l, gbif_ccode, gbif_continent_l, gbif_continent,
+   gbif_habitat_l, gbif_habitat, gbif_habitat_dc,
+   gbif_waterBody_l, gbif_waterbody, gbif_waterbody_dc)
 
 options(warn = oldw); rm(oldw)
-
 
 
 
