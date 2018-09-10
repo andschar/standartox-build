@@ -1185,6 +1185,8 @@ lookup_man_fam =
 ))
 
 
+# names -------------------------------------------------------------------
+setnames(lookup_man_fam, c('isFre', 'isMar', 'isTer'), c('isFre_man', 'isMar_man', 'isTer_man'))
 
 # Checks ------------------------------------------------------------------
 if (length(which(isTRUE(duplicated(lookup_man_fam$family)))) < 1) {

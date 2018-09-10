@@ -145,35 +145,41 @@ gbif_hab_wat_dc[ , isMar_gbif := ifelse(tolower(habitat) %like% paste0(marin, co
 gbif_hab_wat_dc[ , isTer_gbif := ifelse(tolower(habitat) %like% paste0(terre, collapse = '|'), 1, NA) ]
 
 
-# evaluation --------------------------------------------------------------
+
+# missing data ------------------------------------------------------------
 # continent
 gbif_conti_dc[ , count := sum(.SD, na.rm = TRUE),
                  .SDcols = c('africa', 'antarctica', 'asia', 'europe', 'north_america', 'oceania', 'south_america'),
                  by = 1:nrow(gbif_conti_dc) ]
-missing_conti = nrow(gbif_conti_dc[count == 0])
-message('GBIF: For ', missing_conti, ' taxa no continent information was found.')
+na_conti = gbif_conti_dc[count == 0]
+message('GBIF: For ', nrow(na_conti), ' taxa no continent information was found.')
 gbif_conti_dc[ , count := NULL]
 # habitat
 gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
                    .SDcols = c('isFre_gbif', 'isBra_gbif', 'isMar_gbif', 'isTer_gbif'),
                    by = 1:nrow(gbif_hab_wat_dc) ]
-missing_habi = nrow(gbif_hab_wat_dc[ count == 0])
-message('GBIF: For ', missing_habi, ' taxa no habitat information was found.')
+na_habi = gbif_hab_wat_dc[ count == 0]
+message('GBIF: For ', nrow(na_habi), ' taxa no habitat information was found.')
 gbif_hab_wat_dc[ , count := NULL]
 
-# save missing list
-saveRDS(
-  list(gbif_missing_conti = list(missing = missing_conti, total = nrow(gbif_conti_dc)),
-       gbif_missing_habitat = list(missing = missing_habi, total = nrow(gbif_hab_wat_dc))),
-  file.path(cachedir, 'missing_gbif.rds')
-)
+# save missing data to .csv
+missing_l = list(gbif_na_conti = na_conti, gbif_na_habi = na_habi)
+for (i in 1:length(missing_l)) {
+  file = missing_l[[i]]
+  name = names(missing_l)[i]
+  
+  if (nrow(file) > 0) {
+    fwrite(file, file.path(missingdir, paste0(name, '.csv')))
+    message('Writing file with missing data: ', name)
+  }
+}
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings
 
 rm(epa, i, key, taxon, todo_gbif, time, full_list, gbif_l,
-   missing_conti, missing_habi,
+   na_conti, na_habi, missing_l,
    gbif_ccode_l, gbif_ccode, gbif_continent_l, gbif_continent,
    gbif_habitat_l, gbif_habitat, gbif_habitat_dc,
    gbif_waterBody_l, gbif_waterbody, gbif_waterbody_dc)

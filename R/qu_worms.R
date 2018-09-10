@@ -83,16 +83,22 @@ setnames(lookup_worms_sp, c('taxon', 'isFre_wo_sp', 'isBra_wo_sp', 'isMar_wo_sp'
 lookup_worms_sp[ , count := sum(.SD, na.rm = TRUE),
                    .SDcols = c('isFre_wo_sp', 'isBra_wo_sp', 'isMar_wo_sp', 'isTer_wo_sp'),
                    by = 1:nrow(lookup_worms_sp)]
-missing_worms_sp = nrow(lookup_worms_sp[ count == 0 ])
+na_worms_sp = lookup_worms_sp[ count == 0 ]
 
-message('WoRMS: For ', missing_worms_sp, ' taxa no habitat information was found.')
+message('WoRMS: For ', nrow(na_worms_sp), ' taxa no habitat information was found.')
 lookup_worms_sp[ , count := NULL]
 
-# save missing list
-saveRDS(
-  list(worms_missing_taxa = list(missing = missing_worms_sp, total = nrow(lookup_worms_sp))),
-  file.path(cachedir, 'missing_worms.rds')
-)
+# save missing data to .csv
+missing_l = list(worms_na_sp = na_worms_sp)
+for (i in 1:length(missing_l)) {
+  file = missing_l[[i]]
+  name = names(missing_l)[i]
+  
+  if (nrow(file) > 0) {
+    fwrite(file, file.path(missingdir, paste0(name, '.csv')))
+    message('Writing file with missing data: ', name)
+  }
+}
 
 # Cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
