@@ -40,7 +40,7 @@ worms_fam = rbindlist(worms_family_l)
 # Take minimum 'cause some fmailies have mulitple entries (e.g Bopyridae)
 lookup_worms_fam = worms_fam[ , lapply(.SD, function(x) min(as.numeric(x))),
                               by = family, .SDcols = c('isFreshwater', 'isBrackish', 'isMarine', 'isTerrestrial')]
-setnames(lookup_worms_fam, c('family', 'isFre', 'isBra', 'isMar', 'isTer'))
+setnames(lookup_worms_fam, c('family', 'isFre_wo_fam', 'isBra_wo_fam', 'isMar_wo_fam', 'isTer_wo_fam'))
 
 
 # Species query -----------------------------------------------------------
@@ -76,7 +76,23 @@ worms_sp = rbindlist(worms_species_l)
 # Sometimes there are more results for the input (lain_BIname) that's why 
 lookup_worms_sp = worms_sp[ , lapply(.SD, function(x) min(as.numeric(x))),
                             by = taxon, .SDcols = c('isFreshwater', 'isBrackish', 'isMarine', 'isTerrestrial')]
-setnames(lookup_worms_sp, c('taxon', 'isFre', 'isBra', 'isMar', 'isTer'))
+setnames(lookup_worms_sp, c('taxon', 'isFre_wo_sp', 'isBra_wo_sp', 'isMar_wo_sp', 'isTer_wo_sp'))
+
+# evaluation --------------------------------------------------------------
+# species
+lookup_worms_sp[ , count := sum(.SD, na.rm = TRUE),
+                   .SDcols = c('isFre_wo_sp', 'isBra_wo_sp', 'isMar_wo_sp', 'isTer_wo_sp'),
+                   by = 1:nrow(lookup_worms_sp)]
+missing_worms_sp = nrow(lookup_worms_sp[ count == 0 ])
+
+message('WoRMS: For ', missing_worms_sp, ' taxa no habitat information was found.')
+lookup_worms_sp[ , count := NULL]
+
+# save missing list
+saveRDS(
+  list(worms_missing_taxa = list(missing = missing_worms_sp, total = nrow(lookup_worms_sp))),
+  file.path(cachedir, 'missing_worms.rds')
+)
 
 # Cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
