@@ -32,13 +32,14 @@ ui = fluidPage(
                        choices = c('all', 'marine', 'brackish', 'freshwater', 'terrestrial'),
                        selected = 'freshwater'),
           radioButtons(inputId = 'continent', label = 'Continent',
-                       choices = c('all', 'Africa', 'Americas', 'Asia', 'Europe', 'Oceania'),
+                       choiceValues = c('all', 'gb_africa', 'gb_north_america', 'gb_south_america', 'gb_antarctica', 'gb_asia', 'gb_europe', 'gb_oceania'),
+                       choiceNames = c('all', 'Africa', 'North America', 'South America', 'Antarctica', 'Asia', 'Europe', 'Oceania'),
                        selected = 'Europe'),
           checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
         ),
         splitLayout(
           checkboxGroupInput(inputId = 'conc_type', label = 'Concentration type',
-                             choiceValues = c('A', 'F'), # 'T', 'U'),
+                             choiceValues = c('A', 'F'), # TODO 'T', 'U'),
                              choiceNames = c('Active ingredient', 'Formulation'),
                              selected = c('A', 'F')),
           checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
