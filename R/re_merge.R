@@ -27,7 +27,7 @@ source('R/qu_habitat_self_defined.R') # self defined script
 
 
 # regional scripts --------------------------------------------------------
-source('R/qu_gbif.R')
+source('R/qu_gbif.R') # contains also habitat information
 
 
 
@@ -61,18 +61,22 @@ ch_info = Reduce(function(...) merge(..., by = 'cas', all = TRUE),
                  list(pc2, aw2, pan2, pp2, frac2)) # id: cas
 
 # Merge habitat information -----------------------------------------------------
-setnames(lookup_worms_fam, c('family',
-                             paste0('wo_', tolower(names(lookup_worms_fam)[2:length(lookup_worms_fam)]))))
-setnames(lookup_man_fam, c('family',
-                           paste0('ma_', tolower(names(lookup_man_fam)[2:length(lookup_man_fam)]))))
-ha_info = merge(lookup_worms_fam, lookup_man_fam, by = 'family', all = TRUE) # id: family
+# WoRMS
+# setnames(lookup_worms_fam, c('family',
+#                              paste0('wo_', tolower(names(lookup_worms_fam)[2:length(lookup_worms_fam)]))))
+# # self compiled
+# setnames(lookup_man_fam, c('family',
+#                            paste0('ma_', tolower(names(lookup_man_fam)[2:length(lookup_man_fam)]))))
+
+ha_info_fam = merge(lookup_worms_fam, lookup_man_fam, by = 'family', all = TRUE) # id: family
+ha_info_sp = merge(lookup_worms_sp, gbif_hab_wat_dc, by = 'taxon', all = TRUE) # GBIF
 
 # Merge regional information ------------------------------------------------------
 re_info = gbif_conti_dc
 setnames(re_info, c('taxon',
                     paste0('gb_', names(re_info)[2:length(re_info)])))
 
-# Duplicate cas and txon check --------------------------------------------
+# Duplicate cas and txon check ----------------------------------------------------
 chck_cas_dupl = rbindlist(list(epa1[is.na(cas)],
                                ch_info[is.na(cas)]), fill = TRUE)
 
@@ -92,11 +96,13 @@ if (sum(sapply(list(chck_cas_dupl, chck_fam_dupl, chck_tax_dupl), nrow)) != 0) {
 # CAS
 tests = copy(epa1)
 
-tests = Reduce(function(...) merge(..., by = 'cas', all.x = TRUE), list(tests, ch_info))
+tests = merge(tests, ch_info, by = 'cas', all.x = TRUE)
 
-tests = Reduce(function(...) merge(..., by = 'taxon', all.x = TRUE), list(tests, re_info))
+tests = merge(tests, re_info, by = 'taxon', all.x = TRUE)
 
-tests = Reduce(function(...) merge(..., by = 'family', all.x = TRUE), list(tests, ha_info))
+tests = merge(tests, ha_info_fam, by = 'family', all.x = TRUE)
+
+tests = merge(tests, ha_info_sp, by = 'taxon', all.x = TRUE)
 
 # final table
 setcolorder(tests, c('cas', 'casnr', 'taxon', 'family'))
