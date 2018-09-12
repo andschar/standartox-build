@@ -3,15 +3,10 @@
 
 #rm(list = ls())
 # switches
-online = FALSE
-if (online) {
-  check = menu(c('yes', 'no'), title = 'Do you want to query all online databases?')
-  if (check != 1) {
-    stop('Change online setting.')
-  } 
-}
 
-local = FALSE # have you built the EPA ECOTOX DB locally?
+src_ECOTOX = FALSE
+online = FALSE
+online_db = FALSE
 plots = FALSE
 
 # packages
@@ -42,11 +37,11 @@ prj = '/home/andreas/Documents/Projects/etox-base' #! change to your project dir
 
 # variables
 cachedir = file.path(prj, 'cache')
+missingdir = file.path(cachedir, 'missing')
 fundir = file.path(prj, 'functions')
 plotdir = file.path(prj, 'plots')
 srcdir = file.path(prj, 'R')
 datadir = file.path(prj, 'data')
-missingdir = file.path(prj, 'missing')
 lookupdir = file.path(prj, 'lookup')
 
 # source
@@ -55,6 +50,6 @@ source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
 source(file.path(srcdir, 'gg_theme.R'))
 
 # system calls
-system('rm missing/*')
+system(sprintf('rm %s/*', missingdir))
 
 

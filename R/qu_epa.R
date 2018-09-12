@@ -2,6 +2,7 @@
 
 # setup -------------------------------------------------------------------
 source('R/setup.R')
+source('R/qu_epa_taxonomy.R')
 
 # data base
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
@@ -11,8 +12,8 @@ if (online_db) {
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuserL, dbname = DBetox, host = DBhostL, port = DBportL, password = DBpasswordL)
   
-  res = dbGetQuery(con, 'SELECT DISTINCT ON (tests.test_cas) tests.test_cas
-                         FROM ecotox.tests')
+  res = dbGetQuery(con, "SELECT DISTINCT ON (tests.test_cas) tests.test_cas
+                         FROM ecotox.tests")
   todo_cas = res$test_cas # all the CAS in the EPA ECOTOX database
   # todo_cas = todo_cas[1:10] # debug me!
   
@@ -24,7 +25,7 @@ if (online_db) {
                             -- substances
                                 tests.test_cas::varchar AS casnr,
                                 chemicals.chemical_name,
-                                chemical_carriers.chem_name,
+                                chemical_carriers.chem_name AS chemical_carrier,
                                 chemicals.ecotox_group AS chemical_group,
                             -- concentration + unit conversion	
                                 CASE
@@ -62,18 +63,7 @@ if (online_db) {
                                 results.endpoint,
                                 results.effect,
                             -- species
-                                species.latin_name,
-                                --species.variety,
-                                --species.subspecies,
-                                --species.species,
-                                species.genus,
-                                species.family,
-                                --species.tax_order,
-                                --species.class,
-                                --species.superclass,
-                                --species.subphylum_div,
-                                --species.phylum_division,
-                                --species.kingdom,
+                                species.latin_name, -- only latin_name. Other entries are merged: eu_epa_taxonomy.R
                                 tests.exposure_type,
                                 tests.media_type,
                                 tests.organism_habitat AS habitat, -- ('soil')
@@ -135,14 +125,6 @@ epa1[ , conc1_mean := NULL ] # this column was only needed for the qualifier col
 for (i in names(epa1)) {
   epa1[get(i) %in% c('NC', 'NR', '--'), (i) := NA ]
 }
-# Species columns
-epa1[ , latin_BIname := gsub('\\sx\\s', ' X ', latin_name, ignore.case = TRUE) ] # transform all Hybrid X to capital letters => they aren't seen as species-names in the next REGEX
-epa1[ , latin_BIname := gsub('([A-z]+)\\s([a-z]+\\s)(.+)*', '\\1 \\2', latin_BIname) ]
-epa1[ , latin_BIname := sub('\\s+$', '', latin_BIname) ] # delete trailing \\s
-epa1[ , latin_short :=
-        paste0(substr(latin_name,1,1),
-               '. ',
-               gsub('([a-z]+)\\s([a-z]+)', '\\2', latin_BIname, ignore.case = TRUE)) ]
 # Endpoint
 epa1[ , endpoint := gsub('/|\\*|(\\*/)', '', endpoint) ]
 # Exposure typpe
@@ -158,57 +140,26 @@ for (i in names(epa1)) {
   epa1[get(i) == "", (i) := NA]
 }
 
+# taxonomy ----------------------------------------------------------------
+setkey(epa1, 'latin_name')
+epa1 = merge(epa1, tax, by = 'latin_name')
+
 # subseting ---------------------------------------------------------------
 # Effect measure
-epa1 = epa1[ effect %like% '(?i)MOR|POP|ITX|GRO' ] # see help [deletes: 8% of entries]
+epa1 = epa1[ effect %like% '(?i)MOR|POP|ITX|GRO' ] # TODO: put this in app
 # Endpoint
-# epa1[ , .N, endpoint] only EC50 (is done in SQL query)
 epa1 = epa1[ qualifier != '+' ] # delete + qualifier entries [deletes: 0.5% of entries]
-#! TODO !!!!!!!!!!!!!!!1
 # (1) # unit conversions
-epa1 = epa1[ conc1_unit_conv %in% c('ug/L', 'ul/L') ] #! [deletes: 12% of entries] have a look at this soon! #! Maybe include the conversion in R
-# (2) refine to a certain concentraion type? A - Active ingredient, F = formulation
-epa1[ , .N, conc1_type] # TODO
-
-
-# final columns -----------------------------------------------------------
-setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chem_name', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'habitat', 'subhabitat',  'latin_BIname', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'reference_number', 'title', 'author', 'publication_year'))
-
-# change names
-setnames(epa1, c('casnr', 'cas', 'chemical_name', 'carrier_name', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'conc_type', 'endpoint', 'effect',  'exposure_type', 'media_type', 'habitat', 'subhabitat',  'taxon', 'latin_name', 'latin_short', 'genus', 'family', 'source', 'ref_num', 'title', 'author', 'publication_year'))
-
-# errata ------------------------------------------------------------------
-# not accepted (anymore):
-epa1[family == 'Aphidiidae', family := 'Braconidae']
-epa1[family == 'Callitrichaceae', family := 'Plantaginaceae']
-epa1[family == 'Cypridopsidae', family := 'Cypridopsinae']
-epa1[family == 'Filiniidae', family := 'Trochosphaeridae']
-epa1[family == 'Najadaceae', family := 'Hydrocharitaceae']
-epa1[family == 'Platymonadaceae', family := 'Volvocaceae']
-epa1[family == 'Pseudocalanidae', family := 'Clausocalanidae']
-epa1[family == 'Heligmosomatidae', family := 'Trychostrongylidae']
-epa1[family == 'Lymantriidae', family := 'Erebidae']
-
-# spelling:
-epa1[family == 'Diplostomatidae', family := 'Diplostomidae']
-epa1[family == 'Haliotididae', family := 'Haliotidae']
-
-# wrong classification:
-epa1[family == 'Tetracneminae', family := 'Encyrtidae'] # is sub-family
-
-# no family entry:
-epa1[taxon == 'Storeatula major', family := 'Pyrenomonadaceae' ]
-epa1[taxon == 'Pochonia chlamydosporia', family := 'Clavicipitaceae' ]
-epa1[taxon == 'Triaenophorus nodulosus', family := 'Triaenophoridae' ]
-epa1[taxon == 'Bryconamericus iheringii', family := 'Characidae' ]
-epa1[taxon == 'Coenochloris sp.', family := 'Radiococcaceae' ]
-epa1[taxon == 'Girardia tigrina', family := 'Dugesiidae' ]
-epa1[taxon == 'Cenococcum geophilum', family := 'Gloniaceae' ]
-epa1[taxon == 'Acineria uncinata', family := 'Litonotidae' ]
-
-
+epa1 = epa1[ conc1_unit_conv %in% c('ug/L', 'ul/L') ] #! TODO [deletes: 12% of entries] have a look at this soon!
+# TODO Maybe include the conversion in R
 # delete entries with no information on actual Genus or Species
 epa1 = epa1[!taxon %in% c('Hyperamoeba sp.', 'Algae', 'Aquatic Community', 'Plankton', 'Invertebrates') ] # Hyperamoeba is a paraphyletic taxon
+
+# final columns -----------------------------------------------------------
+setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'habitat', 'subhabitat',  'latin_name', 'source', 'reference_number', 'title', 'author', 'publication_year'))
+
+# change names
+setnames(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'conc_type', 'endpoint', 'effect',  'exposure_type', 'media_type', 'habitat', 'subhabitat', 'latin_name', 'source', 'ref_num', 'title', 'author', 'publication_year'))
 
 # checks ------------------------------------------------------------------
 # cas
@@ -219,27 +170,15 @@ if (nrow(cas_chck) != 0) {
   warning(nrow(cas_chck), ' missing CAS or CASNR.')
 }
 
-# family
-family_chck =
-  epa1[ is.na(family) ]
-if (nrow(family_chck)) {
-  warning('For the following taxa family entries are missing:\n',
-          paste0(unique(family_chck$taxon), collapse = '\n'))
-}
-
-
 # names -------------------------------------------------------------------
 setnames(epa1, paste0('ep_', names(epa1)))
-setnames(epa1, old = c('ep_casnr', 'ep_cas', 'ep_taxon', 'ep_family'),
-         new = c('casnr', 'cas', 'taxon', 'family'))
+setnames(epa1, old = c('ep_casnr', 'ep_cas'), new = c('casnr', 'cas'))
 
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
 taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'family') ])
-# taxa = taxa[1:5, ] # debuging
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'ep_chemical_name')])
-# chem = chem[1:5, ] # debuging
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # cleaning ----------------------------------------------------------------

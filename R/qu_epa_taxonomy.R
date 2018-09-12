@@ -50,7 +50,8 @@ tax[ tax_phylum_division == 'Rhodophycota', tax_phylum_division := 'Rhodophyta' 
 # as the taxonomic classification such as phylum and dividin is subject to changes a convenient variable is introduced
 tax[ tax_phylum_division == 'Pyrrophycophyta', tax_phylum := 'Dinoflagellata' ]
 
-# classification ----------------------------------------------------------
+
+# convenience grouping ----------------------------------------------------
 tax[ tax_phylum_division == 'Cryptophyta', .N, tax_kingdom]
 tax[ tax_phylum_division == 'Sarcomastigophora', .N, tax_class ]
 # convenient taxonomic groups
