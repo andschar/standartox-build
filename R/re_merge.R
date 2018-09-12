@@ -3,6 +3,17 @@
 # setup -------------------------------------------------------------------
 source('R/setup.R')
 
+# download and build ECOTOX data ------------------------------------------
+# TODO maybe put in other script OR rename this script coordination_script or similar?
+# TODO automate this to be run every 3 months
+src_ECOTOX = FALSE
+if (src_ECOTOX) {
+  # TODO does not yet work seamlessly
+  source('R/bd_software.sh') # TODO not yet worked out
+  source('R/bd_epa_download.R')
+  source('R/bd_epa_postgres.R')
+}
+
 # EPA test data -----------------------------------------------------------
 source('R/qu_epa.R')
 
