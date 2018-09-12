@@ -109,22 +109,27 @@ ec50_filagg = function(dt, habitat = NULL, continent = NULL, tax = NULL, conc_ty
   }
   ## taxon ----
   # functions to find out the column name of the input taxon  
-  if (!is.null(tax)) {
-    col = names(which(sapply(dt[ , .SD, .SDcols = grep('family|ma_', names(dt))],
-                             function(x) length(grep(tax, x, ignore.case = TRUE))) > 0))
-    message(paste0('Columns used for filtering: ', col))
-    if (length(col) == 0) {
-      stop('Taxon could not be found!')
-    } else if (length(col) > 1) {
-      warning('Multiple columns have been found. Picking the first one:\n',
-              paste0(col, collapse = '\n'))
-      col = col[1]
-    }
-    
-    dt = dt[get(col) == tax ]
-    dt[ , grouping_tax := tax ]
-    tax_id = tolower(substr(tax,1,2))
-  }
+  # old approach ----
+  # if (!is.null(tax)) {
+  #   col = names(which(sapply(dt[ , .SD, .SDcols = grep('tax_', names(dt))],
+  #                            function(x) length(grep(tax, x, ignore.case = TRUE))) > 0))
+  #   message(paste0('Columns used for filtering: ', col))
+  #   if (length(col) == 0) {
+  #     stop('Taxon could not be found!')
+  #   } else if (length(col) > 1) {
+  #     warning('Multiple columns have been found. Picking the first one:\n',
+  #             paste0(col, collapse = '\n'))
+  #     col = col[1]
+  #   }
+  # 
+  #   dt = dt[get(col) == tax ]
+  #   dt[ , grouping_tax := tax ]
+  #   tax_id = tolower(substr(tax,1,2))
+  # }
+  # new approch ----
+  cols = grep('tax_', names(dt), ignore.case = TRUE, value = TRUE)
+  dt = dt[dt[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', taxon_input))), .SDcols = cols]]
+  
   ## duration ----
   if (is.null(duration)) {
     dur = range(dt$ep_duration)
