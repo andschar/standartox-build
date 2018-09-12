@@ -11,68 +11,93 @@ require(knitr)
 # User Interface ----------------------------------------------------------
 ui = fluidPage(
   useShinyjs(), # Include shinyjs
-  
   titlePanel('Etox Base'),
   sidebarLayout(
     sidebarPanel(
-      verticalLayout(
-        selectInput(inputId = 'tax', label = 'Choose a taxon',
-                    choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
-        splitLayout(
-          numericInput(inputId = 'dur1', label = 'Test durations from (h)', value = 24),
-          numericInput(inputId = 'dur2', label = 'to (h)', value = 48)
+      #verticalLayout(
+      tabsetPanel(
+        tabPanel(
+          'Compound',
+          verticalLayout(
+            br(),
+            splitLayout(
+              fileInput(inputId = 'file_cas', label = 'Upload CAS',
+                        accept = '.csv', placeholder = 'one column .csv'),
+              actionButton(inputId = 'reset', label = 'Reset Input', style = 'margin-top:25px')
+            ),
+            splitLayout(
+              checkboxGroupInput(inputId = 'conc_type', label = 'Concentration type',
+                                 choiceValues = c('A', 'F'), # TODO 'T', 'U'),
+                                 choiceNames = c('Active ingredient', 'Formulation'),
+                                 selected = c('A', 'F'))
+            ),
+            splitLayout(
+              checkboxGroupInput(inputId = 'chemical_class', label = 'Chemical class',
+                                 choices = c('Metals', 'Pesticides', 'what else???')),
+              checkboxGroupInput(inputId = 'authorization', label = 'Authorized in',
+                                 choiceValues = c('afr', 'asi', 'eur', 'nam', 'sam', 'aus'),
+                                 choiceNames = c('Afirca', 'Asia', 'Europe', 'North America', 'South America', 'Australia'),
+                                 selected = 'eur')
+            ),
+            checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
+          )
         ),
-        splitLayout(
-          fileInput(inputId = 'file_cas', label = 'Upload CAS',
-                    accept = '.csv', placeholder = 'one column .csv'),
-          actionButton(inputId = 'reset', label = 'Reset Input', style = 'margin-top:25px')
+        tabPanel(
+          'Taxa',
+          verticalLayout(
+            br(),
+            selectInput(inputId = 'tax', label = 'Choose a taxon',
+                        choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
+            splitLayout(
+              radioButtons(inputId = 'habitat', label = 'Organism hatbitat',
+                           choices = c('all', 'marine', 'brackish', 'freshwater', 'terrestrial'),
+                           selected = 'freshwater'),
+              radioButtons(inputId = 'continent', label = 'Continent',
+                           choiceValues = c('all', 'gb_africa', 'gb_north_america', 'gb_south_america', 'gb_antarctica', 'gb_asia', 'gb_europe', 'gb_oceania'),
+                           choiceNames = c('all', 'Africa', 'North America', 'South America', 'Antarctica', 'Asia', 'Europe', 'Oceania'),
+                           selected = 'gb_europe')
+            )
+          )
         ),
-        splitLayout(
-          radioButtons(inputId = 'habitat', label = 'Organism hatbitat',
-                       choices = c('all', 'marine', 'brackish', 'freshwater', 'terrestrial'),
-                       selected = 'freshwater'),
-          radioButtons(inputId = 'continent', label = 'Continent',
-                       choiceValues = c('all', 'gb_africa', 'gb_north_america', 'gb_south_america', 'gb_antarctica', 'gb_asia', 'gb_europe', 'gb_oceania'),
-                       choiceNames = c('all', 'Africa', 'North America', 'South America', 'Antarctica', 'Asia', 'Europe', 'Oceania'),
-                       selected = 'Europe'),
-          checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
+        tabPanel(
+          'Test',
+          verticalLayout(
+            br(),
+            splitLayout(
+              numericInput(inputId = 'dur1', label = 'Test durations from (h)', value = 24),
+              numericInput(inputId = 'dur2', label = 'to (h)', value = 48)
+            ),
+            splitLayout(
+              checkboxGroupInput(inputId = 'effect_group', label = 'TODO Effect group',
+                                 choiceValues = c('MOR', 'ITX', 'GRO'),
+                                 choiceNames = c('MOR', 'ITX', 'GRO')),
+              radioButtons(inputId = 'endpoint', label = 'TODO Endpoints',
+                           choiceValues = c('EC50', 'LOEC', 'NOEC'),
+                           choiceNames = c('L/EC50', 'LOEC', 'NOEC'),
+                           selected = 'EC50')
+            )
+          )
         ),
-        splitLayout(
-          checkboxGroupInput(inputId = 'conc_type', label = 'Concentration type',
-                             choiceValues = c('A', 'F'), # TODO 'T', 'U'),
-                             choiceNames = c('Active ingredient', 'Formulation'),
-                             selected = c('A', 'F')),
-          checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
-                             choices = c('min', 'max', 'md', 'mn', 'sd'),
-                             selected = c('min', 'md'))
-        ),
-        splitLayout(
-          checkboxGroupInput(inputId = 'comp', label = 'Compound columns',
-                             choiceValues = c('comp_name', 'comp_type'),
-                             choiceNames = c('Compound name', 'Compound type'),
-                             selected = c('cas', 'comp_name')),
-          checkboxGroupInput(inputId = 'infocols', label = 'Information columns',
-                             choiceValues = c('info', 'taxa', 'vls', 'n'),
-                             choiceNames = c('info', 'taxa', 'values', 'n'),
-                             selected = 'taxa')
-        ),
-        splitLayout(
-          checkboxGroupInput(inputId = 'effect_group', label = 'TODO Effect group',
-                             choiceValues = c('MOR', 'ITX', 'GRO'),
-                             choiceNames = c('MOR', 'ITX', 'GRO')),
-          checkboxGroupInput(inputId = 'endpoint', label = 'TODO Endpoints',
-                             choiceValues = c('EC50', 'LOEC', 'NOEC'),
-                             choiceNames = c('L/EC50', 'LOEC', 'NOEC'),
-                             selected = 'EC50')
-        ),
-        splitLayout(
-          checkboxGroupInput(inputId = 'chemical_class', label = 'Chemical class',
-                             choices = c('Metals', 'Pesticides', 'what else???'))
-        ),
-        splitLayout(
-          checkboxGroupInput(inputId = 'authorization', label = 'Authorized in',
-                             choiceValues = c('afr', 'asi', 'eur', 'nam', 'sam', 'aus'),
-                             choiceNames = c('Afirca', 'Asia', 'Europe', 'North America', 'South America', 'Australia'))
+        tabPanel(
+          'Aggregation',
+          verticalLayout(
+            br(),
+            splitLayout(
+              checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
+                                 choices = c('min', 'max', 'md', 'mn', 'sd'),
+                                 selected = c('min', 'md'))
+            ),
+            splitLayout(
+              checkboxGroupInput(inputId = 'comp', label = 'Compound columns',
+                                 choiceValues = c('comp_name', 'comp_type'),
+                                 choiceNames = c('Compound name', 'Compound type'),
+                                 selected = c('cas', 'comp_name')),
+              checkboxGroupInput(inputId = 'infocols', label = 'Information columns',
+                                 choiceValues = c('info', 'taxa', 'vls', 'n'),
+                                 choiceNames = c('info', 'taxa', 'values', 'n'),
+                                 selected = 'taxa')
+            )
+          )
         )
       )
     ),
