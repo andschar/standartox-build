@@ -159,7 +159,9 @@ epa1 = epa1[!taxon %in% c('Hyperamoeba sp.', 'Algae', 'Aquatic Community', 'Plan
 setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'habitat', 'subhabitat',  'latin_name', 'source', 'reference_number', 'title', 'author', 'publication_year'))
 
 # change names
-setnames(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group', 'value', 'qualifier', 'unit', 'duration', 'duration_unit', 'conc_type', 'endpoint', 'effect',  'exposure_type', 'media_type', 'habitat', 'subhabitat', 'latin_name', 'source', 'ref_num', 'title', 'author', 'publication_year'))
+setnames(epa1, 
+         old = c('conc1_mean_conv', 'conc1_unit_conv', 'conc1_type'),
+         new = c('value', 'unit', 'conc_type'))
 
 # checks ------------------------------------------------------------------
 # cas
@@ -172,11 +174,13 @@ if (nrow(cas_chck) != 0) {
 
 # names -------------------------------------------------------------------
 setnames(epa1, paste0('ep_', names(epa1)))
-setnames(epa1, old = c('ep_casnr', 'ep_cas'), new = c('casnr', 'cas'))
+setnames(epa1,
+         old = c('ep_casnr', 'ep_cas', 'ep_taxon'),
+         new = c('casnr', 'cas', 'taxon'))
 
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
-taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'family') ])
+taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'ep_tax_family') ])
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'ep_chemical_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))

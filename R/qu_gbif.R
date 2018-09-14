@@ -152,14 +152,16 @@ gbif_conti_dc[ , count := sum(.SD, na.rm = TRUE),
                  .SDcols = c('africa', 'antarctica', 'asia', 'europe', 'north_america', 'oceania', 'south_america'),
                  by = 1:nrow(gbif_conti_dc) ]
 na_conti = gbif_conti_dc[count == 0]
-message('GBIF: For ', nrow(na_conti), ' taxa no continent information was found.')
+message('GBIF: For ', nrow(na_conti), '/', nrow(gbif_conti_dc),
+        ' taxa no continent information was found.')
 gbif_conti_dc[ , count := NULL]
 # habitat
 gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
                    .SDcols = c('isFre_gbif', 'isBra_gbif', 'isMar_gbif', 'isTer_gbif'),
                    by = 1:nrow(gbif_hab_wat_dc) ]
 na_habi = gbif_hab_wat_dc[ count == 0]
-message('GBIF: For ', nrow(na_habi), ' taxa no habitat information was found.')
+message('GBIF: For ', nrow(na_habi), '/', nrow(gbif_hab_wat_dc),
+        ' taxa no habitat information was found.')
 gbif_hab_wat_dc[ , count := NULL]
 
 # save missing data to .csv

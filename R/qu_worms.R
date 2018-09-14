@@ -79,17 +79,28 @@ lookup_worms_sp = worms_sp[ , lapply(.SD, function(x) min(as.numeric(x))),
 setnames(lookup_worms_sp, c('taxon', 'isFre_wo_sp', 'isBra_wo_sp', 'isMar_wo_sp', 'isTer_wo_sp'))
 
 # evaluation --------------------------------------------------------------
+# family
+lookup_worms_fam[ , count := sum(.SD, na.rm = TRUE),
+                 .SDcols = c('isFre_wo_fam', 'isBra_wo_fam', 'isMar_wo_fam', 'isTer_wo_fam'),
+                 by = 1:nrow(lookup_worms_fam)]
+na_worms_fam = lookup_worms_fam[ count == 0 ]
+
+message('WoRMS: For ', nrow(na_worms_fam), '/', nrow(lookup_worms_fam),
+        ' families no habitat information was found.')
+lookup_worms_fam[ , count := NULL]
+
 # species
 lookup_worms_sp[ , count := sum(.SD, na.rm = TRUE),
                    .SDcols = c('isFre_wo_sp', 'isBra_wo_sp', 'isMar_wo_sp', 'isTer_wo_sp'),
                    by = 1:nrow(lookup_worms_sp)]
 na_worms_sp = lookup_worms_sp[ count == 0 ]
 
-message('WoRMS: For ', nrow(na_worms_sp), ' taxa no habitat information was found.')
+message('WoRMS: For ', nrow(na_worms_sp), '/', nrow(lookup_worms_sp),
+        ' species no habitat information was found.')
 lookup_worms_sp[ , count := NULL]
 
 # save missing data to .csv
-missing_l = list(worms_na_sp = na_worms_sp)
+missing_l = list(worms_na_sp = na_worms_sp, worms_na_fam = na_worms_fam)
 for (i in 1:length(missing_l)) {
   file = missing_l[[i]]
   name = names(missing_l)[i]

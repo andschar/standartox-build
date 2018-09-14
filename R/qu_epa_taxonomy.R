@@ -52,9 +52,6 @@ tax[ tax_phylum_division == 'Pyrrophycophyta', tax_phylum := 'Dinoflagellata' ]
 
 
 # convenience grouping ----------------------------------------------------
-tax[ tax_phylum_division == 'Cryptophyta', .N, tax_kingdom]
-tax[ tax_phylum_division == 'Sarcomastigophora', .N, tax_class ]
-# convenient taxonomic groups
 tax[ , tax_convgroup := ifelse(tax_class == 'Osteichthyes', 'Fish', NA) ]
 tax[ , tax_convgroup := ifelse(tax_kingdom == 'Plantae', 'Plants', NA) ]
 tax[ , tax_convgroup := ifelse(tax_kingdom == 'Plantae', 'Plants', NA) ]
@@ -81,7 +78,7 @@ tax[ tax_phylum == 'Dinoflagellata', troph_lvl := 'mixotroph' ]
 # aquatic macro-invertebrates ---------------------------------------------
 freshwater_info_inv = c('Porifera',	'Coelenterata',	'Turbellaria',	'Nematomorpha', 'Nemertini',	'Gastropoda',	'Bivalvia',	'Polychaeta', 'Oligochaeta',	'Hirudinea',	'Branchiobdellida',	'Araneae', 'Hydrachnidia',	'Crustacea',	'Ephemeroptera',	'Odonata', 'Plecoptera',	'Heteroptera',	'Megaloptera',	'Planipennia', 'Coleoptera',	'Hymenoptera',	'Trichoptera', 'Lepidoptera', 'Diptera',	'Chironomidae',	'Bryozoa')
 
-# cleaning
+cols = grep('tax_', names(tax), ignore.case = TRUE, value = TRUE)
 tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', freshwater_info_inv, collapse = '|'))), .SDcols = cols],
     tax_aqu_inv := 'yes']
 
