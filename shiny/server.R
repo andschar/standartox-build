@@ -20,10 +20,12 @@ sapply(rmdfiles, knit, quiet = TRUE)
 
 # data --------------------------------------------------------------------
 tests_data = readRDS(file.path(cachedir, 'tests_fl.rds'))
+tests_stat = fread(file.path(cachedir, 'tests_fl_stat.csv'))
 
 # shiny -------------------------------------------------------------------
 server = function(input, output) {
   
+  # (1) preparation ----
   # read file + reset button ----
   # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
   rv = reactiveValues(
@@ -67,8 +69,8 @@ server = function(input, output) {
     ec50_filagg_plot(thedata(), input$yaxis, input$cutoff)
   })
 
-  # output ----
-  # data
+  # (2) output ----
+  # data ----
   output$dat = DT::renderDataTable({thedata()},
     options = list(
       columnDefs = list(list(
@@ -82,15 +84,15 @@ server = function(input, output) {
       #dom = 't',
       rownames = FALSE,
     callback = JS('table.page(3).draw(false);'))
-  # summary
+  # summary ----
   output$summary_chem = renderPrint({ unique(thedata()$casnr) })
   output$summary_taxa = renderPrint({ thedata()$taxa })
   
-  # plots
+  # plots ----
   output$plot_sensitivity = renderPlot({ plot_sensitivity() })
   output$plot_meta = renderPlot({ gg_counter })
   
-  # download
+  # download ----
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
   output$download = downloadHandler(
     filename = function() { paste(input$tax, #input$habitat, input$continent,
@@ -99,7 +101,9 @@ server = function(input, output) {
       write.csv(thedata(), fname, row.names = FALSE)
     }
   )
-
+  
+  # missing ----
+  output$missing = DT::renderDataTable(tests_stat)
   
 }
 

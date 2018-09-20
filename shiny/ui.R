@@ -165,6 +165,12 @@ ui = fluidPage(
           'Write the help pages'
         ),
         tabPanel(
+          'Missing',
+          column(
+            dataTableOutput(outputId = 'missing'), width = 11, offset = 0
+          )
+        ),
+        tabPanel(
           'Article'
           #withMathJax(includeMarkdown('article.md'))
         ),
