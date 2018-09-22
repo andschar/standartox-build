@@ -144,6 +144,12 @@ for (i in names(epa1)) {
 setkey(epa1, 'latin_name')
 epa1 = merge(epa1, tax, by = 'latin_name')
 
+# new variables -----------------------------------------------------------
+# habitat
+epa1[ media_type == 'FW', isFre := 1 ]
+epa1[ media_type == 'SW', isMar := 1 ]
+epa1[ habitat == 'Soil', isTer := 1 ]
+
 # subseting ---------------------------------------------------------------
 # Effect measure
 epa1 = epa1[ effect %like% '(?i)MOR|POP|ITX|GRO' ] # TODO: put this in app
@@ -151,17 +157,25 @@ epa1 = epa1[ effect %like% '(?i)MOR|POP|ITX|GRO' ] # TODO: put this in app
 epa1 = epa1[ qualifier != '+' ] # delete + qualifier entries [deletes: 0.5% of entries]
 # (1) # unit conversions
 epa1 = epa1[ conc1_unit_conv %in% c('ug/L', 'ul/L') ] #! TODO [deletes: 12% of entries] have a look at this soon!
+# TODO include other unit conversions!
 # TODO Maybe include the conversion in R
 # delete entries with no information on actual Genus or Species
 epa1 = epa1[!taxon %in% c('Hyperamoeba sp.', 'Algae', 'Aquatic Community', 'Plankton', 'Invertebrates') ] # Hyperamoeba is a paraphyletic taxon
 
 # final columns -----------------------------------------------------------
-setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'habitat', 'subhabitat',  'latin_name', 'source', 'reference_number', 'title', 'author', 'publication_year'))
+setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group', 'conc1_mean_conv', 'qualifier', 'conc1_unit_conv', 'obs_duration_conv', 'obs_duration_unit_conv', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'isFre', 'isMar', 'isTer', 'habitat', 'subhabitat',  'latin_name', 'source', 'reference_number', 'title', 'author', 'publication_year'))
 
-# change names
+cols_rm = c('media_type', 'habitat')
+epa1[ , (cols_rm) := NULL ]
+
+# names -------------------------------------------------------------------
 setnames(epa1, 
          old = c('conc1_mean_conv', 'conc1_unit_conv', 'conc1_type'),
          new = c('value', 'unit', 'conc_type'))
+setnames(epa1, paste0('ep_', names(epa1)))
+setnames(epa1,
+         old = c('ep_casnr', 'ep_cas', 'ep_taxon'),
+         new = c('casnr', 'cas', 'taxon'))
 
 # checks ------------------------------------------------------------------
 # cas
@@ -172,12 +186,6 @@ if (nrow(cas_chck) != 0) {
   warning(nrow(cas_chck), ' missing CAS or CASNR.')
 }
 
-# names -------------------------------------------------------------------
-setnames(epa1, paste0('ep_', names(epa1)))
-setnames(epa1,
-         old = c('ep_casnr', 'ep_cas', 'ep_taxon'),
-         new = c('casnr', 'cas', 'taxon'))
-
 # saving ------------------------------------------------------------------
 saveRDS(epa1, file.path(cachedir, 'epa.rds'))
 taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'ep_tax_family') ])
@@ -186,7 +194,7 @@ chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'ep_chemical_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # cleaning ----------------------------------------------------------------
-rm(cas_chck, family_chck, taxa, chem, i)
+rm(cas_chck, taxa, chem, i, cols_rm)
 
 
 # help --------------------------------------------------------------------
