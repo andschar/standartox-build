@@ -136,15 +136,13 @@ setnames(gbif_waterbody_dc, '.', 'waterbody')
 
 # merge + classify --------------------------------------------------------
 gbif_hab_wat_dc = merge(gbif_habitat_dc, gbif_waterbody_dc, by = 'taxon', all = TRUE)
-gbif_hab_wat_dc[ , isFre_gbif := ifelse(tolower(habitat) %like% paste0(fresh, collapse = '|') |
-                                            tolower(waterbody) %like% paste0(fresh, collapse = '|'), 1, NA) ]
-gbif_hab_wat_dc[ , isBra_gbif := ifelse(tolower(habitat) %like% paste0(brack, collapse = '|') |
-                                            tolower(waterbody) %like% paste0(brack, collapse = '|'), 1, NA) ]
-gbif_hab_wat_dc[ , isMar_gbif := ifelse(tolower(habitat) %like% paste0(marin, collapse = '|') |
-                                            tolower(waterbody) %like% paste0(marin, collapse = '|'), 1, NA) ]
-gbif_hab_wat_dc[ , isTer_gbif := ifelse(tolower(habitat) %like% paste0(terre, collapse = '|'), 1, NA) ]
-
-
+gbif_hab_wat_dc[ , isFre := ifelse(tolower(habitat) %like% paste0(fresh, collapse = '|') |
+                                   tolower(waterbody) %like% paste0(fresh, collapse = '|'), 1, NA) ]
+gbif_hab_wat_dc[ , isBra := ifelse(tolower(habitat) %like% paste0(brack, collapse = '|') |
+                                   tolower(waterbody) %like% paste0(brack, collapse = '|'), 1, NA) ]
+gbif_hab_wat_dc[ , isMar := ifelse(tolower(habitat) %like% paste0(marin, collapse = '|') |
+                                   tolower(waterbody) %like% paste0(marin, collapse = '|'), 1, NA) ]
+gbif_hab_wat_dc[ , isTer := ifelse(tolower(habitat) %like% paste0(terre, collapse = '|'), 1, NA) ]
 
 # missing data ------------------------------------------------------------
 # continent
@@ -157,7 +155,7 @@ message('GBIF: For ', nrow(na_conti), '/', nrow(gbif_conti_dc),
 gbif_conti_dc[ , count := NULL]
 # habitat
 gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
-                   .SDcols = c('isFre_gbif', 'isBra_gbif', 'isMar_gbif', 'isTer_gbif'),
+                   .SDcols = c('isFre', 'isBra', 'isMar', 'isTer'),
                    by = 1:nrow(gbif_hab_wat_dc) ]
 na_habi = gbif_hab_wat_dc[ count == 0]
 message('GBIF: For ', nrow(na_habi), '/', nrow(gbif_hab_wat_dc),
@@ -175,6 +173,13 @@ for (i in 1:length(missing_l)) {
     message('Writing file with missing data: ', name)
   }
 }
+
+# names -------------------------------------------------------------------
+setnames(gbif_conti_dc, paste0('gb_', names(gbif_conti_dc)))
+setnames(gbif_conti_dc, 'gb_taxon', 'taxon')
+
+setnames(gbif_hab_wat_dc, paste0('gb_', names(gbif_hab_wat_dc)))
+setnames(gbif_hab_wat_dc, 'gb_taxon', 'taxon')
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
