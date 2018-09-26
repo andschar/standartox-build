@@ -33,7 +33,7 @@ source('R/qu_frac.R')
 
 # habitat scripts ---------------------------------------------------------
 source('R/qu_worms.R')
-source('R/qu_habitat_self_defined.R') # self defined script
+# source('R/qu_habitat_self_defined.R') # self defined script
 #lookup_man_fam = fread(file.path(cachedir, 'lookup_man_fam_list.csv'))
 
 
@@ -41,17 +41,12 @@ source('R/qu_habitat_self_defined.R') # self defined script
 source('R/qu_gbif.R') # contains also habitat information
 
 
-
 # Merge Chemical Information ----------------------------------------------------
-# pubchem ----
-# https://pubchemdocs.ncbi.nlm.nih.gov/about
-# CID - non-zero integer PubChem ID
-# XLogP - Log P calculated Log P
-pc2 = pc[ , .SD, .SDcols = c('cas', 'CID', 'InChIKey', 'IUPACName', 'ExactMass')]
-setnames(pc2, c('cas', paste0('pc_', tolower(names(pc2[ ,2:length(names(pc2))])))))
-pc2 = pc2[!duplicated(cas)] #! easy way out, although pubchem doesn't provide important information
+# names(pc2) # pubchem
+
 # Alan Wood Compendium ----
-aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', 'activity', 'pest_type', 'subactivity', paste0('subactivity', 1:3))]
+aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', 'activity', 'pest_type', 'subactivity',
+                             paste0('subactivity', 1:3))]
 aw2[ , .N, cas][order(-N)] # no duplicates
 setnames(aw2, c('cas', paste0('aw_', tolower(names(aw2[ ,2:length(names(aw2))])))))
 # Pesticide Action Network ----
@@ -63,29 +58,26 @@ pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
 pp2[ , .N, cas][order(-N)] # no duplicates
 setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))])))))
 # FRAC data ----
-frac2 = frac[ , .SD, .SDcols = c('cas', 'casnr', 'cname', 'chemical_group', 'moa')]
+frac2 = frac[ , .SD, .SDcols = c('cas', 'casnr', 'cname', 'chemical_group', 'comp_type', 'moa')]
 frac2[ , .N, cas][order(-N)] # 79956562 duplicated CAS
 frac2 = frac2[casnr != 79956562]
 setnames(frac2, c('cas', paste0('fr_', tolower(names(frac2[ ,2:length(names(frac2))])))))
+
 # Merge ----
 ch_info = Reduce(function(...) merge(..., by = 'cas', all = TRUE),
-                 list(pc2, aw2, pan2, pp2, frac2)) # id: cas
+                 list(pc2,
+                      aw2,
+                      pan2,
+                      pp2,
+                      frac2))
 
-# Merge habitat information -----------------------------------------------------
-# WoRMS
-# setnames(lookup_worms_fam, c('family',
-#                              paste0('wo_', tolower(names(lookup_worms_fam)[2:length(lookup_worms_fam)]))))
-# # self compiled
-# setnames(lookup_man_fam, c('family',
-#                            paste0('ma_', tolower(names(lookup_man_fam)[2:length(lookup_man_fam)]))))
-
-ha_info_fam = merge(lookup_worms_fam, lookup_man_fam, by = 'family', all = TRUE) # id: family
+# habitat information -----------------------------------------------------
+# ha_info_fam = merge(lookup_worms_fam, lookup_man_fam, by = 'family', all = TRUE) # id: family
 ha_info_sp = merge(lookup_worms_sp, gbif_hab_wat_dc, by = 'taxon', all = TRUE) # GBIF
 
-# Merge regional information ------------------------------------------------------
+
+# regional information ------------------------------------------------------
 re_info = gbif_conti_dc
-setnames(re_info, c('taxon',
-                    paste0('gb_', names(re_info)[2:length(re_info)])))
 
 # Duplicate cas and txon check ----------------------------------------------------
 chck_cas_dupl = rbindlist(list(epa1[is.na(cas)],
@@ -111,12 +103,12 @@ tests = merge(tests, ch_info, by = 'cas', all.x = TRUE)
 
 tests = merge(tests, re_info, by = 'taxon', all.x = TRUE)
 
-tests = merge(tests, ha_info_fam, by = 'family', all.x = TRUE)
+# TODO tests = merge(tests, ha_info_fam, by = 'family', all.x = TRUE)
 
 tests = merge(tests, ha_info_sp, by = 'taxon', all.x = TRUE)
 
 # final table
-setcolorder(tests, c('cas', 'casnr', 'taxon', 'family'))
+setcolorder(tests, c('cas', 'casnr', 'taxon'))#, 'family'))
 
 # Save --------------------------------------------------------------------
 saveRDS(tests, file.path(cachedir, 'tests.rds'))

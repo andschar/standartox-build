@@ -29,7 +29,7 @@ if (online_db) {
 
 # preparation -------------------------------------------------------------
 tax[ , c('subspecies', 'variety', 'species',  'ecotox_group') := NULL ]
-tax_names = c('genus', 'family', 'class', 'superclass', 'subphylum_div', 'phylum_division', 'kingdom')
+tax_names = c('common_name', 'genus', 'family', 'class', 'superclass', 'subphylum_div', 'phylum_division', 'kingdom')
 setnames(tax, old = tax_names, paste0('tax_', tax_names))
 setkey(tax, 'latin_name') # use for merge later
 # Species columns
