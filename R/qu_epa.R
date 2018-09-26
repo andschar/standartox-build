@@ -170,8 +170,12 @@ epa1[ , (cols_rm) := NULL ]
 
 # names -------------------------------------------------------------------
 setnames(epa1, 
-         old = c('conc1_mean_conv', 'conc1_unit_conv', 'conc1_type'),
-         new = c('value', 'unit', 'conc_type'))
+         old = c('conc1_mean_conv', 'conc1_unit_conv', 'conc1_type',
+                 'obs_duration_conv', 'obs_duration_unit_conv',
+                 'reference_number'),
+         new = c('value', 'unit', 'conc_type',
+                 'duration', 'duration_unit',
+                 'ref_num'))
 setnames(epa1, paste0('ep_', names(epa1)))
 setnames(epa1,
          old = c('ep_casnr', 'ep_cas', 'ep_taxon'),
