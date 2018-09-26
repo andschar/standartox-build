@@ -45,22 +45,17 @@ source('R/qu_gbif.R') # contains also habitat information
 # names(pc2) # pubchem
 
 # Alan Wood Compendium ----
-aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', 'activity', 'pest_type', 'subactivity',
-                             paste0('subactivity', 1:3))]
 aw2[ , .N, cas][order(-N)] # no duplicates
 setnames(aw2, c('cas', paste0('aw_', tolower(names(aw2[ ,2:length(names(aw2))])))))
 # Pesticide Action Network ----
-pan2 = pan[ , .SD, .SDcols = c('cas', 'chemical_class')]
 pan2[ , .N, cas][order(-N)] # no duplicates
 setnames(pan2, c('cas', paste0('pa_', tolower(names(pan2[ ,2:length(names(pan2))])))))
 # Physprop Data Base ----
-pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
 pp2[ , .N, cas][order(-N)] # no duplicates
 setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))])))))
 # FRAC data ----
-frac2 = frac[ , .SD, .SDcols = c('cas', 'casnr', 'cname', 'chemical_group', 'comp_type', 'moa')]
 frac2[ , .N, cas][order(-N)] # 79956562 duplicated CAS
-frac2 = frac2[casnr != 79956562]
+frac2 = frac2[cas != 79956-56-2]
 setnames(frac2, c('cas', paste0('fr_', tolower(names(frac2[ ,2:length(names(frac2))])))))
 
 # Merge ----

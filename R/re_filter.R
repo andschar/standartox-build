@@ -11,10 +11,6 @@ if (online) {
 }
 
 # variables ---------------------------------------------------------------
-
-# CONTINUE HERE!!!
-# TODO add source variable
-
 # (1) compound name ----
 cols = c('comp_name', 'comp_name_src')
 tests[ , (cols) := list(pp_cname, 'pp') ]
@@ -23,6 +19,10 @@ tests[ is.na(comp_name), (cols) := list(fr_cname, 'fr')  ]
 tests[ is.na(comp_name), (cols) := list(pc_iupacname, 'pc')  ]
 tests[ is.na(comp_name), (cols) := list(ep_chemical_name, 'ep') ]
 tests[ is.na(comp_name), (cols) := NA ] # necessary 'cause string (e.g. 'aw') is recycled nrow times
+# cleaning
+cols_name_rm = c('pp_cname', 'aw_cname', 'fr_cname', 'pc_iupacname', 'ep_chemical_name')
+tests[ , (cols_name_rm) := NULL ]
+rm(cols_name_rm)
 
 # (2) compound type ----
 cols = c('comp_type', 'comp_type_src')
@@ -31,20 +31,53 @@ tests[ , (cols) := list(aw_pest_type, 'aw') ]
 tests[ , (cols) := list(fr_chemical_group, 'fr') ]
 tests[ , (cols) := list(ep_chemical_group, 'ep') ]
 tests[ is.na(comp_type), (cols) := NA ]
+# cleaning
+cols_type_rm = c('aw_pest_type', 'fr_chemical_group', 'ep_chemical_group')
+tests[ , (cols_type_rm) := NULL ]
+rm(cols_type_rm)
 
 # (3) water solubility ----
 cols = c('comp_solub', 'comp_solub_src')
 tests[ , (cols) := list(pp_solubility_water, 'pp') ]
+# TODO add pc water solubility
 tests[ is.na(comp_solub), (cols) := NA ]
 # TODO add more resources to the solub_wat_fin creation
 # TODO check: unit of solubility concentrations
+# cleaning
+cols_sol_rm = c('pp_solubility_water')
+tests[ , (cols_sol_rm) := NULL ]
+rm(cols_sol_rm)
 
 # (4) habitat column ----
-# TODO replace concatenated is.na checks with this: https://stackoverflow.com/questions/42701577/multiple-column-condition-in-data-table
-tests[ , isFre_fin := ifelse(ep_media_type == 'FW' | isFre_wo_sp == 1 | isFre_gbif == 1, '1', NA)] 
-tests[ , isBra_fin := ifelse(isBra_wo_sp == 1 | isBra_gbif == 1, '1', NA)]
-tests[ , isMar_fin := ifelse(ep_media_type == 'SW' | isMar_wo_sp == 1 | isMar_gbif == 1, '1', NA)]
-tests[ , isTer_fin := ifelse(ep_habitat == 'Soil' | isTer_wo_sp == 1 | isTer_gbif == 1 | isTer_gbif == 1, '1', NA)]
+# marine
+cols = c('isMar_fin', 'isMar_fin_src')
+tests[ , (cols) := list(ep_isMar, 'ep')]
+tests[ is.na(isMar_fin), (cols) := list(wo_isMar_sp, 'wo')]
+tests[ is.na(isMar_fin), (cols) := list(gb_isMar, 'gb')]
+tests[ is.na(isMar_fin), (cols) := NA ]
+# brackish
+cols = c('isBra_fin', 'isBra_fin_src')
+tests[ , (cols) := list(wo_isBra_sp, 'wo')]
+tests[ is.na(isBra_fin), (cols) := list(gb_isBra, 'gb')]
+tests[ is.na(isBra_fin), (cols) := NA ]
+# freshwater
+cols = c('isFre_fin', 'isFre_fin_src')
+tests[ , (cols) := list(ep_isFre, 'ep')]
+tests[ is.na(isFre_fin), (cols) := list(wo_isFre_sp, 'wo')]
+tests[ is.na(isFre_fin), (cols) := list(gb_isFre, 'gb')]
+tests[ is.na(isFre_fin), (cols) := NA ]
+# terrestrial
+cols = c('isTer_fin', 'isTer_fin_src')
+tests[ , (cols) := list(ep_isTer, 'ep')]
+tests[ is.na(isTer_fin), (cols) := list(wo_isTer_sp, 'wo')]
+tests[ is.na(isTer_fin), (cols) := list(gb_isTer, 'gb')]
+tests[ is.na(isTer_fin), (cols) := NA ]
+# cleaning
+cols_ha_rm = c('wo_isMar_sp', 'wo_isBra_sp', 'wo_isFre_sp', 'wo_isTer_sp',
+               'gb_isMar', 'gb_isBra', 'gb_isFre', 'gb_isTer',
+               'ep_isMar', 'ep_isFre', 'ep_isTer')
+tests[ , (cols_ha_rm) := NULL ]
+rm(cols_ha_rm)
 
 # (5) regional column ----
 tests[ , is_africa := ifelse(gb_africa == 1, 1, NA) ]
@@ -53,6 +86,10 @@ tests[ , is_america_south := ifelse(gb_south_america == 1, 1, NA) ]
 tests[ , is_asia := ifelse(gb_asia == 1, 1, NA) ]
 tests[ , is_europe := ifelse(gb_europe == 1, 1, NA) ]
 tests[ , is_oceania := ifelse(gb_oceania == 1, 1, NA) ]
+# cleaning
+cols_re_rm = c('gb_africa', 'gb_north_america', 'gb_south_america', 'gb_asia', 'gb_europe', 'gb_oceania')
+tests[ , (cols_re_rm) := NULL ]
+rm(cols_re_rm)
 
 # save data ---------------------------------------------------------------
 tests_fl = copy(tests)
