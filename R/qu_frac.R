@@ -40,7 +40,13 @@ frac_cas = rbindlist(lapply(lapply(cir_frac, '[', 1), data.table),
 
 frac[frac_cas, cas := i.V1, on = 'cname']
 frac[ , casnr := casconv(cas, direction = 'tocasnr') ]
+frac[ , comp_type := 'fungicide' ]
 
+# final dt ----------------------------------------------------------------
+cols_fr_fin = c('cas', 'cname', 'chemical_group')
+frac2 = frac[ , .SD, .SDcols = cols_fr_fin ]
 
 # cleaning ----------------------------------------------------------------
-rm(destfile, url, cir_frac, frac_cas)
+rm(destfile, url, cir_frac, frac_cas, cols_fr_fin)
+
+

@@ -31,10 +31,15 @@ pan = rbindlist(pan_l, fill = TRUE, idcol = 'cas')
 pan[ , V1 := NULL ]
 pan = pan[!is.na(cas)] # TODO why are NAs created in the first place?
 
+# names -------------------------------------------------------------------
 setnames(pan, 'Chemical Class', 'chemical_class')
 
+# final dt ----------------------------------------------------------------
+cols_pan_fin = c('cas', 'chemical_class')
+pan2 = pan[ , .SD, .SDcols = cols_pan_fin ]
+
 # cleaning ----------------------------------------------------------------
-rm(chem)
+rm(chem, cols_pan_fin)
 
 
 

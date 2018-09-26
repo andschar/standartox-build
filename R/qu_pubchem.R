@@ -39,26 +39,37 @@ pc_l = lapply(pc_l, data.table)
 pc = rbindlist(pc_l, fill = TRUE, idcol = 'cas')
 pc[ , V1 := NULL ] # not needed
 
+grep('chebi', sort(names(pc)), ignore.case = TRUE)
+
+
+
+# final dt ----------------------------------------------------------------
+# https://pubchemdocs.ncbi.nlm.nih.gov/about
+# CID - non-zero integer PubChem ID
+# XLogP - Log P calculated Log P
+pc2 = pc[ , .SD, .SDcols = c('cas', 'CID', 'InChIKey', 'IUPACName', 'ExactMass')]
+setnames(pc2, c('cas', paste0('pc_', tolower(names(pc2[ ,2:length(names(pc2))])))))
+pc2 = pc2[!duplicated(cas)] #! easy way out, although pubchem doesn't provide important information
+
+
+# missing entries ---------------------------------------------------------
+na_pc2_inchi = pc2[ is.na(pc_inchikey) ]
+message('PubChem: For ', nrow(na_pc2_inchi), '/', nrow(pc2),
+        ' CAS no InchiKeys were found.')
+
+if (nrow(na_pc2_inchi) > 0) {
+  fwrite(na_pc2_inchi, file.path(missingdir, 'na_pc2_inchi.csv'))
+  message('Writing missing data InChIKey')
+}
+
+
 # cleaning ----------------------------------------------------------------
+oldw = getOption("warn")
+options(warn = -1) # shuts off warnings
+
 rm(cir, chem)
-#rm(list = ls()[!ls() %in% c('pc', 'pc_l')])
 
-
-# most likely cas ---------------------------------------------------------
-# It happens that multiple substances have the same cas. E.g. Propiconazole 
-
-# pc[ , .N, InChIKey][order(-N)]
-# pc[ , .N, InChI][order(-N)]
-# pc[ , .N, CanonicalSMILES][order(-N)]
-# pc[ , .N, ][order(-N)]
-# 
-# sort(names(pc))
-
-
-
-
-
-
+options(warn = oldw); rm(oldw)
 
 
 

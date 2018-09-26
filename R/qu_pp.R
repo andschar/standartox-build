@@ -64,6 +64,9 @@ pp[ , cname := tolower(cname) ]
 # conversions
 pp[ , solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 
+# final dt ----------------------------------------------------------------
+pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
+
 # cleaning ----------------------------------------------------------------
 rm(chem, todo_pp)
 

@@ -58,6 +58,11 @@ setcolorder(aw, c('cas', 'cname'))
 aw[ , pest_type :=
 gsub('(.+)?(fungicide|herbicide|insecticide|rodenticide|acaricide|nematicide)(.+)?', '\\2', aw$subactivity)]
 
+
+# final dt ----------------------------------------------------------------
+cols_aw_fin = c('cas', 'cname', 'pest_type')
+aw2 = aw[ , .SD, .SDcols = cols_aw_fin ]
+
 # cleaning ----------------------------------------------------------------
-rm(chem, cas, todo_aw)
+rm(chem, cas, todo_aw, cols_aw_fin)
 
