@@ -40,14 +40,15 @@ cachedir = file.path(prj, 'cache')
 missingdir = file.path(cachedir, 'missing')
 fundir = file.path(prj, 'functions')
 plotdir = file.path(prj, 'plots')
-srcdir = file.path(prj, 'R')
+src = file.path(prj, 'R')
 datadir = file.path(prj, 'data')
 lookupdir = file.path(prj, 'lookup')
+shinydir = file.path(prj, 'shiny')
 
 # source
-source(file.path(srcdir, 'credentials.R')) # data base credentials
+source(file.path(src, 'credentials.R')) # data base credentials
 source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
-source(file.path(srcdir, 'gg_theme.R'))
+source(file.path(src, 'gg_theme.R'))
 
 # system calls
 system(sprintf('rm %s/*', missingdir))
