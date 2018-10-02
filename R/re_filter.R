@@ -37,6 +37,7 @@ tests[ , (cols_type_rm) := NULL ]
 rm(cols_type_rm)
 
 # (3) water solubility ----
+# a) solubility column
 cols = c('comp_solub', 'comp_solub_src')
 tests[ , (cols) := list(pp_solubility_water, 'pp') ]
 # TODO add pc water solubility
@@ -47,31 +48,34 @@ tests[ is.na(comp_solub), (cols) := NA ]
 cols_sol_rm = c('pp_solubility_water')
 tests[ , (cols_sol_rm) := NULL ]
 rm(cols_sol_rm)
+# b) check column
+tests[ep_value > comp_solub, comp_solub_chck := FALSE]
+tests[ep_value <= comp_solub, comp_solub_chck := TRUE]
 
 # (4) habitat column ----
 # marine
-cols = c('isMar_fin', 'isMar_fin_src')
+cols = c('is_marin', 'is_marin_src')
 tests[ , (cols) := list(ep_isMar, 'ep')]
-tests[ is.na(isMar_fin), (cols) := list(wo_isMar_sp, 'wo')]
-tests[ is.na(isMar_fin), (cols) := list(gb_isMar, 'gb')]
-tests[ is.na(isMar_fin), (cols) := NA ]
+tests[ is.na(is_marin), (cols) := list(wo_isMar_sp, 'wo')]
+tests[ is.na(is_marin), (cols) := list(gb_isMar, 'gb')]
+tests[ is.na(is_marin), (cols) := NA ]
 # brackish
-cols = c('isBra_fin', 'isBra_fin_src')
+cols = c('is_brack', 'is_brack_src')
 tests[ , (cols) := list(wo_isBra_sp, 'wo')]
-tests[ is.na(isBra_fin), (cols) := list(gb_isBra, 'gb')]
-tests[ is.na(isBra_fin), (cols) := NA ]
+tests[ is.na(is_brack), (cols) := list(gb_isBra, 'gb')]
+tests[ is.na(is_brack), (cols) := NA ]
 # freshwater
-cols = c('isFre_fin', 'isFre_fin_src')
+cols = c('is_fresh', 'is_fresh_src')
 tests[ , (cols) := list(ep_isFre, 'ep')]
-tests[ is.na(isFre_fin), (cols) := list(wo_isFre_sp, 'wo')]
-tests[ is.na(isFre_fin), (cols) := list(gb_isFre, 'gb')]
-tests[ is.na(isFre_fin), (cols) := NA ]
+tests[ is.na(is_fresh), (cols) := list(wo_isFre_sp, 'wo')]
+tests[ is.na(is_fresh), (cols) := list(gb_isFre, 'gb')]
+tests[ is.na(is_fresh), (cols) := NA ]
 # terrestrial
-cols = c('isTer_fin', 'isTer_fin_src')
+cols = c('is_terre', 'is_terre_src')
 tests[ , (cols) := list(ep_isTer, 'ep')]
-tests[ is.na(isTer_fin), (cols) := list(wo_isTer_sp, 'wo')]
-tests[ is.na(isTer_fin), (cols) := list(gb_isTer, 'gb')]
-tests[ is.na(isTer_fin), (cols) := NA ]
+tests[ is.na(is_terre), (cols) := list(wo_isTer_sp, 'wo')]
+tests[ is.na(is_terre), (cols) := list(gb_isTer, 'gb')]
+tests[ is.na(is_terre), (cols) := NA ]
 # cleaning
 cols_ha_rm = c('wo_isMar_sp', 'wo_isBra_sp', 'wo_isFre_sp', 'wo_isTer_sp',
                'gb_isMar', 'gb_isBra', 'gb_isFre', 'gb_isTer',

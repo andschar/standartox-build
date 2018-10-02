@@ -12,10 +12,10 @@ DBetox = paste0('etox', gsub('-', '', release))
 # (1) Create data basse ---------------------------------------------------
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
-                user = DBuserL,
-                host = DBhostL,
-                port = DBportL,
-                password = DBpasswordL)
+                user = DBuser,
+                host = DBhost,
+                port = DBport,
+                password = DBpassword)
 
 dbSendQuery(con, paste0("DROP DATABASE IF EXISTS ", DBetox, ";"))
 dbSendQuery(con, paste0("CREATE DATABASE ", DBetox, ";"))
@@ -26,11 +26,11 @@ dbUnloadDriver(drv)
 
 # (2) Tables --------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuserL,
+con = dbConnect(drv, user = DBuser,
                 dbname = DBetox,
-                host = DBhostL,
-                port = DBportL,
-                password = DBpasswordL)
+                host = DBhost,
+                port = DBport,
+                password = DBpassword)
 
 ## Load tables
 # list all .txt files
@@ -107,11 +107,11 @@ dbUnloadDriver(drv)
 
 # (3) Validation tables ---------------------------------------------------
 drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuserL,
+con = dbConnect(drv, user = DBuser,
                 dbname = DBetox,
-                host = DBhostL,
-                port = DBportL,
-                password = DBpasswordL)
+                host = DBhost,
+                port = DBport,
+                password = DBpassword)
 
 # Copy validation tables to server
 files2 = list.files(file.path(etoxdir, "validation"), pattern = "*.txt", 
@@ -168,11 +168,11 @@ dbUnloadDriver(drv)
 
 # (4) Custom tables -------------------------------------------------------
 drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuserL,
+con = dbConnect(drv, user = DBuser,
                 dbname = DBetox,
-                host = DBhostL,
-                port = DBportL,
-                password = DBpasswordL)
+                host = DBhost,
+                port = DBport,
+                password = DBpassword)
 
 dbSendQuery(con, paste0("DROP SCHEMA IF EXISTS lookup CASCADE;"))
 dbSendQuery(con, "CREATE SCHEMA lookup;")
@@ -206,11 +206,11 @@ dbUnloadDriver(drv)
 
 # (5) Custom functions ----------------------------------------------------
 drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuserL,
+con = dbConnect(drv, user = DBuser,
                 dbname = DBetox,
-                host = DBhostL,
-                port = DBportL,
-                password = DBpasswordL)
+                host = DBhost,
+                port = DBport,
+                password = DBpassword)
 
 # https://stackoverflow.com/questions/10306830/postgres-define-a-default-value-for-cast-failures
 # change function 15.05.2018 to live up to asterix '*' in reported concentrations.
@@ -251,11 +251,11 @@ dbUnloadDriver(drv)
 # (6) Cleaning ------------------------------------------------------------
 # Postgres
 drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuserL,
+con = dbConnect(drv, user = DBuser,
                 dbname = DBetox,
-                host = DBhostL,
-                port = DBportL,
-                password = DBpasswordL)
+                host = DBhost,
+                port = DBport,
+                password = DBpassword)
 
 dbSendQuery(con, 'VACUUM ANALYZE')
 

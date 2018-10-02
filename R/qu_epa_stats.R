@@ -10,7 +10,17 @@ DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
 online_db = TRUE
 if (online_db) {
   drv = dbDriver("PostgreSQL")
-  con = dbConnect(drv, user = DBuserL, dbname = DBetox, host = DBhostL, port = DBportL, password = DBpasswordL)
+  con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
+  
+  ## filters ----
+  # concentration type
+  q = 'select conc1_type as conc_type, count(conc1_type) as n
+       from ecotox.results
+       group by conc1_type'
+  coty = as.data.table(dbGetQuery(con, q))
+  coty[ conc_type %in% c('NR', '--', 'NC', ''), conc_type := NA ]
+  coty = coty[ , .(n = sum(n)), conc_type ]
+  setorder(coty, -n)
   
   # endpoints
   q = 'select endpoint, count(endpoint) as n
@@ -55,7 +65,11 @@ if (online_db) {
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
-  epa_stats_l = list(epts = epts, effe = effe, expo = expo, datu = datu)
+  epa_stats_l = list(coty = coty,
+                     epts = epts,
+                     effe = effe,
+                     expo = expo,
+                     datu = datu)
   
   saveRDS(epa_stats_l, file.path(cachedir, 'epa_stats_l.rds'))
   

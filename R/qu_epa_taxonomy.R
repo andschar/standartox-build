@@ -10,7 +10,7 @@ DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
 online_db = F # debug me!
 if (online_db) {
   drv = dbDriver("PostgreSQL")
-  con = dbConnect(drv, user = DBuserL, dbname = DBetox, host = DBhostL, port = DBportL, password = DBpasswordL)
+  con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
 
   tax = dbGetQuery(con, "SELECT DISTINCT ON (latin_name) *
                          FROM ecotox.species")

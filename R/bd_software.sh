@@ -12,13 +12,6 @@
 # 
 
 
-##! sourced from DB_access-script
-# DBnameL <- 'epa_ecotox'
-# DBhostL <- 'localhost' # 127.0.0.1
-# DBportL <- '5432'
-# DBuserL <- 'epa_ecotox'
-# DBpasswordL <- 'epaecotox'
-
 ##! If password leads to connection problems:
 ##! sudo -u user_name psql db_name
 ##! ALTER USER user_name WITH PASSWORD 'new_password';already included above.
