@@ -55,7 +55,7 @@ pp2[ , .N, cas][order(-N)] # no duplicates
 setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))])))))
 # FRAC data ----
 frac2[ , .N, cas][order(-N)] # 79956562 duplicated CAS
-frac2 = frac2[cas != 79956-56-2]
+frac2 = frac2[cas != '79956-56-2']
 setnames(frac2, c('cas', paste0('fr_', tolower(names(frac2[ ,2:length(names(frac2))])))))
 
 # Merge ----
