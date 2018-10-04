@@ -42,8 +42,8 @@ source('R/qu_gbif.R') # contains also habitat information
 
 
 # Merge Chemical Information ----------------------------------------------------
-# names(pc2) # pubchem
-
+# Pubchem ----
+pc2[ , .N, cas][order(-N)] # no duplicates
 # Alan Wood Compendium ----
 aw2[ , .N, cas][order(-N)] # no duplicates
 setnames(aw2, c('cas', paste0('aw_', tolower(names(aw2[ ,2:length(names(aw2))])))))

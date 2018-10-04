@@ -48,12 +48,12 @@ grep('chebi', sort(names(pc)), ignore.case = TRUE)
 # CID - non-zero integer PubChem ID
 # XLogP - Log P calculated Log P
 pc2 = pc[ , .SD, .SDcols = c('cas', 'CID', 'InChIKey', 'IUPACName', 'ExactMass')]
-setnames(pc2, c('cas', paste0('pc_', tolower(names(pc2[ ,2:length(names(pc2))])))))
 pc2 = pc2[!duplicated(cas)] #! easy way out, although pubchem doesn't provide important information
-
+setnames(pc2, tolower(names(pc2)))
+setnames(pc2, c('iupacname', 'exactmass'), c('pc_iupacname', 'pc_exactmass'))
 
 # missing entries ---------------------------------------------------------
-na_pc2_inchi = pc2[ is.na(pc_inchikey) ]
+na_pc2_inchi = pc2[ is.na(inchikey) ]
 message('PubChem: For ', nrow(na_pc2_inchi), '/', nrow(pc2),
         ' CAS no InchiKeys were found.')
 
