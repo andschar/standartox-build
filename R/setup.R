@@ -1,41 +1,31 @@
-# working directory (especially for shiny)
-# TODO find a solution for shin!!
+# setup script for etox-base
 
-#rm(list = ls())
-# switches
+# project directory -------------------------------------------------------
+prj = '/home/andreas/Documents/Projects/etox-base' #! change to your project directory here!
 
+# packages ----------------------------------------------------------------
+if (!require('pacman')) install.packages('pacman')
+
+pacman::p_load(readxl, data.table, RPostgreSQL, vegan,
+               ggplot2, ggrepel, cowplot,
+               rgbif, webchem, taxize, taxizesoap, countrycode)
+
+pacman::p_update()
+
+#### Notes:
+# TODO p_load(raster) ??? why raster ???
+# installation of taxizesoap: https://github.com/ropensci/taxizesoap
+# install.packages(c("XMLSchema", "SSOAP"), repos = c("http://packages.ropensci.org", "http://cran.rstudio.com"))
+# devtools::install_github("ropensci/taxizesoap")
+
+
+# switches ----------------------------------------------------------------
 src_ECOTOX = FALSE
 online = FALSE
 online_db = FALSE
 plots = FALSE
 
-# packages
-require(readxl)
-require(data.table)
-require(RPostgreSQL)
-require(vegan)
-require(raster)
-
-# ploting
-require(ggplot2)
-require(ggrepel)
-require(cowplot)
-
-# data bases
-require(rgbif)
-require(taxize)
-require(taxizesoap)
-require(countrycode)
-
-# installation of taxizesoap: https://github.com/ropensci/taxizesoap
-# install.packages(c("XMLSchema", "SSOAP"), repos = c("http://packages.ropensci.org", "http://cran.rstudio.com"))
-# devtools::install_github("ropensci/taxizesoap")
-require(webchem)
-
-# project path
-prj = '/home/andreas/Documents/Projects/etox-base' #! change to your project directory here!
-
-# variables
+# variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
 missingdir = file.path(cachedir, 'missing')
 fundir = file.path(prj, 'functions')
@@ -46,12 +36,9 @@ lookupdir = file.path(prj, 'lookup')
 shinydir = file.path(prj, 'shiny')
 cred = file.path(prj, 'cred')
 
-# source
+# source ------------------------------------------------------------------
 source(file.path(cred, 'credentials.R')) # data base credentials
 source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
 source(file.path(src, 'gg_theme.R'))
-
-# system calls
-system(sprintf('rm %s/*', missingdir))
 
 
