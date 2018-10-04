@@ -5,7 +5,6 @@
 # TODO replace this script with a chebi API approach
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
 require(rvest)
 source(file.path(src, 'fun_scrape_phantomjs.R'))
 
@@ -15,7 +14,7 @@ csid2 = csid[!is.na(csid)]
 # csid2 = csid2[1:2] # debug me!
 
 # query -------------------------------------------------------------------
-if (TRUE) {
+if (online) {
   
   l = list()
   for (i in seq_along(csid2)) {
@@ -63,5 +62,46 @@ if (TRUE) {
   
   l = readRDS(file.path(cachedir, 'l.rds'))
 }
+
+# preparation -------------------------------------------------------------
+#! due to bad programing above, elements have to be extracted quite complicated here!
+
+if (online) {
+  names(l) = sapply(l, '[', 'cas') # necessary 'cause CSID is not unique
+  cs_chebi_class = rbindlist(lapply(l, function(x) data.table(t(x[1:3]))))
+  cs_chebi_class = as.data.table(lapply(cs_chebi_class, as.character))
+  tags = sapply(l, '[', 'tags')
+  tags = data.table(plyr::ldply(tags, rbind))
+  setnames(tags, c('cas', paste0('chebi_class', 1:5)))
+  tags[ , cas := gsub('([0-9]+)(.tags)', '\\1', cas) ]
+  
+  cs_chebi = merge(cs_chebi_class, tags, by = 'cas')
+  
+  saveRDS(cs_chebi, file.path(cachedir, 'cs_chebi.rds'))
+} else {
+  
+  cs_chebi = readRDS(file.path(cachedir, 'cs_chebi.rds'))
+}
+
+
+# final data.table --------------------------------------------------------
+cs_chebi_m = melt(cs_chebi, id.vars = c('cas', 'csid', 'name'))
+cs_chebi_m_dc = dcast(cs_chebi_m, cas + csid + name ~ value)
+setnames(cs_chebi_m_dc, tolower(names(cs_chebi_m_dc)))
+
+sort(grep('cid', names(cs_chebi_m_dc), value = T))
+cols = c('cas', 'csid', 'name', 'acaricide', 'avicide', 'fungicide', 'herbicide', 'insecticide', 'nematicide', 'pesticide', 'rodenticide', 'scabicide')
+
+cs2 = cs_chebi_m_dc[ , .SD, .SDcols = cols ]
+
+cols = grep('cas|csid|name', names(cs2), invert = TRUE, value = TRUE)
+cs2[ , pesticide := sum(.SD), .SDcols = cols, by = 1:nrow(cs2) ][pesticide > 0, pesticide := 1]
+
+setnames(cs2, paste0('cs_', names(cs2)))
+setnames(cs2, c('cs_cas', 'cs_csid', 'cs_name'), c('cas', 'csid', 'name'))
+
+# cleaning ----------------------------------------------------------------
+rm(tags, cs_chebi_class,
+   cols, cs_chebi_m, cs_chebi_m_dc)
 
 
