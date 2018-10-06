@@ -107,7 +107,8 @@ for (i in 1:length(missing_l)) {
   
   if (nrow(file) > 0) {
     fwrite(file, file.path(missingdir, paste0(name, '.csv')))
-    message('Writing file with missing data: ', name)
+    message('Writing file with missing data:\n',
+            file.path(missingdir, paste0(name, '.csv')))
   }
 }
 

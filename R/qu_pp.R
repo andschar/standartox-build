@@ -67,6 +67,19 @@ pp[ , solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 # final dt ----------------------------------------------------------------
 pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
 
+setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))])))))
+
+# missing entries ---------------------------------------------------------
+na_pp2_cname = pp2[ is.na(pp_cname) ]
+message('PubChem: For ', nrow(na_pp2_cname), '/', nrow(pc2),
+        ' CAS no Cnames were found.')
+
+if (nrow(na_pp2_cname) > 0) {
+  fwrite(na_pp2_cname, file.path(missingdir, 'na_pp2_cname.csv'))
+  message('Writing missing data to:\n',
+          file.path(missingdir, 'na_pp2_cname.csv'))
+}
+
 # cleaning ----------------------------------------------------------------
 rm(chem, todo_pp)
 

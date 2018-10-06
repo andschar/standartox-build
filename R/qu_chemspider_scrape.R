@@ -86,7 +86,7 @@ if (online) {
 
 # final data.table --------------------------------------------------------
 cs_chebi_m = melt(cs_chebi, id.vars = c('cas', 'csid', 'name'))
-cs_chebi_m_dc = dcast(cs_chebi_m, cas + csid + name ~ value)
+cs_chebi_m_dc = dcast(cs_chebi_m, cas + csid + name ~ value, fun.aggregate = length)
 setnames(cs_chebi_m_dc, tolower(names(cs_chebi_m_dc)))
 
 sort(grep('cid', names(cs_chebi_m_dc), value = T))

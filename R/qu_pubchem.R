@@ -59,9 +59,9 @@ message('PubChem: For ', nrow(na_pc2_inchi), '/', nrow(pc2),
 
 if (nrow(na_pc2_inchi) > 0) {
   fwrite(na_pc2_inchi, file.path(missingdir, 'na_pc2_inchi.csv'))
-  message('Writing missing data InChIKey')
+  message('Writing missing data to:\n',
+          file.path(missingdir, 'na_pc2_inchi.csv'))
 }
-
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
