@@ -52,17 +52,41 @@ for (i in 1:length(aw_l)) {
   }
 }
 
+# final dt ----------------------------------------------------------------
 aw = rbindlist(aw_l, fill = TRUE, idcol = 'cas')
 aw[ , V1 := NULL ]
 setcolorder(aw, c('cas', 'cname'))
-aw[ , pest_type :=
-gsub('(.+)?(fungicide|herbicide|insecticide|rodenticide|acaricide|nematicide)(.+)?', '\\2', aw$subactivity)]
+cols = c('activity', 'subactivity', 'subactivity1', 'subactivity2', 'subactivity3')
+aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', cols) ]
+aw2_m = melt(aw2, id.var = c('cas', 'cname'))
 
+aw2_m[ grep('(?i)acaric', value) , aw_acaricide := 1 ]
+aw2_m[ grep('(?i)fungic', value) , aw_fungicide := 1 ]
+aw2_m[ grep('(?i)herbic', value) , aw_herbicide := 1 ]
+aw2_m[ grep('(?i)inhibitor', value) , aw_inhibitors := 1 ]
+aw2_m[ grep('(?i)insectic', value) , aw_insecticide := 1 ]
+aw2_m[ grep('(?i)molluscic', value) , aw_molluscicide := 1 ]
+aw2_m[ grep('(?i)repellent', value) , aw_repellents := 1 ]
+aw2_m[ grep('(?i)rodentic', value) , aw_rodenticide := 1 ]
 
-# final dt ----------------------------------------------------------------
-cols_aw_fin = c('cas', 'cname', 'pest_type')
-aw2 = aw[ , .SD, .SDcols = cols_aw_fin ]
+cols = c('aw_acaricide', 'aw_fungicide', 'aw_herbicide', 'aw_inhibitors', 'aw_insecticide', 'aw_molluscicide', 'aw_repellents', 'aw_rodenticide')
+aw3 = aw2_m[ , lapply(.SD, min, na.rm = TRUE), .SDcols = cols, by = .(cas, cname) ]
+for (i in names(aw3)) {
+  aw3[ get(i) == Inf, (i) := NA ]
+}
+
+# missing entries ---------------------------------------------------------
+na_aw3_cname = aw3[ is.na(cname) ]
+message('AlanWood: For ', nrow(na_aw3_cname), '/', nrow(aw3),
+        ' CAS no cnames were found.')
+
+if (nrow(na_aw3_cname) > 0) {
+  fwrite(na_aw3_cname, file.path(missingdir, 'na_aw3_cname.csv'))
+  message('Writing missing data to:\n',
+          file.path(missingdir, 'na_aw3_cname.csv'))
+}
 
 # cleaning ----------------------------------------------------------------
-rm(chem, cas, todo_aw, cols_aw_fin)
+rm(chem, cas, todo_aw, cols_aw_fin,
+   aw2_m, aw2, cols, aw)
 
