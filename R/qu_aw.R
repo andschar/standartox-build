@@ -75,6 +75,8 @@ for (i in names(aw3)) {
   aw3[ get(i) == Inf, (i) := NA ]
 }
 
+aw3[ , is_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ is_pest == 0, is_pest := NA ]
+
 # missing entries ---------------------------------------------------------
 na_aw3_cname = aw3[ is.na(cname) ]
 message('AlanWood: For ', nrow(na_aw3_cname), '/', nrow(aw3),
