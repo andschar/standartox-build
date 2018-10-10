@@ -1,42 +1,208 @@
 ---
-title: "Etox-Base - A tool and data set in ecotoxicology"
+title: "Etox-Base - A tool and data set in ecotoxicology [max. 110 words]"
 author: "Andreas Scharmüller"
 date: "August 29, 2018"
-output: html_document
+output:
+  # bookdown::html_book:
+  # bookdown::pdf_document2:
+  bookdown::html_document2:
+  # html_document:
 bibliography: references-etox-base.bib
+editor_options: 
+  chunk_output_type: console
 ---
 
-# Abstract
+```{r setup, echo=FALSE}
+prj = '/home/andreas/Documents/Projects/etox-base'
+datadir = file.path(prj, 'article/data') # in sub folder article
+cachedir = file.path(prj, 'cache')
+```
+
+# Abstract [max. 170 words]
+
+# Background & Summary (i.e. Introduction)
+
+Chemical pollutants in the environment, such as pesticides, heavy metals, (?? main pollutant groups ??) belong after @rockstrom_safe_2009 to one of nine planetary boundary groups that should not exceed certain thresholds.
+
+
+A vast amount of chemical substances such as pharmaceuticals, pesticides, synthetic hormones and many more are used all over the world with insufficient knowledge about possible adverse effects on the environment. In Europe alone some 100,000 substances are estimated to be in current use, whereof 30,000 are produced in quantities larger than one ton per year. Thereof less than one percent are thoroughly tested [@breithaupt_costs_2006]. However, for some substance groups adverse effects could be detected. Pesticides for exmaple reduce macro-invertebrate biodiversity in streams [@beketov_pesticides_2013], estrogenic-associated effects in fish could be proven [@vethaak_integrated_2005] + HEAVY METALS. However for many substance groups, especially newly emerging ones authorative test results remain scarce. To overcome such knowledge paucities it is paramount to accumulate and distribute existing knowledge on possible adverse effects of substances widely. The ECOTOXicology knowledgebase (ECOTOX) created by U.S. Environmental Protection Agency (EPA) represents one such initiative [@elonen_ecotoxicology_2018]. It collects ecotoxicological test data on on aquatic and terrestrial wildlife as well as plants and publishes it on a quarterly basis freely accessible on the web. By the time of writing it contained 919,123 test results, comprising 11,655 chemicla substances tested on 12,630 different species. Tests results that can exhibit over ten different endpoints such as Effective Concentrations - EC50 values, No-observed effect concentratons NOEC or lowest observed effect concentraitons - LOEC, where different effects such as Mortality, Intoxication, Growth etc. and test durations ranging from days to weeks can be measured. 
+
+All this information can be queried through a web interface or the whole data base can be fully downloaded. Endpoints from ecotoxicological test data can be used to evaluate ocurrences of substances in the envrionment. Widely used endpoints are EC50s which determine the concentration where 50% of e.g. plant growth is inhibited, 50% of individuals have died etc. These can be realted to measured concnetrations by calculating Toxic Units (TUs) \@ref(eq:tu) [@schafer_effects_2011] [+other citations!!]. 
+
+\begin{equation*}
+TU = \frac{conc_i}{EC50}
+(\#eq:tu)
+\end{equation*}
+
+Test results vary naturally 
+
+Effects of chemical substances vary with time [@sanchez-bayo_simple_2009]. Therefore we propose to aggregate in a first step tests according to the tested compoud, the tested species and the test duration. Hereby if the number of tests is smaller or equal to two the minimum otherwise the median of the reported test concentrations is taken. Secondly this data can then be filtered \@ref(tab:table-filters) and aggregated by the user through the tool/app. Filters steps are applied before the aggregation. 
+
+```{r table-filters, echo=FALSE}
+epa_stats_l = readRDS(file.path(cachedir, 'epa_stats_l.rds'))
+
+conc_type = epa_stats_l[['coty']]$conc_type
+auth = c('Africa', 'Asia', 'Europe', 'North America', 'South America', 'Australia')
+chem_type = c('metal', 'pesticide')
+
+filter_chem = data.frame(filters = c('Concentration type', 'Chemical class', 'Authorization'),
+                         options = c(paste0(conc_type, collapse = ', '),
+                                     paste0(chem_type, collapse = ', '),
+                                     paste0(auth, collapse = ', ')),
+                         explanations = 'link')
+
+habi = c('all', 'marine', 'brackish', 'freshwater', 'terrestrial')
+conti = 'bla'
+
+filter_taxa = data.frame(filters = c('Organism habitat', 'Continent'),
+                         options = paste0(habi, collapse = ', '))
+
+knitr::kable(filter_chem, caption = 'Chemical compound filter option')
+knitr::kable(filter_taxa, caption = 'Taxa filter options')
+```
+
+
+Filters according to concentration type (AI - Active ingredient, F-Formulation)
+
+
+However, due to the large number of tests it is not always trivial to determine single EC50 values for chemical substances. Therefore we propose a toolkit, data set that allows to choose between multiple aggregation methods.
+
+Similar data bases exist and one prominent example is the Pesticide Property Data Base (PPDB) [citation!] which is operated by the university of Head
 
 
 
-# Introduction
+# Introduction IDEAS
 
-Chemical pollutants in the environment, such as pesticides, heavy metals, (?? main pollutant groups ??) belong after @rockstrom_safe_2009 to one of nine planetary boundary groups that should not exceed certain thresholds. Yet, the influence of chemical pollutants is not sufficiently studied to circumvent this boundary. 
+
+checkout citation in [@koehler_wildlife_2013]: Rohr 2008  
+"A field survey of the northern leopard
+frog, Rana pipiens, revealed that atrazine pol-
+lution and inorganic phosphate accounted for
+74% of the variation in the abundance of trem-
+atodes (62)."
+
 
 
 "Currently, pesticide use is wide-spread in agriculture all over the world, but still only very few countries have established wildlife poisoning surveillance programs (2). As a result, many data on pesticides remain scattered and/or
 not publicly available" [@kohler_wildlife_2013]
+
+"bias towards domestic and lab models" [@kohler_wildlife_2013]
+
+"Even though the banning of highly persistent or-
+ganochlorines in developed countries has shifted
+pesticide use toward a vast diversity of readily
+biodegradable ingredients, the explosiveness of
+organochlorines on a global scale cannot be ig-
+nored." [@koehler_wildlife_2013]
+
+-> half a milion tons in developing countries
+
+"to date 120 endocrine disruptive chemcials are known" [@koehler_wildlife_2013] 
+R. McKinlay, J. A. Plant, J. N. B. Bell, N. Voulvoulis,
+Environ. Int. 34, 168–183 (2008). covering numerous classes
+
+important effects: thyroid disruption
+
+
+
+"A recent meta-analysis revealed over-
+all environmental pollution to have large effects
+on abnormality frequencies but only medium
+effects on survival and no effects on time of de-
+velopment (29)." [@koehler_wildlife_2013]
+
+
+"Generally, single-
+chemical risk assessment will probably under-
+estimate the actual risks of pesticide mixtures to
+fish, as combinations of organophosphates and
+carbamates were shown to exert synergistic neu-
+rotoxicity and unpredicted mortality in Pacific
+salmon (35)." [@koehler_wildlife_2013]
+
+" So, despite all efforts to increase the
+specificity of insecticides, there is as yet no com-
+pound that both targets insect pests and leaves
+nontarget insects unaffected" [@koehler_wildlife_2013]
+
+
+
+köhler and triebskorn pesticide classification: where do they have it from?
 
 what is really new and an improvement of the ECOTOX data base is the querying of regional and habitat data and automated checking!!
 
 
 The EPA ECOTOX data base !citation! is a valuable resource for ecotoxicological test data. When it was last updated (June 7, 2018) it contained 910,465 test results of 11,583 different chemicals that were tested on 12,599 organisms.
 
+there ain't no habitat data base on the web
+except gbif fuzzy coded data$habitat column
+
 
 # Methods
 
-The EPA ECOTOX data base was downloaded (version: June 7, 2018) and built into a local PostgreSQL data base [@szoecs_build_2016]. The data base is subsequently queried for EC50 values
+### EPA Ecotox data base
+The EPA ECOTOX data base was downloaded (version: June 7, 2018) and built into a local PostgreSQL data base [@szocs_build_2016]. The data base is subsequently queried for __endpoints__ such as _half maximal effective concentrations - LC50, EC50, LD50, LT50, IC50, ED50 and ET50 (further denoted as EC50)_, _No-observed-adverse-effect level - NOEC, NOEL_ and _lowest observed concentrations - LOEC, LOEL_ [@elonen_ecotoxicology_2018]. Data on other enpoints such as EC25 are ignored. Only the following __effect groups__ are considered: MOR|POP|ITX|GRO. Reported _compound concentrations_ are converted to µg/L and µg/kg respecitvely.
+
+### Ohter chemical data bases
+CAS numbers (e.g. 210880-92-5) that are retrieved from the EPA ECOTOX data base are then used to query other publically available data bases with the help of the webchme R-package [@szocs_webchem_2015] to fetch additional chemical parameters \@ref(chem-refs).
+
+```{r chem-refs, echo=FALSE}
+chem_refs = read.table(file.path(datadir, 'chem_refs.txt'), sep = ',', header = TRUE)
+
+knitr::kable(
+  chem_refs,
+  caption = 'Chemical parameters'
+)
+```
+
+### Habitat data
+
+```{r habi-refs, echo=FALSE}
+habi_refs = NA
+
+knitr::kable(
+  habi_refs,
+  caption = 'Habitat parameters'
+)
+
+# From EPA:
+# media_type: SW, FW
+# habitat: Soil
+
+```
+
+
+The habitat parameters _isFre_, _isBra_, _isMar_, _isTer_ are assorted from data from different data bases such as the World Register of Marine Species (WoRMS) [@worms_editorial_board_world_2018] and the Global Biodiversity Information Facility (GBIF) [@gbif.org_gbif_2018]. Moreover habitat types are also derived from EPA data entries on test media type [EPA SOURCE]
+Data from WoRMS are prefered as they are checked.
+
+
+* WORMS
+* algaebase?
+
+
+### Regional data
+
+Taxonomic data retrieved from the EPA ECOTOX data base is cleaned and only taxa that are determined until Genus level are kept. Subsequently taxa are queried using the rgbif-package [@chamberlain_rgbif_2018].
+
+__what about different chemical class columns?__
+
+__show overview plots or in suplimentary materials__
 
 The whole process is automated and scheduled to be re-run four times a year.
 
 Building the the data base is updated quaterly whenever a new version from the EPA can be downloaded. Based on the EPA ECOTOX data base CAS and taxa information are extracted and queried against other online available data bases to retrieve information which is lackign in the ECOTOX data base. 
 
-## Habitat data
-
-## Regionl data
 
 ## Additional chemical parameters
+
+
+### Parameter table
+
+```{r parameter-table, echo=FALSE}
+# tests_data = readRDS(file.path(cachedir, 'tests_fl.rds'))
+# TODO read in tests data and list the parameters
+
+```
 
 water solubility
 
@@ -61,6 +227,18 @@ system(sprintf('convert -density 300 %s %s', pdf_file, png_file))
 
 # Discussion
 
+discuss problem of lacking data in GBIF on Africa. And Asia is way to big.
+
+## Classification of chemicals
+classification of chemical substances or compounds is not trivial.
+* Approaches
+  * Use-oriented:
+    * Pesticide classification according to degree of harzard based on the acute oral and dermal toxicity to rats [@international_program_on_chemical_safety_who_2010]
+  * Environment
+    * MOA
+  * Chemical classes
+    * ohp document - private company for selling pesticides
+
 quality of data in GBIF for instance in Africa is low. Continental refinement should be used with caution.
 
 some ecotox test results might be flawed
@@ -69,5 +247,23 @@ Generally information on habitats is not easy to find. Only worms, algaebase and
 
 it would be valuable to include other resources such as PPDB and algaebase. however they are proprietary.
 
+There is a need for a __habitat__ and __chemical classification__ data base!
+
+## Taxonomy:
+
+Dinoflagelates are considered autotroph, although mixotrophy in this taxon has been proven [@]stoecker_mixotrophy_1999
+
+
 
 # References
+
+
+
+
+
+
+
+
+
+
+
