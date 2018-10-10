@@ -54,6 +54,7 @@ server = function(input, output) {
     ec50_filagg(tests_data,
                 conc_type = input$conc_type,
                 comp = input$comp,
+                chem_class = input$chem_class,
                 solub_chck = input$comp_solub_chck,
                 habitat = input$habitat,
                 continent = input$continent,

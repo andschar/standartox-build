@@ -1,7 +1,7 @@
 # script for a shiny app selecting EC50 values
 
 # setup -------------------------------------------------------------------
-source('/home/andreas/Documents/Projects/etox-base/R/setup.R')
+source('/home/andreas/Documents/Projects/etox-base/R/setup.R') # TODO change this!
 require(shiny)
 require(shinyjs)
 require(shinydashboard)
@@ -25,21 +25,24 @@ ui = fluidPage(
                         accept = '.csv', placeholder = 'one column .csv'),
               actionButton(inputId = 'reset', label = 'Reset Input', style = 'margin-top:25px')
             ),
-            splitLayout(
+            verticalLayout(
               checkboxGroupInput(inputId = 'conc_type', label = 'Concentration type',
-                                 choiceValues = c('A', 'F'), # TODO 'T', 'U'),
-                                 choiceNames = c('Active ingredient', 'Formulation'),
-                                 selected = c('A', 'F'))
+                                 choiceValues = c('F', 'T', 'A', 'D', 'U', 'L'),
+                                 choiceNames = c('F - Formulation', 'T - Total (Metals and single elements)', 'A - Active ingredient', 'D - Dissolved', 'U - Unionized', 'L - Labile'),
+                                 selected = c('A')),
+              helpText(a('Help', href = 'https://cfpub.epa.gov/ecotox/pdf/codeappendix.pdf'))
             ),
             splitLayout(
-              checkboxGroupInput(inputId = 'chemical_class', label = 'Chemical class',
-                                 choices = c('Metals', 'Pesticides', 'what else???')),
-              checkboxGroupInput(inputId = 'authorization', label = 'Authorized in',
-                                 choiceValues = c('afr', 'asi', 'eur', 'nam', 'sam', 'aus'),
-                                 choiceNames = c('Afirca', 'Asia', 'Europe', 'North America', 'South America', 'Australia'),
-                                 selected = 'eur')
-            ),
-            checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
+              checkboxGroupInput(inputId = 'chem_class', label = 'Chemical class',
+                                 choiceValues = c('meta', 'pest'),
+                                 choiceNames = c('Metals', 'Pesticides')),
+              # TODO Don't know which data source provides such information
+              # checkboxGroupInput(inputId = 'authorization', label = 'Authorized in',
+              #                    choiceValues = c('afr', 'asi', 'eur', 'nam', 'sam', 'aus'),
+              #                    choiceNames = c('Afirca', 'Asia', 'Europe', 'North America', 'South America', 'Australia'),
+              #                    selected = 'eur')
+              checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
+            )
           )
         ),
         tabPanel(
@@ -53,9 +56,9 @@ ui = fluidPage(
                            choices = c('all', 'marine', 'brackish', 'freshwater', 'terrestrial'),
                            selected = 'freshwater'),
               radioButtons(inputId = 'continent', label = 'Continent',
-                           choiceValues = c('all', 'gb_africa', 'gb_north_america', 'gb_south_america', 'gb_antarctica', 'gb_asia', 'gb_europe', 'gb_oceania'),
+                           choiceValues = c('all', 'afri', 'noam', 'soam', 'anta', 'asia', 'euro', 'ocea'),
                            choiceNames = c('all', 'Africa', 'North America', 'South America', 'Antarctica', 'Asia', 'Europe', 'Oceania'),
-                           selected = 'gb_europe')
+                           selected = 'euro')
             )
           )
         ),
