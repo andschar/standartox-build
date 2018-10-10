@@ -11,7 +11,11 @@ tbl = paste0(DBetox, '_fin')
 # data --------------------------------------------------------------------
 tests_fin = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
-# schema ------------------------------------------------------------------
+# (1) to shiny repo -------------------------------------------------------
+saveRDS(tests_fin, file.path(shinydir, 'data', 'tests_fin.rds'))
+
+# (2) to PostgreSQL -----------------------------------------------------------
+# schema ----
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
                 dbname = DBetox,
@@ -26,7 +30,7 @@ dbSendQuery(con, paste0("CREATE SCHEMA ", schema, ";"))
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
-# write -------------------------------------------------------------------
+# write ----
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
                 dbname = DBetox,
@@ -45,7 +49,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 
-# comments ----------------------------------------------------------------
+# comments ----
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
                 dbname = DBetox,

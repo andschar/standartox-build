@@ -1,7 +1,8 @@
 # setup script for etox-base
 
-# project directory -------------------------------------------------------
+# projects directory -------------------------------------------------------
 prj = '/home/andreas/Documents/Projects/etox-base' #! change to your project directory here!
+shinydir = '/home/andreas/Documents/Projects/etox-base-shiny/' #! shiny directory
 
 # packages ----------------------------------------------------------------
 if (!require('pacman')) install.packages('pacman')
@@ -33,7 +34,6 @@ plotdir = file.path(prj, 'plots')
 src = file.path(prj, 'R')
 datadir = file.path(prj, 'data')
 lookupdir = file.path(prj, 'lookup')
-shinydir = file.path(prj, 'shiny')
 cred = file.path(prj, 'cred')
 
 # source ------------------------------------------------------------------
