@@ -6,25 +6,6 @@ source('R/setup.R')
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
-# function ----------------------------------------------------------------
-bind_frame_dcast = function(l) {
-  # l = aw_l[[59]] # debug me!
-  # necessary, 'cause subactivity can have multiple entries
-  dt_l = rbindlist(lapply(l, data.table), idcol = 'id', fill = T)
-  dc_dt_l = dcast(dt_l, . ~ id, value.var = 'V1',
-                  fun.aggregate = function(x) paste(x, collapse = ', '))
-  dc_dt_l[ , c('.', 'cas') := NULL]
-  # split newly created activity and subactivity string respectively
-  ln_sub = length(unlist(strsplit(dc_dt_l$subactivity, ',')))
-  dc_dt_l[ , paste0('subactivity', 1:ln_sub) := tstrsplit(subactivity, ',') ]
-  # NB: it would be nice to do this for activity as well, however the website doesn't allow for it. See how activity-information is coded in Octhilinones:
-  # http://www.alanwood.net/pesticides/octhilinone.html
-  # ln_act = length(unlist(strsplit(dc_dt_l$activity, ',')))
-  # dc_dt_l[ , paste0('activity', 1:ln_act) := tstrsplit(activity, ',') ]
-  
-  return(dc_dt_l)
-}
-
 # query -------------------------------------------------------------------
 todo_aw = chem$cas
 # todo_aw = '119446-68-3'
@@ -40,25 +21,22 @@ if (online) {
 
 
 # preparation -------------------------------------------------------------
-# convert all entries to data.tables
-for (i in 1:length(aw_l)) {
-  cas = names(aw_l[i])
-  if (!is.list(aw_l[[i]])) {
-    aw_l[[i]] = data.table(aw_l[[i]]) #!adapt it in the way it was done in species-sensitivity!
-    names(aw_l)[i] = cas
-  } else if (is.list(aw_l[[i]])) {
-    aw_l[[i]] = bind_frame_dcast(aw_l[[i]])
-    names(aw_l)[i] = cas
-  }
-}
+aw_l2 = aw_l[ !is.na(aw_l) ] # remove NAs
+aw = rbindlist(lapply(aw_l2, function(x) data.table(t(x))),
+                  idcol = 'cas') # columns are lists
+max(sapply(aw$subactivity, length)) # up to 3 length vectors 
 
-# final dt ----------------------------------------------------------------
-aw = rbindlist(aw_l, fill = TRUE, idcol = 'cas')
-aw[ , V1 := NULL ]
-setcolorder(aw, c('cas', 'cname'))
-cols = c('activity', 'subactivity', 'subactivity1', 'subactivity2', 'subactivity3')
+aw[ , subactivity1 := sapply(subactivity, `[`, 1) ]
+aw[ , subactivity2 := sapply(subactivity, `[`, 2) ]
+aw[ , subactivity3 := sapply(subactivity, `[`, 3) ]
+aw[ , subactivity := NULL ]
+
+# identify pesticide groups -----------------------------------------------
+cols = c('activity', 'subactivity1', 'subactivity2', 'subactivity3')
 aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', cols) ]
 aw2_m = melt(aw2, id.var = c('cas', 'cname'))
+aw2_m[ , cas := as.character(cas) ]
+aw2_m[ , cname := as.character(cname) ]
 
 aw2_m[ grep('(?i)acaric', value) , aw_acaricide := 1 ]
 aw2_m[ grep('(?i)fungic', value) , aw_fungicide := 1 ]
@@ -78,17 +56,16 @@ for (i in names(aw3)) {
 aw3[ , is_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ is_pest == 0, is_pest := NA ]
 
 # missing entries ---------------------------------------------------------
-na_aw3_cname = aw3[ is.na(cname) ]
-message('AlanWood: For ', nrow(na_aw3_cname), '/', nrow(aw3),
+message('AlanWood: For ', length(aw_l) - nrow(aw3), '/', length(aw_l),
         ' CAS no cnames were found.')
 
-if (nrow(na_aw3_cname) > 0) {
-  fwrite(na_aw3_cname, file.path(missingdir, 'na_aw3_cname.csv'))
-  message('Writing missing data to:\n',
-          file.path(missingdir, 'na_aw3_cname.csv'))
-}
-
 # cleaning ----------------------------------------------------------------
-rm(chem, cas, todo_aw, cols_aw_fin,
-   aw2_m, aw2, cols, aw)
+oldw = getOption("warn")
+options(warn = -1) # shuts off warnings
+
+rm(chem, cas, todo_aw,
+   aw, aw_l, aw_l2, aw2, aw2m, aw2_m, cols)
+
+options(warn = oldw); rm(oldw)
+
 
