@@ -6,11 +6,11 @@ prj = '/home/andreas/Documents/Projects/etox-base' #! change to your project dir
 # packages ----------------------------------------------------------------
 if (!require('pacman')) install.packages('pacman')
 
-pacman::p_load(readxl, data.table, RPostgreSQL, vegan,
+pacman::p_load(readxl, data.table, RPostgreSQL, vegan, plyr,
                ggplot2, ggrepel, cowplot,
                rgbif, webchem, taxize, taxizesoap, countrycode)
 
-pacman::p_update()
+# TODO remove comment once porject is on server pacman::p_update()
 
 #### Notes:
 # TODO p_load(raster) ??? why raster ???

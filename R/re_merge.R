@@ -2,28 +2,19 @@
 
 # setup -------------------------------------------------------------------
 source('R/setup.R')
-
-# download and build ECOTOX data ------------------------------------------
-# TODO maybe put in other script OR rename this script coordination_script or similar?
-# TODO automate this to be run every 3 months
-src_ECOTOX = FALSE
-if (src_ECOTOX) {
-  # TODO does not yet work seamlessly
-  source('R/bd_software.sh') # TODO not yet worked out
-  source('R/bd_epa_download.R')
-  source('R/bd_epa_postgres.R')
-}
+source(file.path(src, 'setup.R'))
 
 # EPA test data -----------------------------------------------------------
-source('R/qu_epa.R')
+source(file.path(src, 'qu_epa.R'))
 
 # chemical data -----------------------------------------------------------
-source('R/qu_pubchem.R')
-source('R/qu_aw.R')
-source('R/qu_pan.R')
-source('R/qu_pp.R')
-source('R/qu_frac.R')
-
+source(file.path(src, 'qu_pubchem.R'))
+source(file.path(src, 'qu_aw.R'))
+source(file.path(src, 'qu_pan.R'))
+source(file.path(src, 'qu_pp.R'))
+source(file.path(src, 'qu_frac.R'))
+source(file.path(src, 'qu_eurostat_chem_class.R'))
+source(file.path(src, 'qu_chemspider_scrape.R'))
 
 # taxa scripts ------------------------------------------------------------
 # TODO deprecate?!?
@@ -32,36 +23,37 @@ source('R/qu_frac.R')
 
 
 # habitat scripts ---------------------------------------------------------
-source('R/qu_worms.R')
+source(file.path(src, 'qu_worms.R'))
 # source('R/qu_habitat_self_defined.R') # self defined script
 #lookup_man_fam = fread(file.path(cachedir, 'lookup_man_fam_list.csv'))
 
 
 # regional scripts --------------------------------------------------------
-source('R/qu_gbif.R') # contains also habitat information
+source(file.path(src, 'qu_gbif.R')) # contains also habitat information
 
 
 # Merge Chemical Information ----------------------------------------------------
 # Pubchem ----
-pc2[ , .N, cas][order(-N)] # no duplicates
+# pc2[ , .N, cas][order(-N)] # no duplicates
+# Chemspider
+# cs2[ , .N, cas][order(-N)]
 # Alan Wood Compendium ----
-aw2[ , .N, cas][order(-N)] # no duplicates
-setnames(aw2, c('cas', paste0('aw_', tolower(names(aw2[ ,2:length(names(aw2))])))))
+# aw3[ , .N, cas][order(-N)] # no duplicates
 # Pesticide Action Network ----
-pan2[ , .N, cas][order(-N)] # no duplicates
-setnames(pan2, c('cas', paste0('pa_', tolower(names(pan2[ ,2:length(names(pan2))])))))
+# pan2[ , .N, cas][order(-N)] # no duplicates
 # Physprop Data Base ----
-pp2[ , .N, cas][order(-N)] # no duplicates
-setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))])))))
+# pp2[ , .N, cas][order(-N)] # no duplicates
 # FRAC data ----
-frac2[ , .N, cas][order(-N)] # 79956562 duplicated CAS
+# frac2[ , .N, cas][order(-N)] # 79956562 duplicated CAS
 frac2 = frac2[cas != '79956-56-2']
 setnames(frac2, c('cas', paste0('fr_', tolower(names(frac2[ ,2:length(names(frac2))])))))
 
 # Merge ----
 ch_info = Reduce(function(...) merge(..., by = 'cas', all = TRUE),
                  list(pc2,
-                      aw2,
+                      cs2,
+                      aw3,
+                      eu_fin,
                       pan2,
                       pp2,
                       frac2))

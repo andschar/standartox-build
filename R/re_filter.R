@@ -14,7 +14,7 @@ if (online) {
 # (1) compound name ----
 cols = c('comp_name', 'comp_name_src')
 tests[ , (cols) := list(pp_cname, 'pp') ]
-tests[ is.na(comp_name), (cols) := list(aw_cname, 'aw') ]
+#tests[ is.na(comp_name), (cols) := list(aw_cname, 'aw') ]
 tests[ is.na(comp_name), (cols) := list(fr_cname, 'fr')  ]
 tests[ is.na(comp_name), (cols) := list(pc_iupacname, 'pc')  ]
 tests[ is.na(comp_name), (cols) := list(ep_chemical_name, 'ep') ]
@@ -25,14 +25,13 @@ tests[ , (cols_name_rm) := NULL ]
 rm(cols_name_rm)
 
 # (2) compound type ----
-cols = c('comp_type', 'comp_type_src')
-tests[ , (cols) := list(aw_pest_type, 'aw') ]
-# TODO put pubchem here
-tests[ , (cols) := list(fr_chemical_group, 'fr') ]
-tests[ , (cols) := list(ep_chemical_group, 'ep') ]
-tests[ is.na(comp_type), (cols) := NA ]
+cols = c('is_pest', 'is_pest_src')
+tests[ cs_pesticide == 1, (cols) := list(1, 'cs') ]
+tests[ is.na(is_pest) & aw_pest == 1, (cols) := list(1, 'aw') ]
+tests[ is.na(is_pest) & eu_pesticide == 1, (cols) := list(1, 'eu') ]
+
 # cleaning
-cols_type_rm = c('aw_pest_type', 'fr_chemical_group', 'ep_chemical_group')
+cols_type_rm = c('cs_pesticide', 'aw_pest', 'eu_pesticide')
 tests[ , (cols_type_rm) := NULL ]
 rm(cols_type_rm)
 
