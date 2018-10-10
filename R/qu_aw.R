@@ -53,7 +53,7 @@ for (i in names(aw3)) {
   aw3[ get(i) == Inf, (i) := NA ]
 }
 
-aw3[ , is_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ is_pest == 0, is_pest := NA ]
+aw3[ , aw_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ aw_pest == 0, aw_pest := NA ]
 
 # missing entries ---------------------------------------------------------
 message('AlanWood: For ', length(aw_l) - nrow(aw3), '/', length(aw_l),

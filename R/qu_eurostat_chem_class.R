@@ -74,7 +74,8 @@ dt2[ group2 == 'repellents', eu_repellent := 1 ]
 # final dt ----------------------------------------------------------------
 cols = c('cas', 'eu_pesticide', 'eu_fungicide', 'eu_herbicide', 'eu_insecticide', 
          'eu_molluscicide', 'eu_rodenticide', 'eu_repellent')
-dt3 = dt2[ , .SD, .SDcols = cols ]
+eu_fin = dt2[ , .SD, .SDcols = cols ]
+eu_fin = eu_fin[!is.na(cas)] # as the whole approach is based on CAS
 
 # cleaning ----------------------------------------------------------------
 rm(cols, dt, dt2)

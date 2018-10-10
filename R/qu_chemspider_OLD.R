@@ -61,6 +61,13 @@ if (online) {
   cs_l = readRDS(file.path(cachedir, 'chemspider_l.rds'))
 }
 
+
+# interesting variables ---------------------------------------------------
+# cs_l$`2931`$compinfo
+# cs_l$`23807`$extcompinfo$mf # to retrieve element counts
+# cs_l$`4707`$prop$`4707`$acd
+# cs_l$`22412`$prop$`22412`$epi
+
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings
