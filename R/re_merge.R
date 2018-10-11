@@ -5,7 +5,7 @@ source('R/setup.R')
 source(file.path(src, 'setup.R'))
 
 # EPA test data -----------------------------------------------------------
-source(file.path(src, 'qu_epa.R'))
+source(file.path(src, 'da_epa.R'))
 
 # chemical data -----------------------------------------------------------
 source(file.path(src, 'qu_pubchem.R'))
