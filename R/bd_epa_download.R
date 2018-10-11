@@ -25,7 +25,7 @@ if (!basename(output) %in% list.files(datadir)) {
 } else {
   
   err = 'ECOTOX up to date - no new build needed.'
-  fileConn<-file("log")
+  fileConn = file("log")
   writeLines(paste(Sys.time(), err), fileConn, sep = ' ')
   close(fileConn)
   
