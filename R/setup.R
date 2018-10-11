@@ -1,9 +1,5 @@
 # setup script for etox-base
 
-# projects directory -------------------------------------------------------
-prj = system("locate -b '\\etox-base'", intern = TRUE) # locate prj dir
-shinydir = system("locate -b '\\etox-base-shiny'", intern = TRUE) # locate shiny dir
-
 # packages ----------------------------------------------------------------
 if (!require('pacman')) install.packages('pacman')
 
