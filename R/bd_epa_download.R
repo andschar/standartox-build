@@ -5,7 +5,6 @@
 source('R/setup.R')
 
 # download ----------------------------------------------------------------
-require(RCurl)
 baseurl = 'ftp://newftp.epa.gov/ECOTOX/' # removing the trailing '/' causes an error
 ftp = getURL(baseurl)
 date_pattern = '[0-9]{2}_[0-9]{2}_[0-9]{4}'
