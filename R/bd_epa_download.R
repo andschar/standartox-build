@@ -1,9 +1,6 @@
 # this is a script that builds the EPA ECOTOX data base locally
 # it follows roughly this guide: https://edild.github.io/localecotox/
 
-# setup -------------------------------------------------------------------
-source('R/setup.R')
-
 # download ----------------------------------------------------------------
 baseurl = 'ftp://newftp.epa.gov/ECOTOX/' # removing the trailing '/' causes an error
 ftp = getURL(baseurl)
