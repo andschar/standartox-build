@@ -8,15 +8,7 @@ pacman::p_load(RCurl,
                ggplot2, ggrepel, cowplot,
                rgbif, webchem, taxize, countrycode)
 
-pacman::p_update()
-
-#### Notes:
-# TODO not used currently
-# TODO p_load(raster) ??? why raster ???
-# installation of taxizesoap: https://github.com/ropensci/taxizesoap
-# install.packages(c("XMLSchema", "SSOAP"), repos = c("http://packages.ropensci.org", "http://cran.rstudio.com"))
-# devtools::install_github("ropensci/taxizesoap")
-
+# pacman::p_update()
 
 # switches ----------------------------------------------------------------
 src_ECOTOX = FALSE

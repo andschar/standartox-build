@@ -17,9 +17,21 @@ file_fin = ascii_dt$file[1]
 file_url = paste0(baseurl, file_fin)
 output = file.path(datadir, file_fin)
 
-
 # download file + unzip ---------------------------------------------------
-system(sprintf('wget -P %s %s', output, file_url)) # quite slow
-system(sprintf('unzip %s -d %s', output, datadir))
+if (!basename(output) %in% list.files(datadir)) {
+  
+  system(sprintf('wget -P %s %s', output, file_url)) # quite slow
+  system(sprintf('unzip %s -d %s', output, datadir))  
+} else {
+  
+  err = 'ECOTOX up to date - no new build needed.'
+  fileConn<-file("log")
+  writeLines(paste(Sys.time(), err), fileConn, sep = ' ')
+  close(fileConn)
+  
+  stop(err)
+}
+  
+
 
 
