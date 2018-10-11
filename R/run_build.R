@@ -4,8 +4,8 @@
 # 00 22 * * * /home/scharmueller/Projects/run_build.sh
 
 # projects directory -------------------------------------------------------
-prj = system("find / -name etox-base 2>/dev/null", intern = TRUE) # locate prj dir
-shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE) # locate shiny dir
+prj = system("find / -name etox-base 2>/dev/null", intern = TRUE)[1] # locate prj dir
+shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE)[1] # locate shiny dir
 
 # (0) setup -------------------------------------------------------------------
 source(file.path(prj, 'R/setup.R'))
