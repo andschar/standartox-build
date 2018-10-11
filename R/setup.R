@@ -1,19 +1,20 @@
 # setup script for etox-base
 
 # projects directory -------------------------------------------------------
-prj = '/home/andreas/Documents/Projects/etox-base' #! change to your project directory here!
-shinydir = '/home/andreas/Documents/Projects/etox-base-shiny/' #! shiny directory
+prj = system("locate -b '\\etox-base'", intern = TRUE) # locate prj dir
+shinydir = system("locate -b '\\etox-base-shiny'", intern = TRUE) # locate shiny dir
 
 # packages ----------------------------------------------------------------
 if (!require('pacman')) install.packages('pacman')
 
 pacman::p_load(readxl, data.table, RPostgreSQL, vegan, plyr,
                ggplot2, ggrepel, cowplot,
-               rgbif, webchem, taxize, taxizesoap, countrycode)
+               rgbif, webchem, taxize, countrycode)
 
-# TODO remove comment once porject is on server pacman::p_update()
+pacman::p_update()
 
 #### Notes:
+# TODO not used currently
 # TODO p_load(raster) ??? why raster ???
 # installation of taxizesoap: https://github.com/ropensci/taxizesoap
 # install.packages(c("XMLSchema", "SSOAP"), repos = c("http://packages.ropensci.org", "http://cran.rstudio.com"))
