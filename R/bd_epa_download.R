@@ -20,8 +20,8 @@ output = file.path(datadir, file_fin)
 # download file + unzip ---------------------------------------------------
 if (!basename(output) %in% list.files(datadir)) {
   
-  system(sprintf('wget -P %s %s', output, file_url)) # quite slow
-  system(sprintf('unzip %s -d %s', output, datadir))  
+  system(sprintf('wget -P %s %s', datadir, file_url)) # quite slow
+  system(sprintf('unzip %s -d %s', output, datadir))
 } else {
   
   err = 'ECOTOX up to date - no new build needed.'
