@@ -10,6 +10,7 @@ DBetox = paste0('etox', gsub('-', '', release))
 # (1) Create data basse ---------------------------------------------------
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
+                dbname = DBname,
                 user = DBuser,
                 host = DBhost,
                 port = DBport,
