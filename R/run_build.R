@@ -11,11 +11,11 @@ shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE)[1] 
 source(file.path(prj, 'R/setup.R'))
 
 # (1) build data base -----------------------------------------------------
+# download
 source(file.path(src, 'bd_epa_download.R'))
+# build
+source(file.path(src, 'bd_epa_postgres.R'))
 
-# 
-# source(file.path(src, 'bd_epa_postgres.R'))
-# 
 # # (2) queries -------------------------------------------------------------
 # source(file.path(src, 're_merge.R'))
 # source(file.path(src, 're_filter.R'))

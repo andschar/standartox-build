@@ -2,8 +2,6 @@
 # mainly taken from: http://edild.github.io/localecotox/
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
-
 etoxdir = grep('ecotox', list.dirs(datadir, recursive = FALSE), value = TRUE)
 release = regmatches(etoxdir, regexpr('[0-9]{2}_[0-9]{2}_[0-9]{4}', etoxdir))
 release = max(as.Date(release, format = '%m_%d_%Y'))
