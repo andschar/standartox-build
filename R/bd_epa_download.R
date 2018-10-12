@@ -28,7 +28,7 @@ if (!basename(output) %in% list.files(datadir)) {
   line = paste(Sys.time(), err, sep = ' ') 
   write(line, file.path(prj, 'log'), append = TRUE)
   
-  stop(err)
+  message(err)
 }
 
 # cleaning ----------------------------------------------------------------
