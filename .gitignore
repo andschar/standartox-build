@@ -1,0 +1,43 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# self defined:
+*.Rproj
+/data
+/cache
+/plots
+README.html
+TODO.*
+
+# Tex
+TeX/*
+!TeX/organigram1.tex
+!TeX/organigram2.tex
+
+# /functions
+functions/ppdb*
+
+# talk
+presentation/*
+# !presentation/talk_internal.html
+
+# missing directory
+missing/*
+
+# article
+article/*
+!article/article.Rmd
+!article/
+
+# misc
+misc/*
+notes/*
+*.bib
+
+# credentials
+cred/credentials.R
+
+# log
+log
