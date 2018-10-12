@@ -127,7 +127,8 @@ for (i in seq_along(files2)) {
 dbSendQuery(con, "ALTER TABLE chemicals ADD PRIMARY KEY (cas_number)")
 dbSendQuery(con, "ALTER TABLE \"references\" ADD PRIMARY KEY (reference_number)")
 dbSendQuery(con, "ALTER TABLE species ADD PRIMARY KEY (species_number)")
-dbSendQuery(con, "ALTER TABLE species_synonyms ADD PRIMARY KEY (species_number, latin_name)")
+# dbSendQuery(con, "ALTER TABLE species_synonyms ADD PRIMARY KEY (species_number, latin_name)")
+# 2018-10-12: threw an error due to duplicate entries.
 dbSendQuery(con, "ALTER TABLE trend_codes ADD PRIMARY KEY (code)")
 dbSendQuery(con, "ALTER TABLE application_type_codes ADD PRIMARY KEY (code)")
 dbSendQuery(con, "ALTER TABLE application_frequency_codes ADD PRIMARY KEY (code)")
