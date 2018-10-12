@@ -25,13 +25,15 @@ if (!basename(output) %in% list.files(datadir)) {
 } else {
   
   err = 'ECOTOX up to date - no new build needed.'
-  fileConn = file("log")
-  writeLines(paste(Sys.time(), err), fileConn, sep = ' ')
-  close(fileConn)
+  line = paste(Sys.time(), err, sep = ' ') 
+  write(line, file.path(prj, 'log'), append = TRUE)
   
   stop(err)
 }
-  
+
+# cleaning ----------------------------------------------------------------
+rm(baseurl, ftp, date_pattern,
+   file, date, ascii_dt, file_fin, file_url, output)
 
 
 
