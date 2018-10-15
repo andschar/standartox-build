@@ -5,6 +5,7 @@
 
 # projects directory -------------------------------------------------------
 prj = system("find / -name etox-base 2>/dev/null", intern = TRUE)[1] # locate prj dir
+prj = '/home/andreas/Documents/Projects/etox-base' # debuging
 shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE)[1] # locate shiny dir
 
 # (0) setup -------------------------------------------------------------------
