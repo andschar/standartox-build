@@ -29,7 +29,7 @@ missing/*
 # article
 article/*
 !article/article.Rmd
-!article/
+!article/data
 
 # misc
 misc/*
