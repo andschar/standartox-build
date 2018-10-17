@@ -11,14 +11,13 @@ pacman::p_load(RCurl, stringr,
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-src_ECOTOX = FALSE
 online = FALSE
 online_db = FALSE
 plots = FALSE
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
-missingdir = file.path(cachedir, 'missing')
+missingdir = file.path(prj, 'missing')
 fundir = file.path(prj, 'functions')
 plotdir = file.path(prj, 'plots')
 src = file.path(prj, 'R')
