@@ -1,12 +1,6 @@
 # script to upload the test data into PostgreSQL tables
 # mainly taken from: http://edild.github.io/localecotox/
 
-# setup -------------------------------------------------------------------
-etoxdir = grep('ecotox', list.dirs(datadir, recursive = FALSE), value = TRUE)
-release = regmatches(etoxdir, regexpr('[0-9]{2}_[0-9]{2}_[0-9]{4}', etoxdir))
-release = max(as.Date(release, format = '%m_%d_%Y'))
-DBetox = paste0('etox', gsub('-', '', release))
-
 # (1) Create data basse ---------------------------------------------------
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,

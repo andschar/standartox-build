@@ -4,16 +4,37 @@
 # 00 22 * * * /home/scharmueller/Projects/run_build.sh
 
 # projects directory -------------------------------------------------------
-prj = system("find / -name etox-base 2>/dev/null", intern = TRUE)[1] # locate prj dir
-prj = '/home/andreas/Documents/Projects/etox-base' # debuging
-shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE)[1] # locate shiny dir
+## find folder name on system - slow, but generic!
+# prj = system("find / -name etox-base 2>/dev/null", intern = TRUE)[1] # locate prj dir
+# shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE)[1] # locate shiny dir
 
-# (0) setup -------------------------------------------------------------------
+## pre-defined
+nodename = Sys.info()[4]
+if (nodename == 'scharmueller') {
+  prj = '/home/andreas/Documents/Projects/etox-base'
+  shinydir = '/home/andreas/Documents/Projects/etox-base-shiny'
+} else if (nodename == 'uwigis') {
+  prj = '/home/scharmueller/Projects/etox-base'
+  shinydir = '/home/scharmueller/Projects/etox-base-shiny'
+} else {
+  stop('New system. Define prj and shinydir variables.')
+}
+
+
+# (0) setup ---------------------------------------------------------------
 source(file.path(prj, 'R/setup.R'))
 
 # (1) build data base -----------------------------------------------------
 # download
 source(file.path(src, 'bd_epa_download.R'))
+
+
+# setup ECOTOX variables --------------------------------------------------
+etoxdir = grep('ecotox', list.dirs(datadir, recursive = FALSE), value = TRUE)
+release = regmatches(etoxdir, regexpr('[0-9]{2}_[0-9]{2}_[0-9]{4}', etoxdir))
+release = max(as.Date(release, format = '%m_%d_%Y'))
+DBetox = paste0('etox', gsub('-', '', release))
+
 # build
 source(file.path(src, 'bd_epa_postgres.R'))
 
