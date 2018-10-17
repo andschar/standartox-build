@@ -1,15 +1,7 @@
 # script to convert concentration units and extract additional infos
 
 # functions ---------------------------------------------------------------
-# extract pure unit symbols in vectors/columns
-extr_vec = function(pattern, vec, ig.case = FALSE, perl = FALSE) {
-  vec = tolower(vec)
-  l = regmatches(vec, gregexpr(pattern, vec, ignore.case = ig.case, perl = perl))
-  l[ lengths(l) == 0 ] = NA_character_
-  l = unlist(lapply(l, '[', 1))
-  
-  return(l)
-}
+source(file.path(src, 'fun_extr_vec.R'))
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
@@ -22,8 +14,6 @@ con = dbConnect(drv,
 
 unit = dbGetQuery(con, 'select distinct on (conc1_unit) conc1_unit from ecotox.results')
 setDT(unit)
-dur = dbGetQuery(con, 'select distinct on (obs_duration_mean) obs_duration_mean conc1_unit from ecotox.results')
-setDT(dur)
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
@@ -58,7 +48,6 @@ unit_dt2[ ,
             lapply(.SD, extr_vec, ig.case = TRUE,
                      pattern = '[[:digit:]]+\\.*[[:digit:]]+|^[[:digit:]]+(\\.+)*'),
           .SDcols = paste0('u', 1:4) ]
-cols_num = paste0('u', 1:4, 'num')
 unit_dt2[ , paste0('u', 1:4, 'num') ] = lapply(unit_dt2[ , paste0('u', 1:4, 'num') ], as.numeric) 
 # TODO how does this work with .SD?
 
@@ -107,36 +96,23 @@ unit_dt2[ nas == 2, unit_type := paste0(u1type, '/', u2type) ]
 unit_dt2[ nas == 3, unit_conv := u1conv ]
 unit_dt2[ nas == 3, unit_type := u1type ]
 
+# classification ----------------------------------------------------------
+# TODO is this useful?
+unit_dt2[ grep('(?i)ai', key), is_ai := 1 ]
+unit_dt2[ grep('bdwt', key), is_bdwt := 1 ]
+unit_dt2[ grep('feed|food|fd', key), is_fd := 1 ]
+unit_dt2[ grep('ae', key), is_ae := 1 ] # TODO don't know what it is
 
+# output ------------------------------------------------------------------
 fwrite(unit_dt2, '/tmp/unit_dt2.csv') # debuging
 
-unit_fin = unit_dt2[ , .SD, .SDcols = c('key', 'multi', 'unit_conv', 'unit_type', 'conv', 'u1num', 'u2num') ]
+unit_fin = unit_dt2[ ,
+                     .SD,
+                     .SDcols = c('key', 'multi', 'unit_conv', 'unit_type', 'conv', 'u1num', 'u2num') ]
 setnames(unit_fin, paste0('uni_', names(unit_fin)))
 
-
-# classification ----------------------------------------------------------
-# TODO
-# # classifications
-# co[ grep('/L$', unit_conv), media_entity := 'liquid' ]
-# co[ grep('g$', unit_conv), media_entity := 'solid' ]
-# co[ grep('/cm2$', unit_conv), media_entity := 'area' ]
-# co[ grep('(?i)bdwt$', unit), media_entity := 'bodyweight' ]
-# 
-# co[ grep('(?i)ai', unit), ai := '1' ]
-# mol_pattern = '^M$|[A-z]{1}M|mol'
-# co[ grep(mol_pattern, unit), mol := '1' ]
-# co[ grep('hr|hour|/h$|/mi|/d$|wk', unit), time_in_unit := '1' ]
-
-# misc --------------------------------------------------------------------
-
-
-
-# other hints -------------------------------------------------------------
-# ai - active ingredient
-# ae - ?
-# fd - food, feed?
-
-
+# cleaning ----------------------------------------------------------------
+rm(unit_l2, unit, unit_dt2)
 
 
 
