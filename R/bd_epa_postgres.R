@@ -97,7 +97,6 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 
-
 # (3) Validation tables ---------------------------------------------------
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv, user = DBuser,
@@ -159,90 +158,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 
-
-# (4) Custom tables -------------------------------------------------------
-drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuser,
-                dbname = DBetox,
-                host = DBhost,
-                port = DBport,
-                password = DBpassword)
-
-dbSendQuery(con, paste0("DROP SCHEMA IF EXISTS lookup CASCADE;"))
-dbSendQuery(con, "CREATE SCHEMA lookup;")
-
-## read from .csv
-files3 = list.files(lookupdir, pattern = "*.csv$", 
-                     full.names = T)
-names3 = gsub(".csv", "", basename(files3))
-for (i in seq_along(files3)) {
-  message("Read File: ", files3[i], "\n")
-  df = read.table(files3[i], header = TRUE, sep = ';')
-  dbWriteTable(con, names3[i], value = df, row.names = FALSE)
-  dbSendQuery(con, paste0('ALTER TABLE ', names3[i], ' SET SCHEMA lookup'))
-  message("Writing table: ", names3[i])
-}
-
-# add pk
-dbSendQuery(con, "ALTER TABLE lookup.unit_convert ADD PRIMARY KEY (unit)")
-dbSendQuery(con, "ALTER TABLE lookup.duration_convert ADD PRIMARY KEY (duration, unit)")
-dbSendQuery(con, "ALTER TABLE lookup.duration_convert_as ADD PRIMARY KEY (unit)")
-
-# add indexes
-dbSendQuery(con, "CREATE INDEX idx_duration_convert_unit ON lookup.duration_convert(unit)")
-dbSendQuery(con, "CREATE INDEX idx_duration_convert_duration ON lookup.duration_convert(duration)")
-dbSendQuery(con, "CREATE INDEX idx_duration_convert_as_unit ON lookup.duration_convert(unit)")
-
-dbDisconnect(con)
-dbUnloadDriver(drv)
-
-
-
-# (5) Custom functions ----------------------------------------------------
-drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuser,
-                dbname = DBetox,
-                host = DBhost,
-                port = DBport,
-                password = DBpassword)
-
-# https://stackoverflow.com/questions/10306830/postgres-define-a-default-value-for-cast-failures
-# change function 15.05.2018 to live up to asterix '*' in reported concentrations.
-# Accoring to EPA these are recalculated concentrations to meet database standards
-# https://cfpub.epa.gov/ecotox/help.cfm?help_id=CONTENTFAQ&help_type=define&help_back=1#asterisk
-dbSendQuery(con, 
-            "CREATE OR REPLACE FUNCTION public.cast_to_num(text)
-            RETURNS numeric AS
-            $BODY$
-            declare
-            a numeric;
-            begin
-            if $1 ~ '[^0-9]+' then
-            a := regexp_replace($1, '[^0-9\\.\\,]+', '', 'g');
-            a := cast(a::varchar AS numeric);
-            else
-            a := cast($1::varchar AS numeric); 
-            end if;
-            RETURN a;
-            EXCEPTION WHEN OTHERS THEN
-            RETURN NULL;
-            end;
-            $BODY$
-            LANGUAGE plpgsql IMMUTABLE
-            COST 100;
-            ALTER FUNCTION public.cast_to_num(text)
-            OWNER TO epa_ecotox;")
- 
-dbSendQuery(con, "DROP CAST IF EXISTS (text as numeric)")
-dbSendQuery(con, "
-            CREATE CAST (text as numeric) WITH FUNCTION cast_to_num(text);"
-)
-
-dbDisconnect(con)
-dbUnloadDriver(drv)
-
-
-# (6) Cleaning ------------------------------------------------------------
+# (4) Cleaning ------------------------------------------------------------
 # Postgres
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv, user = DBuser,
