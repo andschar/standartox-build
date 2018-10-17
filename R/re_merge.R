@@ -2,7 +2,6 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
-source(file.path(src, 'setup.R'))
 
 # EPA test data -----------------------------------------------------------
 source(file.path(src, 'da_epa.R'))

@@ -24,16 +24,17 @@ if (!basename(output) %in% list.files(datadir)) {
   system(sprintf('unzip %s -d %s', output, datadir))
 } else {
   
-  err = 'ECOTOX up to date - no new build needed.'
+  msg = 'ECOTOX up to date - no new build needed.'
   line = paste(Sys.time(), err, sep = ' ') 
   write(line, file.path(prj, 'log'), append = TRUE)
   
-  message(err)
+  message(msg)
 }
 
 # cleaning ----------------------------------------------------------------
 rm(baseurl, ftp, date_pattern,
-   file, date, ascii_dt, file_fin, file_url, output)
+   file, date, ascii_dt, file_fin, file_url, output,
+   msg)
 
 
 
