@@ -90,11 +90,11 @@ unit_dt2[lookup, u3type := i.type, on = c(u3cl = 'unit') ]
 ## retrieve final units
 unit_dt2[ , multi := u1multi %*na% u2multi %*na% u3multi ]
 unit_dt2[ nas == 1, unit_conv := paste0(u1conv, '/', u2conv, '/', u3conv)]
-unit_dt2[ nas == 1, unit_type := paste0(u1type, '/', u2type, '/', u3type)]
+unit_dt2[ nas == 1, type := paste0(u1type, '/', u2type, '/', u3type)]
 unit_dt2[ nas == 2, unit_conv := paste0(u1conv, '/', u2conv) ]
-unit_dt2[ nas == 2, unit_type := paste0(u1type, '/', u2type) ]
+unit_dt2[ nas == 2, type := paste0(u1type, '/', u2type) ]
 unit_dt2[ nas == 3, unit_conv := u1conv ]
-unit_dt2[ nas == 3, unit_type := u1type ]
+unit_dt2[ nas == 3, type := u1type ]
 
 # classification ----------------------------------------------------------
 # TODO is this useful?
@@ -108,7 +108,7 @@ fwrite(unit_dt2, '/tmp/unit_dt2.csv') # debuging
 
 unit_fin = unit_dt2[ ,
                      .SD,
-                     .SDcols = c('key', 'multi', 'unit_conv', 'unit_type', 'conv', 'u1num', 'u2num') ]
+                     .SDcols = c('key', 'multi', 'unit_conv', 'type', 'conv', 'u1num', 'u2num') ]
 setnames(unit_fin, paste0('uni_', names(unit_fin)))
 
 # cleaning ----------------------------------------------------------------

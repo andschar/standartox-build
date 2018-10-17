@@ -3,7 +3,7 @@
 # packages ----------------------------------------------------------------
 if (!require('pacman')) install.packages('pacman')
 
-pacman::p_load(RCurl,
+pacman::p_load(RCurl, stringr,
                readxl, data.table, RPostgreSQL, vegan, plyr,
                ggplot2, ggrepel, cowplot,
                rgbif, webchem, taxize, countrycode)
@@ -30,6 +30,7 @@ cred = file.path(prj, 'cred')
 source(file.path(cred, 'credentials.R')) # data base credentials
 source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
 source(file.path(src, 'fun_product_na.R'))
+source(file.path(src, 'fun_extr_vec.R'))
 source(file.path(src, 'gg_theme.R'))
 
 

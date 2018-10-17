@@ -3,7 +3,8 @@
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 source(file.path(src, 'da_epa_taxonomy.R'))
-source(file.path(src, 'da_epa_conversion.R'))
+source(file.path(src, 'da_epa_conversion_unit.R'))
+source(file.path(src, 'da_epa_conversion_duration.R'))
 
 # data base
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
@@ -89,20 +90,24 @@ if (online_db) {
 epa1 = rbindlist(epa1_l)
 
 # clean and add -----------------------------------------------------------
-# Clean effect column
-epa1[ , effect := gsub('~|/|*', '', effect) ] # remove ~, /, or * from effect column
-
-# Add qualifier column
-epa1[ , qualifier := trimws(gsub('[0-9\\.]+|E\\+|E\\-', '', conc1_mean)) ] # ading qualifier column
-epa1[ qualifier == '', qualifier := '=' ]
-epa1[ , conc1_mean := as.numeric(conc1_mean) ]
-# TODO remove NAs qualifiers
-
-# TODO epa1[ , conc1_mean := NULL ] # this column was only needed for the qualifier column
 # 'NC', 'NR', '--' to NA
 for (i in names(epa1)) {
   epa1[get(i) %in% c('NC', 'NR', '--'), (i) := NA ]
 }
+# Remove thousand separator
+epa1[ , conc1_mean := gsub(',', '', conc1_mean) ]
+# Remove approximated entries
+epa1 = epa1[ grep('ca', conc1_mean, invert = TRUE) ]
+epa1 = epa1[ grep('>|<', conc1_mean, invert = TRUE) ]
+# Add qualifier column
+pat = '\\*|\\+'
+epa1[ , qualifier := str_extract(epa1$conc1_mean, pat) ]
+epa1[ , conc1_mean := as.numeric(gsub(pat, '', conc1_mean)) ]
+epa1[ is.na(qualifier), qualifier := '=' ]
+# duration column to numeric
+epa1[ , obs_duration_mean := as.numeric(epa1$obs_duration_mean) ]
+# Clean effect column
+epa1[ , effect := gsub('~|/|*', '', effect) ] # remove ~, /, or * from effect column
 # Endpoint
 epa1[ , endpoint := gsub('/|\\*|(\\*/)', '', endpoint) ]
 # Exposure typpe
@@ -122,65 +127,65 @@ for (i in names(epa1)) {
 setkey(epa1, 'latin_name')
 epa1 = merge(epa1, tax, by = 'latin_name')
 
-# merge conversion --------------------------------------------------------
-# TODO UNDER CONSTRUCTION
-# CONTINUE HERE!
-epa1 = merge(epa1, unit_fin, by.x = 'conc1_unit', by.y = 'uni_key', all.x = TRUE)
-epa1[ uni_conv == 'yes', value := conc1_mean %*na% uni_multi ]
-# TODO ENABLE WHEN FINISHED!!
-# cols_rm = c('uni_multi', 'uni_conv', 'uni_u1num', 'uni_u2num')
-# epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
+# merge unit conversion ---------------------------------------------------
+epa1 = merge(epa1, unit_fin, by.x = 'conc1_unit', by.y = 'uni_key', all.x = TRUE); rm(unit_fin)
+epa1[ uni_conv == 'yes', uni_value := conc1_mean %*na% uni_multi ]
+epa1[ uni_conv == 'yes', uni_value_unit := uni_type ]
 
+# cleaning
+cols_rm = c('uni_multi', 'uni_u1num', 'uni_u2num', 'uni_type')
+epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
 
-# debuging
-# cols_test = c('conc1_mean', 'value', 'uni_multi', 'conc1_unit', 'uni_unit_conv', 'uni_conv', 'uni_u1num', 'uni_u2num')
-# test = 
-# epa1[ uni_conv == 'yes',
-#       .SD,
-#       .SDcols = cols_test ]
-# 
-# epa1[ , .N, uni_unit_conv][order(-N)]
-# 
-# set.seed(1)
-# test = test[sample(1:nrow(test), 50)]
-# fwrite(test, '/tmp/test.csv')
+# merge duration conversion -----------------------------------------------
+epa1 = merge(epa1, duration_fin, by.x = 'obs_duration_unit', by.y = 'dur_key',
+             all.x = TRUE); rm(duration_fin)
+epa1[ dur_conv == 'yes', dur_value := obs_duration_mean %*na% dur_multiplier ]
+epa1[ dur_conv == 'yes', dur_value_unit := dur_conv_to ]
+
+# cleaning
+cols_rm = c('dur_conv', 'dur_conv_to', 'dur_multiplier')
+epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
 
 # new variables -----------------------------------------------------------
 # habitat
-epa1[ media_type == 'FW', isFre := 1 ]
-epa1[ media_type == 'SW', isMar := 1 ]
-epa1[ habitat == 'Soil', isTer := 1 ]
-epa1[ subhabitat %in% c('P', 'R', 'L'), isFre := 1 ]
-epa1[ subhabitat %in% c('E'), isBra := 1 ]
-epa1[ subhabitat %in% c('D', 'F', 'G'), isTer := 1 ]
-epa1[ subhabitat %in% c('M'), isMar := 1 ]
+epa1[ media_type == 'FW', hab_isFre := 1 ]
+epa1[ media_type == 'SW', hab_isMar := 1 ]
+epa1[ habitat == 'Soil', hab_isTer := 1 ]
+epa1[ subhabitat %in% c('P', 'R', 'L'), hab_isFre := 1 ]
+epa1[ subhabitat %in% c('E'), hab_isBra := 1 ]
+epa1[ subhabitat %in% c('D', 'F', 'G'), hab_isTer := 1 ]
+epa1[ subhabitat %in% c('M'), hab_isMar := 1 ]
 
 
 # subseting ---------------------------------------------------------------
-# # Effect measure
-# epa1 = epa1[ effect %like% '(?i)MOR|POP|ITX|GRO' ] # TODO: put this in app
-# # Endpoint
-# epa1 = epa1[ qualifier != '+' ] # delete + qualifier entries [deletes: 0.5% of entries]
-# # (1) # unit conversions
-# epa1 = epa1[ conc1_unit_conv %in% c('ug/L', 'ul/L') ] #! TODO [deletes: 12% of entries] have a look at this soon!
-# # TODO include other unit conversions!
-# # TODO Maybe include the conversion in R
-# # delete entries with no information on actual Genus or Species
-# epa1 = epa1[!taxon %in% c('Hyperamoeba sp.', 'Algae', 'Aquatic Community', 'Plankton', 'Invertebrates') ] # Hyperamoeba is a paraphyletic taxon
+# remove NA entries
+epa1 = epa1[ !is.na(dur_value) &
+             !is.na(dur_value_unit) &
+             !is.na(uni_value) &
+             !is.na(uni_value_unit) &
+             !is.na(effect) &
+             !is.na(endpoint) ]
 
 # final columns -----------------------------------------------------------
-setcolorder(epa1, c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group', 'conc1_mean', 'qualifier', 'conc1_unit', 'obs_duration_mean', 'obs_duration_unit', 'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type', 'isFre', 'isMar', 'isTer', 'habitat', 'subhabitat',  'latin_name', 'source', 'reference_number', 'title', 'author', 'publication_year'))
+cols_fin = c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group',
+             'conc1_mean', 'conc1_unit', 'uni_value', 'uni_unit_conv', 'qualifier', 'uni_conv',
+             'obs_duration_mean', 'obs_duration_unit', 'dur_value', 'dur_value_unit',
+             'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type',
+             'hab_isFre', 'hab_isBra', 'hab_isMar', 'hab_isTer',
+             'taxon', 'tax_genus', 'tax_family', 'tax_order', 'tax_class', 'tax_superclass', 'tax_phylum',
+             'tax_subphylum_div', 'tax_phylum_division', 'tax_kingdom',
+             'tax_common_name', 'tax_convgroup', 'tax_aqu_inv', 'tax_troph_lvl',
+             'source', 'reference_number', 'title', 'author', 'publication_year')
 
-cols_rm = c('media_type', 'habitat')
-epa1[ , (cols_rm) := NULL ]
+epa1 = epa1[ , .SD, .SDcols = cols_fin ]
 
 # names -------------------------------------------------------------------
 setnames(epa1, 
-         old = c('conc1_mean', 'conc1_unit', 'conc1_type',
-                 'obs_duration_mean', 'obs_duration_unit',
+         old = c('conc1_mean', 'conc1_unit', 'conc1_type', 'uni_value', 'uni_unit_conv',
+                 'obs_duration_mean', 'obs_duration_unit', 'dur_value', 'dur_value_unit',
                  'reference_number'),
-         new = c('value', 'unit', 'conc_type',
-                 'duration', 'duration_unit',
+         new = c('value_orig', 'unit_orig', 'conc_type', 'value', 'unit',
+                 'duration_orig', 'duration_unit_orig', 'duration', 'duration_unit',
                  'ref_num'))
 setnames(epa1, paste0('ep_', names(epa1)))
 setnames(epa1,
@@ -204,7 +209,7 @@ chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'ep_chemical_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # cleaning ----------------------------------------------------------------
-rm(cas_chck, taxa, chem, i, cols_rm)
+rm(cas_chck, taxa, chem, i, cols_fin)
 
 
 # help --------------------------------------------------------------------

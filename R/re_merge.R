@@ -1,7 +1,7 @@
 # script to manually get habitat information
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 source(file.path(src, 'setup.R'))
 
 # EPA test data -----------------------------------------------------------

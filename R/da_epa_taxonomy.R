@@ -7,7 +7,6 @@ source('R/setup.R')
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
 
 # query -------------------------------------------------------------------
-online_db = F # debug me!
 if (online_db) {
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
@@ -70,9 +69,9 @@ tax[ tax_phylum == 'Dinoflagellata', tax_convgroup := 'Algae' ] # however they a
 rm(algae)
 
 # troph_lvl ---------------------------------------------------------------
-tax[ , troph_lvl := 'heterotroph' ]
-tax[ tax_convgroup %in% c('Algae', 'Plants'), troph_lvl := 'autotroph' ]
-tax[ tax_phylum == 'Dinoflagellata', troph_lvl := 'mixotroph' ]
+tax[ , tax_troph_lvl := 'heterotroph' ]
+tax[ tax_convgroup %in% c('Algae', 'Plants'), tax_troph_lvl := 'autotroph' ]
+tax[ tax_phylum == 'Dinoflagellata', tax_troph_lvl := 'mixotroph' ]
 
 
 # aquatic macro-invertebrates ---------------------------------------------
