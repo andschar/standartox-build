@@ -25,8 +25,8 @@ if (nodename == 'scharmueller') {
 source(file.path(prj, 'R/setup.R'))
 
 # (0) switches ------------------------------------------------------------
-online = FALSE
-online_db = FALSE
+online = TRUE
+online_db = TRUE
 plots = FALSE
 
 
