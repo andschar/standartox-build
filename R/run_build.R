@@ -24,6 +24,12 @@ if (nodename == 'scharmueller') {
 # (0) setup ---------------------------------------------------------------
 source(file.path(prj, 'R/setup.R'))
 
+# (0) switches ------------------------------------------------------------
+online = FALSE
+online_db = FALSE
+plots = FALSE
+
+
 # (1) build data base -----------------------------------------------------
 # download
 source(file.path(src, 'bd_epa_download.R'))
@@ -39,7 +45,7 @@ DBetox = paste0('etox', gsub('-', '', release))
 source(file.path(src, 'bd_epa_postgres.R'))
 
 # # (2) queries -------------------------------------------------------------
-# source(file.path(src, 're_merge.R'))
+source(file.path(src, 're_merge.R'))
 # source(file.path(src, 're_filter.R'))
 # # filter stats?
 # 

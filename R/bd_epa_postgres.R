@@ -173,7 +173,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # R
-rm(con, df, drv, i, files, files2, files3)
+rm(con, df, drv, i, files, files2)
 
 # (7) Saving --------------------------------------------------------------
 saveRDS(DBetox, file.path(cachedir, 'data_base_name_version.rds'))

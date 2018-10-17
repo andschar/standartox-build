@@ -7,7 +7,6 @@ source(file.path(src, 'setup.R'))
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
 
 # query -------------------------------------------------------------------
-online_db = TRUE
 if (online_db) {
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)

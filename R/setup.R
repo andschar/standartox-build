@@ -10,11 +10,6 @@ pacman::p_load(RCurl, stringr,
 
 # pacman::p_update()
 
-# switches ----------------------------------------------------------------
-online = FALSE
-online_db = FALSE
-plots = FALSE
-
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
 missingdir = file.path(prj, 'missing')
