@@ -6,7 +6,7 @@
 # TODO probably not needed
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 require(rvest)
 
 # query -------------------------------------------------------------------

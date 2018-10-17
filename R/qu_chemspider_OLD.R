@@ -1,7 +1,7 @@
 # script to query the PubChem data base
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 
 token = readLines(file.path(cred, 'chemspider_token.txt')) # from webchem github
 # token = '39221bdb-21d7-45b0-aa71-892b07f6b111' # my token. doesn't work currently..

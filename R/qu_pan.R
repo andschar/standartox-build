@@ -1,7 +1,7 @@
 # script to query information from Pesticide Action Network (PAN)
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))

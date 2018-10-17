@@ -1,7 +1,7 @@
 # script to clean the EPA ECOTOX data base test results
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 tests_fl_stat = readRDS(file.path(cachedir, 'tests_fl.rds'))

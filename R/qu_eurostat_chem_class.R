@@ -2,7 +2,7 @@
 # why? because they contain information on the classification of chemicals
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 
 url = 'https://ec.europa.eu/eurostat/cache/metadata/Annexes/aei_fm_salpest09_esms_an5.xls'
 file = tempfile()

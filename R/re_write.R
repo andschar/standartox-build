@@ -1,7 +1,7 @@
 # script to filter the EPA ECOTOX data base test results according to the desired outputs
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 
 # variables
 schema = 'etoxbase'

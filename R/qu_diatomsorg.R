@@ -5,8 +5,8 @@
 require(data.table)
 require(rvest)
 
-source('R/setup.R')
-source('R/fun_scrape_phantomjs.R')
+source(file.path(src, 'setup.R'))
+source(file.path(src, 'fun_scrape_phantomjs.R'))
 
 online = TRUE
 

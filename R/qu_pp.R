@@ -2,7 +2,7 @@
 # https://www.srcinc.com/what-we-do/environmental/scientific-databases.html
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))

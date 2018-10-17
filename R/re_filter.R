@@ -1,7 +1,7 @@
 # script to clean the EPA ECOTOX data base test results
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 if (online) {

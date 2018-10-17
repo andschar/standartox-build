@@ -2,7 +2,7 @@
 # also contains info on habitat: terrestrial, freshwater, brackish, marine
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 todo_worms = readRDS(file.path(cachedir, 'epa_taxa.rds'))

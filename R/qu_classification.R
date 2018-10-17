@@ -2,10 +2,7 @@
 # also contains info on habitat: terrestrial, freshwater, brackish, marine
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
-# switches
-online = online
-# online = TRUE
+source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 todo_taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))$taxon

@@ -1,7 +1,7 @@
 # script to scrap occurrence data from the Global Biodiversity Information Facility (GBIF)
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 # switches
 full_list = FALSE # loads the full result list if online=FALSE
 

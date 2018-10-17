@@ -1,10 +1,10 @@
 # script to query taxonomic entities from the EPA data to retain meaningfull ecotoxicological groups
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
+source(file.path(src, 'setup.R'))
 
 # functions ---------------------------------------------------------------
-source('R/pc_prop_class.R')
+source(file.path(src, 'pc_prop_class.R'))
 
 # data --------------------------------------------------------------------
 cid = unlist(readRDS(file.path(cachedir, 'cid.rds')))
