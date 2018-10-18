@@ -22,20 +22,23 @@ ui = fluidPage(
             ),
             verticalLayout(
               checkboxGroupInput(inputId = 'conc_type', label = 'Concentration type',
-                                 choiceValues = c('F', 'T', 'A', 'D', 'U', 'L'),
-                                 choiceNames = c('F - Formulation', 'T - Total (Metals and single elements)', 'A - Active ingredient', 'D - Dissolved', 'U - Unionized', 'L - Labile'),
-                                 selected = c('A')),
-              helpText(a('Help', href = 'https://cfpub.epa.gov/ecotox/pdf/codeappendix.pdf'))
+                                 choiceValues = out_stats_l$ep_conc_type$val,
+                                 choiceNames = paste0(
+                                   out_stats_l$ep_conc_type$val,
+                                   ' - ',
+                                   out_stats_l$ep_conc_type$nam_long,
+                                   ' (',
+                                   out_stats_l$ep_conc_type$n,
+                                   ')'),
+                                 selected = c('A'))
+              # helpText(a('Help', href = 'https://cfpub.epa.gov/ecotox/pdf/codeappendix.pdf'))
             ),
             splitLayout(
               checkboxGroupInput(inputId = 'chem_class', label = 'Chemical class',
                                  choiceValues = c('meta', 'pest'),
                                  choiceNames = c('Metals', 'Pesticides')),
               # TODO Don't know which data source provides such information
-              # checkboxGroupInput(inputId = 'authorization', label = 'Authorized in',
-              #                    choiceValues = c('afr', 'asi', 'eur', 'nam', 'sam', 'aus'),
-              #                    choiceNames = c('Afirca', 'Asia', 'Europe', 'North America', 'South America', 'Australia'),
-              #                    selected = 'eur')
+              # checkboxGroupInput(inputId = 'authorization', label = 'Authorized in')
               checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
             )
           )
@@ -47,13 +50,14 @@ ui = fluidPage(
             selectInput(inputId = 'tax', label = 'Choose a taxon',
                         choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
             splitLayout(
-              radioButtons(inputId = 'habitat', label = 'Organism hatbitat',
-                           choices = c('all', 'marine', 'brackish', 'freshwater', 'terrestrial'),
-                           selected = 'freshwater'),
-              radioButtons(inputId = 'continent', label = 'Continent',
-                           choiceValues = c('all', 'afri', 'noam', 'soam', 'anta', 'asia', 'euro', 'ocea'),
-                           choiceNames = c('all', 'Africa', 'North America', 'South America', 'Antarctica', 'Asia', 'Europe', 'Oceania'),
-                           selected = 'euro')
+              checkboxGroupInput(inputId = 'habitat', label = 'Organism hatbitat',
+                                 choiceValues = out_stats_l$habitat$variable,
+                                 choiceNames = out_stats_l$habitat$nam_long_stat,
+                                 selected = 'is_fresh'),
+              checkboxGroupInput(inputId = 'continent', label = 'Continent',
+                                 choiceValues = out_stats_l$continent$variable,
+                                 choiceNames = out_stats_l$continent$nam_long_stat,
+                                 selected = 'is_europe')
             )
           )
         ),
@@ -66,9 +70,9 @@ ui = fluidPage(
               numericInput(inputId = 'dur2', label = 'to (h)', value = 48)
             ),
             splitLayout(
-              checkboxGroupInput(inputId = 'effect_group', label = 'TODO Effect group',
-                                 choiceValues = c('MOR', 'ITX', 'GRO'),
-                                 choiceNames = c('MOR', 'ITX', 'GRO')),
+              checkboxGroupInput(inputId = 'effect_group', label = 'Effect group',
+                                 choiceValues = out_stats_l$ep_effect$val,
+                                 choiceNames = out_stats_l$ep_effect$nam),
               radioButtons(inputId = 'endpoint', label = 'TODO Endpoints',
                            choiceValues = c('EC50', 'LOEC', 'NOEC'),
                            choiceNames = c('L/EC50', 'LOEC', 'NOEC'),

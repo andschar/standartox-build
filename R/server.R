@@ -9,10 +9,6 @@ source('setup.R')
 # knit('shiny/README.Rmd', output = 'shiny/README.md', quiet = TRUE)
 # knit('shiny/article.Rmd', output = 'shiny/article.md', quiet = TRUE)
 
-# data --------------------------------------------------------------------
-tests_data = readRDS(file.path(datadir, 'tests_fin.rds'))
-# tests_stat = fread(file.path(datadir, 'tests_fl_stat.csv'))
-
 # shiny -------------------------------------------------------------------
 server = function(input, output) {
   
@@ -42,7 +38,7 @@ server = function(input, output) {
   
   # data + function ----
   thedata = reactive({
-    ec50_filagg(tests_data,
+    ec50_filagg(dat,
                 conc_type = input$conc_type,
                 comp = input$comp,
                 chem_class = input$chem_class,
