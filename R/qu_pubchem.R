@@ -10,6 +10,7 @@ chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 if (online) {
   
   todo_pc = sort(chem$cas)
+  # todo_pc = '128-44-9' # multiple CIDs
   # todo_pc = todo_pc[1:4] # debug me!
   
   cid_l = list()
@@ -27,8 +28,8 @@ if (online) {
   for (i in seq_along(cid_l)) {
     qu_cas = names(cid_l[i])
     qu_cid = cid_l[[i]]
-    message('Pubchem: CAS:', qu_cas, '; CID:', qu_cid, ' (', i, '/', length(cid_l),
-            ') -> to retrieve data.')
+    message('Pubchem: CAS:', qu_cas, '; CID:', paste0(qu_cid, collapse = '\n'),
+            ' (', i, '/', length(cid_l), ') -> to retrieve data.')
     
     pc_res = pc_prop(qu_cid, verbose = FALSE)
     
