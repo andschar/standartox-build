@@ -28,7 +28,8 @@ if (online) {
   for (i in 1:length(cid_l)) {
     qu_cas = names(cid_l[i])
     qu_cid = cid_l[[i]]
-    message('Pubchem: CAS:', qu_cas, '; CID:', qu_cid, ' (', i, '/', length(cid), ') -> to retrieve data.')
+    message('Pubchem: CAS:', qu_cas, '; CID:', qu_cid, ' (', i, '/', length(cid_l),
+            ') -> to retrieve data.')
     
     pc_res = pc_prop(qu_cid, verbose = FALSE)
     
