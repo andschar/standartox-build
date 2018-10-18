@@ -24,7 +24,7 @@ if (online) {
   }
   
   pc_l = list()
-  for (i in seq_aong(cid_l)) {
+  for (i in seq_along(cid_l)) {
     qu_cas = names(cid_l[i])
     qu_cid = cid_l[[i]]
     message('Pubchem: CAS:', qu_cas, '; CID:', qu_cid, ' (', i, '/', length(cid_l),
