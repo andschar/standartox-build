@@ -9,26 +9,39 @@ chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 # query -------------------------------------------------------------------
 if (online) {
   
-  cid = get_cid(chem$cas)
-
-  pc_l = list()
-  for (i in 1:length(cid)) {
-    qu_cas = names(cid[i])
-    qu_cid = cid[[i]]
-    message('Querying: CAS:', qu_cas, '; CID:', qu_cid, ' (', i, '/', length(cid), ')')
+  todo_pc = chem$cas
+  todo_pc = todo_pc[1:4] # debuging
+  
+  cid_l = list()
+  for (i in 1:length(todo_pc)) {
+    qu_cas = todo_pc[i]
+    message('Pubchem: CAS:', qu_cas, ' (', i, '/', length(todo_pc), ') -> to retrieve CID.')
     
-    pc_res = pc_prop(qu_cid)
+    qu_cid = get_cid(qu_cas, verbose = FALSE)
+    
+    
+    cid_l[[i]] = qu_cid
+    names(cid_l)[i] = qu_cas
+  }
+  
+  pc_l = list()
+  for (i in 1:length(cid_l)) {
+    qu_cas = names(cid_l[i])
+    qu_cid = cid_l[[i]]
+    message('Pubchem: CAS:', qu_cas, '; CID:', qu_cid, ' (', i, '/', length(cid), ') -> to retrieve data.')
+    
+    pc_res = pc_prop(qu_cid, verbose = FALSE)
     
     pc_l[[i]] = pc_res
     names(pc_l)[i] = qu_cas
   } 
   
+  saveRDS(cid_l, file.path(cachedir, 'cid_l.rds'))
   saveRDS(pc_l, file.path(cachedir, 'pc_l.rds'))
-  saveRDS(cid, file.path(cachedir, 'cid.rds'))
   
 } else {
+  cid_l = readRDS(file.path(cachedir, 'cid_l.rds'))
   pc_l = readRDS(file.path(cachedir, 'pc_l.rds'))
-  cid = readRDS(file.path(cachedir, 'cid.rds'))
 }
 
 # convert all entries to data.tables
@@ -67,7 +80,7 @@ if (nrow(na_pc2_inchi) > 0) {
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings
 
-rm(cir, chem)
+rm(cir, chem, todo_pc)
 
 options(warn = oldw); rm(oldw)
 
