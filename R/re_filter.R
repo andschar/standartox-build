@@ -54,7 +54,7 @@ tests[ep_value <= comp_solub, comp_solub_chck := TRUE]
 # (4) habitat column ----
 # marine
 cols = c('is_marin', 'is_marin_src')
-tests[ , (cols) := list(ep_isMar, 'ep')]
+tests[ , (cols) := list(ep_hab_isMar, 'ep')]
 tests[ is.na(is_marin), (cols) := list(wo_isMar_sp, 'wo')]
 tests[ is.na(is_marin), (cols) := list(gb_isMar, 'gb')]
 tests[ is.na(is_marin), (cols) := NA ]
@@ -62,23 +62,24 @@ tests[ is.na(is_marin), (cols) := NA ]
 cols = c('is_brack', 'is_brack_src')
 tests[ , (cols) := list(wo_isBra_sp, 'wo')]
 tests[ is.na(is_brack), (cols) := list(gb_isBra, 'gb')]
+tests[ is.na(is_brack), (cols) := list(ep_hab_isBra, 'ep')]
 tests[ is.na(is_brack), (cols) := NA ]
 # freshwater
 cols = c('is_fresh', 'is_fresh_src')
-tests[ , (cols) := list(ep_isFre, 'ep')]
+tests[ , (cols) := list(ep_hab_isFre, 'ep')]
 tests[ is.na(is_fresh), (cols) := list(wo_isFre_sp, 'wo')]
 tests[ is.na(is_fresh), (cols) := list(gb_isFre, 'gb')]
 tests[ is.na(is_fresh), (cols) := NA ]
 # terrestrial
 cols = c('is_terre', 'is_terre_src')
-tests[ , (cols) := list(ep_isTer, 'ep')]
+tests[ , (cols) := list(ep_hab_isTer, 'ep')]
 tests[ is.na(is_terre), (cols) := list(wo_isTer_sp, 'wo')]
 tests[ is.na(is_terre), (cols) := list(gb_isTer, 'gb')]
 tests[ is.na(is_terre), (cols) := NA ]
 # cleaning
 cols_ha_rm = c('wo_isMar_sp', 'wo_isBra_sp', 'wo_isFre_sp', 'wo_isTer_sp',
                'gb_isMar', 'gb_isBra', 'gb_isFre', 'gb_isTer',
-               'ep_isMar', 'ep_isFre', 'ep_isTer')
+               'ep_hab_isMar', 'ep_hab_isBra', 'ep_hab_isFre', 'ep_hab_isTer')
 tests[ , (cols_ha_rm) := NULL ]
 rm(cols_ha_rm)
 

@@ -12,7 +12,14 @@ tbl = paste0(DBetox, '_fin')
 tests_fin = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
 # (1) to shiny repo -------------------------------------------------------
-saveRDS(tests_fin, file.path(shinydir, 'data', 'tests_fin.rds'))
+shiny_path = file.path(shinydir, 'data', 'tests_fin.rds')
+saveRDS(tests_fin, shiny_path)
+
+# message
+msg = paste0('Final table (tests_fin) written to shinydir:\n', shiny_path)
+line = paste(Sys.time(), msg, sep = ' ') 
+write(line, file.path(prj, 'log'), append = TRUE)
+message(msg); rm(msg)
 
 # (2) to PostgreSQL -----------------------------------------------------------
 # schema ----
@@ -62,4 +69,14 @@ con = dbConnect(drv,
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
+
+# message
+msg = paste0('Final table (tests_fin) written to database table:\n',
+             paste(schema, tbl, sep = '.'))
+line = paste(Sys.time(), msg, sep = ' ') 
+write(line, file.path(prj, 'log'), append = TRUE)
+message(msg); rm(msg)
+
+
+
 
