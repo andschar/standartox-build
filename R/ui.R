@@ -70,7 +70,7 @@ ui = fluidPage(
               numericInput(inputId = 'dur2', label = 'to (h)', value = 48)
             ),
             splitLayout(
-              checkboxGroupInput(inputId = 'effect_group', label = 'Effect group',
+              checkboxGroupInput(inputId = 'effect', label = 'Effect group',
                                  choiceValues = out_stats_l$ep_effect$val,
                                  choiceNames = out_stats_l$ep_effect$nam),
               radioButtons(inputId = 'endpoint', label = 'TODO Endpoints',
