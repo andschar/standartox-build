@@ -9,23 +9,22 @@ chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 # query -------------------------------------------------------------------
 if (online) {
   
-  todo_pc = chem$cas
-  todo_pc = todo_pc[1:4] # debuging
+  todo_pc = sort(chem$cas)
+  # todo_pc = todo_pc[1:4] # debug me!
   
   cid_l = list()
-  for (i in 1:length(todo_pc)) {
+  for (i in seq_along(todo_pc)) {
     qu_cas = todo_pc[i]
     message('Pubchem: CAS:', qu_cas, ' (', i, '/', length(todo_pc), ') -> to retrieve CID.')
     
     qu_cid = get_cid(qu_cas, verbose = FALSE)
     
-    
-    cid_l[[i]] = qu_cid
+    cid_l[[i]] = unlist(qu_cid)
     names(cid_l)[i] = qu_cas
   }
   
   pc_l = list()
-  for (i in 1:length(cid_l)) {
+  for (i in seq_aong(cid_l)) {
     qu_cas = names(cid_l[i])
     qu_cid = cid_l[[i]]
     message('Pubchem: CAS:', qu_cas, '; CID:', qu_cid, ' (', i, '/', length(cid_l),
@@ -53,10 +52,6 @@ pc_l = lapply(pc_l, data.table)
 pc = rbindlist(pc_l, fill = TRUE, idcol = 'cas')
 pc[ , V1 := NULL ] # not needed
 
-grep('chebi', sort(names(pc)), ignore.case = TRUE)
-
-
-
 # final dt ----------------------------------------------------------------
 # https://pubchemdocs.ncbi.nlm.nih.gov/about
 # CID - non-zero integer PubChem ID
@@ -68,8 +63,12 @@ setnames(pc2, c('iupacname', 'exactmass'), c('pc_iupacname', 'pc_exactmass'))
 
 # missing entries ---------------------------------------------------------
 na_pc2_inchi = pc2[ is.na(inchikey) ]
-message('PubChem: For ', nrow(na_pc2_inchi), '/', nrow(pc2),
-        ' CAS no InchiKeys were found.')
+
+msg = paste0('PubChem: For ', nrow(na_pc2_inchi), '/', nrow(pc2),
+             ' CAS no InchiKeys were found.')
+line = paste(Sys.time(), msg, sep = ' ') 
+write(line, file.path(prj, 'log'), append = TRUE)
+message(msg); rm(msg)
 
 if (nrow(na_pc2_inchi) > 0) {
   fwrite(na_pc2_inchi, file.path(missingdir, 'na_pc2_inchi.csv'))

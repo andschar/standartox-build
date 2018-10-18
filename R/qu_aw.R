@@ -7,12 +7,21 @@ source(file.path(src, 'setup.R'))
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
 # query -------------------------------------------------------------------
-todo_aw = chem$cas
-# todo_aw = '119446-68-3'
-# todo_aw = todo_aw[1:10] # debug me!
+todo_aw = sort(chem$cas)
+# todo_aw = todo_aw[1:4] # debug me!
 
 if (online) {
-  aw_l = aw_query(todo_aw, type = 'cas', verbose = TRUE)
+  
+  aw_l = list()
+  for (i in seq_along(todo_aw)) {
+    qu_cas = todo_aw[i]
+    message('Alan Wood: CAS:', qu_cas, ' (', i, '/', length(todo_aw), ')')
+    
+    aw_res = aw_query(qu_cas, type = 'cas', verbose = TRUE)[[1]]
+    
+    aw_l[[i]] = aw_res
+    names(aw_l)[i] = qu_cas
+  }
   
   saveRDS(aw_l, file.path(cachedir, 'aw_l.rds'))
 } else {
@@ -56,14 +65,17 @@ for (i in names(aw3)) {
 aw3[ , aw_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ aw_pest == 0, aw_pest := NA ]
 
 # missing entries ---------------------------------------------------------
-message('AlanWood: For ', length(aw_l) - nrow(aw3), '/', length(aw_l),
-        ' CAS no cnames were found.')
+msg = paste0('AlanWood: For ', length(aw_l) - nrow(aw3), '/', length(aw_l),
+             ' CAS no cnames were found.')
+line = paste(Sys.time(), msg, sep = ' ') 
+write(line, file.path(prj, 'log'), append = TRUE)
+message(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings
 
-rm(chem, cas, todo_aw,
+rm(chem, cas, todo_aw, qu_cas, i,
    aw, aw_l, aw_l2, aw2, aw2m, aw2_m, cols)
 
 options(warn = oldw); rm(oldw)
