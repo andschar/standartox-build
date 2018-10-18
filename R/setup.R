@@ -25,6 +25,7 @@ source(file.path(cred, 'credentials.R')) # data base credentials
 source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
 source(file.path(src, 'fun_product_na.R'))
 source(file.path(src, 'fun_extr_vec.R'))
+source(file.path(src, 'fun_log_message.R'))
 source(file.path(src, 'gg_theme.R'))
 
 

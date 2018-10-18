@@ -66,9 +66,7 @@ na_pc2_inchi = pc2[ is.na(inchikey) ]
 
 msg = paste0('PubChem: For ', nrow(na_pc2_inchi), '/', nrow(pc2),
              ' CAS no InchiKeys were found.')
-line = paste(Sys.time(), msg, sep = ' ') 
-write(line, file.path(prj, 'log'), append = TRUE)
-message(msg); rm(msg)
+log_msg(msg); rm(msg)
 
 if (nrow(na_pc2_inchi) > 0) {
   fwrite(na_pc2_inchi, file.path(missingdir, 'na_pc2_inchi.csv'))

@@ -25,10 +25,7 @@ if (!basename(output) %in% list.files(datadir)) {
 } else {
   
   msg = 'ECOTOX up to date - no new build needed.'
-  line = paste(Sys.time(), msg, sep = ' ') 
-  write(line, file.path(prj, 'log'), append = TRUE)
-  
-  message(msg)
+  log_msg(msg); rm(msg)
 }
 
 # cleaning ----------------------------------------------------------------

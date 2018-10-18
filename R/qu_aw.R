@@ -67,9 +67,7 @@ aw3[ , aw_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ 
 # missing entries ---------------------------------------------------------
 msg = paste0('AlanWood: For ', length(aw_l) - nrow(aw3), '/', length(aw_l),
              ' CAS no cnames were found.')
-line = paste(Sys.time(), msg, sep = ' ') 
-write(line, file.path(prj, 'log'), append = TRUE)
-message(msg); rm(msg)
+log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")

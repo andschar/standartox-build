@@ -17,9 +17,7 @@ saveRDS(tests_fin, shiny_path)
 
 # message
 msg = paste0('Final table (tests_fin) written to shinydir:\n', shiny_path)
-line = paste(Sys.time(), msg, sep = ' ') 
-write(line, file.path(prj, 'log'), append = TRUE)
-message(msg); rm(msg)
+log_msg(msg); rm(msg)
 
 # (2) to PostgreSQL -----------------------------------------------------------
 # schema ----
@@ -70,12 +68,15 @@ con = dbConnect(drv,
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
-# message
+## message
 msg = paste0('Final table (tests_fin) written to database table:\n',
              paste(schema, tbl, sep = '.'))
-line = paste(Sys.time(), msg, sep = ' ') 
-write(line, file.path(prj, 'log'), append = TRUE)
-message(msg); rm(msg)
+log_msg(msg); rm(msg)
+
+## final message
+# as this is the exit script
+msg = paste0(rep('-', 30), collapse = '')
+log_msg(msg); rm(msg)
 
 
 

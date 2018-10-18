@@ -198,10 +198,7 @@ if (nrow(DBetox_chck) == 0) {
 } else {
   
   msg = 'ECOTOX already built into Postgres DB.'
-  line = paste(Sys.time(), msg, sep = ' ') 
-  write(line, file.path(prj, 'log'), append = TRUE)
-  
-  message(msg); rm(msg)
+  log_msg(msg); rm(msg)
   
 }
 
