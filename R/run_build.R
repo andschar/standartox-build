@@ -1,3 +1,5 @@
+#!/usr/bin/Rscript
+
 # this is the main script that has to be sourced and timed on the platform
 # time this script tp run every 2 months
 # crontab:
