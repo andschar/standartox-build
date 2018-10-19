@@ -21,7 +21,7 @@ pacman::p_load(data.table,
                shiny, shinyjs, shinydashboard,
                knitr, DT)
 
-# pacman::p_update()
+pacman::p_update()
 
 # options -----------------------------------------------------------------
 options(stringsAsFactors=FALSE)

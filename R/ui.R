@@ -158,8 +158,8 @@ ui = fluidPage(
           downloadButton(outputId = 'download', 'Download the data')
         ),
         tabPanel(
-          'README',
-          withMathJax(includeMarkdown('README.md'))
+          'README'
+          # TODO withMathJax(includeMarkdown('README.md')) # TODO include agian
           # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
         ),
         tabPanel(
