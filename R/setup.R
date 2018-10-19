@@ -24,7 +24,7 @@ pacman::p_load(data.table,
 pacman::p_update()
 
 # options -----------------------------------------------------------------
-options(stringsAsFactors=FALSE)
+options(stringsAsFactors = FALSE)
 
 # variables ---------------------------------------------------------------
 #articledir = file.path(prj, 'article')
