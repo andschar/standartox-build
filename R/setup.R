@@ -15,12 +15,13 @@ if (nodename == 'scharmueller') {
 rm(nodename)
 
 # packages ----------------------------------------------------------------
-require(data.table)
-require(shiny)
-require(shinyjs)
-require(shinydashboard)
-require(knitr)
-require(DT)
+if (!require('pacman')) install.packages('pacman')
+
+pacman::p_load(data.table,
+               shiny, shinyjs, shinydashboard,
+               knitr, DT)
+
+# pacman::p_update()
 
 # options -----------------------------------------------------------------
 options(stringsAsFactors=FALSE)
