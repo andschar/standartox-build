@@ -2,6 +2,7 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
+source(file.path(src, 'da_epa_query.R'))
 source(file.path(src, 'da_epa_taxonomy.R'))
 source(file.path(src, 'da_epa_conversion_unit.R'))
 source(file.path(src, 'da_epa_conversion_duration.R'))
@@ -17,54 +18,13 @@ if (online_db) {
   res = dbGetQuery(con, "SELECT DISTINCT ON (test_cas) test_cas
                          FROM ecotox.tests
                          ORDER BY test_cas ASC")
-  todo_cas = res$test_cas # all the CAS in the EPA ECOTOX database
+  todo_cas = sort(res$test_cas) # all the CAS in the EPA ECOTOX database
   # todo_cas = todo_cas[1:10] # debug me!
   
   epa1_l <- list()
   for (i in seq_along(todo_cas)) {
     casnr <- todo_cas[i]
-    d <- dbGetQuery(con, paste0("
-                                SELECT
-                              -- substances
-                                  tests.test_cas::varchar AS casnr,
-                                  chemicals.chemical_name,
-                                  chemical_carriers.chem_name AS chemical_carrier,
-                                  chemicals.ecotox_group AS chemical_group,
-                              -- concentration 
-                                  conc1_mean,
-                              -- unit
-                                  conc1_unit,
-                                  results.conc1_type,
-                              -- test duration
-                                  results.obs_duration_mean,
-                                  results.obs_duration_unit,
-                              -- result types
-                                  results.endpoint,
-                                  results.effect,
-                              -- species
-                                  species.latin_name, -- only latin_name. Other entries are merged: eu_epa_taxonomy.R
-                                  tests.exposure_type,
-                                  tests.media_type,
-                                  tests.organism_habitat AS habitat, -- ('soil')
-                                  tests.subhabitat, -- ('P', 'R', 'L', 'E', 'D', 'F', 'G', 'M') -- Palustrine, Riverine, Lacustrine, Estuarine
-                              -- references
-                                  tests.reference_number,
-                                  refs.author,
-                                  refs.title,
-                                  refs.publication_year
-                                FROM ecotox.tests
-                                  LEFT JOIN ecotox.results ON tests.test_id = results.test_id
-                                  RIGHT JOIN ecotox.species ON tests.species_number = species.species_number
-                                  LEFT JOIN ecotox.chemicals ON tests.test_cas = chemicals.cas_number
-                                  LEFT JOIN ecotox.chemical_carriers ON tests.test_id = chemical_carriers.test_id
-                                  LEFT JOIN ecotox.refs ON tests.reference_number = refs.reference_number
-                                WHERE tests.test_cas = ", casnr, "
-                              -- endpoints:
-                                  AND results.endpoint IN ('EC50', 'EC50/', 'EC50*', 'EC50*/', 'LC50', 'LC50/', 'LC50*', 'LC50*/')
-                              -- empty result cell? 
-                                  AND results.conc1_mean != 'NR'
-                                  AND coalesce(species.genus, '') <> '' -- same as !=
-                                  ;"))
+    d <- dbGetQuery(con, sprintf(q, casnr))
     
     message('Returning ', '(', i, '/', length(todo_cas), '): ', casnr, ' (n = ', nrow(d), ')')
     
