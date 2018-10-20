@@ -30,8 +30,7 @@ if (!basename(output) %in% list.files(datadir)) {
 
 # cleaning ----------------------------------------------------------------
 rm(baseurl, ftp, date_pattern,
-   file, date, ascii_dt, file_fin, file_url, output,
-   msg)
+   file, date, ascii_dt, file_fin, file_url, output)
 
 
 

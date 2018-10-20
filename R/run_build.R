@@ -39,8 +39,13 @@ source(file.path(src, 'bd_epa_download.R'))
 # setup ECOTOX variables --------------------------------------------------
 etoxdir = grep('ecotox', list.dirs(datadir, recursive = FALSE), value = TRUE)
 release = regmatches(etoxdir, regexpr('[0-9]{2}_[0-9]{2}_[0-9]{4}', etoxdir))
-release = max(as.Date(release, format = '%m_%d_%Y'))
+release = as.character(max(as.Date(release, format = '%m_%d_%Y')))
 DBetox = paste0('etox', gsub('-', '', release))
+
+if (is.na(release)) {
+  msg = 'Newest etox file (DBetox) file can not be found.'
+  log_msg(msg); rm(msg)
+}
 
 # build
 source(file.path(src, 'bd_epa_postgres.R'))
