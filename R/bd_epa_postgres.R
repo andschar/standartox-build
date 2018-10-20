@@ -192,9 +192,6 @@ if (nrow(DBetox_chck) == 0) {
   # R
   rm(con, df, drv, i, files, files2)
   
-  # (7) Saving --------------------------------------------------------------
-  saveRDS(DBetox, file.path(cachedir, 'data_base_name_version.rds'))
-  
 } else {
   
   msg = 'ECOTOX already built into Postgres DB.'
