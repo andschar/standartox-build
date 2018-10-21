@@ -25,7 +25,7 @@ q = "
          media_characteristics.media_hardness_mean,
          media_characteristics.media_hardness_unit,
          media_characteristics.dissolved_oxygen_mean AS media_dissolved_oxygen_mean,
-         media_characteristics.dissolved_oxygen_unit AS media_dissolved_oxygen_mean,
+         media_characteristics.dissolved_oxygen_unit AS media_dissolved_oxygen_unit,
          media_characteristics.media_salinity_mean,
          media_characteristics.media_salinity_unit,
          media_characteristics.media_conductivity_mean,

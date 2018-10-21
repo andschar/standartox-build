@@ -83,6 +83,9 @@ for (i in names(epa1)) {
   epa1[get(i) == "", (i) := NA]
 }
 
+# cleaning
+rm(pat)
+
 # merge taxonomy ----------------------------------------------------------
 setkey(epa1, 'latin_name')
 epa1 = merge(epa1, tax, by = 'latin_name')
