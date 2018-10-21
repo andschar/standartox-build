@@ -5,6 +5,7 @@ if (!require('pacman')) install.packages('pacman')
 
 pacman::p_load(RCurl, stringr,
                readxl, data.table, RPostgreSQL, vegan, plyr,
+               feather,
                ggplot2, ggrepel, cowplot,
                rgbif, webchem, taxize, countrycode)
 

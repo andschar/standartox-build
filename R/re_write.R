@@ -13,7 +13,10 @@ tests_fin = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
 # (1) to shiny repo -------------------------------------------------------
 shiny_path = file.path(shinydir, 'data', 'tests_fin.rds')
+## as .rds
 saveRDS(tests_fin, shiny_path)
+## as feather
+write_feather(tests_fin, file.path(shinydir, 'data', 'tests_fin'))
 
 # message
 msg = paste0('Final table (tests_fin) written to shinydir:\n', shiny_path)
