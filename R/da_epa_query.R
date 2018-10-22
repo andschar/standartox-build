@@ -53,7 +53,7 @@ q = "
       -- species
          species.latin_name, -- only latin_name. Other entries are merged: eu_epa_taxonomy.R
          tests.exposure_type,
-         tests.media_type,
+         tests.media_type AS med_type,
          tests.organism_habitat AS habitat, -- ('soil')
          tests.subhabitat, -- ('P', 'R', 'L', 'E', 'D', 'F', 'G', 'M') -- Palustrine, Riverine, Lacustrine, Estuarine
       -- references

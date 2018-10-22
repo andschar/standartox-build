@@ -73,7 +73,7 @@ epa1[ , endpoint := gsub('/|\\*|(\\*/)', '', endpoint) ]
 # Exposure typpe
 epa1[ , exposure_type := gsub('/|\\*|(\\*/)', '', exposure_type) ]
 # Media type
-epa1[ , media_type := gsub('/|\\*|(\\*/)', '', media_type) ]
+epa1[ , med_type := gsub('/|\\*|(\\*/)', '', med_type) ]
 # CAS
 epa1[ , cas := casconv(casnr) ]
 # Source column
@@ -111,8 +111,8 @@ epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
 
 # new variables -----------------------------------------------------------
 # habitat
-epa1[ media_type == 'FW', hab_isFre := 1 ]
-epa1[ media_type == 'SW', hab_isMar := 1 ]
+epa1[ med_type == 'FW', hab_isFre := 1 ]
+epa1[ med_type == 'SW', hab_isMar := 1 ]
 epa1[ habitat == 'Soil', hab_isTer := 1 ]
 epa1[ subhabitat %in% c('P', 'R', 'L'), hab_isFre := 1 ]
 epa1[ subhabitat %in% c('E'), hab_isBra := 1 ]
@@ -129,11 +129,17 @@ epa1 = epa1[ !is.na(dur_value) &
              !is.na(effect) &
              !is.na(endpoint) ]
 
+# names -------------------------------------------------------------------
+med_cols_orig = grep('media', names(epa1), value = TRUE)
+med_cols = sub('_mean', '', sub('media', 'med', med_cols_orig))
+setnames(epa1, med_cols_orig, med_cols)
+
 # final columns -----------------------------------------------------------
 cols_fin = c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group',
              'conc1_mean', 'conc1_unit', 'uni_value', 'uni_unit_conv', 'qualifier', 'uni_conv',
              'obs_duration_mean', 'obs_duration_unit', 'dur_value', 'dur_value_unit',
-             'conc1_type', 'endpoint', 'effect', 'exposure_type', 'media_type',
+             'conc1_type', 'endpoint', 'effect', 'exposure_type', 'med_type',
+             med_cols,
              'hab_isFre', 'hab_isBra', 'hab_isMar', 'hab_isTer',
              'taxon', 'tax_genus', 'tax_family', 'tax_order', 'tax_class', 'tax_superclass', 'tax_phylum',
              'tax_subphylum_div', 'tax_phylum_division', 'tax_kingdom',
@@ -142,7 +148,7 @@ cols_fin = c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_grou
 
 epa1 = epa1[ , .SD, .SDcols = cols_fin ]
 
-# names -------------------------------------------------------------------
+# final names -------------------------------------------------------------
 setnames(epa1, 
          old = c('conc1_mean', 'conc1_unit', 'conc1_type', 'uni_value', 'uni_unit_conv',
                  'obs_duration_mean', 'obs_duration_unit', 'dur_value', 'dur_value_unit',
@@ -173,7 +179,7 @@ saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # cleaning ----------------------------------------------------------------
 rm(cas_chck, taxa, chem, i, cols_fin)
-
+rm(med_cols_orig, med_cols)
 
 # help --------------------------------------------------------------------
 # https://cfpub.epa.gov/ecotox/help.cfm?help_id=CONTENTFAQ&help_type=define&help_back=1#asterisk
