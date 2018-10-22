@@ -9,3 +9,7 @@
 *.md
 
 # cache -> is done in separate .gitignore in /cache
+
+# data
+# too big
+/data/*.feather

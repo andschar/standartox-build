@@ -15,7 +15,7 @@ ec50_filagg = function(dt,
                        info = NULL,
                        cas = NULL,
                        solub_chck = FALSE) {
-    
+  
   # debug me!
   # source('R/setup.R')
   # tests_fl = readRDS(file.path(datadir, 'tests_fin.rds'))
@@ -72,7 +72,7 @@ ec50_filagg = function(dt,
   #   dt = dt[ dt[ , Reduce('|', lapply(.SD, `==`, 1)), .SDcols = chem_class_var ] ] # awesome!
   #   # https://stackoverflow.com/questions/48641680/filter-data-table-on-same-condition-for-multiple-columns
   # }
-
+  
   ## solubility check ----
   if (solub_chck) {
     dt = dt[ comp_solub_chck == TRUE ]
@@ -86,7 +86,7 @@ ec50_filagg = function(dt,
     hab = 'n' # none
   } else {
     dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1)), .SDcols = habitat ]]
-
+    
   }
   ## continent ----
   if (is.null(continent) | continent == 'all') {
@@ -114,7 +114,7 @@ ec50_filagg = function(dt,
   # write dt for plot function
   # TODO can be done better
   saveRDS(dt, file.path(tempdir(), 'dt.rds'))
-
+  
   # aggregation -------------------------------------------------------------
   ## (1a) Aggregate by casnr, taxon and duration ----
   dt_agg = dt[ ,
@@ -151,11 +151,11 @@ ec50_filagg = function(dt,
   dt_merge = dt[ , .SD, .SDcols = c('casnr', comp)]
   dt_merge = unique(dt_merge)
   out = merge(out, dt_merge, by = 'casnr')
-
+  
   # output filters ----------------------------------------------------------
   sdcols = c('casnr', comp, agg, info)
   out = out[ , .SD, .SDcols = sdcols ]
-
+  
   # save --------------------------------------------------------------------
   saveRDS(dt_counter, file.path(cache, 'dt_counter.rds'))
   
@@ -168,7 +168,7 @@ ec50_filagg = function(dt,
   #            new = paste0(paste0('ep50', hab, '_', tax_id, dur_id, '_'), agg))
   # }
   fwrite(out, file.path(tempdir(), 'out.csv')) # debug me!
-
+  
   return(out)
   
 }

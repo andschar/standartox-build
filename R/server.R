@@ -57,22 +57,22 @@ server = function(input, output) {
   plot_sensitivity = reactive({
     ec50_filagg_plot(thedata(), input$yaxis, input$cutoff)
   })
-
+  
   # (2) output ----
   # data ----
   output$dat = DT::renderDataTable({thedata()},
-    options = list(
-      columnDefs = list(list(
-        # targets = 0:4,
-        render = JS(
-          "function(data, type, row, meta) {",
-          "return type === 'display' && data.length > 6 ?",
-          "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
-          "}"))
-      )),
-      #dom = 't',
-      rownames = FALSE,
-    callback = JS('table.page(3).draw(false);'))
+                                   options = list(
+                                     columnDefs = list(list(
+                                       # targets = 0:4,
+                                       render = JS(
+                                         "function(data, type, row, meta) {",
+                                         "return type === 'display' && data.length > 6 ?",
+                                         "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
+                                         "}"))
+                                     )),
+                                   #dom = 't',
+                                   rownames = FALSE,
+                                   callback = JS('table.page(3).draw(false);'))
   # summary ----
   output$summary_chem = renderPrint({ unique(thedata()$casnr) })
   output$summary_taxa = renderPrint({ thedata()$taxa })

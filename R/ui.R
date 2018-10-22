@@ -22,13 +22,13 @@ ui = fluidPage(
             ),
             verticalLayout(
               checkboxGroupInput(inputId = 'conc_type', label = 'Concentration type',
-                                 choiceValues = out_stats_l$ep_conc_type$val,
+                                 choiceValues = te_stats_l$ep_conc_type$val,
                                  choiceNames = paste0(
-                                   out_stats_l$ep_conc_type$val,
+                                   te_stats_l$ep_conc_type$val,
                                    ' - ',
-                                   out_stats_l$ep_conc_type$nam_long,
+                                   te_stats_l$ep_conc_type$nam_long,
                                    ' (',
-                                   out_stats_l$ep_conc_type$n,
+                                   te_stats_l$ep_conc_type$n,
                                    ')'),
                                  selected = c('A'))
               # helpText(a('Help', href = 'https://cfpub.epa.gov/ecotox/pdf/codeappendix.pdf'))
@@ -51,12 +51,12 @@ ui = fluidPage(
                         choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
             splitLayout(
               checkboxGroupInput(inputId = 'habitat', label = 'Organism hatbitat',
-                                 choiceValues = out_stats_l$habitat$variable,
-                                 choiceNames = out_stats_l$habitat$nam_long_stat,
+                                 choiceValues = te_stats_l$habitat$variable,
+                                 choiceNames = te_stats_l$habitat$nam_long_stat,
                                  selected = 'is_fresh'),
               checkboxGroupInput(inputId = 'continent', label = 'Continent',
-                                 choiceValues = out_stats_l$continent$variable,
-                                 choiceNames = out_stats_l$continent$nam_long_stat,
+                                 choiceValues = te_stats_l$continent$variable,
+                                 choiceNames = te_stats_l$continent$nam_long_stat,
                                  selected = 'is_europe')
             )
           )
@@ -71,8 +71,8 @@ ui = fluidPage(
             ),
             splitLayout(
               checkboxGroupInput(inputId = 'effect', label = 'Effect group',
-                                 choiceValues = out_stats_l$ep_effect$val,
-                                 choiceNames = out_stats_l$ep_effect$nam),
+                                 choiceValues = te_stats_l$ep_effect$val,
+                                 choiceNames = te_stats_l$ep_effect$nam),
               radioButtons(inputId = 'endpoint', label = 'TODO Endpoints',
                            choiceValues = c('EC50', 'LOEC', 'NOEC'),
                            choiceNames = c('L/EC50', 'LOEC', 'NOEC'),
@@ -103,8 +103,8 @@ ui = fluidPage(
         )
       )
     ),
-
-# main panel --------------------------------------------------------------
+    
+    # main panel --------------------------------------------------------------
     mainPanel(
       tabsetPanel(
         selected = 'README',
@@ -136,12 +136,12 @@ ui = fluidPage(
               headerPanel('Most sensitive EC50 values'),
               fluidRow(
                 shinydashboard::box(width = 4,
-                splitLayout(
-                  numericInput(inputId = 'cutoff', label = 'Number of compounds', value = 25, width = '150px'),
-                  radioButtons(inputId = 'yaxis', label = 'Y-Axis',
-                               choiceValues = c('casnr', 'comp_name'),
-                               choiceNames = c('CAS', 'Compound name'),
-                               selected = 'casnr', inline = TRUE))
+                                    splitLayout(
+                                      numericInput(inputId = 'cutoff', label = 'Number of compounds', value = 25, width = '150px'),
+                                      radioButtons(inputId = 'yaxis', label = 'Y-Axis',
+                                                   choiceValues = c('casnr', 'comp_name'),
+                                                   choiceNames = c('CAS', 'Compound name'),
+                                                   selected = 'casnr', inline = TRUE))
                 )
               ),
               plotOutput(outputId = 'plot_sensitivity')
