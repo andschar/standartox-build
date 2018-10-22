@@ -13,9 +13,13 @@ tests_fin = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
 # (1) to shiny repo -------------------------------------------------------
 ## as .rds
+time = Sys.time()
 saveRDS(tests_fin, file.path(shinydir, 'data', 'tests_fin.rds'))
+Sys.time() - time
 ## as feather
+time = Sys.time()
 write_feather(tests_fin, file.path(shinydir, 'data', 'tests_fin.feather'))
+Sys.time() - time
 ## copy .feather via scp to server (github only allows 100MB)
 #! takes some time
 if (nodename == 'scharmueller') {
