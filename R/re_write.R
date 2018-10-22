@@ -12,11 +12,20 @@ tbl = paste0(DBetox, '_fin')
 tests_fin = readRDS(file.path(cachedir, 'tests_fl.rds'))
 
 # (1) to shiny repo -------------------------------------------------------
-shiny_path = file.path(shinydir, 'data', 'tests_fin.rds')
 ## as .rds
-saveRDS(tests_fin, shiny_path)
+saveRDS(tests_fin, file.path(shinydir, 'data', 'tests_fin.rds'))
 ## as feather
-write_feather(tests_fin, file.path(shinydir, 'data', 'tests_fin'))
+write_feather(tests_fin, file.path(shinydir, 'data', 'tests_fin.feather'))
+## copy .feather via scp to server (github only allows 100MB)
+#! takes some time
+if (nodename == 'scharmueller') {
+  system(
+    paste('scp',
+          file.path(shinydir, 'data', 'tests_fin.feather'),
+          'scharmueller@139.14.20.252:/home/scharmueller/Projects/etox-base-shiny/data/tests_fin.feather',
+          sep = ' ')
+  )
+}
 
 # message
 msg = paste0('Final table (tests_fin) written to shinydir:\n', shiny_path)
