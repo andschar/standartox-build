@@ -111,9 +111,8 @@ ec50_filagg = function(dt,
   dur_id = paste0(dur, collapse = '')
   dt = dt[ ep_duration %between% dur ]
   
-  # write dt for plot function
-  # TODO can be done better
-  saveRDS(dt, file.path(tempdir(), 'dt.rds'))
+  # write dt all for plot function
+  write_feather(dt, file.path(cache, 'dt.feather'))
   
   # aggregation -------------------------------------------------------------
   ## (1a) Aggregate by casnr, taxon and duration ----
@@ -157,17 +156,10 @@ ec50_filagg = function(dt,
   out = out[ , .SD, .SDcols = sdcols ]
   
   # save --------------------------------------------------------------------
+  # counter
   saveRDS(dt_counter, file.path(cache, 'dt_counter.rds'))
-  
-  
-  # names -------------------------------------------------------------------
-  #value_cols = names(out)[!names(out) %in% sdcols]
-  # if (!is.null(agg)) {
-  #   setnames(out,
-  #            old = agg,
-  #            new = paste0(paste0('ep50', hab, '_', tax_id, dur_id, '_'), agg))
-  # }
-  fwrite(out, file.path(tempdir(), 'out.csv')) # debug me!
+  # debuging
+  # fwrite(out, file.path(tempdir(), 'out.csv'))
   
   return(out)
   

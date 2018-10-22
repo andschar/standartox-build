@@ -20,7 +20,8 @@ if (!require('pacman')) install.packages('pacman')
 pacman::p_load(data.table,
                feather,
                shiny, shinyjs, shinydashboard,
-               knitr, DT)
+               knitr, DT,
+               ggplot2, cowplot)
 
 # p_update() #! do this manually, as unexpected consequences might occur
 
@@ -40,6 +41,8 @@ source(file.path(fundir, 'fun_ec50filter_aggregation_plots.R'))
 source(file.path(fundir, 'fun_ec50filter_meta_plots.R'))
 source(file.path(fundir, 'fun_output_stats.R'))
 source(file.path(fundir, 'fun_casconv.R'))
+# plot themes
+source(file.path('gg_theme.R'))
 
 # data --------------------------------------------------------------------
 # as .rds (~2.5s)
