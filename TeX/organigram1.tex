@@ -60,16 +60,23 @@
 	
 	%% final result
 	\node (testres) [res, right of = cas, xshift = 14cm, yshift = -5cm] {Result};
-	\node (filtres) [res, right of = testres, xshift = 2cm] {Filter};
-	\node (aggres) [res, right of = filtres, xshift = 2cm] {Aggregate};
 	
+	% shiny
 	\begin{pgfonlayer}{bg3}
-	\node[rectangle, draw, rounded corners, minimum height = 2cm, minimum width = 7cm, fill = gray!10, right of = testres, xshift = 1.5cm] (appbox) {};
+	\node[rectangle, draw, rounded corners, minimum height = 2cm, minimum width = 7cm, fill = gray!10, right of = testres, xshift = 1.5cm, yshift = 4cm] (appbox_shiny) {};
 	\end{pgfonlayer}
+	\node (apptext) [above of = appbox_shiny, yshift = 0.5cm, xshift = -3cm] {Etox-Base Function};
+	\node (filtres) [res, right of = appbox_shiny, xshift = -3.5cm] {Filter};
+	\node (aggres) [res, right of = appbox_shiny, xshift = 0cm] {Aggregate};
 	
-	\node (apptext) [above of = appbox, yshift = 0.25cm, xshift = -3cm] {Etox-Base Function}; 
-	
-	
+	% database output
+	\begin{pgfonlayer}{bg3}
+	\node[rectangle, draw, rounded corners, minimum height = 2cm, minimum width = 7cm, fill = gray!10, right of = testres, xshift = 1.5cm, yshift = 0cm] (appbox_db) {};
+	\end{pgfonlayer}
+	\node (apptext) [above of = appbox_db, yshift = 0.5cm, xshift = -3cm] {Database output};
+	\node (tableres) [res, right of = appbox_db, xshift = -2cm] {Postgres Table};
+	% stats
+	\node (stats) [res, below of = tableres, yshift = -2cm] {re\_stats.R};
 	
 	%%% arrows %%%
 	\begin{pgfonlayer}{bg1}
@@ -87,9 +94,9 @@
 	\draw [arrow] (habitat.east) -| (testres.south);
 	\draw [arrow] (region.east) -| (testres.south);
 	
-	
-	\draw [arrow] (testres) -- (filtres); %++(2cm,0cm);
-	\draw [arrow] (filtres) -- (aggres); 
+	% Result arrows
+	\draw [arrow] (testres) -- (appbox_shiny.west); %++(2cm,0cm);
+	\draw [arrow] (testres) -- (appbox_db.west);
 	
 	\end{pgfonlayer}
 	\end{tikzpicture}
