@@ -137,11 +137,13 @@ ui = fluidPage(
               fluidRow(
                 shinydashboard::box(width = 4,
                                     splitLayout(
-                                      numericInput(inputId = 'cutoff', label = 'Number of compounds', value = 25, width = '150px'),
-                                      radioButtons(inputId = 'yaxis', label = 'Y-Axis',
+                                      numericInput(inputId = 'cutoff',
+                                                   label = 'Number of compounds',
+                                                   value = 25, width = '120px'),
+                                      radioButtons(inputId = 'yaxis', label = 'y-Axis',
                                                    choiceValues = c('casnr', 'comp_name'),
                                                    choiceNames = c('CAS', 'Compound name'),
-                                                   selected = 'casnr', inline = TRUE))
+                                                   selected = 'casnr', inline = FALSE))
                 )
               ),
               plotOutput(outputId = 'plot_sensitivity')

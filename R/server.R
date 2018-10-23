@@ -1,4 +1,5 @@
 # script for a shiny app selecting EC50 values
+
 # setup -------------------------------------------------------------------
 source('setup.R')
 
@@ -9,17 +10,16 @@ source('setup.R')
 # knit('shiny/README.Rmd', output = 'shiny/README.md', quiet = TRUE)
 # knit('shiny/article.Rmd', output = 'shiny/article.md', quiet = TRUE)
 
-# shiny -------------------------------------------------------------------
 server = function(input, output) {
+
+  # (1) preparation ---------------------------------------------------------
   
-  # (1) preparation ----
-  # read file + reset button ----
+  # read csv + action button ------------------------------------------------
   # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
   rv = reactiveValues(
     data = NULL,
     reset = FALSE
   )
-  
   observe({
     req(input$file_cas)
     req(!rv$reset)
@@ -29,14 +29,13 @@ server = function(input, output) {
     data = data[ ,1]
     rv$data = data
   })
-  
   observeEvent(input$reset, {
     rv$data = NULL
     rv$clear = TRUE
     reset('file_cas')
   }, priority = 1000) # priority?
   
-  # data + function ----
+  # data + reactivity function ----------------------------------------------
   thedata = reactive({
     ec50_filagg(dt = dat,
                 conc_type = input$conc_type,
@@ -52,8 +51,9 @@ server = function(input, output) {
                 info = input$infocols,
                 cas = rv$data)
   })
-  
-  # plots ----
+
+
+  # plots -------------------------------------------------------------------
   plot_sensitivity = reactive({
     ec50_filagg_plot(thedata(), input$yaxis, input$cutoff)
   })
