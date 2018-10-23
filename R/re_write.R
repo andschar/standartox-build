@@ -22,7 +22,7 @@ write_feather(tests_fin, file.path(shinydir, 'data', 'tests_fin.feather'))
 Sys.time() - time
 ## copy .feather via scp to server (github only allows 100MB)
 #! takes some time
-if (nodename == 'scharmueller') {
+if (nodename == 'scharmueller' & scp_feather) {
   system(
     paste('scp',
           file.path(shinydir, 'data', 'tests_fin.feather'),
