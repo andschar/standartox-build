@@ -5,6 +5,7 @@
 # (Ch1) check existance
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
+                dbname = DBname,
                 user = DBuser,
                 host = DBhost,
                 port = DBport,
@@ -140,8 +141,9 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   
   # (3) Validation tables ---------------------------------------------------
   drv = dbDriver("PostgreSQL")
-  con = dbConnect(drv, user = DBuser,
+  con = dbConnect(drv,
                   dbname = DBetox,
+                  user = DBuser,
                   host = DBhost,
                   port = DBport,
                   password = DBpassword)
