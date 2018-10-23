@@ -1,28 +1,50 @@
 # script to upload the test data into PostgreSQL tables
 # mainly taken from: http://edild.github.io/localecotox/
 
-# (0) Create data basse ---------------------------------------------------
+# Check if data.base exists -----------------------------------------------
+# (Ch1) check existance
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
-                dbname = DBname,
                 user = DBuser,
                 host = DBhost,
                 port = DBport,
                 password = DBpassword)
 
-DBetox_chck = dbGetQuery(con, paste0("SELECT count(*)
-                                      FROM information_schema.tables
-                                      WHERE table_schema = 'ecotox';"))
-DBetox_chck = as.numeric(DBetox_chck)
+DBetox_chck1 = dbGetQuery(con, paste0("SELECT datname
+                                       FROM pg_catalog.pg_database
+                                       WHERE lower(datname) = lower('", DBetox, "');"))
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
-if (DBetox_chck != 48) {
+# (Ch2) if database exists, are there all tables?
+if (nrow(DBetox_chck1) == 1) {
+  
+  drv = dbDriver("PostgreSQL")
+  con = dbConnect(drv,
+                  dbname = DBetox,
+                  user = DBuser,
+                  host = DBhost,
+                  port = DBport,
+                  password = DBpassword)
+  
+  DBetox_chck2 = dbGetQuery(con, "SELECT count(*)
+                                  FROM information_schema.tables
+                                  WHERE table_schema = 'ecotox';")
+  DBetox_chck2 = as.numeric(DBetox_chck2)
+  
+  dbDisconnect(con)
+  dbUnloadDriver(drv)
+  
+} else {
+  
+  DBetox_chck2 = 0
+}
+
+if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   # (1) Create data basse ---------------------------------------------------
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv,
-                  dbname = DBname,
                   user = DBuser,
                   host = DBhost,
                   port = DBport,
@@ -37,8 +59,9 @@ if (DBetox_chck != 48) {
   
   # (2) Tables --------------------------------------------------------------
   drv = dbDriver("PostgreSQL")
-  con = dbConnect(drv, user = DBuser,
+  con = dbConnect(drv,
                   dbname = DBetox,
+                  user = DBuser,
                   host = DBhost,
                   port = DBport,
                   password = DBpassword)
@@ -176,7 +199,7 @@ if (DBetox_chck != 48) {
   dbUnloadDriver(drv)
   
   
-  # (4) Cleaning ------------------------------------------------------------
+  # (4) DB Cleaning ---------------------------------------------------------
   # Postgres
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser,
@@ -193,6 +216,9 @@ if (DBetox_chck != 48) {
   # R
   rm(con, df, drv, i, files, files2)
   
+  msg = paste(DBetox, 'built into PostgresDB', sep = ' ')
+  log_msg(msg); rm(msg)
+  
 } else {
   
   msg = 'ECOTOX already built into Postgres DB.'
@@ -200,4 +226,6 @@ if (DBetox_chck != 48) {
   
 }
 
+# cleaning ----------------------------------------------------------------
+rm(DBetox_chck1, DBetox_chck2)
 

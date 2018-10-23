@@ -29,21 +29,30 @@ if (!basename(output) %in% list.files(datadir)) {
 }
 
 # setup ECOTOX variables --------------------------------------------------
-etoxdir = grep('ecotox', list.dirs(datadir, recursive = FALSE), value = TRUE)
-release = regmatches(etoxdir, regexpr('[0-9]{2}_[0-9]{2}_[0-9]{4}', etoxdir))
-release = as.character(max(as.Date(release, format = '%m_%d_%Y')))
-DBetox = paste0('etox', gsub('-', '', release))
+etoxdirs = grep('ecotox', list.dirs(datadir, recursive = FALSE), value = TRUE)
+releases = regmatches(etoxdirs, regexpr(date_pattern, etoxdirs))
+
+etoxdir_lookup = data.table(
+  path = etoxdirs,
+  release = as.Date(releases, format = '%m_%d_%Y')
+)
+setorder(etoxdir_lookup, -release)
+
+DBetox = paste0('etox', gsub('-', '', etoxdir_lookup$release[1]))
+etoxdir = etoxdir_lookup$path[1]
+
 saveRDS(DBetox, file.path(cachedir, 'data_base_name_version.rds'))
 
-if (is.na(release)) {
+if (length(releases) == 0) {
   msg = 'Newest etox file (DBetox) file can not be found.'
   log_msg(msg); rm(msg)
 }
 
 # cleaning ----------------------------------------------------------------
 rm(baseurl, ftp, date_pattern,
+   ascii_dt, baseurl,
    file, date, ascii_dt, file_fin, file_url, output,
-   release)
+   etoxdirs, releases, etoxdir_lookup)
 
 
 
