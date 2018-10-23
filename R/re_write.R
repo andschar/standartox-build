@@ -32,7 +32,7 @@ if (nodename == 'scharmueller' & scp_feather) {
 }
 
 # message
-msg = paste0('Final table (tests_fin) written to shinydir:\n', shiny_path)
+msg = paste0('Final table (tests_fin) written to shinydir:\n', shinydir)
 log_msg(msg); rm(msg)
 
 # (2) to PostgreSQL -----------------------------------------------------------

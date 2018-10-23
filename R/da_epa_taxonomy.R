@@ -6,7 +6,7 @@ source(file.path(src, 'setup.R'))
 # data base
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
 
-# query -------------------------------------------------------------------
+# (1) query ---------------------------------------------------------------
 if (online_db) {
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
@@ -25,8 +25,7 @@ if (online_db) {
   tax = readRDS(file.path(cachedir, 'source_epa_taxa.rds'))  
 }
 
-
-# preparation -------------------------------------------------------------
+# (2) preparation ---------------------------------------------------------
 tax[ , c('subspecies', 'variety', 'species',  'ecotox_group') := NULL ]
 tax_names = c('common_name', 'genus', 'family', 'class', 'superclass', 'subphylum_div', 'phylum_division', 'kingdom')
 setnames(tax, old = tax_names, paste0('tax_', tax_names))
@@ -35,14 +34,11 @@ setkey(tax, 'latin_name') # use for merge later
 tax[ , taxon := gsub('\\sx\\s', ' X ', latin_name, ignore.case = TRUE) ] # transform all Hybrid X to capital letters => they aren't seen as species-names in the next REGEX
 tax[ , taxon := trimws(gsub('([A-z]+)\\s([a-z]+\\s)(.+)*', '\\1 \\2', taxon)) ]
 tax[ , taxon := trimws(gsub('sp.', '', taxon)) ] # remove sp.
-# tax[ , latin_short :=
-#         paste0(substr(latin_name,1,1), '. ',
-#                gsub('([a-z]+)\\s([a-z]+)', '\\2', taxon, ignore.case = TRUE)) ]
 
 # cleaning
 rm(tax_names)
 
-# errata ------------------------------------------------------------------
+# (3) errata --------------------------------------------------------------
 tax[ tax_phylum_division == 'Cyanophycota', tax_phylum_division := 'Cyanobacteria' ]
 tax[ tax_phylum_division == 'Rhodophycota', tax_phylum_division := 'Rhodophyta' ]
 
@@ -50,6 +46,7 @@ tax[ tax_phylum_division == 'Rhodophycota', tax_phylum_division := 'Rhodophyta' 
 tax[ tax_phylum_division == 'Pyrrophycophyta', tax_phylum := 'Dinoflagellata' ]
 
 
+# (4) classification ------------------------------------------------------
 # convenience grouping ----------------------------------------------------
 tax[ , tax_convgroup := ifelse(tax_class == 'Osteichthyes', 'Fish', NA) ]
 tax[ , tax_convgroup := ifelse(tax_kingdom == 'Plantae', 'Plants', NA) ]
