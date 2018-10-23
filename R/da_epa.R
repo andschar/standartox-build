@@ -4,6 +4,7 @@
 source(file.path(src, 'setup.R'))
 source(file.path(src, 'da_epa_query.R'))
 source(file.path(src, 'da_epa_taxonomy.R'))
+source(file.path(src, 'da_epa_media.R'))
 source(file.path(src, 'da_epa_conversion_unit.R'))
 source(file.path(src, 'da_epa_conversion_duration.R'))
 
@@ -87,8 +88,10 @@ for (i in names(epa1)) {
 rm(pat)
 
 # merge taxonomy ----------------------------------------------------------
-setkey(epa1, 'latin_name')
 epa1 = merge(epa1, tax, by = 'latin_name')
+
+# merge media characteristics ---------------------------------------------
+epa1 = merge(epa1, med, by = 'result_id')
 
 # merge unit conversion ---------------------------------------------------
 epa1 = merge(epa1, unit_fin, by.x = 'conc1_unit', by.y = 'uni_key', all.x = TRUE); rm(unit_fin)
@@ -119,7 +122,6 @@ epa1[ subhabitat %in% c('E'), hab_isBra := 1 ]
 epa1[ subhabitat %in% c('D', 'F', 'G'), hab_isTer := 1 ]
 epa1[ subhabitat %in% c('M'), hab_isMar := 1 ]
 
-
 # subseting ---------------------------------------------------------------
 # remove NA entries
 epa1 = epa1[ !is.na(dur_value) &
@@ -129,12 +131,9 @@ epa1 = epa1[ !is.na(dur_value) &
              !is.na(effect) &
              !is.na(endpoint) ]
 
-# names -------------------------------------------------------------------
-med_cols_orig = grep('media', names(epa1), value = TRUE)
-med_cols = sub('_mean', '', sub('media', 'med', med_cols_orig))
-setnames(epa1, med_cols_orig, med_cols)
-
 # final columns -----------------------------------------------------------
+med_cols = grep('med_', names(epa1), value = TRUE)
+
 cols_fin = c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group',
              'conc1_mean', 'conc1_unit', 'uni_value', 'uni_unit_conv', 'qualifier', 'uni_conv',
              'obs_duration_mean', 'obs_duration_unit', 'dur_value', 'dur_value_unit',
@@ -183,7 +182,6 @@ log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
 rm(cas_chck, taxa, chem, i, cols_fin)
-rm(med_cols_orig, med_cols)
 
 # help --------------------------------------------------------------------
 # https://cfpub.epa.gov/ecotox/help.cfm?help_id=CONTENTFAQ&help_type=define&help_back=1#asterisk
