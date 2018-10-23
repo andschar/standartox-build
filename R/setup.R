@@ -11,6 +11,12 @@ pacman::p_load(RCurl, stringr,
 
 # pacman::p_update()
 
+# switches ----------------------------------------------------------------
+online = TRUE
+online_db = TRUE
+plots = FALSE
+scp_feather = FALSE
+
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
 missingdir = file.path(prj, 'missing')
@@ -27,6 +33,5 @@ source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
 source(file.path(src, 'fun_product_na.R'))
 source(file.path(src, 'fun_extr_vec.R'))
 source(file.path(src, 'fun_log_message.R'))
-source(file.path(src, 'gg_theme.R'))
 
 

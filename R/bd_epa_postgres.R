@@ -10,14 +10,15 @@ con = dbConnect(drv,
                 port = DBport,
                 password = DBpassword)
 
-DBetox_chck = dbGetQuery(con, paste0("SELECT datname
-                                      FROM pg_catalog.pg_database
-                                      WHERE datname = '", DBetox, "';"))
+DBetox_chck = dbGetQuery(con, paste0("SELECT count(*)
+                                      FROM information_schema.tables
+                                      WHERE table_schema = 'ecotox';"))
+DBetox_chck = as.numeric(DBetox_chck)
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
-if (nrow(DBetox_chck) == 0) {
+if (DBetox_chck != 48) {
   # (1) Create data basse ---------------------------------------------------
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv,
