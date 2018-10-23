@@ -177,6 +177,10 @@ saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'ep_chemical_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
+# log ---------------------------------------------------------------------
+msg = 'no errors'
+log_msg(msg); rm(msg)
+
 # cleaning ----------------------------------------------------------------
 rm(cas_chck, taxa, chem, i, cols_fin)
 rm(med_cols_orig, med_cols)

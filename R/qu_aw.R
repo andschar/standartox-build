@@ -64,7 +64,7 @@ for (i in names(aw3)) {
 
 aw3[ , aw_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ aw_pest == 0, aw_pest := NA ]
 
-# missing entries ---------------------------------------------------------
+# log ---------------------------------------------------------------------
 msg = paste0('AlanWood: For ', length(aw_l) - nrow(aw3), '/', length(aw_l),
              ' CAS no cnames were found.')
 log_msg(msg); rm(msg)
