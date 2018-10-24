@@ -12,8 +12,8 @@ pacman::p_load(RCurl, stringr,
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = TRUE
-online_db = TRUE
+online = T
+online_db = T
 plots = FALSE
 scp_feather = FALSE
 

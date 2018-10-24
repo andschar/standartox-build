@@ -11,6 +11,7 @@ if (online) {
   
   todo_pc = sort(chem$cas)
   # todo_pc = '128-44-9' # multiple CIDs
+  # todo_pc = '120-36-5'
   # todo_pc = todo_pc[1:4] # debug me!
   
   cid_l = list()

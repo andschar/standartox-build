@@ -9,7 +9,6 @@
 ## find folder name on system - slow, but generic!
 # prj = system("find / -name etox-base 2>/dev/null", intern = TRUE)[1] # locate prj dir
 # shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE)[1] # locate shiny dir
-
 ## pre-defined
 nodename = Sys.info()[4]
 if (nodename == 'scharmueller') {
@@ -22,18 +21,24 @@ if (nodename == 'scharmueller') {
   stop('New system. Define prj and shinydir variables.')
 }
 
+# console log -------------------------------------------------------------
+if (nodename == 'uwigis') {
+  con = file('console.log')
+  sink(con, append = TRUE)
+  sink(con, append = TRUE, type = 'message')
+}
 
 # (0) setup ---------------------------------------------------------------
-source(file.path(prj, 'R/setup.R'))
+source(file.path(prj, 'R/setup.R'), max.deparse.length = 1e6)
 
 # (1) build data base -----------------------------------------------------
 # download
-source(file.path(src, 'bd_epa_download.R'))
+source(file.path(src, 'bd_epa_download.R'), max.deparse.length = 1e6)
 # build
-source(file.path(src, 'bd_epa_postgres.R'))
+source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = 1e6)
 
 # # (2) queries -------------------------------------------------------------
-source(file.path(src, 're_merge.R'))
+source(file.path(src, 're_merge.R'), max.deparse.length = 1e6)
 # source(file.path(src, 're_filter.R'))
 # # filter stats?
 # 
@@ -42,6 +47,13 @@ source(file.path(src, 're_merge.R'))
 # source(file.path(src, 're_write.R'))
 # 
 # 
+
+# console log 2 -----------------------------------------------------------
+if (nodename == 'uwoigis') {
+  # Restore output to console
+  sink() 
+  sink(type="message")  
+}
 
 
 
