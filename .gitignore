@@ -5,6 +5,7 @@
 
 # self defined:
 *.Rproj
+*.log
 /data
 /plots
 README.html
