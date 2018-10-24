@@ -53,10 +53,10 @@ aw2_m[ grep('(?i)herbic', value) , aw_herbicide := 1L ]
 aw2_m[ grep('(?i)inhibitor', value) , aw_inhibitors := 1L ]
 aw2_m[ grep('(?i)insectic', value) , aw_insecticide := 1L ]
 aw2_m[ grep('(?i)molluscic', value) , aw_molluscicide := 1L ]
-aw2_m[ grep('(?i)repellent', value) , aw_repellents := 1L ]
+aw2_m[ grep('(?i)repellent', value) , aw_repellent := 1L ]
 aw2_m[ grep('(?i)rodentic', value) , aw_rodenticide := 1L ]
 
-cols = c('aw_acaricide', 'aw_fungicide', 'aw_herbicide', 'aw_inhibitors', 'aw_insecticide', 'aw_molluscicide', 'aw_repellents', 'aw_rodenticide')
+cols = c('aw_acaricide', 'aw_fungicide', 'aw_herbicide', 'aw_inhibitors', 'aw_insecticide', 'aw_molluscicide', 'aw_repellent', 'aw_rodenticide')
 aw3 = aw2_m[ , lapply(.SD, min, na.rm = TRUE), .SDcols = cols, by = .(cas, cname) ]
 for (i in names(aw3)) {
   aw3[ get(i) == Inf, (i) := NA ]
