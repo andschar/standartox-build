@@ -30,7 +30,8 @@ options(stringsAsFactors = FALSE)
 
 # variables ---------------------------------------------------------------
 #articledir = file.path(prj, 'article')
-fundir = file.path(prj, 'R', 'functions')
+src = file.path(prj, 'R')
+fundir = file.path(src,'functions')
 datadir = file.path(prj, 'data')
 cache = file.path(prj, 'cache')
 
@@ -42,7 +43,7 @@ source(file.path(fundir, 'fun_ec50filter_meta_plots.R'))
 source(file.path(fundir, 'fun_output_stats.R'))
 source(file.path(fundir, 'fun_casconv.R'))
 # plot themes
-source(file.path('gg_theme.R'))
+source(file.path(src, 'gg_theme.R'))
 
 # data --------------------------------------------------------------------
 # as .rds (~2.5s)
