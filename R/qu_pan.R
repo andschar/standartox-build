@@ -42,8 +42,9 @@ setnames(pan2, c('cas', paste0('pa_', tolower(names(pan2[ ,2:length(names(pan2))
 
 # missing entries ---------------------------------------------------------
 na_pan2_chem_class = pan2[ is.na(pa_chemical_class) ]
-message('PubChem: For ', nrow(na_pan2_chem_class), '/', nrow(pc2),
-        ' CAS no Chem. class entries were found.')
+msg = paste0('PAN: For ', nrow(na_pan2_chem_class), '/', nrow(pc2),
+             ' CAS no Chem. class entries were found.')
+log_msg(msg); rm(msg)
 
 if (nrow(na_pan2_chem_class) > 0) {
   fwrite(na_pan2_chem_class, file.path(missingdir, 'na_pan2_chem_class.csv'))
