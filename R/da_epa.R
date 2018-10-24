@@ -122,19 +122,10 @@ epa1[ subhabitat %in% c('E'), hab_isBra := 1 ]
 epa1[ subhabitat %in% c('D', 'F', 'G'), hab_isTer := 1 ]
 epa1[ subhabitat %in% c('M'), hab_isMar := 1 ]
 
-# subseting ---------------------------------------------------------------
-# remove NA entries
-epa1 = epa1[ !is.na(obs_duration_mean_conv) &
-             !is.na(obs_duration_unit_conv) &
-             !is.na(conc1_mean_conv) &
-             !is.na(conc1_unit_conv) &
-             !is.na(effect) &
-             !is.na(endpoint) ]
-
 # final columns -----------------------------------------------------------
 med_cols = grep('med_', names(epa1), value = TRUE)
 
-cols_fin = c('casnr', 'cas', 'chemical_name', 'chemical_group',
+cols_fin = c('test_id', 'result_id', 'casnr', 'cas', 'chemical_name', 'chemical_group',
              'conc1_mean', 'conc1_unit', 'conc1_mean_conv', 'conc1_unit_conv', 'qualifier', 'unit_conv',
              'obs_duration_mean', 'obs_duration_unit', 'obs_duration_mean_conv', 'obs_duration_unit_conv',
              'conc1_type', 'endpoint', 'effect', 'exposure_type',
@@ -167,13 +158,39 @@ setnames(epa2,
 rm(che_old, che_new, gen_old, gen_new, tes_old, tes_new, ref_old, ref_new)
 
 # checks ------------------------------------------------------------------
-# cas
+## (1) NA CAS or CASNR?
 cas_chck = 
   epa2[ is.na(casnr) | casnr == '' |
           is.na(cas) | cas == '' ]
 if (nrow(cas_chck) != 0) {
-  warning(nrow(cas_chck), ' missing CAS or CASNR.')
+  msg = paste0(nrow(cas_chck), ' missing CAS or CASNR.') 
+  log_msg(msg)
+  stop(msg)
 }
+
+## (2) Does a duplicated result_id s show different values (i.e. results)?
+dupl_res_id = epa2[ , .N, result_id][order(-N)][N > 1]$result_id
+chck_dupl_res_id = epa2[ result_id %in% dupl_res_id,
+                         .(mn = mean(value_fin, na.rm = TRUE),
+                           sd = sd(value_fin, na.rm = TRUE)),
+                         by = result_id][sd != 0]
+
+if (nrow(chck_dupl_res_id) > 1) {
+  msg = 'Duplicated result_id with differing values.'
+  log_msg(msg)
+  stop(msg)
+}
+
+# subseting ---------------------------------------------------------------
+## (1) remove NA entries
+epa2 = epa2[ !is.na(dur_fin) &
+             !is.na(dur_unit_fin) &
+             !is.na(value_fin) &
+             !is.na(unit_fin) &
+             !is.na(tes_effect) &
+             !is.na(tes_endpoint) ]
+
+## (2) Remove duplicated result_id s
 
 # saving ------------------------------------------------------------------
 saveRDS(epa2, file.path(cachedir, 'epa.rds'))
