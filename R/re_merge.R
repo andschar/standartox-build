@@ -7,29 +7,29 @@ source(file.path(src, 'setup.R'))
 source(file.path(src, 'da_epa.R'))
 # 
 # # chemical data -----------------------------------------------------------
-source(file.path(src, 'qu_pubchem.R'))
+# source(file.path(src, 'qu_pubchem.R'))
 source(file.path(src, 'qu_aw.R'))
 
 
 
 
-# source(file.path(src, 'qu_pan.R'))
-# source(file.path(src, 'qu_pp.R'))
+source(file.path(src, 'qu_pan.R'))
+source(file.path(src, 'qu_pp.R'))
 # source(file.path(src, 'qu_frac.R'))
-# source(file.path(src, 'qu_eurostat_chem_class.R'))
-# source(file.path(src, 'qu_chemspider_scrape.R'))
-# 
-# # taxa scripts ------------------------------------------------------------
-# # TODO deprecate?!?
-# # source('R/qu_classification.R')
-# # TODO 55 taxa to query! also check whether there is habitat data for all the taxa in self defined!
-# 
-# 
-# # habitat scripts ---------------------------------------------------------
-# source(file.path(src, 'qu_worms.R'))
-# # source('R/qu_habitat_self_defined.R') # self defined script
-# #lookup_man_fam = fread(file.path(cachedir, 'lookup_man_fam_list.csv'))
-# 
+source(file.path(src, 'qu_eurostat_chem_class.R'))
+source(file.path(src, 'qu_chemspider_scrape.R'))
+
+# taxa scripts ------------------------------------------------------------
+# TODO deprecate?!?
+# source('R/qu_classification.R')
+# TODO 55 taxa to query! also check whether there is habitat data for all the taxa in self defined!
+
+
+# habitat scripts ---------------------------------------------------------
+source(file.path(src, 'qu_worms.R'))
+# source('R/qu_habitat_self_defined.R') # self defined script
+#lookup_man_fam = fread(file.path(cachedir, 'lookup_man_fam_list.csv'))
+
 # 
 # # regional scripts --------------------------------------------------------
 # source(file.path(src, 'qu_gbif.R')) # contains also habitat information
@@ -69,7 +69,7 @@ source(file.path(src, 'qu_aw.R'))
 # # regional information ------------------------------------------------------
 # re_info = gbif_conti_dc
 # 
-# # Duplicate cas and txon check ----------------------------------------------------
+# # Duplicate cas and txon check ----------------------------------------------
 # chck_cas_dupl = rbindlist(list(epa1[is.na(cas)],
 #                                ch_info[is.na(cas)]), fill = TRUE)
 # 
@@ -87,7 +87,7 @@ source(file.path(src, 'qu_aw.R'))
 # 
 # # Merge with test data ----------------------------------------------------
 # # CAS
-# tests = copy(epa1)
+# tests = copy(epa2)
 # 
 # tests = merge(tests, ch_info, by = 'cas', all.x = TRUE)
 # 
@@ -104,5 +104,5 @@ source(file.path(src, 'qu_aw.R'))
 # saveRDS(tests, file.path(cachedir, 'tests.rds'))
 # 
 # 
-
+# 
 
