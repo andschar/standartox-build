@@ -21,15 +21,15 @@ if (nodename == 'scharmueller') {
   stop('New system. Define prj and shinydir variables.')
 }
 
-# console log -------------------------------------------------------------
+# (0) setup ---------------------------------------------------------------
+source(file.path(prj, 'R/setup.R'), max.deparse.length = 1e6)
+
+# (0a) console log ---------------------------------------------------------
 if (nodename == 'uwigis') {
-  con = file('console.log')
+  con = file(file.path(src, 'console.log'))
   sink(con, append = TRUE)
   sink(con, append = TRUE, type = 'message')
 }
-
-# (0) setup ---------------------------------------------------------------
-source(file.path(prj, 'R/setup.R'), max.deparse.length = 1e6)
 
 # (1) build data base -----------------------------------------------------
 # download
@@ -48,7 +48,7 @@ source(file.path(src, 're_merge.R'), max.deparse.length = 1e6)
 # 
 # 
 
-# console log 2 -----------------------------------------------------------
+# (0b) console log 2 --------------------------------------------------------
 if (nodename == 'uwoigis') {
   # Restore output to console
   sink() 
