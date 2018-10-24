@@ -34,10 +34,10 @@ ui = fluidPage(
               # helpText(a('Help', href = 'https://cfpub.epa.gov/ecotox/pdf/codeappendix.pdf'))
             ),
             splitLayout(
-              # checkboxGroupInput(inputId = 'chem_class', label = 'Chemical class',
-              #                    choiceValues = te_stats_l$chem_class$variable,
-              #                    choiceNames = te_stats_l$chem_class$nam_long_stat,
-              #                    selected = 'cgr_herbicide'),
+              checkboxGroupInput(inputId = 'chem_class', label = 'Chemical class',
+                                 choiceValues = te_stats_l$chem_class$variable,
+                                 choiceNames = te_stats_l$chem_class$nam_long_stat,
+                                 selected = 'cgr_herbicide'),
               # TODO Don't know which data source provides such information
               # checkboxGroupInput(inputId = 'authorization', label = 'Authorized in')
               checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
@@ -58,7 +58,7 @@ ui = fluidPage(
               checkboxGroupInput(inputId = 'continent', label = 'Continent',
                                  choiceValues = te_stats_l$continent$variable,
                                  choiceNames = te_stats_l$continent$nam_long_stat,
-                                 selected = 'hab_europe')
+                                 selected = 'reg_europe')
             )
           )
         ),
