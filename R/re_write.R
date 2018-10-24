@@ -6,7 +6,8 @@ source(file.path(src, 'setup.R'))
 # variables
 schema = 'etoxbase'
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
-tbl = paste0(DBetox, '_fin')
+DBetox_fin = paste0(schema, gsub('[^0-9]+', '', DBetox))
+tbl = paste0(schema, gsub('[^0-9]+', '', DBetox))
 
 # data --------------------------------------------------------------------
 tests_fin = readRDS(file.path(cachedir, 'tests_fl.rds'))
@@ -45,8 +46,8 @@ con = dbConnect(drv,
                 port = DBport,
                 password = DBpassword)
 
-dbSendQuery(con, paste0("DROP SCHEMA IF EXISTS ", schema, " CASCADE;"))
-dbSendQuery(con, paste0("CREATE SCHEMA ", schema, ";"))
+dbSendQuery(con, paste0("DROP DATABASE IF EXISTS ", DBetox_fin, ";"))
+dbSendQuery(con, paste0("CREATE DATABASE ", DBetox_fin, ";"))
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
@@ -54,12 +55,13 @@ dbUnloadDriver(drv)
 # write ----
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
-                dbname = DBetox,
+                dbname = DBetox_fin,
                 user = DBuser,
                 host = DBhost,
                 port = DBport,
                 password = DBpassword)
 
+dbSendQuery(con, paste0("CREATE SCHEMA ", schema, ";"))
 dbSendQuery(con, paste0("DROP TABLE IF EXISTS  ", schema, ".", tbl, ";"))
 dbWriteTable(con, tests_fin,
              name = c(schema, tbl), row.names = FALSE)
@@ -73,7 +75,7 @@ dbUnloadDriver(drv)
 # comments ----
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
-                dbname = DBetox,
+                dbname = DBetox_fin,
                 user = DBuser,
                 host = DBhost,
                 port = DBport,
