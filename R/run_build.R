@@ -26,7 +26,7 @@ source(file.path(prj, 'R/setup.R'), max.deparse.length = 1e6)
 
 # (0a) console log ---------------------------------------------------------
 if (nodename == 'uwigis') {
-  con = file(file.path(src, 'console.log'))
+  con = file(file.path(prj, 'console.log'))
   sink(con, append = TRUE)
   sink(con, append = TRUE, type = 'message')
 }

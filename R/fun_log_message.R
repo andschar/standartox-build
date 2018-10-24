@@ -7,6 +7,6 @@ log_msg = function(msg) {
               msg,
               sep = '\t')
   
-  write(out, file.path(prj, 'log'), append = TRUE)
+  write(out, file.path(prj, 'script.log'), append = TRUE)
   message(out)
 }
