@@ -3,7 +3,7 @@
 # packages ----------------------------------------------------------------
 if (!require('pacman')) install.packages('pacman')
 
-pacman::p_load(RCurl, stringr,
+pacman::p_load(RCurl, stringr, R.utils,
                readxl, data.table, RPostgreSQL, vegan, plyr,
                feather,
                ggplot2, ggrepel, cowplot,
