@@ -5,7 +5,6 @@ q = "
          results.result_id,
          tests.test_cas::varchar AS casnr,
          chemicals.chemical_name,
-         chemical_carriers.chem_name AS chemical_carrier,
          chemicals.ecotox_group AS chemical_group,
       -- concentration 
          conc1_mean,

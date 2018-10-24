@@ -94,19 +94,19 @@ epa1 = merge(epa1, tax, by = 'latin_name')
 epa1 = merge(epa1, med, by = 'result_id')
 
 # merge unit conversion ---------------------------------------------------
-epa1 = merge(epa1, unit_fin, by.x = 'conc1_unit', by.y = 'uni_key', all.x = TRUE); rm(unit_fin)
-epa1[ uni_conv == 'yes', uni_value := conc1_mean %*na% uni_multi ]
-epa1[ uni_conv == 'yes', uni_value_unit := uni_type ]
+epa1 = merge(epa1, unit_fin, by.x = 'conc1_unit', by.y = 'unit_key', all.x = TRUE); rm(unit_fin)
+epa1[ unit_conv == 'yes', conc1_mean_conv := conc1_mean %*na% unit_multi ]
+epa1[ unit_conv == 'yes', conc1_unit_conv := unit_conv_to ]
 
 # cleaning
-cols_rm = c('uni_multi', 'uni_u1num', 'uni_u2num', 'uni_type')
+cols_rm = c('unit_multi', 'unit_u1num', 'unit_u2num', 'unit_type', 'unit_conv_to')
 epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
 
 # merge duration conversion -----------------------------------------------
 epa1 = merge(epa1, duration_fin, by.x = 'obs_duration_unit', by.y = 'dur_key',
              all.x = TRUE); rm(duration_fin)
-epa1[ dur_conv == 'yes', dur_value := obs_duration_mean %*na% dur_multiplier ]
-epa1[ dur_conv == 'yes', dur_value_unit := dur_conv_to ]
+epa1[ dur_conv == 'yes', obs_duration_mean_conv := obs_duration_mean %*na% dur_multiplier ]
+epa1[ dur_conv == 'yes', obs_duration_unit_conv := dur_conv_to ]
 
 # cleaning
 cols_rm = c('dur_conv', 'dur_conv_to', 'dur_multiplier')
@@ -124,20 +124,20 @@ epa1[ subhabitat %in% c('M'), hab_isMar := 1 ]
 
 # subseting ---------------------------------------------------------------
 # remove NA entries
-epa1 = epa1[ !is.na(dur_value) &
-             !is.na(dur_value_unit) &
-             !is.na(uni_value) &
-             !is.na(uni_value_unit) &
+epa1 = epa1[ !is.na(obs_duration_mean_conv) &
+             !is.na(obs_duration_unit_conv) &
+             !is.na(conc1_mean_conv) &
+             !is.na(conc1_unit_conv) &
              !is.na(effect) &
              !is.na(endpoint) ]
 
 # final columns -----------------------------------------------------------
 med_cols = grep('med_', names(epa1), value = TRUE)
 
-cols_fin = c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_group',
-             'conc1_mean', 'conc1_unit', 'uni_value', 'uni_unit_conv', 'qualifier', 'uni_conv',
-             'obs_duration_mean', 'obs_duration_unit', 'dur_value', 'dur_value_unit',
-             'conc1_type', 'endpoint', 'effect', 'exposure_type', 'med_type',
+cols_fin = c('casnr', 'cas', 'chemical_name', 'chemical_group',
+             'conc1_mean', 'conc1_unit', 'conc1_mean_conv', 'conc1_unit_conv', 'qualifier', 'unit_conv',
+             'obs_duration_mean', 'obs_duration_unit', 'obs_duration_mean_conv', 'obs_duration_unit_conv',
+             'conc1_type', 'endpoint', 'effect', 'exposure_type',
              med_cols,
              'hab_isFre', 'hab_isBra', 'hab_isMar', 'hab_isTer',
              'taxon', 'tax_genus', 'tax_family', 'tax_order', 'tax_class', 'tax_superclass', 'tax_phylum',
@@ -145,35 +145,41 @@ cols_fin = c('casnr', 'cas', 'chemical_name', 'chemical_carrier', 'chemical_grou
              'tax_common_name', 'tax_convgroup', 'tax_aqu_inv', 'tax_troph_lvl',
              'source', 'reference_number', 'title', 'author', 'publication_year')
 
-epa1 = epa1[ , .SD, .SDcols = cols_fin ]
+epa2 = epa1[ , .SD, .SDcols = cols_fin ]
 
 # final names -------------------------------------------------------------
-setnames(epa1, 
-         old = c('conc1_mean', 'conc1_unit', 'conc1_type', 'uni_value', 'uni_unit_conv',
-                 'obs_duration_mean', 'obs_duration_unit', 'dur_value', 'dur_value_unit',
-                 'reference_number'),
-         new = c('value_orig', 'unit_orig', 'conc_type', 'value', 'unit',
-                 'duration_orig', 'duration_unit_orig', 'duration', 'duration_unit',
-                 'ref_num'))
-setnames(epa1, paste0('ep_', names(epa1)))
-setnames(epa1,
-         old = c('ep_casnr', 'ep_cas', 'ep_taxon'),
-         new = c('casnr', 'cas', 'taxon'))
+che_old = c('chemical_name', 'chemical_group')
+che_new = c('che_name', 'che_group')
+gen_old = c('conc1_mean', 'conc1_unit', 'conc1_mean_conv', 'conc1_unit_conv', 
+            'obs_duration_mean', 'obs_duration_unit', 'obs_duration_mean_conv', 'obs_duration_unit_conv')
+gen_new = c('value_orig', 'unit_orig', 'value_fin', 'unit_fin',
+            'dur_orig', 'dur_unit_orig', 'dur_fin', 'dur_unit_fin')
+tes_old = c('effect', 'endpoint', 'exposure_type', 'conc1_type')
+tes_new = c('tes_effect', 'tes_endpoint', 'tes_exposure_type', 'tes_conc_type')
+ref_old = c('reference_number', 'title', 'author', 'publication_year')
+ref_new = c('ref_num', 'ref_title', 'ref_author', 'ref_publ_year')
+
+setnames(epa2,
+         old = c(che_old, gen_old, tes_old, ref_old),
+         new = c(che_new, gen_new, tes_new, ref_new))
+
+# cleaning
+rm(che_old, che_new, gen_old, gen_new, tes_old, tes_new, ref_old, ref_new)
 
 # checks ------------------------------------------------------------------
 # cas
 cas_chck = 
-  epa1[ is.na(casnr) | casnr == '' |
+  epa2[ is.na(casnr) | casnr == '' |
           is.na(cas) | cas == '' ]
 if (nrow(cas_chck) != 0) {
   warning(nrow(cas_chck), ' missing CAS or CASNR.')
 }
 
 # saving ------------------------------------------------------------------
-saveRDS(epa1, file.path(cachedir, 'epa.rds'))
-taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'ep_tax_family') ])
+saveRDS(epa2, file.path(cachedir, 'epa.rds'))
+taxa = unique(epa2[ , .SD, .SDcols = c('taxon', 'tax_family') ])
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
-chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'ep_chemical_name')])
+chem = unique(epa2[ , .SD, .SDcols = c('casnr', 'cas', 'che_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # log ---------------------------------------------------------------------
