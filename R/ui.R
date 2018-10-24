@@ -22,21 +22,22 @@ ui = fluidPage(
             ),
             verticalLayout(
               checkboxGroupInput(inputId = 'conc_type', label = 'Concentration type',
-                                 choiceValues = te_stats_l$ep_conc_type$val,
+                                 choiceValues = te_stats_l$tes_conc_type$val,
                                  choiceNames = paste0(
-                                   te_stats_l$ep_conc_type$val,
+                                   te_stats_l$tes_conc_type$val,
                                    ' - ',
-                                   te_stats_l$ep_conc_type$nam_long,
+                                   te_stats_l$tes_conc_type$nam_long,
                                    ' (',
-                                   te_stats_l$ep_conc_type$n,
+                                   te_stats_l$tes_conc_type$n,
                                    ')'),
                                  selected = c('A'))
               # helpText(a('Help', href = 'https://cfpub.epa.gov/ecotox/pdf/codeappendix.pdf'))
             ),
             splitLayout(
-              checkboxGroupInput(inputId = 'chem_class', label = 'Chemical class',
-                                 choiceValues = c('meta', 'pest'),
-                                 choiceNames = c('Metals', 'Pesticides')),
+              # checkboxGroupInput(inputId = 'chem_class', label = 'Chemical class',
+              #                    choiceValues = te_stats_l$chem_class$variable,
+              #                    choiceNames = te_stats_l$chem_class$nam_long_stat,
+              #                    selected = 'cgr_herbicide'),
               # TODO Don't know which data source provides such information
               # checkboxGroupInput(inputId = 'authorization', label = 'Authorized in')
               checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
@@ -53,11 +54,11 @@ ui = fluidPage(
               checkboxGroupInput(inputId = 'habitat', label = 'Organism hatbitat',
                                  choiceValues = te_stats_l$habitat$variable,
                                  choiceNames = te_stats_l$habitat$nam_long_stat,
-                                 selected = 'is_fresh'),
+                                 selected = 'hab_fresh'),
               checkboxGroupInput(inputId = 'continent', label = 'Continent',
                                  choiceValues = te_stats_l$continent$variable,
                                  choiceNames = te_stats_l$continent$nam_long_stat,
-                                 selected = 'is_europe')
+                                 selected = 'hab_europe')
             )
           )
         ),
@@ -71,8 +72,8 @@ ui = fluidPage(
             ),
             splitLayout(
               checkboxGroupInput(inputId = 'effect', label = 'Effect group',
-                                 choiceValues = te_stats_l$ep_effect$val,
-                                 choiceNames = te_stats_l$ep_effect$nam),
+                                 choiceValues = te_stats_l$tes_effect$val,
+                                 choiceNames = te_stats_l$tes_effect$nam),
               radioButtons(inputId = 'endpoint', label = 'TODO Endpoints',
                            choiceValues = c('EC50', 'LOEC', 'NOEC'),
                            choiceNames = c('L/EC50', 'LOEC', 'NOEC'),
@@ -87,7 +88,7 @@ ui = fluidPage(
             splitLayout(
               checkboxGroupInput(inputId = 'agg', label = 'Aggregate',
                                  choices = c('min', 'max', 'md', 'mn', 'sd'),
-                                 selected = c('min', 'md'))
+                                 selected = 'md')
             ),
             splitLayout(
               checkboxGroupInput(inputId = 'comp', label = 'Compound columns',

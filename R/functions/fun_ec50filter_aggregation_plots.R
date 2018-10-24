@@ -16,7 +16,7 @@ ec50_filagg_plot = function(dt_pl, yaxis = 'casnr', cutoff = 25) {
   dt_all_pl = read_feather(file.path(cache, 'dt.feather'))
   setDT(dt_all_pl)
   dt_all_pl[ , comp_type := 'test' ]
-  dt_all_pl = dt_all_pl[ , .SD, .SDcols = c('casnr', 'comp_name', 'comp_type', 'ep_value')]
+  dt_all_pl = dt_all_pl[ , .SD, .SDcols = c('casnr', 'comp_name', 'comp_type', 'value_fin')]
   
   cols = grep('md|mn|min|max', names(dt_pl), ignore.case = TRUE, value = TRUE)
   dt_m = melt(dt_pl, id.vars = 'casnr', measure.vars = c(cols))
@@ -42,7 +42,7 @@ ec50_filagg_plot = function(dt_pl, yaxis = 'casnr', cutoff = 25) {
     
     gg_out = ggplot(x, aes(y = reorder(get(yaxis), -value), x = value)) + #, col = comp_type)) +
       geom_point(size = 0.001) + # TODO dummy to keep ordering. Change this at one point
-      geom_point(data = y, aes(y = get(yaxis), x = ep_value), col = 'gray', size = 0.75) + 
+      geom_point(data = y, aes(y = get(yaxis), x = value_fin), col = 'gray', size = 0.75) + 
       geom_point() +
       #scale_x_log10() +
       coord_cartesian(xlim = range(x$value)) +
