@@ -63,12 +63,12 @@ dt2 = dt[ grep('^[A-Z]+[0-9]+_[0-9]+_.+$', code) ]
 # is pesticide
 dt2[ , eu_pesticide := TRUE ]
 # pesticide sub-groups
-dt2[ group1 == 'fungicides and bactericides', eu_fungicide := 1 ]
-dt2[ group1 == 'herbicides. haulm destructors and moss killers', eu_herbicide := 1 ]
-dt2[ group1 == 'insecticides and acaricides', eu_insecticide := 1 ]
-dt2[ group2 == 'molluscicides', eu_molluscicide := 1 ]
-dt2[ group2 == 'rodenticides', eu_rodenticide := 1 ]
-dt2[ group2 == 'repellents', eu_repellent := 1 ]
+dt2[ group1 == 'fungicides and bactericides', eu_fungicide := 1L ]
+dt2[ group1 == 'herbicides. haulm destructors and moss killers', eu_herbicide := 1L ]
+dt2[ group1 == 'insecticides and acaricides', eu_insecticide := 1L ]
+dt2[ group2 == 'molluscicides', eu_molluscicide := 1L ]
+dt2[ group2 == 'rodenticides', eu_rodenticide := 1L ]
+dt2[ group2 == 'repellents', eu_repellent := 1L ]
 
 
 # final dt ----------------------------------------------------------------

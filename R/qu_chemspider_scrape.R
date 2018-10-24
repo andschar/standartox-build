@@ -95,7 +95,7 @@ cols = c('cas', 'csid', 'name', 'acaricide', 'avicide', 'fungicide', 'herbicide'
 cs2 = cs_chebi_m_dc[ , .SD, .SDcols = cols ]
 
 cols = grep('cas|csid|name', names(cs2), invert = TRUE, value = TRUE)
-cs2[ , pesticide := sum(.SD), .SDcols = cols, by = 1:nrow(cs2) ][pesticide > 0, pesticide := 1]
+cs2[ , pesticide := sum(.SD), .SDcols = cols, by = 1:nrow(cs2) ][pesticide > 0, pesticide := 1L ]
 
 setnames(cs2, paste0('cs_', names(cs2)))
 setnames(cs2, c('cs_cas', 'cs_csid', 'cs_name'), c('cas', 'csid', 'name'))

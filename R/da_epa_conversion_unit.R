@@ -98,10 +98,10 @@ unit_dt2[ nas == 3, type := u1type ]
 
 # classification ----------------------------------------------------------
 # TODO is this useful?
-unit_dt2[ grep('(?i)ai', key), is_ai := 1 ]
-unit_dt2[ grep('bdwt', key), is_bdwt := 1 ]
-unit_dt2[ grep('feed|food|fd', key), is_fd := 1 ]
-unit_dt2[ grep('ae', key), is_ae := 1 ] # TODO don't know what it is
+unit_dt2[ grep('(?i)ai', key), is_ai := 1L ]
+unit_dt2[ grep('bdwt', key), is_bdwt := 1L ]
+unit_dt2[ grep('feed|food|fd', key), is_fd := 1L ]
+unit_dt2[ grep('ae', key), is_ae := 1L ] # TODO don't know what it is
 
 # output ------------------------------------------------------------------
 fwrite(unit_dt2, '/tmp/unit_dt2.csv') # debuging

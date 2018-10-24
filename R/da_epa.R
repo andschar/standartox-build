@@ -114,13 +114,13 @@ epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
 
 # new variables -----------------------------------------------------------
 # habitat
-epa1[ med_type == 'FW', hab_isFre := 1 ]
-epa1[ med_type == 'SW', hab_isMar := 1 ]
-epa1[ habitat == 'Soil', hab_isTer := 1 ]
-epa1[ subhabitat %in% c('P', 'R', 'L'), hab_isFre := 1 ]
-epa1[ subhabitat %in% c('E'), hab_isBra := 1 ]
-epa1[ subhabitat %in% c('D', 'F', 'G'), hab_isTer := 1 ]
-epa1[ subhabitat %in% c('M'), hab_isMar := 1 ]
+epa1[ med_type == 'FW', hab_isFre := 1L ]
+epa1[ med_type == 'SW', hab_isMar := 1L ]
+epa1[ habitat == 'Soil', hab_isTer := 1L ]
+epa1[ subhabitat %in% c('P', 'R', 'L'), hab_isFre := 1L ]
+epa1[ subhabitat %in% c('E'), hab_isBra := 1L ]
+epa1[ subhabitat %in% c('D', 'F', 'G'), hab_isTer := 1L ]
+epa1[ subhabitat %in% c('M'), hab_isMar := 1L ]
 
 # final columns -----------------------------------------------------------
 med_cols = grep('med_', names(epa1), value = TRUE)

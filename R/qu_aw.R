@@ -47,14 +47,14 @@ aw2_m = melt(aw2, id.var = c('cas', 'cname'))
 aw2_m[ , cas := as.character(cas) ]
 aw2_m[ , cname := as.character(cname) ]
 
-aw2_m[ grep('(?i)acaric', value) , aw_acaricide := 1 ]
-aw2_m[ grep('(?i)fungic', value) , aw_fungicide := 1 ]
-aw2_m[ grep('(?i)herbic', value) , aw_herbicide := 1 ]
-aw2_m[ grep('(?i)inhibitor', value) , aw_inhibitors := 1 ]
-aw2_m[ grep('(?i)insectic', value) , aw_insecticide := 1 ]
-aw2_m[ grep('(?i)molluscic', value) , aw_molluscicide := 1 ]
-aw2_m[ grep('(?i)repellent', value) , aw_repellents := 1 ]
-aw2_m[ grep('(?i)rodentic', value) , aw_rodenticide := 1 ]
+aw2_m[ grep('(?i)acaric', value) , aw_acaricide := 1L ]
+aw2_m[ grep('(?i)fungic', value) , aw_fungicide := 1L ]
+aw2_m[ grep('(?i)herbic', value) , aw_herbicide := 1L ]
+aw2_m[ grep('(?i)inhibitor', value) , aw_inhibitors := 1L ]
+aw2_m[ grep('(?i)insectic', value) , aw_insecticide := 1L ]
+aw2_m[ grep('(?i)molluscic', value) , aw_molluscicide := 1L ]
+aw2_m[ grep('(?i)repellent', value) , aw_repellents := 1L ]
+aw2_m[ grep('(?i)rodentic', value) , aw_rodenticide := 1L ]
 
 cols = c('aw_acaricide', 'aw_fungicide', 'aw_herbicide', 'aw_inhibitors', 'aw_insecticide', 'aw_molluscicide', 'aw_repellents', 'aw_rodenticide')
 aw3 = aw2_m[ , lapply(.SD, min, na.rm = TRUE), .SDcols = cols, by = .(cas, cname) ]
