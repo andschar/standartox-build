@@ -3,17 +3,21 @@
 # packages ----------------------------------------------------------------
 if (!require('pacman')) install.packages('pacman')
 
+## install via CRAN
 pacman::p_load(RCurl, stringr, R.utils,
                readxl, data.table, RPostgreSQL, vegan, plyr,
                feather,
                ggplot2, ggrepel, cowplot,
                rgbif, webchem, taxize, countrycode)
 
+## install via Github
+pacman::p_load_gh('NIVANorge/chemspideR')
+
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = TRUE
-online_db = TRUE
+online = FALSE
+online_db = FALSE
 plots = FALSE
 scp_feather = FALSE
 
