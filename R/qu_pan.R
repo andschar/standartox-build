@@ -7,19 +7,29 @@ source(file.path(src, 'setup.R'))
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
 # query -------------------------------------------------------------------
-todo_pan = chem$cas
-# todo_pan = todo_pan[1:7] # debug me
+todo_pan = sort(chem$cas)
+todo_pan = todo_pan[1:3] # debug me
 
-if (online) {
-  pan_l = pan_query(todo_pan)
+if (TRUE) {
+  pan_l = list()
+  for (i in seq_along(todo_pan)) {
+    cas = todo_pan[i]
+    message('PAN: CAS:', cas, ' (', i, '/', length(todo_pan), ')')
+    pan = pan_query(cas, verbose = FALSE)
+    
+    pan_l[[i]] = unlist(pan)
+    names(pan_l)[i] = cas
+  }
   
   saveRDS(pan_l, file.path(cachedir, 'pan_l.rds'))
+  
 } else {
+  
   pan_l = readRDS(file.path(cachedir, 'pan_l.rds'))
 }
 
 # convert all entries to data.tables
-for (i in 1:length(pan_l)) {
+for (i in seq_along(pan_l)) {
   if (!is.list(pan_l[[i]])) {
     pan_l[[i]] = data.table(pan_l[[i]])
   } else if (is.list(pan_l[[i]])) {
