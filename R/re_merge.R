@@ -7,16 +7,13 @@ source(file.path(src, 'setup.R'))
 source(file.path(src, 'da_epa.R'))
 # 
 # # chemical data -----------------------------------------------------------
+## special script, should be run first as it queries InChiKeys (which are subsequently needed)
 # source(file.path(src, 'qu_pubchem.R'))
-source(file.path(src, 'qu_aw.R'))
-
-
-
-
-source(file.path(src, 'qu_pan.R'))
-source(file.path(src, 'qu_pp.R'))
-# source(file.path(src, 'qu_frac.R'))
-source(file.path(src, 'qu_eurostat_chem_class.R'))
+# source(file.path(src, 'qu_aw.R'))
+# source(file.path(src, 'qu_pan.R')) # PAN API is not always working - not a relable resource
+# source(file.path(src, 'qu_pp.R'))
+# source(file.path(src, 'qu_frac.R')) # TODO maybe include again in the future
+# source(file.path(src, 'qu_eurostat_chem_class.R'))
 source(file.path(src, 'qu_chemspider_scrape.R'))
 
 # taxa scripts ------------------------------------------------------------
@@ -26,7 +23,7 @@ source(file.path(src, 'qu_chemspider_scrape.R'))
 
 
 # habitat scripts ---------------------------------------------------------
-source(file.path(src, 'qu_worms.R'))
+# source(file.path(src, 'qu_worms.R'))
 # source('R/qu_habitat_self_defined.R') # self defined script
 #lookup_man_fam = fread(file.path(cachedir, 'lookup_man_fam_list.csv'))
 
