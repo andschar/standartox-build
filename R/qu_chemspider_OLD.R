@@ -3,8 +3,7 @@
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 
-token = readLines(file.path(cred, 'chemspider_token.txt')) # from webchem github
-# token = '39221bdb-21d7-45b0-aa71-892b07f6b111' # my token. doesn't work currently..
+token = readLines(file.path(cred, 'chemspider_token_edi.txt')) # from webchem github
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
@@ -54,7 +53,7 @@ if (online) {
     names(cs_l)[i] = qu_csid
   }
   # saving
-  saveRDS(cs_l, file.path(cachedir, 'chemspider_l.rds'))
+  # saveRDS(cs_l, file.path(cachedir, 'chemspider_l.rds'))
 
 } else {
   
