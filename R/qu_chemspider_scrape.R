@@ -1,17 +1,16 @@
 # this script scrapes substance classifications and names from www.chemspider.org.
-# This is quite a detour, 'cause (1) chemspider has an API from which this data can be accessed (however the API is currently rebuilt) and 'cause (2) the classification data itself comes from www.chebi.ac.at (https://www.ebi.ac.uk/chebi/webServices.do). However I can't use these PERL or Java clients properly.
+# This is quite a detour, 'cause (1) chemspider has an API from which this data can be accessed (however the API is currently rebuilt) and 'cause (2) the classification data itself comes from www.chebi.ac.uk (https://www.ebi.ac.uk/chebi/webServices.do). However I can't use these PERL or Java clients properly.
 # Furthermore this script relies on phantomjs and additional dependancy which is also currently deprecated.
 # The classification data would also availavble through Pubchem. However, there
 # TODO replace this script with a chebi API approach
 
 # setup -------------------------------------------------------------------
-require(rvest)
-source(file.path(src, 'fun_scrape_phantomjs.R'))
+# source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 csid = readRDS(file.path(cachedir, 'csid.rds'))
 csid2 = csid[!is.na(csid)]
-# csid2 = csid2[1:2] # debug me!
+csid2 = csid2[1:8] # debug me!
 
 # query -------------------------------------------------------------------
 if (online) {
@@ -33,25 +32,34 @@ if (online) {
     site = try(read_html(file.path(tempdir(), 'file.html')))
     
     if (inherits(site, 'try-error')) {
-      name = NA
-      tags = NA
+      name = NA_character_
+      tags = NA_character_
     } else {
     
       name = site %>%
         html_nodes(xpath = '//*[@id="ctl00_ctl00_ContentSection_ContentPlaceHolder1_RecordViewDetails_rptDetailsView_ctl00_WrapTitle"]') %>%
         html_text()
       
+      if (length(name) == 0) {
+        name = NA_character_
+      }
+      
       tags = site %>% 
         html_nodes(xpath = '//*[@id="tags-list"]') %>% 
         html_children() %>% 
         html_text() %>% 
         grep('(?i)tag', ., value = TRUE, invert = TRUE) # remove tag entry
+      
+      if (length(tags) == 0) {
+        tags = NA_character_
+      }
+      
     }
     # list
-    l[[i]] = list(csid = qu_csid,
-                  cas = names(qu_csid),
-                  name = name,
-                  tags = tags)
+    l[[i]] = data.table(csid = qu_csid,
+                        cas = names(qu_csid),
+                        name = name,
+                        tags = tags)
     names(l)[i] = qu_csid
   }
   
@@ -64,44 +72,37 @@ if (online) {
 }
 
 # preparation -------------------------------------------------------------
-#! due to bad programing above, elements have to be extracted quite complicated here!
-
 if (online) {
-  names(l) = sapply(l, '[', 'cas') # necessary 'cause CSID is not unique
-  cs_chebi_class = rbindlist(lapply(l, function(x) data.table(t(x[1:3]))))
-  cs_chebi_class = as.data.table(lapply(cs_chebi_class, as.character))
-  tags = sapply(l, '[', 'tags')
-  tags = data.table(plyr::ldply(tags, rbind))
-  setnames(tags, c('cas', paste0('chebi_class', 1:5)))
-  tags[ , cas := gsub('([0-9]+)(.tags)', '\\1', cas) ]
+  l_dt = rbindlist(l)
+  cs_scrape = dcast(l_dt, csid + cas + name ~ tags,
+                    fun.aggregate = length,
+                    value.var = 'tags')  
+  cs_scrape[ , "NA" := NULL ]
   
-  cs_chebi = merge(cs_chebi_class, tags, by = 'cas')
+  for (i in names(cs_scrape)) {
+    cs_scrape[ get(i) == 0, (i) := NA_integer_ ]
+  }
   
-  saveRDS(cs_chebi, file.path(cachedir, 'cs_chebi.rds'))
+  names_new = gsub('\\s', '_', names(cs_scrape))
+  setnames(cs_scrape, paste0('cs_', names_new))
+  setnames(cs_scrape, c('cs_cas', 'cs_csid', 'cs_name'), c('cas', 'csid', 'name'))
+  
+  saveRDS(cs_scrape, file.path(cachedir, 'cs_scrape.rds'))
+  
 } else {
   
-  cs_chebi = readRDS(file.path(cachedir, 'cs_chebi.rds'))
+  cs_scrape = readRDS(file.path(cachedir, 'cs_scrape.rds'))
 }
 
-
-# final data.table --------------------------------------------------------
-cs_chebi_m = melt(cs_chebi, id.vars = c('cas', 'csid', 'name'))
-cs_chebi_m_dc = dcast(cs_chebi_m, cas + csid + name ~ value, fun.aggregate = length)
-setnames(cs_chebi_m_dc, tolower(names(cs_chebi_m_dc)))
-
-sort(grep('cid', names(cs_chebi_m_dc), value = T))
-cols = c('cas', 'csid', 'name', 'acaricide', 'avicide', 'fungicide', 'herbicide', 'insecticide', 'nematicide', 'pesticide', 'rodenticide', 'scabicide')
-
-cs2 = cs_chebi_m_dc[ , .SD, .SDcols = cols ]
-
-cols = grep('cas|csid|name', names(cs2), invert = TRUE, value = TRUE)
-cs2[ , pesticide := sum(.SD), .SDcols = cols, by = 1:nrow(cs2) ][pesticide > 0, pesticide := 1L ]
-
-setnames(cs2, paste0('cs_', names(cs2)))
-setnames(cs2, c('cs_cas', 'cs_csid', 'cs_name'), c('cas', 'csid', 'name'))
+# log ---------------------------------------------------------------------
+log_msg('run')
 
 # cleaning ----------------------------------------------------------------
-rm(tags, cs_chebi_class,
-   cols, cs_chebi_m, cs_chebi_m_dc)
+rm(tags, names_new)
+
+
+
+
+
 
 

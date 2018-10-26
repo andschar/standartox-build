@@ -2,10 +2,6 @@
 # http://www.rladiesnyc.org/post/scraping-javascript-websites-in-r/
 # PhantomJS needs to be installed!
 
-# setup -------------------------------------------------------------------
-require(V8)
-
-
 # Java script -------------------------------------------------------------
 writeLines(
   text =
