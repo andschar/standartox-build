@@ -3,6 +3,7 @@
 # Furthermore this script relies on phantomjs and additional dependancy which is also currently deprecated.
 # The classification data would also availavble through Pubchem. However, there
 # TODO replace this script with a chebi API approach
+# TODO scrape additional parameters from website
 
 # setup -------------------------------------------------------------------
 # source(file.path(src, 'setup.R'))
@@ -21,10 +22,16 @@ if (online) {
     prolog = 'http://www.chemspider.com/Chemical-Structure.'  
     qu_csid = csid2[i]
     qu_cas = names(qu_csid)
-    token = '.html?rid=46421728-92be-4b35-9c51-2cef6ede1cf2'
-    qurl = paste0(prolog, qu_csid, token)
+    header = '.html?rid='
+    token = paste(paste0(sample(0:9, 8), collapse = ''),
+                  paste0(sample(letters, 2), sample(0:9, 2), collapse = ''),
+                  paste0(sample(0:9, 1), sample(letters, 1), sample(0:9, 2), collapse = ''),
+                  paste0(sample(c(letters, 0:9), 12), collapse = ''),
+                  sep = '-') # random token
+    # token = '46421728-92be-4b35-9c51-2cef6ede1cf2'
+    qurl = paste0(prolog, qu_csid, header, token)
     
-    message('Querying: CAS:', qu_cas, '; CSID:', qu_csid,
+    message('Chemspider Scrape: CAS:', qu_cas, '; CSID:', qu_csid,
             ' (', i, '/', length(csid2), ')')
     # scrape
     Sys.sleep(rgamma(1, shape = 5, scale = 1/10))
@@ -64,11 +71,11 @@ if (online) {
   }
   
   # save
-  saveRDS(l, file.path(cachedir, 'l.rds'))
+  saveRDS(l, file.path(cachedir, 'cs_scrape_l.rds'))
   
 } else {
   
-  l = readRDS(file.path(cachedir, 'l.rds'))
+  l = readRDS(file.path(cachedir, 'cs_scrape_l.rds'))
 }
 
 # preparation -------------------------------------------------------------
