@@ -32,31 +32,24 @@ if (nodename == 'uwigis') {
   sink(con, append = TRUE, type = 'message')
 }
 
-## testing 
-source(file.path(src, 'fun_scrape_phantomjs.R'))
+# (1) build data base -----------------------------------------------------
+# download
+source(file.path(src, 'bd_epa_download.R'), max.deparse.length = 1e6)
+# build
+source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = 1e6)
 
-source(file.path(src, 'qu_chemspider_scrape.R'))
-### end
+# # (2) queries -------------------------------------------------------------
+source(file.path(src, 're_merge.R'), max.deparse.length = 1e6)
+# source(file.path(src, 're_filter.R'))
+# source(file.path(src, 're_final.R'))
+# # filter stats?
+#
+# # (3) save to DB ----------------------------------------------------------
+# # saving filter table to data base and as an .rds object
+# source(file.path(src, 're_write.R'))
+#
+#
 
-
-# # (1) build data base -----------------------------------------------------
-# # download
-# source(file.path(src, 'bd_epa_download.R'), max.deparse.length = 1e6)
-# # build
-# source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = 1e6)
-# 
-# # # (2) queries -------------------------------------------------------------
-# source(file.path(src, 're_merge.R'), max.deparse.length = 1e6)
-# # source(file.path(src, 're_filter.R'))
-# # source(file.path(src, 're_final.R'))
-# # # filter stats?
-# # 
-# # # (3) save to DB ----------------------------------------------------------
-# # # saving filter table to data base and as an .rds object
-# # source(file.path(src, 're_write.R'))
-# # 
-# # 
-# 
 # # (0b) console log 2 --------------------------------------------------------
 if (nodename == 'uwigis') {
   # Restore output to console

@@ -10,7 +10,7 @@
 # data --------------------------------------------------------------------
 csid = readRDS(file.path(cachedir, 'csid.rds'))
 csid2 = csid[!is.na(csid)]
-csid2 = csid2[1:3] # debug me!
+# csid2 = csid2[1:3] # debug me!
 
 # query -------------------------------------------------------------------
 if (online) {
