@@ -200,7 +200,7 @@ chem = unique(epa2[ , .SD, .SDcols = c('casnr', 'cas', 'che_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # log ---------------------------------------------------------------------
-msg = 'no errors'
+msg = 'EPA: no errors'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------

@@ -8,7 +8,7 @@ source(file.path(src, 'da_epa.R'))
 # 
 # # chemical data -----------------------------------------------------------
 ## special script, should be run first as it queries InChiKeys (which are subsequently needed)
-# source(file.path(src, 'qu_pubchem.R'))
+source(file.path(src, 'qu_pubchem.R'))
 # source(file.path(src, 'qu_aw.R'))
 # source(file.path(src, 'qu_pan.R')) # PAN API is not always working - not a relable resource
 # source(file.path(src, 'qu_pp.R'))

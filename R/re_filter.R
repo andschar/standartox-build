@@ -93,13 +93,13 @@ cols_sol_rm = c('pp_solubility_water')
 tests[ , (cols_sol_rm) := NULL ]
 rm(cols_sol_rm)
 # b) check column
-tests[ep_value > comp_solub, comp_solub_chck := FALSE]
-tests[ep_value <= comp_solub, comp_solub_chck := TRUE]
+tests[value_fin > comp_solub, comp_solub_chck := FALSE]
+tests[value_fin <= comp_solub, comp_solub_chck := TRUE]
 
 # (4) habitat column ----
 # marine
 cols = c('hab_marin', 'hab_marin_src')
-tests[ , (cols) := list(ep_hab_isMar, 'ep')]
+tests[ , (cols) := list(hab_isMar, 'ep')]
 tests[ is.na(hab_marin), (cols) := list(wo_isMar_sp, 'wo')]
 tests[ is.na(hab_marin), (cols) := list(gb_isMar, 'gb')]
 tests[ is.na(hab_marin), (cols) := NA ]
@@ -107,17 +107,17 @@ tests[ is.na(hab_marin), (cols) := NA ]
 cols = c('hab_brack', 'hab_brack_src')
 tests[ , (cols) := list(wo_isBra_sp, 'wo')]
 tests[ is.na(hab_brack), (cols) := list(gb_isBra, 'gb')]
-tests[ is.na(hab_brack), (cols) := list(ep_hab_isBra, 'ep')]
+tests[ is.na(hab_brack), (cols) := list(hab_isBra, 'ep')]
 tests[ is.na(hab_brack), (cols) := NA ]
 # freshwater
 cols = c('hab_fresh', 'hab_fresh_src')
-tests[ , (cols) := list(ep_hab_isFre, 'ep')]
+tests[ , (cols) := list(hab_isFre, 'ep')]
 tests[ is.na(hab_fresh), (cols) := list(wo_isFre_sp, 'wo')]
 tests[ is.na(hab_fresh), (cols) := list(gb_isFre, 'gb')]
 tests[ is.na(hab_fresh), (cols) := NA ]
 # terrestrial
 cols = c('hab_terre', 'hab_terre_src')
-tests[ , (cols) := list(ep_hab_isTer, 'ep')]
+tests[ , (cols) := list(hab_isTer, 'ep')]
 tests[ is.na(hab_terre), (cols) := list(wo_isTer_sp, 'wo')]
 tests[ is.na(hab_terre), (cols) := list(gb_isTer, 'gb')]
 tests[ is.na(hab_terre), (cols) := NA ]
@@ -129,12 +129,12 @@ tests[ , (cols_ha_rm) := NULL ]
 rm(cols_ha_rm)
 
 # (5) regional column ----
-tests[ , reg_is_africa := ifelse(gb_africa == 1, 1, NA) ]
-tests[ , reg_is_america_north := ifelse(gb_north_america == 1, 1, NA) ]
-tests[ , reg_is_america_south := ifelse(gb_south_america == 1, 1, NA) ]
-tests[ , reg_is_asia := ifelse(gb_asia == 1, 1, NA) ]
-tests[ , reg_is_europe := ifelse(gb_europe == 1, 1, NA) ]
-tests[ , reg_is_oceania := ifelse(gb_oceania == 1, 1, NA) ]
+tests[ , reg_africa := ifelse(gb_africa == 1, 1, NA) ]
+tests[ , reg_america_north := ifelse(gb_north_america == 1, 1, NA) ]
+tests[ , reg_america_south := ifelse(gb_south_america == 1, 1, NA) ]
+tests[ , reg_asia := ifelse(gb_asia == 1, 1, NA) ]
+tests[ , reg_europe := ifelse(gb_europe == 1, 1, NA) ]
+tests[ , reg_oceania := ifelse(gb_oceania == 1, 1, NA) ]
 # cleaning
 cols_re_rm = c('gb_africa', 'gb_north_america', 'gb_south_america', 'gb_asia', 'gb_europe', 'gb_oceania')
 tests[ , (cols_re_rm) := NULL ]
