@@ -24,7 +24,7 @@ if (online) {
     token = '.html?rid=46421728-92be-4b35-9c51-2cef6ede1cf2'
     qurl = paste0(prolog, qu_csid, token)
     
-    message('Querying: CAS:', qu_cas, '; CID:', qu_csid,
+    message('Querying: CAS:', qu_cas, '; CSID:', qu_csid,
             ' (', i, '/', length(csid2), ')')
     # scrape
     Sys.sleep(rgamma(1, shape = 5, scale = 1/10))

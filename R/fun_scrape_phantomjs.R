@@ -8,12 +8,12 @@ writeLines(
     "var url ='http://www.example.com';
     var page = new WebPage()
     var fs = require('fs');
-    
-    
+
+
     page.open(url, function (status) {
       just_wait();
     });
-    
+
     function just_wait() {
       setTimeout(function() {
         fs.write('1.html', page.content, 'w');
@@ -22,7 +22,6 @@ writeLines(
     }",
   con = file.path(tempdir(), 'scrape.js')
 )
-
 
 # R -----------------------------------------------------------------------
 js_scrape = function(url = 'http://www.example.com',
