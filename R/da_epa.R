@@ -190,7 +190,21 @@ epa2 = epa2[ !is.na(dur_fin) &
              !is.na(tes_effect) &
              !is.na(tes_endpoint) ]
 
-## (2) Remove duplicated result_id s
+## (2) Remove duplicated result_id
+dupl_result_id = epa2[ , .N, result_id][order(-N)][N > 1]$result_id
+chck_epa2_id = epa2[ result_id %in% dupl_result_id,
+                     .(mn = mean(value_fin),
+                       sd = sd(value_fin)),
+                     by = result_id ][ sd > 0 ]
+
+if (nrow(chck_epa2_id) > 0) {
+  # If it stops here, come up with a new identifier
+  msg = 'Duplicated result_ids with differing vlaues!'
+  log_msg(msg)
+  stop(msg)
+}
+
+epa2 = epa2[ !result_id %in% dupl_result_id ]
 
 # saving ------------------------------------------------------------------
 saveRDS(epa2, file.path(cachedir, 'epa.rds'))
@@ -204,7 +218,8 @@ msg = 'EPA: no errors'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(cas_chck, taxa, chem, i, cols_fin)
+rm(cas_chck, taxa, chem, i, cols_fin,
+   dupl_result_id, chck_epa2_id)
 
 # help --------------------------------------------------------------------
 # https://cfpub.epa.gov/ecotox/help.cfm?help_id=CONTENTFAQ&help_type=define&help_back=1#asterisk
