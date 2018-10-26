@@ -1,5 +1,11 @@
 # script to query information from Pesticide Action Network (PAN)
 
+# INFORMATION
+
+# Pan isn't so reliable, hence it's exclude for now
+
+
+
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 
@@ -8,9 +14,9 @@ chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
 # query -------------------------------------------------------------------
 todo_pan = sort(chem$cas)
-todo_pan = todo_pan[1:3] # debug me
+# todo_pan = todo_pan[1:3] # debug me
 
-if (TRUE) {
+if (online) {
   pan_l = list()
   for (i in seq_along(todo_pan)) {
     cas = todo_pan[i]
