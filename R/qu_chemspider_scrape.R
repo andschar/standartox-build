@@ -10,7 +10,7 @@
 # data --------------------------------------------------------------------
 csid = readRDS(file.path(cachedir, 'csid.rds'))
 csid2 = csid[!is.na(csid)]
-csid2 = csid2[1:8] # debug me!
+csid2 = csid2[1:3] # debug me!
 
 # query -------------------------------------------------------------------
 if (online) {
@@ -28,7 +28,7 @@ if (online) {
             ' (', i, '/', length(csid2), ')')
     # scrape
     Sys.sleep(rgamma(1, shape = 5, scale = 1/10))
-    js_scrape(qurl)
+    js_scrape(qurl, phantompath = phantompath)
     site = try(read_html(file.path(tempdir(), 'file.html')))
     
     if (inherits(site, 'try-error')) {

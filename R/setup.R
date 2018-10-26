@@ -5,7 +5,7 @@ if (!require('pacman')) install.packages('pacman')
 
 ## install via CRAN
 pacman::p_load(RCurl, stringr, R.utils,
-               rvest, V8,
+               rvest,
                readxl, data.table, RPostgreSQL, vegan, plyr,
                feather,
                ggplot2, ggrepel, cowplot,
@@ -32,6 +32,13 @@ datadir = file.path(prj, 'data')
 lookupdir = file.path(prj, 'lookup')
 cred = file.path(prj, 'cred')
 
+# path to phantomjs
+if (nodename == 'scharmueller') {
+  phantompath = '/usr/bin/phantomjs'
+} else if (nodename == 'uwigis') {
+  phantompath = '/usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs'
+}
+
 # source ------------------------------------------------------------------
 source(file.path(cred, 'credentials.R')) # data base credentials
 source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
@@ -43,7 +50,7 @@ source(file.path(src, 'fun_scrape_phantomjs.R'))
 # library dependencies ----------------------------------------------------
 # libsodium - for JS module fs - fun_scrape_phantomjs.R
 # phantomjs - headless browser - fun_scrape_phantomjs.R
-
+# libv8-3.14-dev - Google's open source JavaScript engine - fun_scrape_phantomjs.R
 
 
 
