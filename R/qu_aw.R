@@ -28,20 +28,16 @@ if (online) {
   aw_l = readRDS(file.path(cachedir, 'aw_l.rds'))
 }
 
-
 # preparation -------------------------------------------------------------
 aw_l2 = aw_l[ !is.na(aw_l) ] # remove NAs
 aw = rbindlist(lapply(aw_l2, function(x) data.table(t(x))),
                   idcol = 'cas') # columns are lists
-max(sapply(aw$subactivity, length)) # up to 3 length vectors 
+n_sa_cols = max(sapply(aw$subactivity, length)) # up to 3 length vectors 
 
-aw[ , subactivity1 := sapply(subactivity, `[`, 1) ]
-aw[ , subactivity2 := sapply(subactivity, `[`, 2) ]
-aw[ , subactivity3 := sapply(subactivity, `[`, 3) ]
-aw[ , subactivity := NULL ]
+aw[ , paste0('subactivity', n_sa_cols) := sapply(subactivity, `[`, n_sa_cols)]
 
 # identify pesticide groups -----------------------------------------------
-cols = c('activity', 'subactivity1', 'subactivity2', 'subactivity3')
+cols = c('activity', paste0('subactivity', n_sa_cols))
 aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', cols) ]
 aw2_m = melt(aw2, id.var = c('cas', 'cname'))
 aw2_m[ , cas := as.character(cas) ]
@@ -73,7 +69,7 @@ log_msg(msg); rm(msg)
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings
 
-rm(chem, cas, todo_aw, qu_cas, i,
+rm(chem, cas, todo_aw, qu_cas, i, n_sa_cols,
    aw, aw_l, aw_l2, aw2, aw2m, aw2_m, cols)
 
 options(warn = oldw); rm(oldw)

@@ -102,7 +102,8 @@ if (online) {
 }
 
 # log ---------------------------------------------------------------------
-log_msg('run')
+msg = 'ChemSpider Scrape run'
+log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
 rm(tags, names_new)

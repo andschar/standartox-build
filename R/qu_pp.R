@@ -72,7 +72,7 @@ setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))]))
 
 # missing entries ---------------------------------------------------------
 na_pp2_cname = pp2[ is.na(pp_cname) ]
-msg = paste0('PhysProp: For ', nrow(na_pp2_cname), '/', nrow(pc2),
+msg = paste0('PhysProp: For ', nrow(na_pp2_cname), '/', nrow(pp2),
              ' CAS no Cnames were found.')
 log_msg(msg); rm(msg)
 
