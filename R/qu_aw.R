@@ -17,7 +17,7 @@ if (online) {
     qu_cas = todo_aw[i]
     message('Alan Wood: CAS:', qu_cas, ' (', i, '/', length(todo_aw), ')')
     
-    aw_res = aw_query(qu_cas, type = 'cas', verbose = TRUE)[[1]]
+    aw_res = aw_query(qu_cas, type = 'cas', verbose = FALSE)[[1]]
     
     aw_l[[i]] = aw_res
     names(aw_l)[i] = qu_cas

@@ -23,7 +23,7 @@ source(file.path(src, 'qu_eurostat_chem_class.R'))
 
 
 # habitat scripts ---------------------------------------------------------
-source(file.path(src, 'qu_worms.R'))
+# source(file.path(src, 'qu_worms.R'))
 # source('R/qu_habitat_self_defined.R') # self defined script
 #lookup_man_fam = fread(file.path(cachedir, 'lookup_man_fam_list.csv'))
 

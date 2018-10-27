@@ -5,7 +5,10 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
-taxa = taxa[1:10] # debuging
+# debuging
+if (debug_mode) {
+  taxa = taxa[1:10]  
+}
 
 # query -------------------------------------------------------------------
 todo_gbif = sort(unique(taxa$taxon))
@@ -17,7 +20,7 @@ if (online) {
   gbif_l = list()
   for (i in seq_along(todo_gbif)) {
     taxon = todo_gbif[i]
-    message('Querying (', i, '/', length(todo_gbif), '): ', taxon)
+    message('GBIF: Querying (', i, '/', length(todo_gbif), '): ', taxon)
     
     key = name_backbone(taxon)$speciesKey
     
@@ -145,8 +148,9 @@ gbif_hab_wat_dc[ , isTer := ifelse(tolower(habitat) %like% paste0(terre, collaps
 
 # missing data ------------------------------------------------------------
 # continent
+cols_conti = grep('taxon', names(gbif_conti_dc), value = TRUE, invert = TRUE)
 gbif_conti_dc[ , count := sum(.SD, na.rm = TRUE),
-                 .SDcols = c('africa', 'antarctica', 'asia', 'europe', 'north_america', 'oceania', 'south_america'),
+                 .SDcols = cols_conti,
                  by = 1:nrow(gbif_conti_dc) ]
 na_conti = gbif_conti_dc[count == 0]
 msg = paste0('GBIF: For ', nrow(na_conti), '/', nrow(gbif_conti_dc),
@@ -155,8 +159,9 @@ log_msg(msg); rm(msg)
 gbif_conti_dc[ , count := NULL]
 
 # habitat
+cols_habi = grep('(?i)isfre|isbra|ismar|ister', names(gbif_hab_wat_dc), value = TRUE)
 gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
-                   .SDcols = c('isFre', 'isBra', 'isMar', 'isTer'),
+                   .SDcols = cols_habi,
                    by = 1:nrow(gbif_hab_wat_dc) ]
 na_habi = gbif_hab_wat_dc[ count == 0]
 msg = paste0('GBIF: For ', nrow(na_habi), '/', nrow(gbif_hab_wat_dc),
@@ -190,6 +195,7 @@ options(warn = -1) # shuts off warnings
 
 rm(epa, i, key, taxon, todo_gbif, time, full_gbif_l, gbif_l,
    na_conti, na_habi, missing_l,
+   cols_conti, cols_habi,
    gbif_ccode_l, gbif_ccode, gbif_continent_l, gbif_continent,
    gbif_habitat_l, gbif_habitat, gbif_habitat_dc,
    gbif_waterBody_l, gbif_waterbody, gbif_waterbody_dc)

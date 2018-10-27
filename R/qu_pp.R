@@ -6,7 +6,10 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
-chem = chem[1:10] # debuging
+# debuging
+if (debug_mode) {
+  chem = chem[1:10]  
+}
 
 # query -------------------------------------------------------------------
 todo_pp = sort(chem$cas)
@@ -18,9 +21,9 @@ if (online) {
   for (i in seq_along(todo_pp)) {
     
     todo = todo_pp[i]
-    message('Querying (', i, '/', length(todo_pp), '): ', todo)
+    message('PhysProp: Querying (', i, '/', length(todo_pp), '): ', todo)
     
-    pp_res = tryCatch({ pp_query(todo)
+    pp_res = tryCatch({ pp_query(todo, verbose = FALSE)
     }, error = function(e) {cat('ERROR: ', conditionMessage(e), '\n')
       return(NA)})
   

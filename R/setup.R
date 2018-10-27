@@ -17,11 +17,12 @@ pacman::p_load_gh(char = 'NIVANorge/chemspideR')
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = TRUE
-online_db = TRUE
+online = T
+online_db = T
 plots = FALSE
 scp_feather = FALSE
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
+debug_mode = TRUE # should only 10 input rows for each quering script be run
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
