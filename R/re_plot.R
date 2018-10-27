@@ -2,17 +2,9 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
-# switches
-online = online
-online = FALSE
-
-# plot theme
-theme_set(theme_bw())
 
 # data --------------------------------------------------------------------
-tests = readRDS(file.path(cachedir, 'tests.rds'))
-tests_cl = readRDS(file.path(cachedir, 'tests_cl.rds'))
-tests_fl = readRDS(file.path(cachedir, 'tests_fl.rds'))
+te_fin = readRDS(file.path(cachedir, 'tests_fin.rds'))
 
 # (1) merge plots ---------------------------------------------------------
 # substance type ----
