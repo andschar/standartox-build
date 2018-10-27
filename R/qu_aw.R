@@ -5,7 +5,10 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
-chem = chem[1:10] # debuging
+# debuging
+if (debug_mode) {
+  chem = chem[1:10]
+}
 
 # query -------------------------------------------------------------------
 todo_aw = sort(chem$cas)
