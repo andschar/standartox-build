@@ -5,6 +5,7 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
+chem = chem[1:10] # debuging
 
 # query -------------------------------------------------------------------
 if (online) {
@@ -20,49 +21,11 @@ if (online) {
       onTimeout = 'warning'
     )
   }
-  # query
+  # CID query
   todo_pc = sort(chem$cas)
-  # todo_pc = todo_pc[1:4] # debug me!
-  
   cid_l = sapply(seq_along(todo_pc), get_cid2)
   
-  #### UNDER CONSTRUCTION ----
-  # todo_pc_err = as.character(lapply(cid_l2[ grep('time', cid_l2)], names))
-  # sapply(cid_l2, names)
-  # 
-  # cid_l = list()
-  # for (i in seq_along(todo_pc)) {
-  #   qu_cas = todo_pc[i]
-  #   message('Pubchem: CAS:', qu_cas, ' (', i, '/', length(todo_pc), ') -> to retrieve CID.')
-  #   
-  #   qu_cid = try(R.utils::withTimeout(
-  #     get_cid(qu_cas, verbose = FALSE),
-  #     timeout = 2,
-  #     onTimeout = 'error'
-  #   ))
-  #   
-  #   cid_l[[i]] = unlist(qu_cid)
-  #   names(cid_l)[i] = qu_cas
-  # }
-  # 
-  # # redo errors 'cause they are probalby 'caused to API issues
-  # # maybe impro get_cid()
-  # cid_l_err = list()
-  # for (i in seq_along(cid_l)) {
-  #   obj = cid_l[[i]]
-  #   obj_l = cid_l[i]
-  #   if (inherits(obj, 'try-error')) {
-  #     cid_l_err[[i]] = names(obj_l)[i]
-  #   } else {
-  #     cid_l_err = NA
-  #   }
-  # }
-  # 
-  # todo_pc_err = cid_l_err[ !is.na(cid_l_err) ]
-  # 
-  # get_cid(todo_pc_err, verbose = TRUE)
-  #### END ----
-  
+  # Data query
   pc_l = list()
   for (i in seq_along(cid_l)) {
     qu_cas = names(cid_l[i])

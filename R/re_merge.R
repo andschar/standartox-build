@@ -4,17 +4,17 @@
 source(file.path(src, 'setup.R'))
 
 # EPA test data -----------------------------------------------------------
-source(file.path(src, 'da_epa.R'))
+# source(file.path(src, 'da_epa.R'))
 # 
 # # chemical data -----------------------------------------------------------
 ## special script, should be run first as it queries InChiKeys (which are subsequently needed)
-source(file.path(src, 'qu_pubchem.R'))
-# source(file.path(src, 'qu_aw.R'))
+# source(file.path(src, 'qu_pubchem.R'))
+source(file.path(src, 'qu_aw.R'))
 # source(file.path(src, 'qu_pan.R')) # PAN API is not always working - not a relable resource
-# source(file.path(src, 'qu_pp.R'))
+source(file.path(src, 'qu_pp.R'))
 # source(file.path(src, 'qu_frac.R')) # TODO maybe include again in the future
-# source(file.path(src, 'qu_eurostat_chem_class.R'))
-source(file.path(src, 'qu_chemspider_scrape.R'))
+source(file.path(src, 'qu_eurostat_chem_class.R'))
+# source(file.path(src, 'qu_chemspider_scrape.R'))
 
 # taxa scripts ------------------------------------------------------------
 # TODO deprecate?!?
@@ -23,28 +23,28 @@ source(file.path(src, 'qu_chemspider_scrape.R'))
 
 
 # habitat scripts ---------------------------------------------------------
-# source(file.path(src, 'qu_worms.R'))
+source(file.path(src, 'qu_worms.R'))
 # source('R/qu_habitat_self_defined.R') # self defined script
 #lookup_man_fam = fread(file.path(cachedir, 'lookup_man_fam_list.csv'))
 
-# 
-# # regional scripts --------------------------------------------------------
-# source(file.path(src, 'qu_gbif.R')) # contains also habitat information
-# 
-# 
-# # Merge Chemical Information ----------------------------------------------------
-# # Pubchem ----
-# # pc2[ , .N, cas][order(-N)] # no duplicates
-# # Chemspider
-# # cs2[ , .N, cas][order(-N)]
-# # Alan Wood Compendium ----
-# # aw3[ , .N, cas][order(-N)] # no duplicates
-# # Pesticide Action Network ----
-# # pan2[ , .N, cas][order(-N)] # no duplicates
-# # Physprop Data Base ----
-# # pp2[ , .N, cas][order(-N)] # no duplicates
-# # FRAC data ----
-# # frac2[ , .N, cas][order(-N)] # 79956562 duplicated CAS
+
+# regional scripts --------------------------------------------------------
+source(file.path(src, 'qu_gbif.R')) # contains also habitat information
+
+
+# Merge Chemical Information ----------------------------------------------------
+# Pubchem ----
+# pc2[ , .N, cas][order(-N)] # no duplicates
+# Chemspider
+# cs2[ , .N, cas][order(-N)]
+# Alan Wood Compendium ----
+# aw3[ , .N, cas][order(-N)] # no duplicates
+# Pesticide Action Network ----
+# pan2[ , .N, cas][order(-N)] # no duplicates
+# Physprop Data Base ----
+# pp2[ , .N, cas][order(-N)] # no duplicates
+# FRAC data ----
+# frac2[ , .N, cas][order(-N)] # 79956562 duplicated CAS
 # frac2 = frac2[cas != '79956-56-2']
 # setnames(frac2, c('cas', paste0('fr_', tolower(names(frac2[ ,2:length(names(frac2))])))))
 # 
@@ -102,4 +102,4 @@ source(file.path(src, 'qu_chemspider_scrape.R'))
 # 
 # 
 # 
-
+# 

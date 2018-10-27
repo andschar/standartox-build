@@ -6,9 +6,10 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
+chem = chem[1:10] # debuging
 
 # query -------------------------------------------------------------------
-todo_pp = chem$cas
+todo_pp = sort(chem$cas)
 # todo_pp = todo_pp[1:10] # debug me!
 
 if (online) {
@@ -71,8 +72,9 @@ setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))]))
 
 # missing entries ---------------------------------------------------------
 na_pp2_cname = pp2[ is.na(pp_cname) ]
-message('PubChem: For ', nrow(na_pp2_cname), '/', nrow(pc2),
-        ' CAS no Cnames were found.')
+msg = paste0('PhysProp: For ', nrow(na_pp2_cname), '/', nrow(pc2),
+             ' CAS no Cnames were found.')
+log_msg(msg); rm(msg)
 
 if (nrow(na_pp2_cname) > 0) {
   fwrite(na_pp2_cname, file.path(missingdir, 'na_pp2_cname.csv'))

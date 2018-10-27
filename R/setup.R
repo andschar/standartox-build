@@ -21,6 +21,7 @@ online = TRUE
 online_db = TRUE
 plots = FALSE
 scp_feather = FALSE
+full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')

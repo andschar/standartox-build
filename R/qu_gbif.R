@@ -2,14 +2,13 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
-# switches
-full_list = FALSE # loads the full result list if online=FALSE
 
 # data --------------------------------------------------------------------
-todo_gbif = readRDS(file.path(cachedir, 'epa_taxa.rds'))
+taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
+taxa = taxa[1:10] # debuging
 
 # query -------------------------------------------------------------------
-todo_gbif = sort(unique(todo_gbif$taxon))
+todo_gbif = sort(unique(taxa$taxon))
 # todo_gbif = todo_gbif[818:820] # debug me!
 
 if (online) {
@@ -67,7 +66,7 @@ if (online) {
   
 } else {
   
-  if (full_list) {
+  if (full_gbif_l) {
     gbif_l = readRDS(file.path(cachedir, 'gbif_l.rds')) # takes time!  
   }
   gbif_ccode_l = readRDS(file.path(cachedir, 'gbif_ccode_l.rds'))
@@ -150,16 +149,19 @@ gbif_conti_dc[ , count := sum(.SD, na.rm = TRUE),
                  .SDcols = c('africa', 'antarctica', 'asia', 'europe', 'north_america', 'oceania', 'south_america'),
                  by = 1:nrow(gbif_conti_dc) ]
 na_conti = gbif_conti_dc[count == 0]
-message('GBIF: For ', nrow(na_conti), '/', nrow(gbif_conti_dc),
-        ' taxa no continent information was found.')
+msg = paste0('GBIF: For ', nrow(na_conti), '/', nrow(gbif_conti_dc),
+             ' taxa no continent information was found.')
+log_msg(msg); rm(msg)
 gbif_conti_dc[ , count := NULL]
+
 # habitat
 gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
                    .SDcols = c('isFre', 'isBra', 'isMar', 'isTer'),
                    by = 1:nrow(gbif_hab_wat_dc) ]
 na_habi = gbif_hab_wat_dc[ count == 0]
-message('GBIF: For ', nrow(na_habi), '/', nrow(gbif_hab_wat_dc),
-        ' taxa no habitat information was found.')
+msg = paste0('GBIF: For ', nrow(na_habi), '/', nrow(gbif_hab_wat_dc),
+             ' taxa no habitat information was found.')
+log_msg(msg); rm(msg)
 gbif_hab_wat_dc[ , count := NULL]
 
 # save missing data to .csv
@@ -186,7 +188,7 @@ setnames(gbif_hab_wat_dc, 'gb_taxon', 'taxon')
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings
 
-rm(epa, i, key, taxon, todo_gbif, time, full_list, gbif_l,
+rm(epa, i, key, taxon, todo_gbif, time, full_gbif_l, gbif_l,
    na_conti, na_habi, missing_l,
    gbif_ccode_l, gbif_ccode, gbif_continent_l, gbif_continent,
    gbif_habitat_l, gbif_habitat, gbif_habitat_dc,

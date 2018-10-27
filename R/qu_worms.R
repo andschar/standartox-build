@@ -5,12 +5,12 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-todo_worms = readRDS(file.path(cachedir, 'epa_taxa.rds'))
+taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
+taxa = taxa[1:10] # debuging
 
 # Family query ------------------------------------------------------------
 if (online) {
-  family_todo = sort(unique(todo_worms$family))
-  # family_todo = family_todo[1:2]
+  family_todo = sort(unique(taxa$family))
   
   worms_family_l = list()
   for (i in 1:length(family_todo)) {
@@ -45,7 +45,7 @@ setnames(lookup_worms_fam, c('family', 'wo_isFre_fam', 'wo_isBra_fam', 'wo_isMar
 
 # Species query -----------------------------------------------------------
 if (online) {
-  species_todo = sort(unique(todo_worms$taxon))
+  species_todo = sort(unique(taxa$taxon))
   species_todo = trimws(gsub('sp.', '', species_todo)) # remove sp. as it shows no results
   # species_todo = species_todo[1:2] # debug me!
   
@@ -85,8 +85,9 @@ lookup_worms_fam[ , count := sum(.SD, na.rm = TRUE),
                  by = 1:nrow(lookup_worms_fam)]
 na_worms_fam = lookup_worms_fam[ count == 0 ]
 
-message('WoRMS: For ', nrow(na_worms_fam), '/', nrow(lookup_worms_fam),
-        ' families no habitat information was found.')
+msg = paste0('WoRMS: For ', nrow(na_worms_fam), '/', nrow(lookup_worms_fam),
+             ' families no habitat information was found.')
+log_msg(msg); rm(msg)
 lookup_worms_fam[ , count := NULL]
 
 # species
@@ -95,8 +96,9 @@ lookup_worms_sp[ , count := sum(.SD, na.rm = TRUE),
                    by = 1:nrow(lookup_worms_sp)]
 na_worms_sp = lookup_worms_sp[ count == 0 ]
 
-message('WoRMS: For ', nrow(na_worms_sp), '/', nrow(lookup_worms_sp),
-        ' species no habitat information was found.')
+msg = paste0('WoRMS: For ', nrow(na_worms_sp), '/', nrow(lookup_worms_sp),
+             ' species no habitat information was found.')
+log_msg(msg); rm(msg)
 lookup_worms_sp[ , count := NULL]
 
 # save missing data to .csv
@@ -116,7 +118,7 @@ for (i in 1:length(missing_l)) {
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings
 
-rm(todo_worms, family_todo, species_todo)
+rm(taxa, family_todo, species_todo)
 rm(worms_family_l, worms_fam, worms_species_l, worms_sp)
 
 options(warn = oldw); rm(oldw)
