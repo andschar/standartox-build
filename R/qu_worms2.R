@@ -68,6 +68,22 @@ wo = wo[ ind %in% c('AphiaID', 'scientificname', 'rank',
                     'isTerrestrial', 'isFreshwater', 'isBrackish', 'isMarine') ]
 wo2 = dcast(wo, id ~ ind,
             value.var = 'values')[ , id := NULL]
+setnames(wo2,
+         c('isMarine', 'isBrackish', 'isFreshwater', 'isTerrestrial'),
+         c('wo_isMar', 'wo_isBra', 'wo_isFre', 'wo_isTer'))
+cols = c('wo_isMar', 'wo_isBra', 'wo_isFre', 'wo_isTer')
+wo2[ , (cols) := lapply(.SD, as.integer), .SDcols = cols ]
+# separate into single objects (spec, genus, family)
+cols = c('scientificname', grep('wo_', names(wo2), value = TRUE))
+wo2_sp = wo2[ rank == 'Species', .SD, .SDcols = cols ]
+setnames(wo2_sp, paste0(names(wo2_sp), '_sp'))
+setnames(wo2_sp, 'scientificname_sp', 'taxon')
+wo2_gn = wo2[ rank == 'Genus', .SD, .SDcols = cols ]
+setnames(wo2_gn, paste0(names(wo2_gn), '_gn'))
+setnames(wo2_gn, 'scientificname_gn', 'tax_genus')
+wo2_fm = wo2[ rank == 'Family', .SD, .SDcols = cols ]
+setnames(wo2_fm, paste0(names(wo2_fm), '_fm'))
+setnames(wo2_fm, 'scientificname_fm', 'tax_family')
 
 # log ---------------------------------------------------------------------
 msg = 'WoRMS query run'
