@@ -5,7 +5,7 @@ if (!require('pacman')) install.packages('pacman')
 
 ## install via CRAN
 pacman::p_load(RCurl, stringr, R.utils,
-               rvest,
+               rvest, httr, jsonlite,
                readxl, data.table, RPostgreSQL, vegan, plyr,
                feather,
                ggplot2, ggrepel, cowplot,
@@ -22,7 +22,7 @@ online_db = T
 plots = FALSE
 scp_feather = FALSE
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
-debug_mode = TRUE # should only 10 input rows for each quering script be run
+debug_mode = FALSE # should only 10 input rows for each quering script be run
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
@@ -48,6 +48,7 @@ source(file.path(src, 'fun_product_na.R'))
 source(file.path(src, 'fun_extr_vec.R'))
 source(file.path(src, 'fun_log_message.R'))
 source(file.path(src, 'fun_scrape_phantomjs.R'))
+source(file.path(src, 'fun_worms_query.R'))
 
 # library dependencies ----------------------------------------------------
 # libsodium - for JS module fs - fun_scrape_phantomjs.R
