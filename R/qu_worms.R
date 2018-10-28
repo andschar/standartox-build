@@ -6,11 +6,13 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
-taxa = taxa[1:10] # debuging
+if (debug_mode) {
+  taxa = taxa[1:10] # debuging
+}
 
 # Family query ------------------------------------------------------------
 if (online) {
-  family_todo = sort(unique(taxa$family))
+  family_todo = sort(unique(taxa$tax_family))
   
   worms_family_l = list()
   for (i in 1:length(family_todo)) {
@@ -18,7 +20,7 @@ if (online) {
     
     message('Querying (', i, '/', length(family_todo), '): ', family)
     time = Sys.time()
-    worms_data = taxizesoap::worms_records(scientific = family, marine_only = FALSE)
+    worms_data = worms::wormsbynames(family)
     Sys.time() - time
     
     if (nrow(worms_data) > 0) {
@@ -29,7 +31,7 @@ if (online) {
     
     worms_family_l[[i]] = worms_data
   }
-  saveRDS(worms_family_l, file.path(cachedir, 'worms_family_list.rds'))
+  #saveRDS(worms_family_l, file.path(cachedir, 'worms_family_list.rds'))
   
 } else {
   
@@ -55,7 +57,7 @@ if (online) {
     
     message('Querying (', i, '/', length(species_todo), '): ', species)
     time = Sys.time()
-    worms_data = taxizesoap::worms_records(scientific = species, marine_only = FALSE)
+    worms_data = worms::wormsbynames(species)
     Sys.time() - time
     
     if (nrow(worms_data) > 0) {
@@ -66,7 +68,7 @@ if (online) {
     
     worms_species_l[[i]] = worms_data
   }
-  saveRDS(worms_species_l, file.path(cachedir, 'worms_species_list.rds'))
+  #saveRDS(worms_species_l, file.path(cachedir, 'worms_species_list.rds'))
   
 } else {
   worms_species_l = readRDS(file.path(cachedir, 'worms_species_list.rds'))
