@@ -208,7 +208,7 @@ epa2 = epa2[ !result_id %in% dupl_result_id ]
 
 # saving ------------------------------------------------------------------
 saveRDS(epa2, file.path(cachedir, 'epa.rds'))
-taxa = unique(epa2[ , .SD, .SDcols = c('taxon', 'tax_family') ])
+taxa = unique(epa2[ , .SD, .SDcols = c('taxon', 'tax_genus', 'tax_family') ])
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 chem = unique(epa2[ , .SD, .SDcols = c('casnr', 'cas', 'che_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
