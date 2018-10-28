@@ -69,6 +69,15 @@ wo = wo[ ind %in% c('AphiaID', 'scientificname', 'rank',
 wo2 = dcast(wo, id ~ ind,
             value.var = 'values')[ , id := NULL]
 
+# log ---------------------------------------------------------------------
+msg = 'WoRMS query run'
+log_msg(msg); rm(msg)
+
+# cleaning ----------------------------------------------------------------
+rm(taxa, todo, todo_wo, todo_wo_id, 
+   res,
+   worms_aphiaid_l, worms_l,
+   wo)
 
 
 
