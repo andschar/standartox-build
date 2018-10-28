@@ -101,12 +101,17 @@ if (online) {
   cs_scrape = readRDS(file.path(cachedir, 'cs_scrape.rds'))
 }
 
+# final dt ----------------------------------------------------------------
+setnames(cs_scrape, 'name', 'cs_name')
+cols = c('cas', 'cs_name', 'cs_fungicide', 'cs_herbicide', 'cs_insecticide')
+cs2 = cs_scrape[ , .SD, .SDcols = cols]
+
 # log ---------------------------------------------------------------------
 msg = 'ChemSpider Scrape run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(tags, names_new)
+rm(tags, names_new, cols)
 
 
 
