@@ -133,7 +133,7 @@ cols_fin = c('test_id', 'result_id', 'casnr', 'cas', 'chemical_name', 'chemical_
              'hab_isFre', 'hab_isBra', 'hab_isMar', 'hab_isTer',
              'taxon', 'tax_genus', 'tax_family', 'tax_order', 'tax_class', 'tax_superclass', 'tax_phylum',
              'tax_subphylum_div', 'tax_phylum_division', 'tax_kingdom',
-             'tax_common_name', 'tax_convgroup', 'tax_aqu_inv', 'tax_troph_lvl',
+             'tax_common_name', 'tax_convgroup', 'tax_invertebrate', 'tax_troph_lvl',
              'source', 'reference_number', 'title', 'author', 'publication_year')
 
 epa2 = epa1[ , .SD, .SDcols = cols_fin ]

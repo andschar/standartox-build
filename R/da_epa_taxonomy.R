@@ -71,18 +71,33 @@ tax[ tax_convgroup %in% c('Algae', 'Plants'), tax_troph_lvl := 'autotroph' ]
 tax[ tax_phylum == 'Dinoflagellata', tax_troph_lvl := 'mixotroph' ]
 
 
-# aquatic macro-invertebrates ---------------------------------------------
-freshwater_info_inv = c('Porifera',	'Coelenterata',	'Turbellaria',	'Nematomorpha', 'Nemertini',	'Gastropoda',	'Bivalvia',	'Polychaeta', 'Oligochaeta',	'Hirudinea',	'Branchiobdellida',	'Araneae', 'Hydrachnidia',	'Crustacea',	'Ephemeroptera',	'Odonata', 'Plecoptera',	'Heteroptera',	'Megaloptera',	'Planipennia', 'Coleoptera',	'Hymenoptera',	'Trichoptera', 'Lepidoptera', 'Diptera',	'Chironomidae',	'Bryozoa')
-
+# Makro and Mikro Invertebrates -------------------------------------------
 cols = grep('tax_', names(tax), ignore.case = TRUE, value = TRUE)
+#### out-commented for now -> maybe this column will again be needed
+# freshwater_info_inv = c('Porifera',	'Coelenterata',	'Turbellaria',	'Nematomorpha', 'Nemertini',	'Gastropoda',	'Bivalvia',	'Polychaeta', 'Oligochaeta',	'Hirudinea',	'Branchiobdellida',	'Araneae', 'Hydrachnidia',	'Crustacea',	'Ephemeroptera',	'Odonata', 'Plecoptera',	'Heteroptera',	'Megaloptera',	'Planipennia', 'Coleoptera',	'Hymenoptera',	'Trichoptera', 'Lepidoptera', 'Diptera',	'Chironomidae',	'Bryozoa')
+# tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
+#                               paste0('(?i)', freshwater_info_inv, collapse = '|'))),
+#          .SDcols = cols], tax_aqu_inv := 'yes' ]
+### END
+## Invertebrat variables
+inv_makro_phylum = c('Annelida', 'Echinodermata', 'Mollusca', 'Nemertea', 'Platyhelminthes', 'Porifera')
+inv_mikro_phylum = c('Bryozoa', 'Chaetognatha', 'Ciliophora', 'Cnidaria', 'Gastrotricha', 'Nematoda', 'Rotifera')
+inv_makro_subphylum = c('Crustacea')
+inv_makro_class = c('Arachnida', 'Diplopoda', 'Entognatha', 'Insecta') # phylum: Arthropoda
+invertebrates_makro = c(inv_makro_phylum, inv_makro_subphylum, inv_makro_class)
+invertebrates_mikro = inv_mikro_phylum
+## Makro Invertebrates
 tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
-                              paste0('(?i)', freshwater_info_inv, collapse = '|'))),
-         .SDcols = cols], tax_aqu_inv := 'yes' ]
-rm(cols)
-
+                              paste0('(?i)', invertebrates_makro, collapse = '|'))),
+         .SDcols = cols ], tax_invertebrate := 'Makro Invertebrates' ]
+## Mikro Invertebrates
+tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
+                              paste0('(?i)', invertebrates_mikro, collapse = '|'))),
+         .SDcols = cols ], tax_invertebrate := 'Mikro Invertebrates' ]
 
 # cleaning ----------------------------------------------------------------
-
+rm(inv_makro_phylum, inv_mikro_phylum, inv_makro_subphylum, inv_makro_class,
+   invertebrates_makro, invertebrates_mikro)
 
 
 
@@ -116,14 +131,7 @@ rm(cols)
 # grep('mollusca', names(tax), ignore.case = TRUE, value = TRUE)
 # 
 # 
-# inv_makro_phylum = c('Annelida', 'Echinodermata', 'Mollusca', 'Nemertea', 'Platyhelminthes', 'Porifera')
-# inv_mikro_phylum = c('Bryozoa', 'Chaetognatha', 'Ciliophora', 'Cnidaria', 'Gastrotricha', 'Nematoda', 'Rotifera')
-# inv_makro_subphylum = c('Crustacea')
-# inv_makro_class = c('Arachnida', 'Diplopoda', 'Entognatha', 'Insecta') # phylum: Arthropoda
-# invertebrates_makro = c(inv_makro_phylum, inv_makro_subphylum, inv_makro_class)
-# invertebrates_mikro = inv_mikro_phylum
-# tests[ , ma_supgroup2 := ifelse(ma_supgroup %in% invertebrates_makro, 'Makro_Inv',
-#                          ifelse(ma_supgroup %in% invertebrates_mikro, 'Mikro_Inv', ma_supgroup)) ]
+
 # # trophic level
 # autotrophs = c('Plants', 'Algae', 'Bryophyta')
 # tests[ , trophic_lvl := ifelse(ma_supgroup2 %in% autotrophs, 'autotrophic', 'heterotrophic') ]
