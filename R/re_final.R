@@ -7,14 +7,25 @@ source(file.path(src, 'setup.R'))
 tests_fin = readRDS(file.path(cachedir, 'tests_ch.rds'))
 
 # final columns -----------------------------------------------------------
-cols_gen = c('cas', 'casnr', 'inchikey')
-cols_chem_class = c('cgr_fungicides', 'cgr_herbicides', 'cgr_insecticides', 'cgr_repellents', 'cgr_rodenticide')
+cols = grep('_src', names(tests_fin), value = TRUE, invert = TRUE)
 
-cols = c(cols_gen,
-         cols_chem_class)
+
+cols_gen = c('result_id', 'cas', 'casnr', 'inchikey', 'value_fin', 'unit_fin', 'dur_fin', 'taxon')
+cols_test_param = grep('tes_', cols, value = TRUE) # test parameters
+cols_chem_class = grep('cgr_', cols, value = TRUE) # chemical classes
+cols_taxa = grep('tax_', cols, value = TRUE) # taxonomic classes
+cols_habi = grep('hab_', cols, value = TRUE) # habitat
+cols_regi = grep('reg_', cols, value = TRUE) # region information
+
+cols_fin = c(cols_gen,
+             cols_test_param,
+             cols_chem_class,
+             cols_taxa,
+             cols_habi,
+             cols_regi)
 
 ## final table
-tests_fin = tests_fin[ , .SD, .SDcols = cols ]
+tests_fin = tests_fin[ , .SD, .SDcols = cols_fin ]
 
 # final meta columns ------------------------------------------------------
 cols_meta = grep('_src', names(tests_fin), value = TRUE)
@@ -40,6 +51,6 @@ saveRDS(tests_fin_meta, file.path(cachedir, 'tests_meta_fin.rds'))
 saveRDS(meta_stats, file.path(cachedir, 'tests_meta_stats.rds'))
 
 # cleaning ----------------------------------------------------------------
-rm(tests_ch, tests_fin, tests_fin_meta,
-   cols, cols_meta)
+rm(tests_ch, tests_fin, tests_fin_meta)
+rm(list = grep('^cols', ls(), value = TRUE))
 
