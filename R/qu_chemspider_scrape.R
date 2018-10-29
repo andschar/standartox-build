@@ -103,7 +103,8 @@ if (online) {
 
 # final dt ----------------------------------------------------------------
 setnames(cs_scrape, 'name', 'cs_name')
-cols = c('cas', 'cs_name', 'cs_fungicide', 'cs_herbicide', 'cs_insecticide')
+cols = c('cas', 'cs_name', 'cs_fungicide', 'cs_herbicide', 'cs_insecticide',
+         'cs_rodenticide')
 cs2 = cs_scrape[ , .SD, .SDcols = cols]
 
 # log ---------------------------------------------------------------------
