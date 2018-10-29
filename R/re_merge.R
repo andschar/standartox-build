@@ -4,7 +4,7 @@
 source(file.path(src, 'setup.R'))
 
 # EPA test data -----------------------------------------------------------
-# source(file.path(src, 'da_epa.R'))
+source(file.path(src, 'da_epa.R'))
 # 
 # # chemical data -----------------------------------------------------------
 ## special script, should be run first as it queries InChiKeys (which are subsequently needed)
@@ -67,13 +67,13 @@ ha_info_fm = wo2_fm
 re_info = gbif_conti_dc
 
 # Duplicate cas and txon check ----------------------------------------------
-chck_cas_dupl = rbindlist(list(epa1[is.na(cas)],
+chck_cas_dupl = rbindlist(list(epa2[is.na(cas)],
                                ch_info[is.na(cas)]), fill = TRUE)
 
 chck_fam_dupl = data.table()
-# chck_fam_dupl = rbindlist(list(epa1_)) # TODO Where are the families in the habitat queries taken from?
+# chck_fam_dupl = rbindlist(list(epa2_)) # TODO Where are the families in the habitat queries taken from?
 
-chck_tax_dupl = rbindlist(list(epa1[is.na(taxon)],
+chck_tax_dupl = rbindlist(list(epa2[is.na(taxon)],
                                re_info[is.na(taxon)]), fill = TRUE)
 
 
