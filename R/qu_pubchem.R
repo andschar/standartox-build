@@ -70,7 +70,9 @@ pc[ , V1 := NULL ] # not needed
 pc2 = pc[ , .SD, .SDcols = c('cas', 'CID', 'InChIKey', 'IUPACName', 'ExactMass')]
 pc2 = pc2[!duplicated(cas)] #! easy way out, although pubchem doesn't provide important information
 setnames(pc2, tolower(names(pc2)))
-setnames(pc2, c('iupacname', 'exactmass'), c('pc_iupacname', 'pc_exactmass'))
+setnames(pc2,
+         old = c('inchikey', 'iupacname', 'exactmass'),
+         new = c('pc_inchikey', 'pc_iupacname', 'pc_exactmass'))
 
 # missing entries ---------------------------------------------------------
 na_pc2_inchi = pc2[ is.na(inchikey) ]
