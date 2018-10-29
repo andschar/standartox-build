@@ -7,17 +7,22 @@ source(file.path(src, 'setup.R'))
 tests = readRDS(file.path(cachedir, 'tests.rds'))
 
 # variables ---------------------------------------------------------------
+# (2) compound identifier ----
+cols = c('inchikey', 'inchikey_src')
+tests[ , (cols) := list(pc_inchikey, 'pc') ]
+tests[ is.na(inchikey), (cols) := NA ]
+
 # (1) compound name ----
 cols = c('comp_name', 'comp_name_src')
 tests[ , (cols) := list(pp_cname, 'pp') ]
 #tests[ is.na(comp_name), (cols) := list(aw_cname, 'aw') ]
-tests[ is.na(comp_name), (cols) := list(fr_cname, 'fr')  ]
+# tests[ is.na(comp_name), (cols) := list(fr_cname, 'fr')  ]
 tests[ is.na(comp_name), (cols) := list(pc_iupacname, 'pc')  ]
 tests[ is.na(comp_name), (cols) := list(che_name, 'ep') ]
 tests[ is.na(comp_name), (cols) := NA ] # necessary 'cause string (e.g. 'aw') is recycled nrow times
 
 # cleaning
-cols_name_rm = c('pp_cname', 'aw_cname', 'fr_cname', 'pc_iupacname', 'ep_chemical_name')
+cols_name_rm = c('pp_cname', 'aw_cname', 'pc_iupacname', 'ep_chemical_name')
 tests[ , (cols_name_rm) := NULL ]; rm(cols_name_rm)
 
 # (2) compound type ----
@@ -55,6 +60,7 @@ tests[ , (cols_insecticide_rm) := NULL ]; rm(cols_insecticide_rm)
 cols = c('cgr_molluscicide', 'cgr_molluscicide_src')
 tests[ , (cols) := list(eu_molluscicide, 'eu') ]
 tests[ is.na(cgr_molluscicide), (cols) := list(aw_molluscicide, 'aw') ]
+tests[ is.na(cgr_molluscicide), (cols) := NA ]
 # cleaning
 cols_molluscicide_rm = c('eu_molluscicide', 'aw_molluscicide')
 tests[ , (cols_molluscicide_rm) := NULL ]; rm(cols_molluscicide_rm)
@@ -73,6 +79,7 @@ tests[ , (cols_rodenticide_rm) := NULL ]; rm(cols_rodenticide_rm)
 cols = c('cgr_repellent', 'cgr_repellent_src')
 tests[ , (cols) := list(eu_repellent, 'eu') ]
 tests[ is.na(cgr_repellent), (cols) := list(aw_repellent, 'aw') ]
+tests[ is.na(cgr_repellent), (cols) := NA ]
 # cleaning
 cols_repellent_rm = c('eu_repellent', 'aw_repellent')
 tests[ , (cols_repellent_rm) := NULL ]; rm(cols_repellent_rm)
@@ -129,12 +136,30 @@ tests[ , (cols_ha_rm) := NULL ]
 rm(cols_ha_rm)
 
 # (5) regional column ----
-tests[ , reg_africa := ifelse(gb_africa == 1, 1, NA) ]
-tests[ , reg_america_north := ifelse(gb_north_america == 1, 1, NA) ]
-tests[ , reg_america_south := ifelse(gb_south_america == 1, 1, NA) ]
-tests[ , reg_asia := ifelse(gb_asia == 1, 1, NA) ]
-tests[ , reg_europe := ifelse(gb_europe == 1, 1, NA) ]
-tests[ , reg_oceania := ifelse(gb_oceania == 1, 1, NA) ]
+# Africa
+cols = c('reg_africa', 'reg_africa_src')
+tests[ , (cols) := list(gb_africa, 'gb')]
+tests[ is.na(reg_africa), (cols) := NA ]
+# North America
+cols = c('reg_america_north', 'reg_america_north_src')
+tests[ , (cols) := list(gb_north_america, 'gb')]
+tests[ is.na(reg_america_north), (cols) := NA ]
+# South America
+cols = c('reg_america_south', 'reg_america_south_src')
+tests[ , (cols) := list(gb_south_america, 'gb')]
+tests[ is.na(reg_america_south), (cols) := NA ]
+# Asia
+cols = c('reg_asia', 'reg_asia_src')
+tests[ , (cols) := list(gb_south_america, 'gb')]
+tests[ is.na(reg_asia), (cols) := NA ]
+# Europe
+cols = c('reg_europe', 'reg_europe_src')
+tests[ , (cols) := list(gb_south_america, 'gb')]
+tests[ is.na(reg_europe), (cols) := NA ]
+# Oceania
+cols = c('reg_oceania', 'reg_oceania_src')
+tests[ , (cols) := list(gb_south_america, 'gb')]
+tests[ is.na(reg_oceania), (cols) := NA ]
 # cleaning
 cols_re_rm = c('gb_africa', 'gb_north_america', 'gb_south_america', 'gb_asia', 'gb_europe', 'gb_oceania')
 tests[ , (cols_re_rm) := NULL ]
