@@ -4,10 +4,10 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-tests_fin = readRDS(file.path(cachedir, 'tests_ch.rds'))
+tests_ch = readRDS(file.path(cachedir, 'tests_ch.rds'))
 
 # final columns -----------------------------------------------------------
-cols = grep('_src', names(tests_fin), value = TRUE, invert = TRUE)
+cols = grep('_src', names(tests_ch), value = TRUE, invert = TRUE)
 
 
 cols_gen = c('result_id', 'cas', 'casnr', 'inchikey', 'value_fin', 'unit_fin', 'dur_fin', 'taxon')
@@ -25,12 +25,12 @@ cols_fin = c(cols_gen,
              cols_regi)
 
 ## final table
-tests_fin = tests_fin[ , .SD, .SDcols = cols_fin ]
+tests_fin = tests_ch[ , .SD, .SDcols = cols_fin ]
 
 # final meta columns ------------------------------------------------------
-cols_meta = grep('_src', names(tests_fin), value = TRUE)
+cols_meta = grep('_src', names(tests_ch), value = TRUE)
 
-tests_fin_meta = tests_fin[ , .SD, .SDcols = cols_meta ]
+tests_fin_meta = tests_ch[ , .SD, .SDcols = cols_meta ]
 
 # meta stats table --------------------------------------------------------
 meta_m = melt(tests_fin_meta, measure.vars = names(tests_fin_meta))
@@ -44,7 +44,7 @@ meta_stats[ , variable := gsub('_src', '', variable) ]
 
 # writing -----------------------------------------------------------------
 # table
-saveRDS(tests_fin, file.path(cachedir, 'tests_fin.rds'))
+saveRDS(tests_fin, file.path(cachedir, 'tests_ch.rds'))
 # meta table
 saveRDS(tests_fin_meta, file.path(cachedir, 'tests_meta_fin.rds'))
 # meta stats table
