@@ -56,11 +56,13 @@ dat = read_feather(file.path(datadir, 'tests_fin.feather'))
 setDT(dat)
 Sys.time() - time
 
-## test statistics
+## test statistics + variable names
 te_stats_l = readRDS(file.path(datadir, 'te_stats_l.rds'))
 
+## missing variables
+var_missing = fread(file.path(datadir, 'all_variables_na.csv'))
 
-
+## EPA ECOTOX version
 
 
 

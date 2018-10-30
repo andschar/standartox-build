@@ -91,6 +91,7 @@ server = function(input, output) {
   
   # missing ----
   # TODO output$missing = DT::renderDataTable(tests_stat)
+  output$missing = DT::renderDataTable(var_missing)
   
 }
 
