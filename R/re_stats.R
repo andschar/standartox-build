@@ -102,6 +102,7 @@ na_dt = rbindlist(na_l, idcol = 'varaible_type')
 
 # writing -----------------------------------------------------------------
 fwrite(na_dt, file.path(missingdir, 'all_variables_na.csv'))
+fwrite(na_dt, file.path(shinydata, 'all_variables_na.csv'))
 
 # log ---------------------------------------------------------------------
 msg = 'Summary stats on variables calculated and written'

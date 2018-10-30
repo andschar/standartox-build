@@ -107,6 +107,7 @@ log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
 rm(list = grep('prj|src|nodename', ls(), value = TRUE, invert = TRUE))
+# TODO maybe think about a more elegant solution in the future
 
 
 
