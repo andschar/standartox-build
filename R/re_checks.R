@@ -33,7 +33,7 @@ msg = 'Checks done'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(tests_ch, cols)
+rm(tests_ch)
 
 
 

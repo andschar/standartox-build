@@ -41,7 +41,7 @@ source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = 1e6)
 
 # (2) queries + data preparation ------------------------------------------
 source(file.path(src, 're_merge.R'), max.deparse.length = 1e6)
-source(file.path(src, 're_filter.R'), max.deparse.length = 1e6)
+source(file.path(src, 're_combine.R'), max.deparse.length = 1e6)
 source(file.path(src, 're_checks.R'), max.deparse.length = 1e6)
 
 
@@ -60,7 +60,8 @@ source(file.path(src, 're_stats.R'), max.deparse.length = 1e6)
 ## shiny variables
 source(file.path(src, 're_shiny_variables.R'), max.deparse.length = 1e6)
 ## plots
-source(file.path(src, 're_plots.R'), max.deparse.length = 1e6)
+# TODO NOT WORKING YET
+# source(file.path(src, 're_plots.R'), max.deparse.length = 1e6)
 
 
 

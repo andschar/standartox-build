@@ -106,7 +106,7 @@ msg = 'Query results merged'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(list = ls())
+rm(list = grep('prj|src|nodename', ls(), value = TRUE, invert = TRUE))
 
 
 

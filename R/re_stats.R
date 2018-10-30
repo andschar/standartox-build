@@ -9,7 +9,6 @@ te_st = readRDS(file.path(cachedir, 'tests_ch.rds'))
 cols = sort(names(te_st))
 cols = grep('src', cols, value = TRUE, invert = TRUE) # remove src columns
 
-
 #### individual variables -------------------------------------------------
 # every variable stands for its own
 
@@ -109,8 +108,13 @@ msg = 'Summary stats on variables calculated and written'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(cols)
-
+rm(list = grep('cols', ls(), value = TRUE))
+rm(list = grep('comp', ls(), value = TRUE))
+rm(list = grep('media', ls(), value = TRUE))
+rm(list = grep('chcl', ls(), value = TRUE))
+rm(list = grep('habi', ls(), value = TRUE))
+rm(list = grep('regi', ls(), value = TRUE))
+rm(te_st, na_l, na_dt)
 
 
 

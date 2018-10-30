@@ -182,11 +182,5 @@ msg = 'Variable combination script tun'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-oldw = getOption("warn")
-options(warn = -1) # shuts off warnings
-
-rm(file, name, missing_l, i,
-   na_name, na_type, na_solub, na_habi,
-   autotrophs)
-
-options(warn = oldw); rm(oldw)
+rm(tests, tests_fl)
+rm(list = grep('cols', ls(), value = TRUE))

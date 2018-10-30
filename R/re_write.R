@@ -86,16 +86,18 @@ con = dbConnect(drv,
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
+# writing -----------------------------------------------------------------
 ## message
 msg = paste0('Final table (tests_fin) written to database table:\n',
              paste(schema, tbl, sep = '.'))
 log_msg(msg); rm(msg)
 
 ## final message
-# as this is the exit script
 msg = paste0(rep('-', 30), collapse = '')
 log_msg(msg); rm(msg)
 
+# cleaning ----------------------------------------------------------------
+rm(tests_fin, con, drv, tbl, time)
 
 
 
