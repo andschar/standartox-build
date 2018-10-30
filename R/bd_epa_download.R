@@ -38,11 +38,16 @@ etoxdir_lookup = data.table(
 )
 setorder(etoxdir_lookup, -release)
 
+## ECOTOX database
 DBetox = paste0('etox', gsub('-', '', etoxdir_lookup$release[1]))
 etoxdir = etoxdir_lookup$path[1]
 
+# writing -----------------------------------------------------------------
+# ECOTOX version
 saveRDS(DBetox, file.path(cachedir, 'data_base_name_version.rds'))
+saveRDS(DBetox, file.path(shinydir, 'data_base_name_version.rds'))
 
+# check -------------------------------------------------------------------
 if (length(releases) == 0) {
   msg = 'Newest etox file (DBetox) file can not be found.'
   log_msg(msg); rm(msg)
