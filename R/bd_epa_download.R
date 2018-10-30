@@ -45,7 +45,7 @@ etoxdir = etoxdir_lookup$path[1]
 # writing -----------------------------------------------------------------
 # ECOTOX version
 saveRDS(DBetox, file.path(cachedir, 'data_base_name_version.rds'))
-saveRDS(DBetox, file.path(shinydir, 'data_base_name_version.rds'))
+saveRDS(DBetox, file.path(shinydata, 'data_base_name_version.rds'))
 
 # check -------------------------------------------------------------------
 if (length(releases) == 0) {

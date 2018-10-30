@@ -36,6 +36,7 @@ meta_stats = merge(meta_stats_fin, meta_stats_src,
 # writing -----------------------------------------------------------------
 saveRDS(meta_stats, file.path(cachedir, 'tests_meta_stats.rds'))
 fwrite(meta_stats, file.path(cachedir, 'tests_meta_stats.csv'))
+fwrite(meta_stats, file.path(shinydata, 'tests_meta_stats.csv'))
 
 # log ---------------------------------------------------------------------
 msg = 'Meta tables written'

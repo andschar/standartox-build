@@ -75,7 +75,7 @@ te_stats_l$chem_class[ , nam_long_stat := paste0(nam_long, ' (', N, ')') ]
 
 # write -------------------------------------------------------------------
 # to shinydir
-saveRDS(te_stats_l, file.path(shinydir, 'data', 'te_stats_l.rds'))
+saveRDS(te_stats_l, file.path(shinydata, 'te_stats_l.rds'))
 
 # log ---------------------------------------------------------------------
 msg = 'Shiny variables written'

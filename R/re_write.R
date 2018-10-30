@@ -15,25 +15,25 @@ tests_fin = readRDS(file.path(cachedir, 'tests_fl.rds'))
 # (1) to shiny repo -------------------------------------------------------
 ## as .rds
 time = Sys.time()
-saveRDS(tests_fin, file.path(shinydir, 'data', 'tests_fin.rds'))
+saveRDS(tests_fin, file.path(shinydata, 'tests_fin.rds'))
 Sys.time() - time
 ## as feather
 time = Sys.time()
-write_feather(tests_fin, file.path(shinydir, 'data', 'tests_fin.feather'))
+write_feather(tests_fin, file.path(shinydata, 'tests_fin.feather'))
 Sys.time() - time
 ## copy .feather via scp to server (github only allows 100MB)
 #! takes some time
 if (nodename == 'scharmueller' & scp_feather) {
   system(
     paste('scp',
-          file.path(shinydir, 'data', 'tests_fin.feather'),
+          file.path(shinydata, 'tests_fin.feather'),
           'scharmueller@139.14.20.252:/home/scharmueller/Projects/etox-base-shiny/data/tests_fin.feather',
           sep = ' ')
   )
 }
 
 # message
-msg = paste0('Final table (tests_fin) written to shinydir:\n', shinydir)
+msg = paste0('Final table (tests_fin) written to shiny data dir:\n', shinydata)
 log_msg(msg); rm(msg)
 
 # (2) to PostgreSQL -----------------------------------------------------------
