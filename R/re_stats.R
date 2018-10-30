@@ -84,7 +84,7 @@ te_st[ , N_regi := rowSums(.SD, na.rm = TRUE), .SDcols = cols_regi ]
 na_regi = te_st[ , .N, N_regi ][order(-N)]
 
 regi = data.table(
-  varaible = 'regitat (reg_)',
+  varaible = 'region (reg_)',
   N_NA = na_regi[ N_regi == 0 ]$N,
   N_tot = nrow(te_st)
 )
