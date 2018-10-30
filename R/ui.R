@@ -117,19 +117,6 @@ ui = fluidPage(
           )
         ),
         tabPanel(
-          'Summary',
-          splitLayout(
-            fluidPage(
-              headerPanel('CAS'),
-              verbatimTextOutput(outputId = 'summary_chem')
-            ),
-            fluidPage(
-              headerPanel('Organisms'),
-              verbatimTextOutput(outputId = 'summary_taxa')
-            )
-          )
-        ),
-        tabPanel(
           'Plots',
           tabsetPanel(
             tabPanel(
