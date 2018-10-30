@@ -38,17 +38,31 @@ source(file.path(src, 'bd_epa_download.R'), max.deparse.length = 1e6)
 # build
 source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = 1e6)
 
-# # (2) queries -------------------------------------------------------------
+
+# (2) queries + data preparation ------------------------------------------
 source(file.path(src, 're_merge.R'), max.deparse.length = 1e6)
-# source(file.path(src, 're_filter.R'))
-# source(file.path(src, 're_final.R'))
-# # filter stats?
-#
-# # (3) save to DB ----------------------------------------------------------
-# # saving filter table to data base and as an .rds object
-# source(file.path(src, 're_write.R'))
-#
-#
+source(file.path(src, 're_filter.R'), max.deparse.length = 1e6)
+source(file.path(src, 're_checks.R'), max.deparse.length = 1e6)
+
+
+# (3) final table ---------------------------------------------------------
+source(file.path(src, 're_final.R'), max.deparse.length = 1e6)
+
+
+# (4) scripts base on final table -----------------------------------------
+## write
+# write to database and save as .rds (also to shinydir)
+source(file.path(src, 're_write.R'), max.deparse.length = 1e6)
+## meta table
+source(file.path(src, 're_meta.R'), max.deparse.length = 1e6)
+## stats table
+source(file.path(src, 're_stats.R'), max.deparse.length = 1e6)
+## shiny variables
+source(file.path(src, 're_shiny_variables.R'), max.deparse.length = 1e6)
+## plots
+source(file.path(src, 're_plots.R'), max.deparse.length = 1e6)
+
+
 
 # # (0b) console log 2 --------------------------------------------------------
 if (nodename == 'uwigis') {
