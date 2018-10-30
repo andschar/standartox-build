@@ -8,6 +8,7 @@ ec50_filagg = function(dt,
                        tax = NULL,
                        conc_type = NULL,
                        effect = NULL,
+                       endpoint = NULL,
                        comp = NULL,
                        chem_class = NULL,
                        duration = NULL,
@@ -19,7 +20,7 @@ ec50_filagg = function(dt,
   # debug me!
   # source('R/setup.R')
   # tests_fin = readRDS(file.path(datadir, 'tests_fin.rds'))
-  # dt = tests_fin; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); chem_class = c('cgr_fungicide'); cas = c("1071836", "122145",  "121755",  NA); conc_type = NULL; info = 'n'; comp = 'comp_name'; solub_chck = FALSE
+  # dt = tests_fin; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); chem_class = c('cgr_fungicide'); cas = c("1071836", "122145",  "121755",  NA); conc_type = NULL; info = 'n'; comp = 'comp_name'; solub_chck = FALSE; effect = 'MOR'; endpoint = 'EC50'
   
   if (!is.null(cas)) {
     casnr_todo = casconv(cas, direction = 'tocasnr')
@@ -51,6 +52,13 @@ ec50_filagg = function(dt,
     dt = dt
   } else {
     dt = dt[ tes_effect %in% effect ]
+  }
+  
+  ## endpoint ----
+  if (is.null(endpoint)) {
+    dt = dt
+  } else {
+    dt = dt[ tes_endpoint %in% endpoint ]
   }
   
   ## solubility check ----

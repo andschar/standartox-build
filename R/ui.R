@@ -74,10 +74,10 @@ ui = fluidPage(
               checkboxGroupInput(inputId = 'effect', label = 'Effect group',
                                  choiceValues = te_stats_l$tes_effect$val,
                                  choiceNames = te_stats_l$tes_effect$nam),
-              radioButtons(inputId = 'endpoint', label = 'TODO Endpoints',
-                           choiceValues = c('EC50', 'LOEC', 'NOEC'),
-                           choiceNames = c('L/EC50', 'LOEC', 'NOEC'),
-                           selected = 'EC50')
+              checkboxGroupInput(inputId = 'endpoint', label = 'Endpoints',
+                                 choiceValues = te_stats_l$tes_endpoint$val,
+                                 choiceNames = te_stats_l$tes_endpoint$nam,
+                                 selected = c('LC50', 'EC50'))
             )
           )
         ),
