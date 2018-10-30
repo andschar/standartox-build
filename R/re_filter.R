@@ -7,10 +7,16 @@ source(file.path(src, 'setup.R'))
 tests = readRDS(file.path(cachedir, 'tests.rds'))
 
 # variables ---------------------------------------------------------------
-# (2) compound identifier ----
+# (1) identifiers ----
+## CAS
+tests[ , cas_src := 'ep' ] # dummy
+tests[ , casnr_src := 'ep' ]
+## InchiKey
 cols = c('inchikey', 'inchikey_src')
 tests[ , (cols) := list(pc_inchikey, 'pc') ]
 tests[ is.na(inchikey), (cols) := NA ]
+## Taxon
+tests[ , taxon_src := 'ep' ]
 
 # (1) compound name ----
 cols = c('comp_name', 'comp_name_src')
@@ -131,7 +137,7 @@ tests[ is.na(hab_terre), (cols) := NA ]
 # cleaning
 cols_ha_rm = c('wo_isMar_sp', 'wo_isBra_sp', 'wo_isFre_sp', 'wo_isTer_sp',
                'gb_isMar', 'gb_isBra', 'gb_isFre', 'gb_isTer',
-               'ep_hab_isMar', 'ep_hab_isBra', 'ep_hab_isFre', 'ep_hab_isTer')
+               'hab_isMar', 'hab_isBra', 'hab_isFre', 'hab_isTer')
 tests[ , (cols_ha_rm) := NULL ]
 rm(cols_ha_rm)
 
