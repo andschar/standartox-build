@@ -178,7 +178,7 @@ tests_fl[comp_name == 'glyphosphate', comp_name := 'glyphosate']
 saveRDS(tests_fl, file.path(cachedir, 'tests_fl.rds'))
 
 # log ---------------------------------------------------------------------
-msg = 'Variable combination script tun'
+msg = 'Variable combination script run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
