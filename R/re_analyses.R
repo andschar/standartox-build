@@ -25,6 +25,10 @@ tests_an[tests_ou, outl := i.outl, on = 'result_id' ]
 # writing -----------------------------------------------------------------
 saveRDS(tests_an, file.path(cachedir, 'tests_an.rds'))
 
+# log ---------------------------------------------------------------------
+msg = 'Analyses script run'
+log_msg(msg); rm(msg)
+
 # cleaning ----------------------------------------------------------------
 rm(tests_an,
    tests_ou)

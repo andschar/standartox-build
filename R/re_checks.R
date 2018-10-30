@@ -28,6 +28,10 @@ tests_ch = readRDS(file.path(cachedir, 'tests_an.rds'))
 # writing -----------------------------------------------------------------
 saveRDS(tests_ch, file.path(cachedir, 'tests_ch.rds'))
 
+# log ---------------------------------------------------------------------
+msg = 'Checks done'
+log_msg(msg); rm(msg)
+
 # cleaning ----------------------------------------------------------------
 rm(tests_ch, cols)
 
