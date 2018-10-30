@@ -49,7 +49,7 @@ ui = fluidPage(
           verticalLayout(
             br(),
             selectInput(inputId = 'tax', label = 'Choose a taxon',
-                        choices = c('Chironomidae', 'Daphniidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
+                        choices = c('Daphniidae', 'Chironomidae', 'Insecta', 'Crustacea', 'Annelida', 'Platyhelminthes', 'Mollusca', 'Makro_Inv', 'Fish', 'Algae', 'Bacillariophyceae', 'Plants')),
             splitLayout(
               checkboxGroupInput(inputId = 'habitat', label = 'Organism hatbitat',
                                  choiceValues = te_stats_l$habitat$variable,

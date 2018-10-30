@@ -68,14 +68,14 @@ ec50_filagg = function(dt,
   
   ## habitat ----
   # TODO enable ticking two options
-  if (is.null(habitat) | habitat == 'all') {
+  if (is.null(habitat)) {
     dt = dt
     hab = 'n' # none
   } else {
     dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = habitat ]]
   }
   ## continent ----
-  if (is.null(continent) | continent == 'all') {
+  if (is.null(continent)) {
     dt = dt
   } else {
     dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = continent ]]
