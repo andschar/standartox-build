@@ -98,13 +98,15 @@ tests = merge(tests, ha_info_fm, by = 'tax_family', all.x = TRUE)
 # final table
 setcolorder(tests, c('cas', 'casnr', 'taxon'))#, 'family'))
 
+# Save --------------------------------------------------------------------
+saveRDS(tests, file.path(cachedir, 'tests.rds'))
+
 # log ---------------------------------------------------------------------
 msg = 'Query results merged'
 log_msg(msg); rm(msg)
 
-# Save --------------------------------------------------------------------
-saveRDS(tests, file.path(cachedir, 'tests.rds'))
-
+# cleaning ----------------------------------------------------------------
+rm(list = ls())
 
 
 
