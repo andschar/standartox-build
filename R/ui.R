@@ -162,10 +162,11 @@ ui = fluidPage(
             dataTableOutput(outputId = 'missing'), width = 11, offset = 0
           )
         ),
-        tabPanel(
-          'Article'
-          #withMathJax(includeMarkdown('article.md'))
-        ),
+        # TODO
+        # tabPanel(
+        #   'Article'
+        #   #withMathJax(includeMarkdown('article.md'))
+        # ),
         tabPanel(
           'About',
           'EPA ECOTOX cersion: Version: 7 Juli 2018',
