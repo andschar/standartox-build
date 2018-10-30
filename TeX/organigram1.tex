@@ -31,6 +31,7 @@
 	inner sep = 0pt, outer sep = 0pt
 	]
 	
+	%%%%%%%% 1st part: downloading data %%%%%%%%
 	\node (io) [io, align = center] at (0cm,0cm) {EPA ECOTOX\\data base};
 	%% chemicals
 	% id nodes
@@ -97,6 +98,26 @@
 	% Result arrows
 	\draw [arrow] (testres) -- (appbox_shiny.west); %++(2cm,0cm);
 	\draw [arrow] (testres) -- (appbox_db.west);
+	
+	%%%%%%%% 2nd part: processing chain %%%%%%%%
+	% nodes
+	\node (testres2) [res] at (0cm,-24cm) {Result re\_merge.R}; % maybe connect it with testres ?
+	\node (filter) [res, right of = testres2, xshift = 2cm] {re\_filter.R};
+	\node (analyses) [res, right of = filter, xshift = 2cm] {re\_analyses.R};
+	\node (checks) [res, right of = analyses, xshift = 2cm] {re\_checks.R};
+	\node (final) [res, right of = checks, xshift = 2cm] {re\_final.R};
+	    \node (stats) [res, right of = final, xshift = 2cm, yshift = 2cm] {re\_stats.R};
+	    \node (write) [res, right of = final, xshift = 2cm, yshift = 0cm] {re\_write.R};
+	    \node (shinyvar) [res, right of = final, xshift = 2cm, yshift = -2cm] {re\_shiny\_variables.R};
+	
+	% arrows
+	\draw [arrow] (testres2.east) -- (filter.west);
+	\draw [arrow] (filter.east) -- (analyses.west);
+	\draw [arrow] (analyses.east) -- (checks.west);
+	\draw [arrow] (checks.east) -- (final.west);
+	\draw [arrow] (final.east) -- (stats.west);
+	\draw [arrow] (final.east) -- (write.west);
+	\draw [arrow] (final.east) -- (shinyvar.west);
 	
 	\end{pgfonlayer}
 	\end{tikzpicture}
