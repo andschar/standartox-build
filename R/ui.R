@@ -128,15 +128,19 @@ ui = fluidPage(
               'Sensitivity plots',
               headerPanel('Most sensitive EC50 values'),
               fluidRow(
-                shinydashboard::box(width = 4,
+                shinydashboard::box(width = 10,
                                     splitLayout(
                                       numericInput(inputId = 'cutoff',
                                                    label = 'Number of compounds',
                                                    value = 25, width = '120px'),
-                                      radioButtons(inputId = 'yaxis', label = 'y-Axis',
+                                      radioButtons(inputId = 'yaxis', label = 'y-axis',
                                                    choiceValues = c('casnr', 'comp_name'),
                                                    choiceNames = c('CAS', 'Compound name'),
-                                                   selected = 'casnr', inline = FALSE))
+                                                   selected = 'casnr', inline = FALSE),
+                                      radioButtons(inputId = 'xaxis', label = 'x-axis',
+                                                   choiceValues = c('limout', 'log10'),
+                                                   choiceNames = c('Limit x-axis to range\nof aggregated values', 'Log10 x-axis'),
+                                                   selected = 'limout', inline = FALSE))
                 )
               ),
               plotOutput(outputId = 'plot_sensitivity')

@@ -2,6 +2,7 @@
 
 ec50_filagg_plot = function(dt_pl,
                             yaxis = 'casnr',
+                            xaxis = 'limout',
                             cutoff = 25) {
   
   # debuging (has to be turned on in fun_ec50filter_aggregation.R)
@@ -40,10 +41,14 @@ ec50_filagg_plot = function(dt_pl,
 
   # plot function -----------------------------------------------------------
   # x = dt_l; y = dt_all_pl # debug me!
-  gg_ec50 = function(dt_out, dt_all = dt_all_pl, yaxis = c('casnr', 'comp_name')) {
+  gg_ec50 = function(dt_out,
+                     dt_all = dt_all_pl,
+                     yaxis = c('casnr', 'comp_name'),
+                     xaxis = c('limout', 'log10')) {
     # prepare
     dt_all = dt_all[ casnr %in% dt_out$casnr ]
     yaxis = match.arg(yaxis)
+    xaxis = match.arg(xaxis)
     
     gg_out = ggplot(dt_out, aes(y = reorder(get(yaxis), -value),
                                 x = value)) + #, col = comp_type)) +
@@ -52,8 +57,8 @@ ec50_filagg_plot = function(dt_pl,
                                     x = value_fin,
                                     col = outl), shape = 1, size = 1.25) + 
       geom_point() +
-      scale_x_log10() +
-      #coord_cartesian(xlim = range(dt_out$value)) +
+      { if (xaxis == 'limout') coord_cartesian(xlim = range(dt_out$value)) } +
+      { if (xaxis == 'log10') scale_x_log10() } +
       labs(y = yaxis, x = expression(EC50~concentration~µg/L),
            title = paste(dt_out$variable, 'EC50', 'values', sep = ' ')) +
       theme_bw2
@@ -62,7 +67,7 @@ ec50_filagg_plot = function(dt_pl,
   }
   
   # apply plot function -----------------------------------------------------
-  gg_l = lapply(dt_l, gg_ec50, yaxis = yaxis)
+  gg_l = lapply(dt_l, gg_ec50, yaxis = yaxis, xaxis = xaxis)
   gg_out = plot_grid(plotlist = gg_l, ncol = 2)
   
   return(gg_out)

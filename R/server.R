@@ -57,7 +57,7 @@ server = function(input, output) {
 
   # plots -------------------------------------------------------------------
   plot_sensitivity = reactive({
-    ec50_filagg_plot(thedata(), input$yaxis, input$cutoff)
+    ec50_filagg_plot(thedata(), input$yaxis, input$xaxis, input$cutoff)
   })
   
   # (2) output ----
