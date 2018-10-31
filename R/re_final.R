@@ -16,6 +16,7 @@ cols_taxa = grep('tax_', cols, value = TRUE) # taxonomic classes
 cols_habi = grep('hab_', cols, value = TRUE) # habitat
 cols_regi = grep('reg_', cols, value = TRUE) # region information
 cols_test_media = grep('med_', cols, value = TRUE) # test media columns
+cols_chck = grep('chck_', cols, value = TRUE) # check columns
 
 cols_fin = c(cols_gen,
              cols_test_param,
@@ -23,7 +24,8 @@ cols_fin = c(cols_gen,
              cols_chem_class,
              cols_taxa,
              cols_habi,
-             cols_regi)
+             cols_regi,
+             cols_chck)
 
 ## final table
 tests_fin = tests_ch[ , .SD, .SDcols = cols_fin ]
