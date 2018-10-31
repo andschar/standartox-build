@@ -6,7 +6,7 @@ if (!require('pacman')) install.packages('pacman')
 ## install via CRAN
 pacman::p_load(RCurl, stringr, R.utils,
                rvest, httr, jsonlite,
-               readxl, data.table, RPostgreSQL, vegan, plyr,
+               readxl, data.table, RPostgreSQL, vegan, plyr, outliers,
                feather,
                ggplot2, ggrepel, cowplot,
                rgbif, webchem, taxize, countrycode)
