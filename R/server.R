@@ -90,8 +90,11 @@ server = function(input, output) {
   )
   
   # missing ----
-  # TODO output$missing = DT::renderDataTable(tests_stat)
+  # TODO maybe include with meta data on variables
   output$missing = DT::renderDataTable(var_missing)
+  
+  # EPA ECOTOX version ----
+  output$version = renderText(version_string)
   
 }
 

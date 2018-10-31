@@ -63,6 +63,16 @@ te_stats_l = readRDS(file.path(datadir, 'te_stats_l.rds'))
 var_missing = fread(file.path(datadir, 'all_variables_na.csv'))
 
 ## EPA ECOTOX version
+epa_time_stamp = readRDS(file.path(datadir, 'data_base_name_version.rds'))
+epa_time_stamp = as.Date(gsub('[^0-9]+', '', epa_time_stamp),
+                         format = '%Y%m%d')
+version_string = sprintf('This tool builds on EPA ECOTOX data (release: %s)',
+                         epa_time_stamp)
+
+
+
+
+
 
 
 

@@ -169,8 +169,7 @@ ui = fluidPage(
         # ),
         tabPanel(
           'About',
-          'EPA ECOTOX cersion: Version: 7 Juli 2018',
-          'automate this on the server side!!'
+          textOutput(outputId = 'version')
         )
       )
     )
