@@ -16,12 +16,12 @@ ec50_filagg = function(dt,
                        info = NULL,
                        cas = NULL,
                        chck_solub = FALSE,
-                       chck_outl = FALSE) {
+                       chck_outlier = FALSE) {
   
   # debug me!
   # source('R/setup.R')
   # tests_fin = readRDS(file.path(datadir, 'tests_fin.rds'))
-  # dt = tests_fin; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); chem_class = c('cgr_fungicide'); cas = c("1071836", "122145",  "121755",  NA); conc_type = NULL; info = 'n'; comp = 'comp_name'; chck_solub = FALSE; effect = 'MOR'; endpoint = 'EC50'; chck_outl = FALSE
+  # dt = tests_fin; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = 'Daphniidae'; duration = c(24,48); effect = NULL; endpoint = c('EC50', 'LC50'); chem_class = c('cgr_herbicides'); conc_type = 'A'; comp = 'comp_name'; agg = c('min', 'max'); info = 'taxa'; chck_solub = FALSE; chck_outl = FALSE
   
   if (!is.null(cas)) {
     casnr_todo = casconv(cas, direction = 'tocasnr')
@@ -64,12 +64,8 @@ ec50_filagg = function(dt,
   
   ## solubility check ----
   if (chck_solub) {
-    dt = dt[ chck_solub_wt == TRUE ]
+    dt = dt[ chck_solub_wat == TRUE ]
     dt_counter[[3]] = data.table('Solubility check', nrow(dt))
-  }
-  
-  if (chck_outl) {
-    dt = dt[ chck_outl == FALSE ]
   }
 
   ## chemical class ----
@@ -80,13 +76,13 @@ ec50_filagg = function(dt,
   }
   
   ## habitat ----
-  # TODO enable ticking two options
   if (is.null(habitat)) {
     dt = dt
     hab = 'n' # none
   } else {
     dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = habitat ]]
   }
+  
   ## continent ----
   if (is.null(continent)) {
     dt = dt
@@ -95,7 +91,6 @@ ec50_filagg = function(dt,
   }
   
   ## taxon ----
-  # functions to find out the column name of the input taxon  
   cols = grep('tax_', names(dt), ignore.case = TRUE, value = TRUE)
   dt = dt[dt[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', tax))), .SDcols = cols ]]
   
@@ -123,45 +118,49 @@ ec50_filagg = function(dt,
                      taxa = paste0(unique(taxon), collapse = '-'),
                      md = median(value_fin, na.rm = TRUE),
                      min = min(value_fin, na.rm = TRUE),
+                     outl = outliers::scores(value_fin, type = 'iqr', lim = 1.5),
                      n_tests = .N),
                by = .(casnr, taxon, dur_fin)]
+  ## outliers
+  if (chck_outlier) {
+    dt_agg = dt_agg[ outl == FALSE ] # exclude outliers
+  }
   ## (1b) If N_tests <= 2 pick the minimum of this aggregation, else take the median ----
-  # TODO Ralf recommended that. Citation?
   dt_agg[ , `:=`
           (vl = ifelse(n_tests <= 2, min, md),
-            vl_agg = ifelse(n_tests <= 2, 'min', 'md'))]
+           vl_agg = ifelse(n_tests <= 2, 'min', 'md'))]
   ## (2) Aggregate by casnr ----
-  out = dt_agg[,
-               j = .(min = min(vl, na.rm = TRUE),
-                     max = max(vl, na.rm = TRUE),
-                     md = median(vl, na.rm = TRUE),
-                     q95 = quantile(vl, 0.95, na.rm = TRUE),
-                     q5 = quantile(vl, 0.05, na.rm = TRUE),
-                     mn = mean(vl, na.rm = TRUE),
-                     sd = sd(vl, na.rm = TRUE),
-                     n = sum(n_tests),
-                     info = paste0(info, collapse = ' - '),
-                     vls = paste0(vls, collapse = '-'),
-                     taxa = paste0(unique(taxa), collapse = '-')),
-               by = casnr]
+  out = dt_agg[ ,
+                j = .(min = min(vl, na.rm = TRUE),
+                      max = max(vl, na.rm = TRUE),
+                      md = median(vl, na.rm = TRUE),
+                      # q95 = quantile(vl, 0.95, na.rm = TRUE),
+                      # q5 = quantile(vl, 0.05, na.rm = TRUE),
+                      mn = mean(vl, na.rm = TRUE),
+                      sd = sd(vl, na.rm = TRUE),
+                      n = sum(n_tests),
+                      info = paste0(info, collapse = ' - '),
+                      vls = paste0(vls, collapse = '-'),
+                      taxa = paste0(unique(taxa), collapse = '-')),
+                by = casnr]
   # TODO round numeric values above 0
-  
   dt_merge = dt[ , .SD, .SDcols = c('casnr', comp)]
   dt_merge = unique(dt_merge)
   out = merge(out, dt_merge, by = 'casnr')
-  
+
   # output filters ----------------------------------------------------------
   sdcols = c('casnr', comp, agg, info)
   out = out[ , .SD, .SDcols = sdcols ]
   
+  #cat(paste0(nrow(out)), '/tmp/nrow_out.txt', append = TRUE, sep = '\n')
+  
   # save --------------------------------------------------------------------
   # counter
-  saveRDS(dt_counter, file.path(cache, 'dt_counter.rds'))
+  # saveRDS(dt_counter, file.path(cache, 'dt_counter.rds'))
   # debuging
-  # fwrite(out, file.path(tempdir(), 'out.csv'))
+  fwrite(out, file.path(tempdir(), 'out.csv'))
   
   return(out)
-  
 }
 
 
