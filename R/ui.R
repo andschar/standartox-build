@@ -37,11 +37,7 @@ ui = fluidPage(
               checkboxGroupInput(inputId = 'chem_class', label = 'Chemical class',
                                  choiceValues = te_stats_l$chem_class$variable,
                                  choiceNames = te_stats_l$chem_class$nam_long_stat,
-                                 selected = 'cgr_herbicide'),
-              # TODO Don't know which data source provides such information
-              # checkboxGroupInput(inputId = 'authorization', label = 'Authorized in')
-              checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check')
-            )
+                                 selected = 'cgr_herbicide'))
           )
         ),
         tabPanel(
@@ -79,6 +75,14 @@ ui = fluidPage(
                                  choiceNames = te_stats_l$tes_endpoint$nam,
                                  selected = c('LC50', 'EC50'))
             )
+          )
+        ),
+        tabPanel(
+          'Checks',
+          verticalLayout(
+            br(),
+            checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check'),
+            checkboxInput(inputId = 'outl', label = 'Include outliers')
           )
         ),
         tabPanel(
