@@ -5,8 +5,6 @@
 
 # self defined:
 *.Rproj
-*.Rmd
-*.md
 
 # cache -> is done in separate .gitignore in /cache
 
