@@ -1,7 +1,7 @@
 ---
 title: "Etox-Base"
 author: "Andras Scharmüller"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: "31 October, 2018"
 output:
   html_document:
     keep_md: true
@@ -9,9 +9,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
 
-```
 
 ## Etox Base
 
