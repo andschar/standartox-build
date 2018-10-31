@@ -17,7 +17,9 @@ source(file.path(src, 'an_outliers.R'))
 # merge -------------------------------------------------------------------
 
 # outliers
-tests_an[tests_ou, chck_outl := i.outl, on = 'result_id' ]
+# TODO this is now done in the function
+# maybe do it also here to provide NORMAN with this check??
+# tests_an[tests_ou, chck_outl := i.outl, on = 'result_id' ]
 
 # acute & chronic tests
 # TODO 
