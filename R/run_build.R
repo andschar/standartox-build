@@ -43,7 +43,7 @@ source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = 1e6)
 source(file.path(src, 're_merge.R'), max.deparse.length = 1e6)
 source(file.path(src, 're_combine.R'), max.deparse.length = 1e6)
 source(file.path(src, 're_analyses.R'), max.deparse.length = 1e6)
-source(file.path(src, 're_checks.R'), max.deparse.length = 1e6)
+source(file.path(src, 're_checks_internal.R'), max.deparse.length = 1e6)
 
 
 # (3) final table ---------------------------------------------------------
