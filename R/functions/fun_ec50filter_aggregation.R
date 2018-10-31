@@ -152,8 +152,6 @@ ec50_filagg = function(dt,
   sdcols = c('casnr', comp, agg, info)
   out = out[ , .SD, .SDcols = sdcols ]
   
-  #cat(paste0(nrow(out)), '/tmp/nrow_out.txt', append = TRUE, sep = '\n')
-  
   # save --------------------------------------------------------------------
   # counter
   # saveRDS(dt_counter, file.path(cache, 'dt_counter.rds'))
