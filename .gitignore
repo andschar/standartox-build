@@ -8,7 +8,6 @@
 *.log
 /data
 /plots
-README.html
 TODO.*
 
 # cache -> is done via /cache/.gitignore
