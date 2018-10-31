@@ -17,7 +17,7 @@ source(file.path(src, 'an_outliers.R'))
 # merge -------------------------------------------------------------------
 
 # outliers
-tests_an[tests_ou, outl := i.outl, on = 'result_id' ]
+tests_an[tests_ou, chck_outl := i.outl, on = 'result_id' ]
 
 # acute & chronic tests
 # TODO 
