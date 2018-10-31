@@ -9,7 +9,7 @@ tests_ch = readRDS(file.path(cachedir, 'tests_ch.rds'))
 # final columns -----------------------------------------------------------
 cols = grep('_src', names(tests_ch), value = TRUE, invert = TRUE)
 
-cols_gen = c('result_id', 'cas', 'casnr', 'inchikey', 'value_fin', 'unit_fin', 'dur_fin', 'taxon')
+cols_gen = c('result_id', 'cas', 'casnr', 'inchikey', 'comp_name', 'value_fin', 'unit_fin', 'dur_fin', 'taxon')
 cols_test_param = grep('tes_', cols, value = TRUE) # test parameters
 cols_chem_class = grep('cgr_', cols, value = TRUE) # chemical classes
 cols_taxa = grep('tax_', cols, value = TRUE) # taxonomic classes
@@ -17,6 +17,7 @@ cols_habi = grep('hab_', cols, value = TRUE) # habitat
 cols_regi = grep('reg_', cols, value = TRUE) # region information
 cols_test_media = grep('med_', cols, value = TRUE) # test media columns
 cols_chck = grep('chck_', cols, value = TRUE) # check columns
+cols_ref = grep('ref_', cols, value = TRUE) # reference columns
 
 cols_fin = c(cols_gen,
              cols_test_param,
@@ -25,7 +26,8 @@ cols_fin = c(cols_gen,
              cols_taxa,
              cols_habi,
              cols_regi,
-             cols_chck)
+             cols_chck,
+             cols_ref)
 
 ## final table
 tests_fin = tests_ch[ , .SD, .SDcols = cols_fin ]

@@ -97,7 +97,6 @@ tests[ , (cols_repellent_rm) := NULL ]; rm(cols_repellent_rm)
 # a) solubility column
 cols = c('comp_solub', 'comp_solub_src')
 tests[ , (cols) := list(pp_solubility_water, 'pp') ]
-# TODO add pc water solubility
 tests[ is.na(comp_solub), (cols) := NA ]
 # TODO add more resources to the solub_wat_fin creation
 # TODO check: unit of solubility concentrations
