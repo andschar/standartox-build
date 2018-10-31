@@ -81,8 +81,8 @@ ui = fluidPage(
           'Checks',
           verticalLayout(
             br(),
-            checkboxInput(inputId = 'comp_solub_chck', label = 'Water solubility check'),
-            checkboxInput(inputId = 'outl', label = 'Include outliers')
+            checkboxInput(inputId = 'chck_solub', label = 'Water solubility check'),
+            checkboxInput(inputId = 'chck_outl', label = 'Include outliers')
           )
         ),
         tabPanel(

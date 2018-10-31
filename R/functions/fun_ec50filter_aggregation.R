@@ -15,12 +15,13 @@ ec50_filagg = function(dt,
                        agg = NULL,
                        info = NULL,
                        cas = NULL,
-                       solub_chck = FALSE) {
+                       chck_solub = FALSE,
+                       chck_outl = FALSE) {
   
   # debug me!
   # source('R/setup.R')
   # tests_fin = readRDS(file.path(datadir, 'tests_fin.rds'))
-  # dt = tests_fin; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); chem_class = c('cgr_fungicide'); cas = c("1071836", "122145",  "121755",  NA); conc_type = NULL; info = 'n'; comp = 'comp_name'; solub_chck = FALSE; effect = 'MOR'; endpoint = 'EC50'
+  # dt = tests_fin; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = 'Algae'; duration = c(48,96); agg = c('min', 'max'); chem_class = c('cgr_fungicide'); cas = c("1071836", "122145",  "121755",  NA); conc_type = NULL; info = 'n'; comp = 'comp_name'; chck_solub = FALSE; effect = 'MOR'; endpoint = 'EC50'; chck_outl = FALSE
   
   if (!is.null(cas)) {
     casnr_todo = casconv(cas, direction = 'tocasnr')
@@ -62,9 +63,13 @@ ec50_filagg = function(dt,
   }
   
   ## solubility check ----
-  if (solub_chck) {
-    dt = dt[ comp_solub_chck == TRUE ]
+  if (chck_solub) {
+    dt = dt[ chck_solub_wt == TRUE ]
     dt_counter[[3]] = data.table('Solubility check', nrow(dt))
+  }
+  
+  if (chck_outl) {
+    dt = dt[ chck_outl == FALSE ]
   }
 
   ## chemical class ----
