@@ -24,6 +24,9 @@ if (nodename == 'scharmueller') {
 # (0) setup ---------------------------------------------------------------
 source(file.path(prj, 'R/setup.R'), max.deparse.length = 1e6)
 
+# copy files to shiny repo:
+file.copy('README.Rmd', file.path(shinydir, 'README.Rmd'),
+          overwrite = TRUE)
 
 # (0a) console log ---------------------------------------------------------
 if (nodename == 'uwigis') {
