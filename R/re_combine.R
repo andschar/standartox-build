@@ -106,8 +106,8 @@ cols_sol_rm = c('pp_solubility_water')
 tests[ , (cols_sol_rm) := NULL ]
 rm(cols_sol_rm)
 # b) check column
-tests[value_fin > comp_solub, comp_solub_chck := FALSE]
-tests[value_fin <= comp_solub, comp_solub_chck := TRUE]
+tests[value_fin > comp_solub, chck_solub_wat := FALSE]
+tests[value_fin <= comp_solub, chck_solub_wat := TRUE]
 
 # (4) habitat column ----
 # marine
