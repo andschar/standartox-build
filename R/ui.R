@@ -144,12 +144,12 @@ ui = fluidPage(
                 )
               ),
               plotOutput(outputId = 'plot_sensitivity')
-            ),
-            tabPanel(
-              'Meta plots',
-              headerPanel('Meta plot'),
-              plotOutput(outputId = 'plot_meta')
             )
+            # tabPanel(
+            #   'Meta plots',
+            #   headerPanel('Meta plot'),
+            #   plotOutput(outputId = 'plot_meta')
+            # )
           )
         ),
         tabPanel(
@@ -160,10 +160,6 @@ ui = fluidPage(
           'README'
           # TODO withMathJax(includeMarkdown('README.md')) # TODO include agian
           # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
-        ),
-        tabPanel(
-          'Help',
-          'Write the help pages'
         ),
         tabPanel(
           'Missing',
