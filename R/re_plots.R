@@ -38,11 +38,11 @@ etox_dur_plot = function(dt, tax, limit = 100) {
 
 # plots -------------------------------------------------------------------
 # todo vectors
-todo_tax = sort(c('Algae', 'Daphnia', 'Amphibia', 'Bacillariophyceae', 'Insecta', 'Plants', 'Mollusca', 'Fungi', 'Crustacea', 'Invertebrates', 'Fish'))
-todo_algae = c('Algae', 'Chlorophyceae', 'Cyanophyceae', 'Coscinodiscophyceae', 'Bacillariophyceae')
-todo_invertebrates = c()
+todo_algae = c('Plants', 'Algae', 'Chlorophyceae', 'Cyanophyceae', 'Coscinodiscophyceae', 'Bacillariophyceae', 'Fungi')
+todo_invertebrates = c('Insecta', 'Daphniidae', 'Invertebrates', 'Crustacea', 'Mollusca')
+todo_other = c('Fish', 'Amphibia')
 # list them
-todo_l = list(todo_tax, todo_algae, todo_invertebrates)
+todo_l = list(todo_algae, todo_invertebrates, todo_other)
 
 # create final plot list
 pl_l = lapply(todo_l, function(todo) {
