@@ -1,7 +1,8 @@
 # script for a shiny app selecting EC50 values
 
 # setup -------------------------------------------------------------------
-source('setup.R')
+src = file.path(getwd(), 'R')
+source(file.path(src, 'setup.R'))
 
 # knit README beforehands
 # TODO

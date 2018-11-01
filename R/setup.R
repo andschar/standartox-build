@@ -1,6 +1,5 @@
 # shiny setup script 
 
-
 # project folder ----------------------------------------------------------
 nodename = Sys.info()[4]
 if (nodename == 'scharmueller') {
