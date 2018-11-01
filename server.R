@@ -4,13 +4,6 @@
 src = file.path(getwd(), 'R')
 source(file.path(src, 'setup.R'))
 
-# knit README beforehands
-# TODO
-# rmdfiles = c('README.Rmd', file.path(articledir, 'article.Rmd'))
-# sapply(rmdfiles, knit, quiet = TRUE)
-# knit('shiny/README.Rmd', output = 'shiny/README.md', quiet = TRUE)
-# knit('shiny/article.Rmd', output = 'shiny/article.md', quiet = TRUE)
-
 server = function(input, output) {
 
   # (1) preparation ---------------------------------------------------------
