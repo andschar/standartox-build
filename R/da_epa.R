@@ -7,6 +7,7 @@ source(file.path(src, 'da_epa_taxonomy.R'))
 source(file.path(src, 'da_epa_media.R'))
 source(file.path(src, 'da_epa_conversion_unit.R'))
 source(file.path(src, 'da_epa_conversion_duration.R'))
+source(file.path(src, 'da_epa_endpoints.R'))
 
 # data base
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
@@ -53,7 +54,7 @@ epa1 = rbindlist(epa1_l)
 # clean and add -----------------------------------------------------------
 # 'NC', 'NR', '--' to NA
 for (i in names(epa1)) {
-  epa1[get(i) %in% c('NC', 'NR', '--'), (i) := NA ]
+  epa1[get(i) %in% c('NC', 'NR', '+ NR', '--', ''), (i) := NA ]
 }
 # Remove thousand separator
 epa1[ , conc1_mean := gsub(',', '', conc1_mean) ]
@@ -61,9 +62,10 @@ epa1[ , conc1_mean := gsub(',', '', conc1_mean) ]
 epa1 = epa1[ grep('ca', conc1_mean, invert = TRUE) ]
 epa1 = epa1[ grep('>|<', conc1_mean, invert = TRUE) ]
 # Add qualifier column
-pat = '\\*|\\+'
+pat = '\\*|\\+|~|-|x'
 epa1[ , qualifier := str_extract(epa1$conc1_mean, pat) ]
 epa1[ , conc1_mean := as.numeric(gsub(pat, '', conc1_mean)) ]
+epa1 = epa1[ !is.na(conc1_mean) ]
 epa1[ is.na(qualifier), qualifier := '=' ]
 # duration column to numeric
 epa1[ , obs_duration_mean := as.numeric(epa1$obs_duration_mean) ]
@@ -112,6 +114,14 @@ epa1[ dur_conv == 'yes', obs_duration_unit_conv := dur_conv_to ]
 cols_rm = c('dur_conv', 'dur_conv_to', 'dur_multiplier')
 epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
 
+# merge entpoints ---------------------------------------------------------
+epa1 = merge(epa1, epts, by = 'endpoint', all.x = TRUE); rm(epts)
+
+# cleaning
+cols_rm = c('endpoint', 'n') 
+epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
+setnames(epa1, 'endpoint_cl', 'endpoint')
+
 # new variables -----------------------------------------------------------
 # habitat
 epa1[ med_type == 'FW', hab_isFre := 1L ]
@@ -128,7 +138,7 @@ med_cols = grep('med_', names(epa1), value = TRUE)
 cols_fin = c('test_id', 'result_id', 'casnr', 'cas', 'chemical_name', 'chemical_group',
              'conc1_mean', 'conc1_unit', 'conc1_mean_conv', 'conc1_unit_conv', 'qualifier', 'unit_conv',
              'obs_duration_mean', 'obs_duration_unit', 'obs_duration_mean_conv', 'obs_duration_unit_conv',
-             'conc1_type', 'endpoint', 'effect', 'exposure_type',
+             'conc1_type', 'endpoint', 'endpoint_grp', 'effect', 'exposure_type',
              med_cols,
              'hab_isFre', 'hab_isBra', 'hab_isMar', 'hab_isTer',
              'taxon', 'tax_genus', 'tax_family', 'tax_order', 'tax_class', 'tax_superclass', 'tax_phylum',
@@ -145,8 +155,8 @@ gen_old = c('conc1_mean', 'conc1_unit', 'conc1_mean_conv', 'conc1_unit_conv',
             'obs_duration_mean', 'obs_duration_unit', 'obs_duration_mean_conv', 'obs_duration_unit_conv')
 gen_new = c('value_orig', 'unit_orig', 'value_fin', 'unit_fin',
             'dur_orig', 'dur_unit_orig', 'dur_fin', 'dur_unit_fin')
-tes_old = c('effect', 'endpoint', 'exposure_type', 'conc1_type')
-tes_new = c('tes_effect', 'tes_endpoint', 'tes_exposure_type', 'tes_conc_type')
+tes_old = c('effect', 'endpoint', 'endpoint_grp', 'exposure_type', 'conc1_type')
+tes_new = c('tes_effect', 'tes_endpoint', 'tes_endpoint_grp', 'tes_exposure_type', 'tes_conc_type')
 ref_old = c('reference_number', 'title', 'author', 'publication_year')
 ref_new = c('ref_num', 'ref_title', 'ref_author', 'ref_publ_year')
 
@@ -182,7 +192,7 @@ if (nrow(chck_dupl_res_id) > 1) {
 }
 
 # subseting ---------------------------------------------------------------
-## (1) remove NA entries
+## (1) remove NA entries ----
 epa2 = epa2[ !is.na(dur_fin) &
              !is.na(dur_unit_fin) &
              !is.na(value_fin) &
@@ -190,7 +200,7 @@ epa2 = epa2[ !is.na(dur_fin) &
              !is.na(tes_effect) &
              !is.na(tes_endpoint) ]
 
-## (2) Remove duplicated result_id
+## (2) Remove duplicated result_id ----
 dupl_result_id = epa2[ , .N, result_id][order(-N)][N > 1]$result_id
 chck_epa2_id = epa2[ result_id %in% dupl_result_id,
                      .(mn = mean(value_fin),
@@ -205,6 +215,9 @@ if (nrow(chck_epa2_id) > 0) {
 }
 
 epa2 = epa2[ !result_id %in% dupl_result_id ]
+
+## (3) remove endpoints ----
+epa2 = epa2[ tes_endpoint_grp %in% c('NOEX', 'XX50', 'LOEX', 'XX10') ]
 
 # saving ------------------------------------------------------------------
 saveRDS(epa2, file.path(cachedir, 'epa.rds'))

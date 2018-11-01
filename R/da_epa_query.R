@@ -35,9 +35,7 @@ q = "
       LEFT JOIN ecotox.chemical_carriers ON tests.test_id = chemical_carriers.test_id
       LEFT JOIN ecotox.refs ON tests.reference_number = refs.reference_number
     WHERE tests.test_cas = %i
-      -- endpoints:
-      AND results.endpoint IN ('EC50', 'EC50/', 'EC50*', 'EC50*/', 'LC50', 'LC50/', 'LC50*', 'LC50*/')
-      -- empty result cell? 
+      -- empty result cells
       AND results.conc1_mean != 'NR'
       AND coalesce(species.genus, '') <> '' -- same as !=
 ;"
