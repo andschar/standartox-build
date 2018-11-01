@@ -12,6 +12,11 @@ tbl = paste0(schema, gsub('[^0-9]+', '', DBetox))
 # data --------------------------------------------------------------------
 tests_fin = readRDS(file.path(cachedir, 'tests_fin.rds'))
 
+# (0) as .csv -------------------------------------------------------------
+time = Sys.time()
+fwrite(tests_fin, file.path(cachedir, 'tests_fin.csv'))
+Sys.time() - time
+
 # (1) to shiny repo -------------------------------------------------------
 ## as .rds
 time = Sys.time()
@@ -86,7 +91,7 @@ con = dbConnect(drv,
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
-# writing -----------------------------------------------------------------
+# log ---------------------------------------------------------------------
 ## message
 msg = paste0('Final table (tests_fin) written to database table:\n',
              paste(schema, tbl, sep = '.'))
