@@ -6,7 +6,7 @@ source(file.path(src, 'setup.R'))
 # data --------------------------------------------------------------------
 tests_ch = readRDS(file.path(cachedir, 'tests_ch.rds'))
 
-# final columns -----------------------------------------------------------
+# final columns + order ---------------------------------------------------
 cols = grep('_src', names(tests_ch), value = TRUE, invert = TRUE)
 
 cols_gen = c('result_id', 'cas', 'casnr', 'inchikey', 'comp_name', 'value_fin', 'unit_fin', 'dur_fin', 'taxon')
@@ -40,6 +40,8 @@ tests_fin_src = tests_ch[ , .SD, .SDcols = cols_src ]
 # writing -----------------------------------------------------------------
 # table
 saveRDS(tests_fin, file.path(cachedir, 'tests_fin.rds'))
+# colums vector
+saveRDS(cols_fin, file.path(cachedir, 'tests_fin_cols.rds'))
 # meta table
 saveRDS(tests_fin_src, file.path(cachedir, 'tests_fin_src.rds'))
 
