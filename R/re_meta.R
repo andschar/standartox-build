@@ -8,8 +8,8 @@ collapse = ', '
 te_fin = readRDS(file.path(cachedir, 'tests_fin.rds'))
 te_fin_src = readRDS(file.path(cachedir, 'tests_fin_src.rds'))
 
-cols_fin = sort(names(te_fin))
-cols_fin_src = sort(names(te_fin_src))
+cols_fin = names(te_fin)
+cols_fin_src = names(te_fin_src)
 
 # meta stats tables -------------------------------------------------------
 meta_fin_m = melt(te_fin, measure.vars = cols_fin)
@@ -32,6 +32,9 @@ meta_stats_src[ , variable := gsub('_src', '', variable) ]
 ## combined meta table
 meta_stats = merge(meta_stats_fin, meta_stats_src,
                    by = 'variable', all = TRUE)
+
+# row ordering ------------------------------------------------------------
+meta_stats = meta_stats[ order(match(variable, cols_fin)) ]
 
 # writing -----------------------------------------------------------------
 saveRDS(meta_stats, file.path(cachedir, 'tests_meta_stats.rds'))
