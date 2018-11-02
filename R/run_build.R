@@ -24,10 +24,6 @@ if (nodename == 'scharmueller') {
 # (0) setup ---------------------------------------------------------------
 source(file.path(prj, 'R/setup.R'), max.deparse.length = 1e6)
 
-# copy files to shiny repo:
-file.copy('README.md', file.path(shinydir, 'README.md'),
-          overwrite = TRUE)
-
 # (0a) console log ---------------------------------------------------------
 if (nodename == 'uwigis') {
   con = file(file.path(prj, 'console.log'))
@@ -67,7 +63,20 @@ source(file.path(src, 're_shiny_variables.R'), max.deparse.length = 1e6)
 # TODO NOT WORKING YET
 # source(file.path(src, 're_plots.R'), max.deparse.length = 1e6)
 
-
+# file copies -------------------------------------------------------------
+# copy README.md to shiny repo
+file.copy('README.md', file.path(shinydir, 'README.md'),
+          overwrite = TRUE)
+# copy /share to owncloud
+todo = list.files(share)
+if (nodename == 'scharmueller') {
+  for (i in seq_along(todo)) {
+    file = todo[i]
+    file.copy(file.path(share, file),
+              file.path('/home/andreas/Documents/ownCloud/norman', file),
+              overwrite = TRUE)
+  }
+}
 
 # # (0b) console log 2 --------------------------------------------------------
 if (nodename == 'uwigis') {
