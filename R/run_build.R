@@ -67,15 +67,8 @@ source(file.path(src, 're_shiny_variables.R'), max.deparse.length = 1e6)
 # copy README.md to shiny repo
 file.copy('README.md', file.path(shinydir, 'README.md'),
           overwrite = TRUE)
-# copy /share to owncloud
-todo = list.files(share)
 if (nodename == 'scharmueller') {
-  for (i in seq_along(todo)) {
-    file = todo[i]
-    file.copy(file.path(share, file),
-              file.path('/home/andreas/Documents/ownCloud/norman', file),
-              overwrite = TRUE)
-  }
+  source(file.path(src, 'no_share.R'))
 }
 
 # # (0b) console log 2 --------------------------------------------------------
