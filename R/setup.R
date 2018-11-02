@@ -17,12 +17,14 @@ pacman::p_load_gh(char = 'NIVANorge/chemspideR')
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = TRUE
-online_db = TRUE
-plots = FALSE
-scp_feather = FALSE
+online = TRUE # should queries be run
+online_db = TRUE # should database query be run
+plots = FALSE # should output plots be created
+scp_feather = FALSE # scp feather object # TODO remove this in the end
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
-debug_mode = FALSE # should only 10 input rows for each quering script be run
+# debuging
+debug_mode = TRUE # should only 10 input rows for each quering script be run
+sink_console = FALSE # sink console to file
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')

@@ -25,7 +25,7 @@ if (nodename == 'scharmueller') {
 source(file.path(prj, 'R/setup.R'), max.deparse.length = 1e6)
 
 # (0a) console log ---------------------------------------------------------
-if (nodename == 'uwigis') {
+if (sink_console) {
   con = file(file.path(prj, 'console.log'))
   sink(con, append = TRUE)
   sink(con, append = TRUE, type = 'message')
@@ -72,7 +72,7 @@ if (nodename == 'scharmueller') {
 }
 
 # # (0b) console log 2 --------------------------------------------------------
-if (nodename == 'uwigis') {
+if (sink_console) {
   # Restore output to console
   sink()
   sink(type="message")
