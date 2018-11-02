@@ -6,12 +6,15 @@
 # TODO scrape additional parameters from website
 
 # setup -------------------------------------------------------------------
-# source(file.path(src, 'setup.R'))
+source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 csid = readRDS(file.path(cachedir, 'csid.rds'))
-csid2 = csid[!is.na(csid)]
-# csid2 = csid2[1:3] # debug me!
+csid2 = csid[ !is.na(csid) ]
+# debuging
+if (debug_mode) {
+  csid2 = csid2[1:10]
+}
 
 # query -------------------------------------------------------------------
 if (online) {

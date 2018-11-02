@@ -7,10 +7,15 @@ token = readLines(file.path(cred, 'chemspider_token_edi.txt')) # from webchem gi
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
-todo_cs = chem$cas
+# debuging
+if (debug_mode) {
+  chem = chem[1:10]
+}
 
 # Query CSID --------------------------------------------------------------
 if (online) {
+  todo_cs = chem$cas
+  
   csid = get_csid(todo_cs, token = token)
   saveRDS(csid, file.path(cachedir, 'csid.rds'))
   
@@ -21,7 +26,10 @@ if (online) {
 
 # Query Chemspider data ---------------------------------------------------
 csid2 = csid[!is.na(csid)]
-# csid2 = csid2[146:148] # debug me!
+# debuging
+if (debug_mode) {
+  csid2 = csid2[1:10]
+}
 
 if (online) {
   cs_l = list()
