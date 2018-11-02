@@ -17,8 +17,8 @@ pacman::p_load_gh(char = 'NIVANorge/chemspideR')
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = TRUE
-online_db = TRUE
+online = F
+online_db = F
 plots = FALSE
 scp_feather = FALSE
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
@@ -51,6 +51,7 @@ source(file.path(src, 'fun_extr_vec.R'))
 source(file.path(src, 'fun_log_message.R'))
 source(file.path(src, 'fun_scrape_phantomjs.R'))
 source(file.path(src, 'fun_worms_query.R'))
+source(file.path(src, 'fun_ln_na.R'))
 
 # database ----------------------------------------------------------------
 # put database credentials here?
