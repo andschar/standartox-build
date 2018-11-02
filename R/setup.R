@@ -6,7 +6,8 @@ if (!require('pacman')) install.packages('pacman')
 ## install via CRAN
 pacman::p_load(RCurl, stringr, R.utils,
                rvest, httr, jsonlite,
-               readxl, data.table, RPostgreSQL, vegan, plyr, outliers,
+               readxl, openxlsx,
+               data.table, RPostgreSQL, vegan, plyr, outliers,
                feather,
                ggplot2, ggrepel, cowplot,
                rgbif, webchem, taxize, countrycode)
@@ -18,13 +19,13 @@ pacman::p_load_gh(char = 'NIVANorge/chemspideR')
 
 # switches ----------------------------------------------------------------
 online = TRUE # should queries be run
-online_db = TRUE # should database query be run
+online_db = FALSE # should database query be run
 plots = FALSE # should output plots be created
 scp_feather = FALSE # scp feather object # TODO remove this in the end
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
 # debuging
-debug_mode = TRUE # should only 10 input rows for each quering script be run
-sink_console = FALSE # sink console to file
+debug_mode = FALSE # should only 10 input rows for each quering script be run
+sink_console = TRUE # sink console to file
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')

@@ -108,7 +108,8 @@ if (online) {
 setnames(cs_scrape, 'name', 'cs_name')
 cols = c('cas', 'cs_name', 'cs_fungicide', 'cs_herbicide', 'cs_insecticide',
          'cs_rodenticide')
-cs2 = cs_scrape[ , .SD, .SDcols = cols]
+cols = names(cs_scrape)[ names(cs_scrape) %in% cols ] # prevents errors
+cs2 = cs_scrape[ , .SD, .SDcols = cols ]
 
 # log ---------------------------------------------------------------------
 msg = 'ChemSpider Scrape run'
