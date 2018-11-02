@@ -38,6 +38,9 @@ article/*
 !article/article.Rmd
 !article/data
 
+# share
+share/*
+
 # misc
 misc/*
 notes/*
