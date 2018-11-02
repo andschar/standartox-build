@@ -17,8 +17,8 @@ pacman::p_load_gh(char = 'NIVANorge/chemspideR')
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = F
-online_db = F
+online = TRUE
+online_db = TRUE
 plots = FALSE
 scp_feather = FALSE
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
