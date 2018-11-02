@@ -51,6 +51,22 @@ if (online_db) {
 
 epa1 = rbindlist(epa1_l)
 
+
+# raw export --------------------------------------------------------------
+# TODO continue here!! manage raw export
+# 1) put merges in front of cleaning
+# 2) put refinement from this script before cleaning?
+# 2) create chemical, organism (habitat, region) as additional postgres tables
+time = Sys.time()
+fwrite(epa1, '/tmp/epa1_raw.csv')
+Sys.time() - time
+
+time = Sys.time()
+set.seed(1234)
+idx_rnd = sample(1:nrow(epa1), 10000)
+fwrite(epa1[ idx_rnd ], '/tmp/epa1_raw_sample.csv')
+Sys.time() - time
+
 # clean and add -----------------------------------------------------------
 # 'NC', 'NR', '--' to NA
 for (i in names(epa1)) {
@@ -63,12 +79,12 @@ epa1 = epa1[ grep('ca', conc1_mean, invert = TRUE) ]
 epa1 = epa1[ grep('>|<', conc1_mean, invert = TRUE) ]
 # Add qualifier column
 pat = '\\*|\\+|~|-|x'
-epa1[ , qualifier := str_extract(epa1$conc1_mean, pat) ]
+epa1[ , qualifier := str_extract(conc1_mean, pat) ]
 epa1[ , conc1_mean := as.numeric(gsub(pat, '', conc1_mean)) ]
 epa1 = epa1[ !is.na(conc1_mean) ]
 epa1[ is.na(qualifier), qualifier := '=' ]
 # duration column to numeric
-epa1[ , obs_duration_mean := as.numeric(epa1$obs_duration_mean) ]
+epa1[ , obs_duration_mean := as.numeric(obs_duration_mean) ]
 # Clean effect column
 epa1[ , effect := gsub('~|/|*', '', effect) ] # remove ~, /, or * from effect column
 # Endpoint
@@ -231,8 +247,12 @@ msg = 'EPA: no errors'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(cas_chck, taxa, chem, i, cols_fin,
-   dupl_result_id, chck_epa2_id)
+rm(epa1_l,
+   lookup, med, tax,
+   cas_chck, taxa, chem, i, cols_fin,
+   dupl_result_id, chck_epa2_id,
+   drv, con)
+rm(list = grep('chck', ls(), value = TRUE))
 
 # help --------------------------------------------------------------------
 # https://cfpub.epa.gov/ecotox/help.cfm?help_id=CONTENTFAQ&help_type=define&help_back=1#asterisk
