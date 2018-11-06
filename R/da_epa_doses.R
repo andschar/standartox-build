@@ -26,26 +26,16 @@ if (online_db) {
 }
 
 # preparation -------------------------------------------------------------
-cols = c('dose1_mean', 'dose2_mean', 'dose3_mean')
-for (col in cols) {
-  dose[ get(col) == 'NR', (col) := NA ]
-  dose[ , (col) := as.numeric(get(col)) ]
-}
-#! some data has duplicated test_id + dose_number --> mean()
+# remove duplicated entries
+dose = dose[ !duplicated(dose, by = c('test_id', 'dose_number')) ]
+# dcast
 dose_dc = dcast(dose, test_id ~ dose_number,
-                value.var = 'dose1_mean',
-                fun.aggregate = mean)
-
+                value.var = 'dose1_mean')
 setnames(dose_dc, paste0('dose_', names(dose_dc)))
 setnames(dose_dc, 'dose_test_id', 'test_id')
 
-cols = names(dose_dc)[2:length(names(dose_dc))]
-for (col in cols) {
-  dose_dc[ is.nan(get(col)), (col) := NA_real_ ]
-}
-
 # cleaning ----------------------------------------------------------------
-rm(dose, cols)
+rm(dose)
 
 
 
