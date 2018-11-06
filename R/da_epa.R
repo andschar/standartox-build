@@ -7,6 +7,7 @@ source(file.path(src, 'da_epa_query.R'))
 source(file.path(src, 'da_epa_taxonomy.R'))
 source(file.path(src, 'da_epa_media.R'))
 source(file.path(src, 'da_epa_endpoints.R'))
+source(file.path(src, 'da_epa_doses.R'))
 # merge: conversion
 source(file.path(src, 'da_epa_conversion_unit.R'))
 source(file.path(src, 'da_epa_conversion_duration.R'))
@@ -77,11 +78,13 @@ epa1 = merge(epa1, med, by = 'result_id'); rm(med)
 
 # merge entpoints ---------------------------------------------------------
 epa1 = merge(epa1, epts, by = 'endpoint', all.x = TRUE); rm(epts)
-
 # cleaning
 cols_rm = c('endpoint', 'n') 
 epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
 setnames(epa1, 'endpoint_cl', 'endpoint')
+
+# merge doses -------------------------------------------------------------
+epa1 = merge(epa1, dose_dc, by = 'test_id', all.x = TRUE)
 
 # raw export --------------------------------------------------------------
 # TODO continue here!! manage raw export
@@ -93,9 +96,13 @@ fwrite(epa1, file.path(share, 'epa1_raw.csv'))
 Sys.time() - time
 
 time = Sys.time()
+saveRDS(epa1, file.path(cachedir, 'epa1.rds'))
+Sys.time() - time
+
 set.seed(1234)
 idx_rnd = sample(1:nrow(epa1), 1000)
-fwrite(epa1[ idx_rnd ], file.path(share, 'epa1_raw_sample.csv'))
+# idx_tric = epa1[ cas == 'TODO-CAS' ] # TODO find CAS from Triclosan
+fwrite(epa1[ idx_tric ], file.path(share, 'epa1_raw_sample.csv'))
 Sys.time() - time
 
 epa1_meta = ln_na(epa1, names(epa1))
@@ -103,6 +110,9 @@ epa1_meta = ln_na(epa1, names(epa1))
 # table columns
 fwrite(epa1_meta,
        file.path(share, 'epa1_raw_variables.csv'))
+
+# cleaning
+rm(idx_tric)
 
 # (2) merges: conversion --------------------------------------------------
 # merge unit conversion ---------------------------------------------------
