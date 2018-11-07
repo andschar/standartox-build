@@ -4,9 +4,10 @@
 source(file.path(src, 'setup.R'))
 
 # EPA test data -----------------------------------------------------------
-source(file.path(src, 'da_epa.R'))
-# 
-# # chemical data -----------------------------------------------------------
+source(file.path(src, 'da_epa1.R'))
+source(file.path(src, 'da_epa2.R'))
+
+# chemical data -----------------------------------------------------------
 ## special script, should be run first as it queries InChiKeys (which are subsequently needed)
 source(file.path(src, 'qu_pubchem.R'))
 source(file.path(src, 'qu_aw.R'))
@@ -30,7 +31,7 @@ source(file.path(src, 'qu_worms2.R'))
 # regional scripts --------------------------------------------------------
 source(file.path(src, 'qu_gbif.R')) # contains also habitat information
 
-# Merge Chemical Information ----------------------------------------------------
+# Merge Chemical Information ----------------------------------------------
 # # Pubchem ----
 # pc2[ , .N, cas][order(-N)] # no duplicates
 # # Chemspider
