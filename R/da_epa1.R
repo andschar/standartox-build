@@ -4,14 +4,16 @@
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 source(file.path(src, 'da_epa_query.R'))
+
+# data base
+DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
+
 # merge: addition
 source(file.path(src, 'da_epa_taxonomy.R'))
 source(file.path(src, 'da_epa_media.R'))
 source(file.path(src, 'da_epa_endpoints.R'))
 source(file.path(src, 'da_epa_doses.R'))
-
-# data base
-DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
+source(file.path(src, 'da_epa_statistics.R'))
 
 # query -------------------------------------------------------------------
 if (online_db) {
@@ -53,7 +55,18 @@ if (online_db) {
 epa1 = rbindlist(epa1_l)
 
 # remove empty results ----------------------------------------------------
-epa1 = epa1[ !conc1_mean %in% c('', '+ NR') ]
+# rm conc (only very little!)
+epa1 = epa1[ !conc1_mean %in% c('', '+ NR', 'NR') ]
+epa1 = epa1[ -grep('ca|x|~', conc1_mean) ]
+# repare eonc
+epa1[ , conc1_mean := gsub(',', '.', conc1_mean) ]
+# new cols
+epa1[ grep('\\*', conc1_mean) , conc1_mean_calc := 1L ] # '*' - indicates recalculated values (to ug/L)
+epa1[ , qualifier := str_extract(conc1_mean, '<|>') ]
+epa1[ is.na(qualifier), qualifier := '=' ]
+# clean concentration column
+epa1[ , conc1_mean := trimws(gsub('^\\+|<|>|\\*|=', '', conc1_mean)) ] # remove '*' and '+' (TODO don't know '+')
+epa1[ , conc1_mean := as.numeric(conc1_mean) ]
 
 # merges: additional ------------------------------------------------------
 # merge taxonomy ----------------------------------------------------------
@@ -72,11 +85,32 @@ setnames(epa1, 'endpoint_cl', 'endpoint')
 # merge doses -------------------------------------------------------------
 epa1 = merge(epa1, dose_dc, by = 'test_id', all.x = TRUE); rm(dose_dc)
 
+# merge statistics --------------------------------------------------------
+epa1 = merge(epa1, sta, by = 'result_id', all.x = TRUE); rm(sta)
+
 # preparation -------------------------------------------------------------
 # CAS
 epa1[ , cas := casconv(casnr) ]
 # Source column
-epa1[ , source := 'epa' ]
+epa1[ , source := 'EPA ecotox' ]
+# Clean effect column
+epa1[ , effect := gsub('~|/|*', '', effect) ] # remove ~, /, or * from effect column
+# measurement (more detailed effect description)
+epa1[ , res_measurement := gsub('\\/', '', measurement) ]
+# Endpoint
+epa1[ , endpoint := gsub('/|\\*|(\\*/)', '', endpoint) ]
+# Exposure typpe
+epa1[ , exposure_type := gsub('/|\\*|(\\*/)', '', exposure_type) ]
+# Media type
+epa1[ , media_type := gsub('/|\\*|(\\*/)', '', media_type) ]
+# Test location
+# FIELD (A-artificial, N-natural, U-undeterminable), LAB, NR
+epa1[ , test_location := gsub('/|\\*|(\\*/)', '', test_location) ]
+
+# set all "" to NA
+for (i in names(epa1)) {
+  epa1[get(i) == "", (i) := NA]
+}
 
 # writing -----------------------------------------------------------------
 #### Etox-Base ----
@@ -90,21 +124,43 @@ saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'chemical_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
-#### NORMAN ----
+# NORMAN variables --------------------------------------------------------
+no_look = fread(file.path(norman, 'norman_lookup.csv'),
+                na.strings = 'NA')
+# check 
+chck_no_look = nrow( no_look[ status == 'ok' & ! key %in% names(epa1) ] )
+if (chck_no_look != 0) {
+  msg = 'Some NORMAN lookup variables can not be found in names(epa1)'
+  log_msg(msg)
+  stop(msg)
+}; rm(chck_no_look)
+
+# integer column names
+cols = no_look$key
+names(cols) = no_look$id1
+
+# NORMAN table
+epa1_norman = epa1[ , .SD, .SDcols = cols ]
+setnames(epa1_norman, names(cols))
+
 # epa ecotox_raw data for sharing
 time = Sys.time()
-fwrite(epa1, file.path(share, 'epa1_raw.csv'))
+fwrite(epa1_norman, file.path(share, 'epa1_raw.csv'))
 Sys.time() - time
 # epa ecotox raw data example for sharing
 time = Sys.time()
 set.seed(1234)
-idx = sample(1:nrow(epa1), 1000)
+# idx = sample(1:nrow(epa1_norman), 1000)
+idx = epa1_norman[ `21` == '3380345' ] # triclosan
 # idx = epa1[ cas == 'TODO-CAS' ] # TODO find CAS from Triclosan
-fwrite(epa1[ idx ], file.path(share, 'epa1_raw_sample.csv'))
+fwrite(epa1_norman[ idx ], file.path(share, 'epa1_raw_sample.csv'))
 Sys.time() - time
 # meta data
-epa1_meta = ln_na(epa1, names(epa1))
-fwrite(epa1_meta,
+epa1_norman_meta = ln_na(epa1_norman)
+setnames(epa1_norman_meta, 'variable', 'id')
+epa1_norman_meta[ , variable := cols[ match(epa1_norman_meta$id, names(cols)) ] ] # named v update
+setcolorder(epa1_norman_meta, c('id', 'variable'))
+fwrite(epa1_norman_meta,
        file.path(share, 'epa1_raw_variables.csv'))
 
 # log ---------------------------------------------------------------------
@@ -112,15 +168,9 @@ msg = 'EPA: raw script run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(q, epa1_l, epa1, epa1_meta)
+rm(q, epa1_l, epa1, epa1_norman, epa1_norman_meta, no_look)
 rm(taxa, chem)
-rm(idx)
-
-# MISC --------------------------------------------------------------
-# TODO continue here!! manage raw export
-# 1) put merges in front of cleaning
-# 2) put refinement from this script before cleaning?
-# 2) create chemical, organism (habitat, region) as additional postgres tables
+rm(idx, i)
 
 
 
