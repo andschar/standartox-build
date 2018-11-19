@@ -31,8 +31,8 @@ dose = dose[ !duplicated(dose, by = c('test_id', 'dose_number')) ]
 # dcast
 dose_dc = dcast(dose, test_id ~ dose_number,
                 value.var = 'dose1_mean')
-setnames(dose_dc, paste0('dose_', names(dose_dc)))
-setnames(dose_dc, 'dose_test_id', 'test_id')
+setnames(dose_dc, paste0('dose', names(dose_dc)))
+setnames(dose_dc, 'dosetest_id', 'test_id')
 
 # cleaning ----------------------------------------------------------------
 rm(dose)

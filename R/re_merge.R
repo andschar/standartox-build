@@ -6,6 +6,8 @@ source(file.path(src, 'setup.R'))
 # EPA test data -----------------------------------------------------------
 source(file.path(src, 'da_epa1.R'))
 source(file.path(src, 'da_epa2.R'))
+source(file.path(src, 'no_share.R'))
+source(file.path(src, 'da_epa3.R'))
 
 # chemical data -----------------------------------------------------------
 ## special script, should be run first as it queries InChiKeys (which are subsequently needed)

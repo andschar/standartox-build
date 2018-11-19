@@ -54,19 +54,20 @@ if (online_db) {
 
 epa1 = rbindlist(epa1_l)
 
-# remove empty results ----------------------------------------------------
-# rm conc (only very little!)
-epa1 = epa1[ !conc1_mean %in% c('', '+ NR', 'NR') ]
+# type conversion ---------------------------------------------------------
+## concentration
+epa1 = epa1[ !conc1_mean %in% c('', '+ NR', 'NR') ] 
 epa1 = epa1[ -grep('ca|x|~', conc1_mean) ]
-# repare eonc
 epa1[ , conc1_mean := gsub(',', '.', conc1_mean) ]
-# new cols
 epa1[ grep('\\*', conc1_mean) , conc1_mean_calc := 1L ] # '*' - indicates recalculated values (to ug/L)
+# qualifier
 epa1[ , qualifier := str_extract(conc1_mean, '<|>') ]
 epa1[ is.na(qualifier), qualifier := '=' ]
 # clean concentration column
 epa1[ , conc1_mean := trimws(gsub('^\\+|<|>|\\*|=', '', conc1_mean)) ] # remove '*' and '+' (TODO don't know '+')
 epa1[ , conc1_mean := as.numeric(conc1_mean) ]
+## duration
+epa1[ , obs_duration_mean := as.numeric(obs_duration_mean) ]
 
 # merges: additional ------------------------------------------------------
 # merge taxonomy ----------------------------------------------------------
@@ -112,6 +113,39 @@ for (i in names(epa1)) {
   epa1[get(i) == "", (i) := NA]
 }
 
+# NORMAN additions --------------------------------------------------------
+epa1[ , biotest_id := paste0('EPA', result_id) ]
+epa1[ , rely_score := 5L ]
+
+# checks ------------------------------------------------------------------
+## (1) NA CAS or CASNR?
+cas_chck = 
+  epa1[ is.na(casnr) | casnr == '' |
+          is.na(cas) | cas == '' ]
+if (nrow(cas_chck) != 0) {
+  msg = paste0(nrow(cas_chck), ' missing CAS or CASNR.') 
+  log_msg(msg)
+  stop(msg)
+}
+
+## (2) Does a duplicated result_id s show different values (i.e. results)?
+dupl_result_id = epa1[ , .N, result_id][order(-N)][N > 1]$result_id
+chck_dupl_res_id = epa1[ result_id %in% dupl_result_id,
+                         .(mn = mean(conc1_mean, na.rm = TRUE),
+                           sd = sd(conc1_mean, na.rm = TRUE)),
+                         by = result_id][sd != 0]
+
+if (nrow(chck_dupl_res_id) > 1) {
+  msg = 'Duplicated result_id with differing values.'
+  log_msg(msg)
+  stop(msg)
+}
+
+# subseting ---------------------------------------------------------------
+## duplicated result_id
+# they all have the same result - see chck_dupl_res_id
+epa1 = epa1[ !result_id %in% dupl_result_id ]
+
 # writing -----------------------------------------------------------------
 #### Etox-Base ----
 time = Sys.time()
@@ -147,30 +181,30 @@ setnames(epa1_norman, names(cols))
 time = Sys.time()
 fwrite(epa1_norman, file.path(share, 'epa1_raw.csv'))
 Sys.time() - time
-# epa ecotox raw data example for sharing
+# epa ecotox raw data example (Triclosan) for sharing
 time = Sys.time()
-set.seed(1234)
-# idx = sample(1:nrow(epa1_norman), 1000)
-idx = epa1_norman[ `21` == '3380345' ] # triclosan
-# idx = epa1[ cas == 'TODO-CAS' ] # TODO find CAS from Triclosan
-fwrite(epa1_norman[ idx ], file.path(share, 'epa1_raw_sample.csv'))
+fwrite(epa1_norman[ `21` == '3380345' ],
+       file.path(share, 'epa1_raw_triclosan.csv'))
 Sys.time() - time
 # meta data
 epa1_norman_meta = ln_na(epa1_norman)
 setnames(epa1_norman_meta, 'variable', 'id')
 epa1_norman_meta[ , variable := cols[ match(epa1_norman_meta$id, names(cols)) ] ] # named v update
 setcolorder(epa1_norman_meta, c('id', 'variable'))
+setorder(epa1_norman_meta, variable)
 fwrite(epa1_norman_meta,
        file.path(share, 'epa1_raw_variables.csv'))
 
 # log ---------------------------------------------------------------------
-msg = 'EPA: raw script run'
+msg = 'EPA1: raw script run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
 rm(q, epa1_l, epa1, epa1_norman, epa1_norman_meta, no_look)
+rm(cas_chck, chck_dupl_res_id, dupl_result_id)
 rm(taxa, chem)
-rm(idx, i)
+rm(res, i)
+rm(time)
 
 
 

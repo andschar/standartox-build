@@ -13,15 +13,19 @@ if (online_db) {
   
   med = dbGetQuery(con, "SELECT
                            media_characteristics.result_id,
+                           media_characteristics.media_ph_min,
                            media_characteristics.media_ph_mean,
+                           media_characteristics.media_ph_max,
+                           media_characteristics.media_temperature_min,
                            media_characteristics.media_temperature_mean,
+                           media_characteristics.media_temperature_max,
                            media_characteristics.media_temperature_unit,
                            media_characteristics.media_alkalinity_mean,
                            media_characteristics.media_alkalinity_unit,
                            media_characteristics.media_hardness_mean,
                            media_characteristics.media_hardness_unit,
-                           media_characteristics.dissolved_oxygen_mean AS media_dissolved_oxygen_mean,
-                           media_characteristics.dissolved_oxygen_unit AS media_dissolved_oxygen_unit,
+                           media_characteristics.dissolved_oxygen_mean,
+                           media_characteristics.dissolved_oxygen_unit,
                            media_characteristics.media_salinity_mean,
                            media_characteristics.media_salinity_unit,
                            media_characteristics.media_conductivity_mean,
@@ -48,11 +52,7 @@ if (online_db) {
                            media_characteristics.media_sulfur_unit
                          FROM ecotox.media_characteristics")
   setDT(med)
-  # names
-  med_cols_orig = grep('media', names(med), value = TRUE)
-  med_cols = sub('_mean', '', sub('media', 'med', med_cols_orig))
-  setnames(med, med_cols_orig, med_cols)
-    
+
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
@@ -62,35 +62,6 @@ if (online_db) {
   
   med = readRDS(file.path(cachedir, 'source_epa_media_characteristics.rds'))
 }
-
-# names vector
-cols = sort(names(med))
-
-# clean and add -----------------------------------------------------------
-# 'NC', 'NR', '--' to NA
-for (i in names(med)) {
-  med[get(i) %in% c('NC', 'NR', '--'), (i) := NA ]
-}
-# qualifier column for all numeric values
-cols_val = grep('unit|result_id', cols, value = TRUE, invert = TRUE) 
-pat = '\\*|\\+|\\/' #pat = '[^0-9]'
-# remove * and + patterns from values
-#! data.table is so damn fast
-for (col in cols_val) {
-  # https://stackoverflow.com/questions/16943939/elegantly-assigning-multiple-columns-in-data-table-with-lapply
-  med[ , (paste0(col, '_symb')) := str_extract(med[[col]], pat) ] # own col for special symbols
-  set(med, j = col, value = as.numeric(gsub(pat, '', med[[col]]))) # replace pat with '' & numeric
-}
-
-# final dt ----------------------------------------------------------------
-cols_fin_not = grep('_symb', names(med), value = TRUE)
-med = med[ , .SD, .SDcols =! cols_fin_not ]
-
-# cleaning ----------------------------------------------------------------
-rm(pat, cols, cols_val, cols_fin_not)
-
-
-
 
 
 
