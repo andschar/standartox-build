@@ -48,7 +48,7 @@ tax[ tax_phylum_division == 'Pyrrophycophyta', tax_phylum := 'Dinoflagellata' ]
 
 # (4) classification ------------------------------------------------------
 # convenience grouping ----------------------------------------------------
-tax[ , tax_convgroup := ifelse(tax_class == 'Osteichthyes', 'Fish', NA) ]
+tax[ tax_superclass == 'Osteichthyes', tax_convgroup := 'Fish' ]
 tax[ , tax_convgroup := ifelse(tax_kingdom == 'Plantae', 'Plants', NA) ]
 tax[ , tax_convgroup := ifelse(tax_kingdom == 'Plantae', 'Plants', NA) ]
 tax[ tax_phylum_division == 'Oomycota', tax_convgroup := 'Pseudofungi'] # colorless heterokonts (pseudofungi, bigyra) https://en.wikipedia.org/wiki/Heterokont
@@ -94,6 +94,19 @@ tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
 tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
                               paste0('(?i)', invertebrates_mikro, collapse = '|'))),
          .SDcols = cols ], tax_invertebrate := 'Mikro Invertebrates' ]
+
+# Ecotox group ------------------------------------------------------------
+# column for convenient ecotox grouping
+tax[ tax_genus == 'Daphnia',
+     tax_ecotox_grp := 'Daphnia' ]
+tax[ tax_genus %in% c('Lemna', 'Myriophyllum'),
+     tax_ecotox_grp := 'Makrophytes' ]
+tax[ tax_superclass == 'Osteichthyes',
+     tax_ecotox_grp := 'Fish' ]
+tax[ tax_convgroup == 'Algae',
+     tax_ecotox_grp := 'Algae' ]
+tax[ tax_family == 'Chironomidae',
+     tax_ecotox_grp := 'Chrionomidae' ]
 
 # cleaning ----------------------------------------------------------------
 rm(inv_makro_phylum, inv_mikro_phylum, inv_makro_subphylum, inv_makro_class,
