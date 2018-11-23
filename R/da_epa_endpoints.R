@@ -31,15 +31,37 @@ if (online_db) {
 # remove / and *
 epts[ , endpoint_cl := gsub('/|\\*', '', endpoint) ] # clean endpoint
 # combine endpoints
+epts[ grep('^[A-z]{0,2}0$', endpoint_cl), 
+      endpoint_grp := 'XX0' ]
+epts[ grep('^[A-z]{0,2}01$', endpoint_cl), 
+      endpoint_grp := 'XX01' ]
 epts[ grep('^[A-z]{0,2}10$', endpoint_cl), 
       endpoint_grp := 'XX10' ]
+epts[ grep('^[A-z]{0,2}15$', endpoint_cl), 
+      endpoint_grp := 'XX15' ]
+epts[ grep('^[A-z]{0,2}16$', endpoint_cl), 
+      endpoint_grp := 'XX16' ]
+epts[ grep('^[A-z]{0,2}20', endpoint_cl),
+      endpoint_grp := 'XX20' ]
 epts[ grep('^[A-z]{0,2}50', endpoint_cl),
       endpoint_grp := 'XX50' ]
+epts[ grep('^[A-z]{0,2}95', endpoint_cl),
+      endpoint_grp := 'XX95' ]
+epts[ grep('^[A-z]{0,2}99', endpoint_cl),
+      endpoint_grp := 'XX99' ]
+epts[ grep('^[A-z]{0,2}100', endpoint_cl),
+      endpoint_grp := 'XX100' ]
 epts[ grep('(?i)NOEC|NOEL', endpoint_cl),
       endpoint_grp := 'NOEX' ]
 epts[ grep('(?i)LOEC|LOEL', endpoint_cl),
       endpoint_grp := 'LOEX' ]
-epts[ is.na(endpoint_grp), endpoint_grp := endpoint_cl ]
+epts[ grep('(?i)let', endpoint_cl),
+      endpoint_grp := 'LETX' ]
+epts[ grep('(?i)zero', endpoint_cl),
+      endpoint_grp := 'ZERO' ]
+
+# others
+# epts[ is.na(endpoint_grp), endpoint_grp := endpoint_cl ]
 
 # summary -----------------------------------------------------------------
 epts_fin = epts[ , .(N = sum(n)), endpoint ][order(-N)]

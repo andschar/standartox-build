@@ -97,22 +97,60 @@ tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
 
 # Ecotox group ------------------------------------------------------------
 # column for convenient ecotox grouping
-tax[ tax_genus == 'Daphnia',
-     tax_ecotox_grp := 'Daphnia' ]
-tax[ tax_genus %in% c('Lemna', 'Myriophyllum'),
-     tax_ecotox_grp := 'Makrophytes' ]
+# sometimes redundant!
+# assign first the big groups, then smaller ones
+tax[ tax_phylum_division %in% c('Ascomycota', 'Basidiomycota'),
+     tax_ecotox_grp := 'Fungi' ]
+tax[ tax_class == 'Insecta',
+     tax_ecotox_grp := 'Insects' ]
+tax[ tax_class == 'Entognatha',
+     tax_ecotox_grp := 'Entognatha' ]
+tax[ tax_class == 'Arachnida',
+     tax_ecotox_grp := 'Arachnida' ]
+tax[ tax_class %in% c('Magnoliopsida', 'Liliopsida', 'Bryopsida'),
+     tax_ecotox_grp := 'Plants' ]
 tax[ tax_superclass == 'Osteichthyes',
      tax_ecotox_grp := 'Fish' ]
 tax[ tax_convgroup == 'Algae',
      tax_ecotox_grp := 'Algae' ]
+tax[ tax_phylum_division == 'Cyanobacteria',
+     tax_ecotox_grp := 'Cyanobacteria' ]
+tax[ tax_class == 'Aves',
+     tax_ecotox_grp := 'Birds' ]
+tax[ tax_class == 'Amphibia',
+     tax_ecotox_grp := 'Amphibia' ]
+tax[ tax_phylum_division == 'Annelida',
+     tax_ecotox_grp := 'Annelida' ]
+tax[ tax_phylum_division == 'Echinodermata',
+     tax_ecotox_grp := 'Echinodermata' ]
+tax[ tax_class == 'Mammalia',
+     tax_ecotox_grp := 'Mammalia' ]
+tax[ tax_class == 'Reptilia',
+     tax_ecotox_grp := 'Reptilia' ]
+tax[ tax_phylum_division == 'Mollusca',
+     tax_ecotox_grp := 'Mollusca' ]
+tax[ tax_convgroup == 'Nematoda',
+     tax_ecotox_grp := 'Nematoda' ]
+tax[ tax_phylum_division == 'Protozoa',
+     tax_ecotox_grp := 'Protozoa' ]
+tax[ tax_phylum_division == 'Rotifera',
+     tax_ecotox_grp := 'Rotifera' ]
+tax[ tax_genus == 'Daphnia',
+     tax_ecotox_grp := 'Daphnia' ]
+tax[ tax_genus %in% c('Lemna', 'Myriophyllum'),
+     tax_ecotox_grp := 'Makrophytes' ]
+tax[ tax_genus != 'Daphnia' & tax_subphylum_div == 'Crustacea',
+     tax_ecotox_grp := 'Crustacea' ]
 tax[ tax_family == 'Chironomidae',
      tax_ecotox_grp := 'Chrionomidae' ]
+# TODO
+# sediment dwellers
+# worms sind eigentlich Annelida
+# aquatic invertebrates is hard to determine
 
 # cleaning ----------------------------------------------------------------
 rm(inv_makro_phylum, inv_mikro_phylum, inv_makro_subphylum, inv_makro_class,
    invertebrates_makro, invertebrates_mikro)
-
-
 
 # TODO --------------------------------------------------------------------
 

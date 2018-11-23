@@ -36,6 +36,7 @@ q = "
          tests.num_doses_max,
       -- species
          species.latin_name, -- only latin_name. Other entries are merged: eu_epa_taxonomy.R
+         species.ecotox_group AS spec_ecotox_group,
          tests.created_date,
          tests.modified_date,
          tests.published_date,
