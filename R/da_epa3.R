@@ -66,6 +66,10 @@ setnames(epa3,
 # writing -----------------------------------------------------------------
 saveRDS(epa3, file.path(cachedir, 'epa3.rds'))
 
+# log ---------------------------------------------------------------------
+msg = 'EPA3: reduce script run'
+log_msg(msg); rm(msg)
+
 # cleaning ----------------------------------------------------------------
 rm(che_old, che_new, gen_old, gen_new, tes_old, tes_new, ref_old, ref_new)
 

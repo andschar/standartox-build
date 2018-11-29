@@ -100,7 +100,6 @@ msg = 'EPA2: preparation script run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-
 rm(list = grep('chck', ls(), value = TRUE))
 
 

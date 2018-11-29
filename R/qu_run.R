@@ -4,7 +4,7 @@
 source(file.path(src, 'setup.R'))
 
 # chemical data -----------------------------------------------------------
-source(file.path(src, 'qu_pubchem.R'), max.deparse.length = mdl)
+source(file.path(src, 'qu_pc.R'), max.deparse.length = mdl)
 source(file.path(src, 'qu_aw.R'), max.deparse.length = mdl)
 source(file.path(src, 'qu_pp.R'), max.deparse.length = mdl)
 source(file.path(src, 'qu_eurostat_chem_class.R'), max.deparse.length = mdl)
