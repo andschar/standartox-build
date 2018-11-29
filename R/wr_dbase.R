@@ -1,4 +1,4 @@
-# script to filter the EPA ECOTOX data base test results according to the desired outputs
+# script to write table to data base
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
@@ -12,36 +12,7 @@ tbl = paste0(schema, gsub('[^0-9]+', '', DBetox))
 # data --------------------------------------------------------------------
 tests_fin = readRDS(file.path(cachedir, 'tests_fin.rds'))
 
-# (0) as .csv -------------------------------------------------------------
-time = Sys.time()
-fwrite(tests_fin, file.path(cachedir, 'tests_fin.csv'))
-Sys.time() - time
-
-# (1) to shiny repo -------------------------------------------------------
-## as .rds
-time = Sys.time()
-saveRDS(tests_fin, file.path(shinydata, 'tests_fin.rds'))
-Sys.time() - time
-## as feather
-time = Sys.time()
-write_feather(tests_fin, file.path(shinydata, 'tests_fin.feather'))
-Sys.time() - time
-## copy .feather via scp to server (github only allows 100MB)
-#! takes some time
-if (nodename == 'scharmueller' & scp_feather) {
-  system(
-    paste('scp',
-          file.path(shinydata, 'tests_fin.feather'),
-          'scharmueller@139.14.20.252:/home/scharmueller/Projects/etox-base-shiny/data/tests_fin.feather',
-          sep = ' ')
-  )
-}
-
-# message
-msg = paste0('Final table (tests_fin) written to shiny data dir:\n', shinydata)
-log_msg(msg); rm(msg)
-
-# (2) to PostgreSQL -----------------------------------------------------------
+# write to data base ------------------------------------------------------
 # schema ----
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,

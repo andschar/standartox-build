@@ -70,12 +70,14 @@ dt2[ group2 == 'molluscicides', eu_molluscicide := 1L ]
 dt2[ group2 == 'rodenticides', eu_rodenticide := 1L ]
 dt2[ group2 == 'repellents', eu_repellent := 1L ]
 
-
 # final dt ----------------------------------------------------------------
 cols = c('cas', 'eu_pesticide', 'eu_fungicide', 'eu_herbicide', 'eu_insecticide', 
          'eu_molluscicide', 'eu_rodenticide', 'eu_repellent')
 eu_fin = dt2[ , .SD, .SDcols = cols ]
 eu_fin = eu_fin[!is.na(cas)] # as the whole approach is based on CAS
+
+# writing -----------------------------------------------------------------
+saveRDS(eu_fin, file.path(cachedir, 'eu_fin.rds'))
 
 # cleaning ----------------------------------------------------------------
 rm(cols, dt, dt2)

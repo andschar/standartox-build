@@ -40,6 +40,8 @@ tests_fin_src = tests_ch[ , .SD, .SDcols = cols_src ]
 # writing -----------------------------------------------------------------
 # table
 saveRDS(tests_fin, file.path(cachedir, 'tests_fin.rds'))
+# as .csv
+fwrite(tests_fin, file.path(cachedir, 'tests_fin.csv'))
 # colums vector
 saveRDS(cols_fin, file.path(cachedir, 'tests_fin_cols.rds'))
 # meta table

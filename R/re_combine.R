@@ -179,7 +179,7 @@ rm(cols_re_rm)
 tests_fl = copy(tests)
 # TODO rm after presentation and change it in the right place
 tests_fl[comp_name == 'glyphosphate', comp_name := 'glyphosate']
-saveRDS(tests_fl, file.path(cachedir, 'tests_fl.rds'))
+saveRDS(tests_fl, file.path(cachedir, 'tests_cb.rds'))
 
 # log ---------------------------------------------------------------------
 msg = 'Variable combination script run'

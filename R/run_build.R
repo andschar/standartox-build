@@ -22,7 +22,7 @@ if (nodename == 'scharmueller') {
 }
 
 # (0) setup ---------------------------------------------------------------
-source(file.path(prj, 'R/setup.R'), max.deparse.length = 1e6)
+source(file.path(prj, 'R/setup.R'), max.deparse.length = mdl)
 
 # (0a) console log ---------------------------------------------------------
 if (sink_console) {
@@ -33,37 +33,22 @@ if (sink_console) {
 
 # (1) build data base -----------------------------------------------------
 # download
-source(file.path(src, 'bd_epa_download.R'), max.deparse.length = 1e6)
+source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
 # build
-source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = 1e6)
+source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
+
+# (2) prepare data --------------------------------------------------------
 # run EPA preparation files
-source(file.path(src, 'da_epa_run.R'), max.deparse.length = 1e6)
+source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
 
+# (3) queries + data preparation ------------------------------------------
+source(file.path(src, 'qu_run.R'), max.deparse.length = mdl)
 
-# (2) queries + data preparation ------------------------------------------
-source(file.path(src, 're_merge.R'), max.deparse.length = 1e6)
-source(file.path(src, 're_combine.R'), max.deparse.length = 1e6)
-source(file.path(src, 're_analyses.R'), max.deparse.length = 1e6)
-source(file.path(src, 're_checks_internal.R'), max.deparse.length = 1e6)
+# (4) results -------------------------------------------------------------
+source(file.path(src, 're_run.R'), max.deparse.length = mdl)
 
-
-# (3) final table ---------------------------------------------------------
-source(file.path(src, 're_final.R'), max.deparse.length = 1e6)
-
-
-# (4) scripts base on final table -----------------------------------------
-## write
-# write to database and save as .rds (also to shinydir)
-source(file.path(src, 're_write.R'), max.deparse.length = 1e6)
-## meta table
-source(file.path(src, 're_meta.R'), max.deparse.length = 1e6)
-## stats table
-source(file.path(src, 're_stats.R'), max.deparse.length = 1e6)
-## shiny variables
-source(file.path(src, 're_shiny_variables.R'), max.deparse.length = 1e6)
-## plots
-# TODO NOT WORKING YET
-# source(file.path(src, 're_plots.R'), max.deparse.length = 1e6)
+# (5) writing -------------------------------------------------------------
+source(file.path(src, 'wr_run.R'), max.deparse.length = mdl)
 
 # file copies -------------------------------------------------------------
 # copy README.md to shiny repo

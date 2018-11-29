@@ -69,21 +69,24 @@ pp[ , cname := tolower(cname) ]
 pp[ , solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 
 # final dt ----------------------------------------------------------------
-pp2 = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
+pp_fin = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
 
-setnames(pp2, c('cas', paste0('pp_', tolower(names(pp2[ ,2:length(names(pp2))])))))
+setnames(pp_fin, c('cas', paste0('pp_', tolower(names(pp_fin[ ,2:length(names(pp_fin))])))))
 
 # missing entries ---------------------------------------------------------
-na_pp2_cname = pp2[ is.na(pp_cname) ]
-msg = paste0('PhysProp: For ', nrow(na_pp2_cname), '/', nrow(pp2),
+na_pp_fin_cname = pp_fin[ is.na(pp_cname) ]
+msg = paste0('PhysProp: For ', nrow(na_pp_fin_cname), '/', nrow(pp_fin),
              ' CAS no Cnames were found.')
 log_msg(msg); rm(msg)
 
-if (nrow(na_pp2_cname) > 0) {
-  fwrite(na_pp2_cname, file.path(missingdir, 'na_pp2_cname.csv'))
+if (nrow(na_pp_fin_cname) > 0) {
+  fwrite(na_pp_fin_cname, file.path(missingdir, 'na_pp_fin_cname.csv'))
   message('Writing missing data to:\n',
-          file.path(missingdir, 'na_pp2_cname.csv'))
+          file.path(missingdir, 'na_pp_fin_cname.csv'))
 }
+
+# writing -----------------------------------------------------------------
+saveRDS(pp_fin, file.path(cachedir, 'pp_fin.rds'))
 
 # cleaning ----------------------------------------------------------------
 rm(chem, todo_pp)

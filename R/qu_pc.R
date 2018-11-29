@@ -67,25 +67,28 @@ pc[ , V1 := NULL ] # not needed
 # https://pubchemdocs.ncbi.nlm.nih.gov/about
 # CID - non-zero integer PubChem ID
 # XLogP - Log P calculated Log P
-pc2 = pc[ , .SD, .SDcols = c('cas', 'CID', 'InChIKey', 'IUPACName', 'ExactMass')]
-pc2 = pc2[!duplicated(cas)] #! easy way out, although pubchem doesn't provide important information
-setnames(pc2, tolower(names(pc2)))
-setnames(pc2,
+pc_fin = pc[ , .SD, .SDcols = c('cas', 'CID', 'InChIKey', 'IUPACName', 'ExactMass')]
+pc_fin = pc_fin[!duplicated(cas)] #! easy way out, although pubchem doesn't provide important information
+setnames(pc_fin, tolower(names(pc_fin)))
+setnames(pc_fin,
          old = c('inchikey', 'iupacname', 'exactmass'),
          new = c('pc_inchikey', 'pc_iupacname', 'pc_exactmass'))
 
 # missing entries ---------------------------------------------------------
-na_pc2_inchi = pc2[ is.na(inchikey) ]
+na_pc_fin_inchi = pc_fin[ is.na(inchikey) ]
 
-msg = paste0('PubChem: For ', nrow(na_pc2_inchi), '/', nrow(pc2),
+msg = paste0('PubChem: For ', nrow(na_pc_fin_inchi), '/', nrow(pc_fin),
              ' CAS no InchiKeys were found.')
 log_msg(msg); rm(msg)
 
-if (nrow(na_pc2_inchi) > 0) {
-  fwrite(na_pc2_inchi, file.path(missingdir, 'na_pc2_inchi.csv'))
+if (nrow(na_pc_fin_inchi) > 0) {
+  fwrite(na_pc_fin_inchi, file.path(missingdir, 'na_pc_fin_inchi.csv'))
   message('Writing missing data to:\n',
-          file.path(missingdir, 'na_pc2_inchi.csv'))
+          file.path(missingdir, 'na_pc_fin_inchi.csv'))
 }
+
+# writing -----------------------------------------------------------------
+saveRDS(pc_fin, file.path(cachedir, 'pc_fin.rds'))
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")

@@ -109,7 +109,10 @@ setnames(cs_scrape, 'name', 'cs_name')
 cols = c('cas', 'cs_name', 'cs_fungicide', 'cs_herbicide', 'cs_insecticide',
          'cs_rodenticide')
 cols = names(cs_scrape)[ names(cs_scrape) %in% cols ] # prevents errors
-cs2 = cs_scrape[ , .SD, .SDcols = cols ]
+cs_fin = cs_scrape[ , .SD, .SDcols = cols ]
+
+# writing -----------------------------------------------------------------
+saveRDS(cs_fin, file.path(cachedir, 'cs_fin.rds'))
 
 # log ---------------------------------------------------------------------
 msg = 'ChemSpider Scrape run'

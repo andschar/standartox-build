@@ -4,7 +4,7 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-tests_an = readRDS(file.path(cachedir, 'tests_fl.rds'))
+tests_an = readRDS(file.path(cachedir, 'tests_cb.rds'))
 
 # source scripts ----------------------------------------------------------
 

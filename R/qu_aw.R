@@ -56,24 +56,27 @@ aw2_m[ grep('(?i)repellent', value) , aw_repellent := 1L ]
 aw2_m[ grep('(?i)rodentic', value) , aw_rodenticide := 1L ]
 
 cols = c('aw_acaricide', 'aw_fungicide', 'aw_herbicide', 'aw_inhibitors', 'aw_insecticide', 'aw_molluscicide', 'aw_repellent', 'aw_rodenticide')
-aw3 = aw2_m[ , lapply(.SD, min, na.rm = TRUE), .SDcols = cols, by = .(cas, cname) ]
-for (i in names(aw3)) {
-  aw3[ get(i) == Inf, (i) := NA ]
+aw_fin = aw2_m[ , lapply(.SD, min, na.rm = TRUE), .SDcols = cols, by = .(cas, cname) ]
+for (i in names(aw_fin)) {
+  aw_fin[ get(i) == Inf, (i) := NA ]
 }
 
-aw3[ , aw_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ aw_pest == 0, aw_pest := NA ]
+aw_fin[ , aw_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ aw_pest == 0, aw_pest := NA ]
 
 # log ---------------------------------------------------------------------
-msg = paste0('AlanWood: For ', length(aw_l) - nrow(aw3), '/', length(aw_l),
+msg = paste0('AlanWood: For ', length(aw_l) - nrow(aw_fin), '/', length(aw_l),
              ' CAS no cnames were found.')
 log_msg(msg); rm(msg)
+
+# writing -----------------------------------------------------------------
+saveRDS(aw_fin, file.path(cachedir, 'aw_fin.rds'))
 
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings
 
 rm(chem, cas, todo_aw, qu_cas, i, n_sa_cols,
-   aw, aw_l, aw_l2, aw2, aw2m, aw2_m, cols)
+   aw, aw_l, aw_l2, aw2, aw2m, aw2_m, aw_fin, cols)
 
 options(warn = oldw); rm(oldw)
 

@@ -189,6 +189,10 @@ setnames(gbif_conti_dc, 'gb_taxon', 'taxon')
 setnames(gbif_hab_wat_dc, paste0('gb_', names(gbif_hab_wat_dc)))
 setnames(gbif_hab_wat_dc, 'gb_taxon', 'taxon')
 
+# writing -----------------------------------------------------------------
+saveRDS(gbif_conti_dc, file.path(cachedir, 'gbif_conti_dc.rds'))
+saveRDS(gbif_hab_wat_dc, file.path(cachedir, 'gbif_hab_wat_dc.rds'))
+
 # cleaning ----------------------------------------------------------------
 oldw = getOption("warn")
 options(warn = -1) # shuts off warnings

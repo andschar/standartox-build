@@ -47,6 +47,9 @@ if (nodename == 'scharmueller') {
   phantompath = '/usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs'
 }
 
+# other
+mdl = 1e6 # max deparse length for writing to sink console
+
 # source ------------------------------------------------------------------
 source(file.path(cred, 'credentials.R')) # data base credentials
 source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
