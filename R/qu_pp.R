@@ -5,7 +5,7 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
+chem = readRDS(file.path(cachedir, 'epa2_chem.rds'))
 # debuging
 if (debug_mode) {
   chem = chem[1:10]  

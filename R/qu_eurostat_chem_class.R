@@ -82,20 +82,5 @@ rm(cols, dt, dt2)
 
 
 
-# TODO CONTINUE HERE!!!!
-# CREATE PROPER COMPOUND TYPES
-# dt2[!is.na(cas)]
-# dt2[ , .N, group2]
-# dt2[ , .N, group1]
-# 
-# st2[ group1 == 'fungicides and bactericides']
-# 
-# dt2[ , .N, code]
-# fwrite(dt2, '/tmp/dt2.csv')
-# 
-# unique(dt2$group2)
-# dt2[ group2 == 'rodenticides']
-
-
 
 

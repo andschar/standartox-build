@@ -4,7 +4,7 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
+taxa = readRDS(file.path(cachedir, 'epa2_taxa.rds'))
 # debuging
 if (debug_mode) {
   taxa = taxa[1:10]  
