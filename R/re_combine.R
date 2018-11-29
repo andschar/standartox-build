@@ -90,6 +90,11 @@ tests[ is.na(cgr_repellent), (cols) := NA ]
 cols_repellent_rm = c('eu_repellent', 'aw_repellent')
 tests[ , (cols_repellent_rm) := NULL ]; rm(cols_repellent_rm)
 
+## metals ----
+cols = c('cgr_metal', 'cgr_metal_src')
+tests[ , (cols) := list(ep_metal, 'ep') ]
+tests[ is.na(cgr_metal), (cols) := NA ]
+
 # TODO OTHER CHEMICAL CLASSES
 # is_rodenticide, metal, etc.....
 
@@ -111,7 +116,7 @@ tests[value_fin <= comp_solub, chck_solub_wat := TRUE]
 # (4) habitat column ----
 # marine
 cols = c('hab_marin', 'hab_marin_src')
-tests[ , (cols) := list(hab_isMar, 'ep')]
+tests[ , (cols) := list(ep_isMar, 'ep')]
 tests[ is.na(hab_marin), (cols) := list(wo_isMar_sp, 'wo')]
 tests[ is.na(hab_marin), (cols) := list(gb_isMar, 'gb')]
 tests[ is.na(hab_marin), (cols) := NA ]
@@ -119,24 +124,24 @@ tests[ is.na(hab_marin), (cols) := NA ]
 cols = c('hab_brack', 'hab_brack_src')
 tests[ , (cols) := list(wo_isBra_sp, 'wo')]
 tests[ is.na(hab_brack), (cols) := list(gb_isBra, 'gb')]
-tests[ is.na(hab_brack), (cols) := list(hab_isBra, 'ep')]
+tests[ is.na(hab_brack), (cols) := list(ep_isBra, 'ep')]
 tests[ is.na(hab_brack), (cols) := NA ]
 # freshwater
 cols = c('hab_fresh', 'hab_fresh_src')
-tests[ , (cols) := list(hab_isFre, 'ep')]
+tests[ , (cols) := list(ep_isFre, 'ep')]
 tests[ is.na(hab_fresh), (cols) := list(wo_isFre_sp, 'wo')]
 tests[ is.na(hab_fresh), (cols) := list(gb_isFre, 'gb')]
 tests[ is.na(hab_fresh), (cols) := NA ]
 # terrestrial
 cols = c('hab_terre', 'hab_terre_src')
-tests[ , (cols) := list(hab_isTer, 'ep')]
+tests[ , (cols) := list(ep_isTer, 'ep')]
 tests[ is.na(hab_terre), (cols) := list(wo_isTer_sp, 'wo')]
 tests[ is.na(hab_terre), (cols) := list(gb_isTer, 'gb')]
 tests[ is.na(hab_terre), (cols) := NA ]
 # cleaning
 cols_ha_rm = c('wo_isMar_sp', 'wo_isBra_sp', 'wo_isFre_sp', 'wo_isTer_sp',
                'gb_isMar', 'gb_isBra', 'gb_isFre', 'gb_isTer',
-               'hab_isMar', 'hab_isBra', 'hab_isFre', 'hab_isTer')
+               'ep_isMar', 'ep_isBra', 'ep_isFre', 'ep_isTer')
 tests[ , (cols_ha_rm) := NULL ]
 rm(cols_ha_rm)
 

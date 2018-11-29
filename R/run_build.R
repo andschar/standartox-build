@@ -36,6 +36,8 @@ if (sink_console) {
 source(file.path(src, 'bd_epa_download.R'), max.deparse.length = 1e6)
 # build
 source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = 1e6)
+# run EPA preparation files
+source(file.path(src, 'da_epa_run.R'), max.deparse.length = 1e6)
 
 
 # (2) queries + data preparation ------------------------------------------

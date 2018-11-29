@@ -59,6 +59,8 @@ epts[ grep('(?i)let', endpoint_cl),
       endpoint_grp := 'LETX' ]
 epts[ grep('(?i)zero', endpoint_cl),
       endpoint_grp := 'ZERO' ]
+epts[ grep('^NR$', endpoint_cl), 
+      endpoint_grp := 'NR' ]
 
 # others
 # epts[ is.na(endpoint_grp), endpoint_grp := endpoint_cl ]

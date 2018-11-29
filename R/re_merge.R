@@ -4,10 +4,12 @@
 source(file.path(src, 'setup.R'))
 
 # EPA test data -----------------------------------------------------------
-source(file.path(src, 'da_epa1.R'))
-source(file.path(src, 'da_epa2.R'))
-source(file.path(src, 'no_share.R'))
-source(file.path(src, 'da_epa3.R'))
+# source(file.path(src, 'da_epa1.R'))
+# source(file.path(src, 'da_epa2.R'))
+# source(file.path(src, 'no_share.R'))
+# source(file.path(src, 'da_epa3.R'))
+
+epa3 = readRDS(file.path(cachedir, 'epa3.rds'))
 
 # chemical data -----------------------------------------------------------
 ## special script, should be run first as it queries InChiKeys (which are subsequently needed)
@@ -70,13 +72,13 @@ ha_info_fm = wo2_fm
 re_info = gbif_conti_dc
 
 # Duplicate cas and txon check ----------------------------------------------
-chck_cas_dupl = rbindlist(list(epa2[is.na(cas)],
+chck_cas_dupl = rbindlist(list(epa3[is.na(cas)],
                                ch_info[is.na(cas)]), fill = TRUE)
 
 chck_fam_dupl = data.table()
 # chck_fam_dupl = rbindlist(list(epa2_)) # TODO Where are the families in the habitat queries taken from?
 
-chck_tax_dupl = rbindlist(list(epa2[is.na(taxon)],
+chck_tax_dupl = rbindlist(list(epa3[is.na(taxon)],
                                re_info[is.na(taxon)]), fill = TRUE)
 
 
@@ -86,7 +88,7 @@ if (sum(sapply(list(chck_cas_dupl, chck_fam_dupl, chck_tax_dupl), nrow)) != 0) {
 
 # Merge with test data ----------------------------------------------------
 # CAS
-tests = copy(epa2)
+tests = copy(epa3)
 
 tests = merge(tests, ch_info, by = 'cas', all.x = TRUE)
 

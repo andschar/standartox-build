@@ -3,19 +3,23 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
+source(file.path(src, 'da_epa_comp_classification.R'))
 
 # data --------------------------------------------------------------------
 epa3 = readRDS(file.path(cachedir, 'epa2.rds'))
 
+# merge -------------------------------------------------------------------
+epa3 = merge(epa3, cla_che, by = 'casnr', all.x = TRUE)
+
 # new variables -----------------------------------------------------------
 # habitat
-epa3[ media_type == 'FW', hab_isFre := 1L ]
-epa3[ media_type == 'SW', hab_isMar := 1L ]
-epa3[ organism_habitat == 'Soil', hab_isTer := 1L ]
-epa3[ subhabitat %in% c('P', 'R', 'L'), hab_isFre := 1L ]
-epa3[ subhabitat %in% c('E'), hab_isBra := 1L ]
-epa3[ subhabitat %in% c('D', 'F', 'G'), hab_isTer := 1L ]
-epa3[ subhabitat %in% c('M'), hab_isMar := 1L ]
+epa3[ media_type == 'FW', ep_isFre := 1L ]
+epa3[ media_type == 'SW', ep_isMar := 1L ]
+epa3[ organism_habitat == 'Soil', ep_isTer := 1L ]
+epa3[ subhabitat %in% c('P', 'R', 'L'), ep_isFre := 1L ]
+epa3[ subhabitat %in% c('E'), ep_isBra := 1L ]
+epa3[ subhabitat %in% c('D', 'F', 'G'), ep_isTer := 1L ]
+epa3[ subhabitat %in% c('M'), ep_isMar := 1L ]
 
 # subsetting --------------------------------------------------------------
 ## (1) remove endpoints ----
@@ -34,7 +38,8 @@ cols_fin = c('test_id', 'result_id', 'casnr', 'cas', 'chemical_name', 'ecotox_gr
              'conc1_mean', 'conc1_unit', 'conc1_mean_conv', 'conc1_unit_conv', 'qualifier', 'unit_conv',
              'obs_duration_mean', 'obs_duration_unit', 'obs_duration_mean_conv', 'obs_duration_unit_conv',
              'conc1_type', 'endpoint', 'endpoint_grp', 'effect', 'exposure_type',
-             'hab_isFre', 'hab_isBra', 'hab_isMar', 'hab_isTer',
+             'ep_isFre', 'ep_isBra', 'ep_isMar', 'ep_isTer',
+             'ep_metal', 'ep_pesticide',
              'taxon', 'tax_genus', 'tax_family', 'tax_order', 'tax_class', 'tax_superclass', 'tax_phylum',
              'tax_subphylum_div', 'tax_phylum_division', 'tax_kingdom',
              'tax_common_name', 'tax_convgroup', 'tax_invertebrate', 'tax_troph_lvl',

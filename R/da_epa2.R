@@ -13,6 +13,11 @@ source(file.path(src, 'da_epa_conversion_duration.R'))
 
 # data --------------------------------------------------------------------
 epa2 = readRDS(file.path(cachedir, 'epa1.rds'))
+# additional data (classified by P. O.)
+no_data = read_excel(file.path(norman, 'data', 'todo combionations.xlsx'))
+setDT(no_data)
+no_look = fread(file.path(norman, 'norman_lookup.csv'),
+                na.strings = 'NA')
 
 # cleaning ----------------------------------------------------------------
 for (col in names(epa2)) {
@@ -40,6 +45,15 @@ epa2[ dur_conv == 'yes', obs_duration_unit_conv := dur_conv_to ]
 cols_rm = c('dur_conv', 'dur_conv_to', 'dur_multiplier')
 epa2[ , (cols_rm) := NULL ]; rm(cols_rm)
 
+# NORMAN variables --------------------------------------------------------
+# create ID out of tax_ecotox_grp, endpoint_grp, effect
+# no_data[ , no_test_id := paste0(tax_ecotox_grp, obs_duration_mean_con)]
+
+
+# TODO CONTINUE THIS, once the list by Peter is complete!
+# TODO see also no_ac_ch_standard_INTERMEDIATE.R
+
+
 # saving ------------------------------------------------------------------
 saveRDS(epa2, file.path(cachedir, 'epa2.rds'))
 taxa = unique(epa2[ , .SD, .SDcols = c('taxon', 'tax_genus', 'tax_family') ])
@@ -48,8 +62,6 @@ chem = unique(epa2[ , .SD, .SDcols = c('casnr', 'cas', 'chemical_name')])
 saveRDS(chem, file.path(cachedir, 'epa2_chem.rds'))
 
 # NORMAN variables --------------------------------------------------------
-no_look = fread(file.path(norman, 'norman_lookup.csv'),
-                na.strings = 'NA')
 # check 
 chck_no_look = nrow( no_look[ status == 'ok' & ! key %in% names(epa2) ] )
 if (chck_no_look != 0) {

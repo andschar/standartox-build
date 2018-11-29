@@ -1,6 +1,10 @@
 require(data.table)
 
-ln_na = function(dt, cols) {
+ln_na = function(dt, cols = NULL) {
+  
+  if (is.null(cols)) {
+    cols = names(dt)
+  }
   
   setDT(dt)
   dt_NA = dt[ , lapply(.SD, function(x) length(which(is.na(x)))), .SDcols = cols ]
