@@ -3,19 +3,32 @@
 # packages ----------------------------------------------------------------
 if (!require('pacman')) install.packages('pacman')
 
+pkg_cran = c('base', # only for citation
+             'RCurl', 'stringr', 'R.utils',
+             'rvest', 'httr', 'jsonlite',
+             'readxl', 'openxlsx',
+             'data.table', 'RPostgreSQL', 'vegan', 'plyr', 'outliers',
+             'feather',
+             'ggplot2', 'ggrepel', 'cowplot',
+             'rgbif', 'webchem', 'taxize', 'countrycode')
+pkg_gith = 'NIVANorge/chemspideR' # no citation available!
+
 ## install via CRAN
-pacman::p_load(RCurl, stringr, R.utils,
-               rvest, httr, jsonlite,
-               readxl, openxlsx,
-               data.table, RPostgreSQL, vegan, plyr, outliers,
-               feather,
-               ggplot2, ggrepel, cowplot,
-               rgbif, webchem, taxize, countrycode)
+pacman::p_load(char = pkg_cran)
 
 ## install via Github
-pacman::p_load_gh(char = 'NIVANorge/chemspideR')
+pacman::p_load_gh(char = pkg_gith)
 
 # pacman::p_update()
+
+## cite packages
+pkg = c('pacman', pkg_cran)
+
+for (i in pkg) {
+  capture.output(utils:::print.bibentry(citation(i), style = "Bibtex"),
+                 file = file.path(tempdir(), 'bibliography_etox_base.bib'),
+                 append = TRUE)
+}
 
 # switches ----------------------------------------------------------------
 online = FALSE # should queries be run
@@ -25,7 +38,7 @@ scp_feather = FALSE # scp feather object # TODO remove this in the end
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
 # debuging
 debug_mode = FALSE # should only 10 input rows for each quering script be run
-sink_console = TRUE # sink console to file
+sink_console = FALSE # sink console to file
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
