@@ -1,52 +1,87 @@
-parameter_group,norman_header,key,ep_variable,etox_base_variable,ep_table,id1,id2,status
-Source,Data Source,source,source,source,,2,,ok
-Source,Data Source ID,result_id,result_id,result_id,,3,,ok
-Source,Data Source reference ID,reference_number,reference_number,ref_number,,4,,ok
-Reference,Title,title,title,ref_title,,11,,ok
-Reference,Author(s),author,author,ref_author,,12,,ok
-Reference,Year,publication_year,publication_year,ref_publication_year,,13,,ok
-Reference,Bibliographic source,source,source,ref_source,,14,,ok
-Test substance,Substance name,chemical_name,chemical_name,che_name,,20,,ok
-Test substance,CAS Number,casnr,test_cas,cas,,21,,ok
-Test substance,Purity [%] of test substance,test_purity_mean,test_purity_mean,che_purity,,24,,ok
-Test substance,Vehicle substance,chem_name,chem_name,che_carrier_name,,26,,ok
-Test substance,Radio labeled substance,test_radiolabel,test_radiolabel,tes_radiolabel,,28,,ok
-Biotest,Standard qualifier,effect,effect,effect,,35,,ok
-Biotest,Effect measurement,measurement,measurement,res_measurement,,36,,ok
-Biotest,Endpoint,endpoint,endpoint,endpoint,,37,,ok
-Biotest,Test Duration,obs_duration_mean,obs_duration_mean,obs_duration_mean,,38,,ok
-Biotest,Test Duration Unit,obs_duration_unit,obs_duration_unit,obs_duration_unit,,39,,ok
-Test organism,Scientific name,latin_name,latin_name,taxon,species,42,,ok
-Test organism,Common name,tax_common_name,common_name,tax_common_name,species,43,,ok
-Test organism,Taxonomic group,tax_convgroup,,tax_convgroup,,44,,ok
-Test conditions,Lipid %,lipid_pct_mean,lipid_pct_mean,tes_lipid_pct,,52,,ok
-Test organism,Age,organism_age_mean,organism_age_mean,organism_age_mean,,53,,ok
-Test organism,Age unit,organism_age_unit,organism_age_unit,organism_age_unit,,54,,ok
-Test organism,Life stage,organism_lifestage,organism_lifestage,organism_lifestage,,55,,ok
-Test organism,Gender,organism_gender,organism_gender,organism_gender,,56,,ok
-Test organism,"Source (laboratory, culture collection)",organism_source,organism_source,organism_source,,58,,ok
-Test conditions,pH,media_ph_mean,media_ph_mean,med_ph,media_characteristics,84,,ok
-Test conditions,Temperature,media_temperature_mean,media_temperature_mean,med_temperature,media_characteristics,86,,ok
-Test conditions,Temperature Unit,media_temperature_unit,media_temperature_unit,med_temperature_unit,media_characteristics,87,,ok
-Test conditions,Conductivity,media_conductivity_mean,media_conductivity_mean,med_conductivity,media_characteristics,88,,ok
-Test conditions,Conductivity Unit,media_conductivity_unit,media_conductivity_unit,med_conductivity_unit,media_characteristics,89,,ok
-Test conditions,Hardness,media_hardness_mean,media_hardness_mean,med_hardness,media_characteristics,94,,ok
-Test conditions,Hardness Unit,media_hardness_unit,media_hardness_unit,med_hardness_unit,media_characteristics,95,,ok
-Test conditions,Chlorine,media_chlorine_mean,media_chlorine_mean,med_chlorine,media_characteristics,96,,ok
-Test conditions,Chlorine Unit,media_chlorine_unit,media_chlorine_unit,med_chlorine_unit,media_characteristics,97,,ok
-Test conditions,Alkalinity,media_alkalinity_mean,media_alkalinity_mean,med_alkalinity,media_characteristics,98,,ok
-Test conditions,Alkalinity Unit,media_alkalinity_unit,media_alkalinity_unit,med_alkalinity_unit,media_characteristics,99,,ok
-Test conditions,Salinity,media_salinity_mean,media_salinity_mean,med_salinity,media_characteristics,100,,ok
-Test conditions,Salinity Unit,media_salinity_unit,media_salinity_unit,med_salinity_unit,media_characteristics,101,,ok
-Test conditions,Total Organic Carbon,media_org_carbon_mean,media_org_carbon_mean,med_org_carbon,media_characteristics,102,,ok
-Test conditions,Total Organic Carbon Unit,media_org_carbon_unit,media_org_carbon_unit,med_org_carbon_unit,media_characteristics,103,,ok
-Test conditions,Dissolved Oxygen,dissolved_oxygen_mean,dissolved_oxygen_mean,med_diss_oxygen,media_characteristics,104,,ok
-Test conditions,Dissolved Oxygen Unit,dissolved_oxygen_unit,dissolved_oxygen_unit,med_diss_oxygen_unit,media_characteristics,105,,ok
-Statistical design,Trend,trend,trend,tes_trend,results,118,,ok
-Statistical design,Significance of result,significance_code,significance_code,tes_sig_code,results,119,,ok
-Statistical design,Significance level,significance_level_mean,significance_level_mean,tes_sig_lvl,results,120,,ok
-Biological effect,Effect concentration qualifier,qualifier,,qualifier,results,121,,ok
-Biological effect,Effect concentration,conc1_mean,conc1_mean,conc1_mean,results,122,,ok
-Biological effect,Effect concentration unit,conc1_unit,conc1_unit,conc1_unit,results,123,,ok
-Biological effect,Concentration based on,conc1_type,conc1_type,conc1_type,results,125,,ok
-Biological effect,Result comment,conc1_comments,conc1_comments,conc1_comments,results,127,,ok
+parameter_group,norman_header,key,ep_variable,etox_base_variable,ep_table,id1,id2,status,conversion
+Source,Biotest ID,biotest_id,,,,1,,ok,
+Source,Data Source,source,source,source,,2,,ok,
+Source,Data Source ID,result_id,result_id,result_id,,3,,ok,
+Source,Data Source reference ID,reference_number,reference_number,ref_number,,4,,ok,
+Reference,Title,title,title,ref_title,,11,,ok,
+Reference,Author(s),author,author,ref_author,,12,,ok,
+Reference,Year,publication_year,publication_year,ref_publication_year,,13,,ok,
+Reference,Bibliographic source,source,source,ref_source,,14,,ok,
+Test substance,Substance name,chemical_name,chemical_name,che_name,,20,,ok,
+Test substance,CAS Number,casnr,test_cas,cas,,21,,ok,
+Test substance,Purity [%] of test substance,test_purity_mean,test_purity_mean,che_purity,,24,,ok,
+Test substance,Vehicle substance,chem_name,chem_name,che_carrier_name,,26,,ok,
+Test substance,Radio labeled substance,test_radiolabel,test_radiolabel,tes_radiolabel,,28,,ok,
+Biotest,Standard qualifier,effect,effect,effect,,35,,ok,
+Biotest,Effect measurement,measurement,measurement,res_measurement,,36,,ok,
+Biotest,Endpoint,endpoint,endpoint,endpoint,,37,,ok,
+Biotest,Test Duration,obs_duration_mean,obs_duration_mean,obs_duration_mean,,38,,ok,yes
+Biotest,Test Duration Unit,obs_duration_unit,obs_duration_unit,obs_duration_unit,,39,,ok,yes
+Test organism,Scientific name,latin_name,latin_name,taxon,species,42,,ok,
+Test organism,Common name,tax_common_name,common_name,tax_common_name,species,43,,ok,
+Test organism,Taxonomic group,tax_convgroup,,tax_convgroup,,44,,ok,
+Test conditions,Lipid %,lipid_pct_mean,lipid_pct_mean,tes_lipid_pct,,52,,ok,
+Test organism,Age,organism_age_mean,organism_age_mean,organism_age_mean,,53,,ok,
+Test organism,Age unit,organism_age_unit,organism_age_unit,organism_age_unit,,54,,ok,
+Test organism,Life stage,organism_lifestage,organism_lifestage,organism_lifestage,,55,,ok,
+Test organism,Gender,organism_gender,organism_gender,organism_gender,,56,,ok,
+Test organism,"Source (laboratory, culture collection)",organism_source,organism_source,organism_source,,58,,ok,
+Test conditions,pH,media_ph_mean,media_ph_mean,med_ph,media_characteristics,84,,ok,
+Test conditions,Temperature,media_temperature_mean,media_temperature_mean,med_temperature,media_characteristics,86,,ok,
+Test conditions,Temperature Unit,media_temperature_unit,media_temperature_unit,med_temperature_unit,media_characteristics,87,,ok,
+Test conditions,Conductivity,media_conductivity_mean,media_conductivity_mean,med_conductivity,media_characteristics,88,,ok,
+Test conditions,Conductivity Unit,media_conductivity_unit,media_conductivity_unit,med_conductivity_unit,media_characteristics,89,,ok,
+Test conditions,Hardness,media_hardness_mean,media_hardness_mean,med_hardness,media_characteristics,94,,ok,
+Test conditions,Hardness Unit,media_hardness_unit,media_hardness_unit,med_hardness_unit,media_characteristics,95,,ok,
+Test conditions,Chlorine,media_chlorine_mean,media_chlorine_mean,med_chlorine,media_characteristics,96,,ok,
+Test conditions,Chlorine Unit,media_chlorine_unit,media_chlorine_unit,med_chlorine_unit,media_characteristics,97,,ok,
+Test conditions,Alkalinity,media_alkalinity_mean,media_alkalinity_mean,med_alkalinity,media_characteristics,98,,ok,
+Test conditions,Alkalinity Unit,media_alkalinity_unit,media_alkalinity_unit,med_alkalinity_unit,media_characteristics,99,,ok,
+Test conditions,Salinity,media_salinity_mean,media_salinity_mean,med_salinity,media_characteristics,100,,ok,
+Test conditions,Salinity Unit,media_salinity_unit,media_salinity_unit,med_salinity_unit,media_characteristics,101,,ok,
+Test conditions,Total Organic Carbon,media_org_carbon_mean,media_org_carbon_mean,med_org_carbon,media_characteristics,102,,ok,
+Test conditions,Total Organic Carbon Unit,media_org_carbon_unit,media_org_carbon_unit,med_org_carbon_unit,media_characteristics,103,,ok,
+Test conditions,Dissolved Oxygen,dissolved_oxygen_mean,dissolved_oxygen_mean,med_diss_oxygen,media_characteristics,104,,ok,
+Test conditions,Dissolved Oxygen Unit,dissolved_oxygen_unit,dissolved_oxygen_unit,med_diss_oxygen_unit,media_characteristics,105,,ok,
+Statistical design,Trend,trend,trend,tes_trend,results,118,,ok,
+Statistical design,Significance of result,significance_code,significance_code,tes_sig_code,results,119,,ok,
+Statistical design,Significance level,significance_level_mean,significance_level_mean,tes_sig_lvl,results,120,,ok,
+Biological effect,Effect concentration qualifier,qualifier,,qualifier,results,121,,ok,
+Biological effect,Effect concentration,conc1_mean,conc1_mean,conc1_mean,results,122,,ok,yes
+Biological effect,Effect concentration unit,conc1_unit,conc1_unit,conc1_unit,results,123,,ok,yes
+Biological effect,Concentration based on,conc1_type,conc1_type,conc1_type,results,125,,ok,
+Biological effect,Result comment,conc1_comments,conc1_comments,conc1_comments,results,127,,ok,
+Evaluation,Exisiting Relyability Score,rely_score,,,,134,,ok,
+Extra,Dose numbers (min),num_doses_min,num_doses_min,,tests,148,,ok,
+Extra,Dose numbers (mean),num_doses_mean,num_doses_max,,tests,149,,ok,
+Extra,Dose numbers (max),num_doses_max,num_doses_max,,tests,150,,ok,
+Extra,Temperature (min),media_temperature_min,media_temperature_min,,media_characteristics,151,,ok,
+Extra,Temperature (max),media_temperature_max,media_temperature_max,,media_characteristics,151,,ok,
+Extra,pH (min),media_ph_min,media_ph_min,,media_characteristics,152,,ok,
+Extra,pH (max),media_ph_max,media_ph_max,,media_characteristics,153,,ok,
+Extra,dose1,dose1,dose1_mean,,doses,201,,ok,
+Extra,dose2,dose2,dose1_mean,,doses,202,,ok,
+Extra,dose3,dose3,dose1_mean,,doses,203,,ok,
+Extra,dose4,dose4,dose1_mean,,doses,204,,ok,
+Extra,dose5,dose5,dose1_mean,,doses,205,,ok,
+Extra,dose6,dose6,dose1_mean,,doses,206,,ok,
+Extra,dose7,dose7,dose1_mean,,doses,207,,ok,
+Extra,dose8,dose8,dose1_mean,,doses,208,,ok,
+Extra,dose9,dose9,dose1_mean,,doses,209,,ok,
+Extra,dose10,dose10,dose1_mean,,doses,210,,ok,
+Extra,dose11,dose11,dose1_mean,,doses,211,,ok,
+Extra,dose12,dose12,dose1_mean,,doses,212,,ok,
+Extra,dose13,dose13,dose1_mean,,doses,213,,ok,
+Extra,dose14,dose14,dose1_mean,,doses,214,,ok,
+Extra,dose15,dose15,dose1_mean,,doses,215,,ok,
+Extra,dose16,dose16,dose1_mean,,doses,216,,ok,
+Extra,dose17,dose17,dose1_mean,,doses,217,,ok,
+Extra,dose18,dose18,dose1_mean,,doses,218,,ok,
+Extra,dose19,dose19,dose1_mean,,doses,219,,ok,
+Extra,dose20,dose20,dose1_mean,,doses,220,,ok,
+Extra,dose21,dose21,dose1_mean,,doses,221,,ok,
+Extra,dose22,dose22,dose1_mean,,doses,222,,ok,
+Extra,dose23,dose23,dose1_mean,,doses,223,,ok,
+Extra,dose24,dose24,dose1_mean,,doses,224,,ok,
+Extra,dose25,dose25,dose1_mean,,doses,225,,ok,
+Extra,dose26,dose26,dose1_mean,,doses,226,,ok,
