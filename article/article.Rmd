@@ -4,8 +4,8 @@ author: "Andreas Scharmüller"
 date: "August 29, 2018"
 output:
   # bookdown::html_book:
-  # bookdown::pdf_document2:
-  bookdown::html_document2:
+  bookdown::pdf_document2:
+  # bookdown::html_document2:
   # html_document:
 bibliography: references-etox-base.bib
 editor_options: 
@@ -13,21 +13,81 @@ editor_options:
 ---
 
 ```{r setup, echo=FALSE}
+# projectdir
 prj = '/home/andreas/Documents/Projects/etox-base'
+
+# packages
+require(data.table)
+
+# variables
 datadir = file.path(prj, 'article/data') # in sub folder article
 cachedir = file.path(prj, 'cache')
 ```
 
+\newcommand{\etoxbase}{Etox-Base}
+\newcommand{\epa}{EPA ECOTOX data base}
+\newcommand{\app}{http://139.14.20.252:3838/etox-base-shiny/}
+
 # Abstract [max. 170 words]
 
-# Background & Summary (i.e. Introduction)
+# Background & Summary (i.e. Introduction) [max 700 words]
 
-Chemical pollutants in the environment, such as pesticides, heavy metals, (?? main pollutant groups ??) belong after @rockstrom_safe_2009 to one of nine planetary boundary groups that should not exceed certain thresholds.
+A vast amount of chemical compounds such as pharmaceuticals, pesticides, synthetic hormones and many more are used all over the world with insufficient knowledge about possible adverse effects on the environment. In Europe alone some 100,000 compounds are estimated to be in current use, whereof 30,000 are produced in quantities larger than one ton per year. Thereof less than one percent are thoroughly tested [@breithaupt_costs_2006]. For substances that have been tested adverse effects could be detected. Pesticides for exmaple reduce macro-invertebrate biodiversity in streams [@beketov_pesticides_2013] and estrogenic-associated effects were found in fish [@vethaak_integrated_2005]. However for many substance groups, especially newly emerging ones authorative test results remain scarce or not hard to find. To overcome such knowledge paucities it is paramount to accumulate and distribute existing knowledge on possible adverse effects of substances widely. The ECOTOXicology knowledgebase (ECOTOX) created by U.S. Environmental Protection Agency (EPA) represents one such initiative. It collects ecotoxicological test data on on aquatic and terrestrial wildlife as well as plants and publishes it on a quarterly basis freely accessible on the web. By the time of writing it contained 919,123 test results, comprising 11,655 chemical compounds tested on 12,630 different species [@elonen_ecotoxicology_2018]. The ecotoxicological tests are collected without limitation and comprise all sorts of measured endpoints such as Effective Concentrations - EC50 values, No-observed effect concentratons NOEC or lowest observed effect concentraitons - LOEC. Likewise the data set contains many different effect measures such as mortality, intoxication, growth etc. and test durations ranging from seconds to weeks or even years. These test results can be used to derive toxicity risk thresholds. As ecotoxicological risk assessment often relies on national and international quality thresholds such as EU-Environmtal quality standards (EQS) or Regulatory Aceptable concentrations (RAC) in Germany. In order to make this data more widely accessible we created a tool that downloads every new version of the \epa{} and performs several quality checks, e.g. unit harmonization, and cleaning steps on it. In addition to the test parameters that are retrieved from the \epa{} we query compound and organism parameters from other open data bases to adress missing information such as compound solubility or organism habitat or regional ocurrence patterns. Subsequently the data is provided online via a web app where users can filter the data according to needed test parameters. Furthermore the user can choose between several aggregation methods to retrieve individual values per compound. Compounds are identified by their CAS-number as this is also the key identifier in the \epa{}. Optionally the data base can also be downloaded as a whole for local useage. This is the first approach that tries to handle large amounts of toxicity test data to derive meaningful information about the susceptability of organisms towards individual compounds by aggregating test results. Researchers relying on ecotoxicological test data will benefit from the \etoxbase{} due to concise representation ecotoxicological test data.
 
 
-A vast amount of chemical substances such as pharmaceuticals, pesticides, synthetic hormones and many more are used all over the world with insufficient knowledge about possible adverse effects on the environment. In Europe alone some 100,000 substances are estimated to be in current use, whereof 30,000 are produced in quantities larger than one ton per year. Thereof less than one percent are thoroughly tested [@breithaupt_costs_2006]. However, for some substance groups adverse effects could be detected. Pesticides for exmaple reduce macro-invertebrate biodiversity in streams [@beketov_pesticides_2013], estrogenic-associated effects in fish could be proven [@vethaak_integrated_2005] + HEAVY METALS. However for many substance groups, especially newly emerging ones authorative test results remain scarce. To overcome such knowledge paucities it is paramount to accumulate and distribute existing knowledge on possible adverse effects of substances widely. The ECOTOXicology knowledgebase (ECOTOX) created by U.S. Environmental Protection Agency (EPA) represents one such initiative [@elonen_ecotoxicology_2018]. It collects ecotoxicological test data on on aquatic and terrestrial wildlife as well as plants and publishes it on a quarterly basis freely accessible on the web. By the time of writing it contained 919,123 test results, comprising 11,655 chemicla substances tested on 12,630 different species. Tests results that can exhibit over ten different endpoints such as Effective Concentrations - EC50 values, No-observed effect concentratons NOEC or lowest observed effect concentraitons - LOEC, where different effects such as Mortality, Intoxication, Growth etc. and test durations ranging from days to weeks can be measured. 
+# Methods [no word limit]
 
-All this information can be queried through a web interface or the whole data base can be fully downloaded. Endpoints from ecotoxicological test data can be used to evaluate ocurrences of substances in the envrionment. Widely used endpoints are EC50s which determine the concentration where 50% of e.g. plant growth is inhibited, 50% of individuals have died etc. These can be realted to measured concnetrations by calculating Toxic Units (TUs) \@ref(eq:tu) [@schafer_effects_2011] [+other citations!!]. 
+The EPA releases \epa{} on a quarterly basis through their website. The software downloads each new version and rebuilds it locally in a PostgreSQL data base. A processing pipline of several R \cite{r_core_team_r_2017} scripts prepares the data for the tool. The tool itself is a R function that is executed by a user acessing the R shiny \citep{chang_shiny_2018} application. In the following the steps for processing the data are explained in more detail (PATH_TO_OVERVIEW) as well as the scripts that have been used for it (REFER_TO_SCRIPTS_TABLE).
+
+## Downloading and preparing the data
+
+The data is downloaded (bd_epa_download.R) and subsequently built into a PostgreSQL data base (bd_epa_postgres.R). Thereafter the data is imported into R for preparing it (da_epa1.R, da_epa2.R, da_epa3.R), by removing special characters type conversions, unit harmonizations and by reducing the columns. At the end the data is stored locally (epa3.rds, epa2_taxa.rds, epa2_chem.rds). Obtained CAS numbers and taxon names are then used to query other data bases for additional information on compounds and biota respectively. Compound information is retrieved from the Pubchem data base \citep{CITE_PUBCHEM} (qu_pc.R), from the Compendium of Pesticide Common Names \citep{CITE_AW} (qu_aw.R), from the Physprop data base \citep{CITE_PHYSPROP} (qu_pp.R), from EUROSTAT and the Chemspider data base \citep(CITE_CHEMSPIDER). These queries mostly rely on the webchem R-package \citep{szocs_webchem_2015-1}. Additional habitat and occurrence information for organisms is queried from the World Register of Marine Species (WORMS) \citep{WORMS} and from the Global Biodiversity Information Facility (GBIF) \citep{CITE_RGBIF} using the rgbif R-package. The acquired information is then merged (re_merge.R), variables are combined and created (re_combine.R), checked (re_checks_internal.R) and finally compiled in one final table (re_final.R) This table is then used in the application to perform search queries on. For a detailed overview of what information is collected see table (REFERNCE_TO_VARIABLE_TABLE)
+
+## The Application
+The application is accesible through \app{}
+
+
+
+### functionalities
+
+### 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Supporting information
+
+
+Tables:
+
+(1) script-table
+(2) varaiable-table
+
+
+# OLD
+
+
+
+
+
+
+
+
+
+
+Due to its size allowing for a more broad compound assessment.
+
+Widely used endpoints are EC50s which determine the concentration where 50% of e.g. plant growth is inhibited, 50% of individuals have died etc. These can be realted to measured concnetrations by calculating Toxic Units (TUs) \@ref(eq:tu) [@schafer_effects_2011] [+other citations!!]. 
 
 \begin{equation*}
 TU = \frac{conc_i}{EC50}
@@ -140,44 +200,21 @@ except gbif fuzzy coded data$habitat column
 
 # Methods
 
-### EPA Ecotox data base
-The EPA ECOTOX data base was downloaded (version: June 7, 2018) and built into a local PostgreSQL data base [@szocs_build_2016]. The data base is subsequently queried for __endpoints__ such as _half maximal effective concentrations - LC50, EC50, LD50, LT50, IC50, ED50 and ET50 (further denoted as EC50)_, _No-observed-adverse-effect level - NOEC, NOEL_ and _lowest observed concentrations - LOEC, LOEL_ [@elonen_ecotoxicology_2018]. Data on other enpoints such as EC25 are ignored. Only the following __effect groups__ are considered: MOR|POP|ITX|GRO. Reported _compound concentrations_ are converted to µg/L and µg/kg respecitvely.
+For all concentration columns patterns like + and * are deleted
 
-### Ohter chemical data bases
-CAS numbers (e.g. 210880-92-5) that are retrieved from the EPA ECOTOX data base are then used to query other publically available data bases with the help of the webchme R-package [@szocs_webchem_2015] to fetch additional chemical parameters \@ref(chem-refs).
 
-```{r chem-refs, echo=FALSE}
-chem_refs = read.table(file.path(datadir, 'chem_refs.txt'), sep = ',', header = TRUE)
 
-knitr::kable(
-  chem_refs,
-  caption = 'Chemical parameters'
-)
+### EPA ECOTOX data
+In a first step the latest version of the EPA ECOTOX data base was downloaded (version: June 7, 2018) and built into a local PostgreSQL data base [@szocs_build_2016]. The data base was subsequently queried for __endpoints__ such as _half maximal effective concentrations - LC50, EC50, LD50, LT50, IC50, ED50 and ET50 (further denoted as EC50)_, _No-observed-adverse-effect level - NOEC, NOEL_ and _lowest observed concentrations - LOEC, LOEL_ [@elonen_ecotoxicology_2018]. Data on other enpoints such as EC25 are ignored. Reported _compound concentrations_ are converted to µg/L and µg/kg respecitvely whenever possible.
+
+### Other data sources
+In order to retrieve additional __chemical parameters__, CAS numbers (e.g. 210880-92-5) that are retrieved from the EPA ECOTOX data base are then used to query other publically available data bases with the help of the webchme R-package [@szocs_webchem_2015] or directly through respective APIs. Likewise __habitat parameters__ are retrieved from online database such as the World Register of Marine Species (WoRMS) [@worms_editorial_board_world_2018] and the Global Biodiversity Information Facility (GBIF) [@gbif.org_gbif_2018]. To some extent the EPA ECOTOX data base itself also contains information on organism hatbitats [@elonen_ecotoxicology_2018]. __Regional parameters__, that consitute natural occurrences of tested organisms are retrieved from GBIF. Original names and newly assigned names of the parameters are listed in \@ref(meta-refs).
+
+```{r meta-stats, echo=FALSE}
+meta = fread(file.path(cachedir, 'meta.csv'))
+knitr::kable(meta)
 ```
 
-### Habitat data
-
-```{r habi-refs, echo=FALSE}
-habi_refs = NA
-
-knitr::kable(
-  habi_refs,
-  caption = 'Habitat parameters'
-)
-
-# From EPA:
-# media_type: SW, FW
-# habitat: Soil
-
-```
-
-
-The habitat parameters _isFre_, _isBra_, _isMar_, _isTer_ are assorted from data from different data bases such as the World Register of Marine Species (WoRMS) [@worms_editorial_board_world_2018] and the Global Biodiversity Information Facility (GBIF) [@gbif.org_gbif_2018]. Moreover habitat types are also derived from EPA data entries on test media type [EPA SOURCE]
-Data from WoRMS are prefered as they are checked.
-
-
-* WORMS
-* algaebase?
 
 
 ### Regional data
@@ -193,23 +230,14 @@ The whole process is automated and scheduled to be re-run four times a year.
 Building the the data base is updated quaterly whenever a new version from the EPA can be downloaded. Based on the EPA ECOTOX data base CAS and taxa information are extracted and queried against other online available data bases to retrieve information which is lackign in the ECOTOX data base. 
 
 
-## Additional chemical parameters
 
-
-### Parameter table
-
-```{r parameter-table, echo=FALSE}
-# tests_data = readRDS(file.path(cachedir, 'tests_fl.rds'))
-# TODO read in tests data and list the parameters
-
-```
 
 water solubility
 
 maybe also include degredation (water and soil) ?
 information for the classification of chemicals
 
-Data is stored at a [github repository](https://github.com/andreasLD/etox-base).
+
 
 
 
