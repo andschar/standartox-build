@@ -1,5 +1,12 @@
 # function to plot data created by fun_ec50_filagg()
 
+# setup -------------------------------------------------------------------
+require(data.table)
+
+# source ------------------------------------------------------------------
+source(file.path(fundir, 'fun_outliers.R'))
+
+# function ----------------------------------------------------------------
 ec50_filagg_plot = function(dt_pl,
                             yaxis = 'casnr',
                             xaxis = 'limout',
@@ -20,8 +27,10 @@ ec50_filagg_plot = function(dt_pl,
   setDT(dt_all_pl)
   # calculate outliers (as in fun_ec50filter_aggregation.R)
   dt_all_pl[ ,
-             outl := outliers::scores(value_fin, type = 'iqr', lim = 1.5),
+             #outl := outliers::scores(value_fin, type = 'iqr', lim = 1.5),
+             outl := rm_outliers(value_fin, lim = 1.5, na.rm = TRUE),
              by = .(casnr, taxon, dur_fin) ]
+  dt_all_pl[ , outl := ifelse(is.na(outl), TRUE, FALSE)]
   
   dt_all_pl[ , comp_type := 'test' ]
   cols = c('casnr', 'comp_name', 'comp_type', 'value_fin', 'outl')

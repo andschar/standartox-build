@@ -1,6 +1,10 @@
 # function to filter EC50 data according to habitat, continent and conc_type
 
+# setup -------------------------------------------------------------------
 require(data.table)
+
+# source ------------------------------------------------------------------
+source(file.path(fundir, 'fun_outliers.R'))
 
 ec50_filagg = function(dt, 
                        habitat = NULL,
@@ -118,12 +122,13 @@ ec50_filagg = function(dt,
                      taxa = paste0(unique(taxon), collapse = '-'),
                      md = median(value_fin, na.rm = TRUE),
                      min = min(value_fin, na.rm = TRUE),
-                     outl = outliers::scores(value_fin, type = 'iqr', lim = 1.5),
+                     # outl = outliers::scores(value_fin, type = 'iqr', lim = 1.5),
+                     outl = rm_outliers(value_fin, lim = 1.5, na.rm = TRUE),
                      n_tests = .N),
                by = .(casnr, taxon, dur_fin)]
   ## outliers
   if (chck_outlier) {
-    dt_agg = dt_agg[ outl == FALSE ] # exclude outliers
+    dt_agg = dt_agg[ !is.na(outl) ] # exclude outliers
   }
   ## (1b) If N_tests <= 2 pick the minimum of this aggregation, else take the median ----
   dt_agg[ , `:=`
