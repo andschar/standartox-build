@@ -1,0 +1,178 @@
+\documentclass[english]{article}
+\usepackage{natbib}
+%\usepackage{pgfplotstable, filecontents}
+%\usepackage{csvsimple}
+
+\newcommand{\etoxbase}{Etox-Base}
+\newcommand{\epa}{EPA ECOTOX data base}
+\newcommand{\app}{http://139.14.20.252:3838/etox-base-shiny/}
+\newcommand{\git}{https://github.com/andreasLD/etox-base}
+
+\listfiles
+
+
+\begin{document}
+
+
+\title{Etox-Base - a tool for ecotoxicologists}
+
+
+\begin{abstract}
+
+\end{abstract}
+
+
+\section*{Background \& Summary [max 700 words]}
+
+A vast amount of chemical compounds such as pharmaceuticals, pesticides, synthetic hormones and many more are used all over the world with insufficient knowledge about possible adverse effects on the environment. In Europe alone some 100,000 compounds are estimated to be in current use, whereof 30,000 are produced in quantities larger than one ton per year. Thereof less than one percent are thoroughly tested \citep{breithaupt_costs_2006}. For substances that have been tested adverse effects could be detected. Pesticides for exmaple reduce macro-invertebrate biodiversity in streams \citep{beketov_pesticides_2013} and estrogenic-associated effects were found in fish \citep{vethaak_integrated_2005}. However for many substance groups, especially newly emerging ones authorative test results remain scarce or not hard to find. To overcome such knowledge paucities it is paramount to accumulate and distribute existing knowledge on possible adverse effects of substances widely. The ECOTOXicology knowledgebase (ECOTOX) created by U.S. Environmental Protection Agency (EPA) represents one such initiative. It collects ecotoxicological test data on on aquatic and terrestrial wildlife as well as plants and publishes it on a quarterly basis freely accessible on the web. By the time of writing it contained 919,123 test results, comprising 11,655 chemical compounds tested on 12,630 different species \citep{elonen_ecotoxicology_2018}. The ecotoxicological tests are collected without limitation and comprise all sorts of measured endpoints such as Effective Concentrations - EC50 values, No-observed effect concentratons NOEC or lowest observed effect concentraitons - LOEC. Likewise the data set contains many different effect measures such as mortality, intoxication, growth etc. and test durations ranging from seconds to weeks or even years. These test results can be used to derive toxicity risk thresholds. As ecotoxicological risk assessment often relies on national and international quality thresholds such as EU-Environmtal quality standards (EQS) or Regulatory Aceptable concentrations (RAC) in Germany. In order to make this data more widely accessible we created a tool that downloads every new version of the \epa{} and performs several quality checks, e.g. unit harmonization, and cleaning steps on it. In addition to the test parameters that are retrieved from the \epa{} we query compound and organism parameters from other open data bases to adress missing information such as compound solubility or organism habitat or regional ocurrence patterns. Subsequently the data is provided online via a web app where users can filter the data according to needed test parameters. Furthermore the user can choose between several aggregation methods to retrieve individual values per compound. Compounds are identified by their CAS-number as this is also the key identifier in the \epa{}. Optionally the data base can also be downloaded as a whole for local useage. This is the first approach that tries to handle large amounts of toxicity test data to derive meaningful information about the susceptability of organisms towards individual compounds by aggregating test results. Researchers relying on ecotoxicological test data will benefit from the \etoxbase{} due to concise representation ecotoxicological test data.
+
+\section*{Methods}
+%%The Methods should include detailed text describing any steps or procedures 
+%%used in producing the data, including full descriptions of the experimental 
+%%design, data acquisition assays, and any computational processing (e.g. 
+%%normalization, image feature extraction). Related methods should be grouped 
+%%under corresponding subheadings where possible, and methods should be described 
+%%in enough detail to allow other researchers to interpret and repeat, if required, 
+%%the full study. Specific data outputs should be explicitly referenced via data 
+%%citation (see Data Records and Data Citations, below). Authors should cite 
+%%previous descriptions of the methods under use, but ideally the method 
+%%descriptions should be complete enough for others to understand and reproduce 
+%%the methods and processing steps without referring to associated publications. 
+%%There is no limit to the length of the Methods section.
+
+
+The EPA releases \epa{} on a quarterly basis through their website. The software downloads each new version and rebuilds it locally in a PostgreSQL data base. A processing pipline of several R \cite{r_core_team_r_2017} scripts prepares the data for the tool. The tool itself is a R function that is executed by a user acessing the R shiny \citep{chang_shiny_2018} application. In the following the steps for processing the data are explained in more detail (PATH-TO-OVERVIEW) as well as the scripts that have been used for it (REFER-TO-SCRIPTS-TABLE).
+
+\subsection*{Data acquisition \& preparation}
+
+The data is downloaded (bd\_epa\_download.R) and subsequently built into a PostgreSQL data base (bd\_epa\_postgres.R). Thereafter the data is imported into R for preparing it (da\_epa1.R, da\_epa2.R, da\_epa3.R), by removing special characters type conversions, unit harmonizations and by reducing the columns. At the end the data is stored locally (epa3.rds, epa2\_taxa.rds, epa2\_chem.rds). Obtained CAS numbers and taxon names are then used to query other data bases for additional information on compounds and biota respectively. Compound information is retrieved from the Pubchem data base \citep{CITE_PUBCHEM} (qu\_pc.R), from the Compendium of Pesticide Common Names \citep{CITE_AW} (qu\_aw.R), from the Physprop data base \citep{CITE_PHYSPROP} (qu\_pp.R), from EUROSTAT and the Chemspider data base \citep(CITE-CHEMSPIDER). These queries mostly rely on the webchem R-package \citep{szocs_webchem_2015-1}. Additional habitat and occurrence information for organisms is queried from the World Register of Marine Species (WORMS) \citep{WORMS} and from the Global Biodiversity Information Facility (GBIF) \citep{CITE_RGBIF} using the rgbif R-package. The acquired information is then merged (re\_merge.R), variables are combined and created (re\_combine.R), checked (re\_checks\_internal.R) and finally compiled in one final table (re\_final.R) This table is then used in the application to perform search queries on. For a detailed overview of what information is collected see table (REFERNCE-TO-VARIABLE-TABLE)
+
+\subsection*{The application}
+The application is accessible through \app{} and consitutes 
+
+
+%
+%\begin{filecontents*}{data/scripts.csv}
+%	
+%\end{filecontents*}
+
+
+%\input{data/scripts.csv}
+
+
+%
+%\begin{tabular}{l|c}
+%	
+%	\csvreader[head to column names]{data/scripts.csv}{}
+%	\end{tabular}
+
+
+
+\subsection*{Code availability}
+%%For all studies using custom code in the generation or processing of datasets, 
+%%a statement must be included here, indicating whether and how the code can be 
+%%accessed, including any restrictions to access. This section should also include 
+%%information on the versions of any software used, if relevant, and any specific 
+%%variables or parameters used to generate, test, or process the current dataset. 
+
+The code for processing the data is stored in a Github reopsitory (\git{})
+
+
+\section*{Data Records}
+%%Please explain each data record associated with this work, including
+%%the repository where this information is stored, and an overview of
+%%the data files and their formats. Each external data record should
+%%be listed in Data Citation section at the end of this template, and 
+%%records should be cited throughout the manuscript as, for example 
+%%(Data Citation 1). 
+%%
+%%Tables should be used to support the data records, and should clearly indicate 
+%%the samples and subjects, their provenance, and the experimental manipulations 
+%%performed on each. They should also specify the data output resulting from each 
+%%data-collection or analytical step, should these form part of the archived record. 
+%%Please see the submission guidelines at the \emph{Scientific Data} website, and 
+%%our Word templates for more information on preparing such tables. 
+
+
+
+\section*{Technical Validation}
+%%This section presents any experiments or analyses that are needed
+%%to support the technical quality of the dataset. This section may
+%%be supported by up figures and tables, as needed. This is a required
+%%section; authors must present information justifying the reliability
+%%of their data.
+
+
+\section*{Usage Notes}
+%%Brief instructions that may help other researchers reuse these dataset.
+%%This is an optional section, but strongly encouraged when helpful
+%%to readers. This may include discussion of software packages that
+%%are suitable for analyzing the assay data files, suggested downstream
+%%processing steps (e.g. normalization, etc.), or tips for integrating
+%%or comparing this with other datasets. If needed, authors are encouraged
+%%to provide code, programs, or data processing workflows when they may help 
+%%others analyse the data. We encourage authors to archive related code in 
+%%a DOI-issuing archive when possible, but code may also be supplied as 
+%%supplementary information files. 
+%%
+%%For studies involving privacy or safety controls on public access
+%%to the data, this section should describe in detail these controls,
+%%including how authors can apply to access the data, and what criteria
+%%will be used to determine who may access the data, and any limitations
+%%on data use. 
+
+
+\section*{Acknowledgements}
+%%Text acknowledging non-author contributors. Acknowledgements should
+%%be brief, and should not include thanks to anonymous referees and
+%%editors, or effusive comments. Grant or contribution numbers may be
+%%acknowledged. Author contributions Please describe briefly the contributions
+%%of each author to this work on a separate line. 
+%%
+%%AK did this and that. 
+%%
+%%BG did this and that and the other. 
+
+
+\section*{Competing financial interests}
+%%A competing financial interests statement is required for all accepted
+%%papers published in \emph{Scientific Data}. If none exist simply write,
+%%``The author(s) declare no competing financial interests''.
+
+
+\section*{Figures Legends}
+%%Figure should be referred to using a consistent numbering scheme through
+%%the entire Data Descriptor. For initial submissions, authors may choose
+%%to supply this document as a single PDF with embedded figures, but
+%%separate figure image files must be provided for revisions and accepted
+%%manuscripts. In most cases, a Data Descriptor should not contain more
+%%than three figures, but more may be allowed when needed. We discourage
+%%the inclusion of figures in the Supplementary Information \textendash{}
+%%all key figures should be included here in the main Figure section. 
+%%
+%%Figure legends begin with a brief title sentence for the whole figure
+%%and continue with a short description of what is shown in each panel,
+%%as well as explaining any symbols used. Legend must total no more
+%%than 350 words, and may contain literature references. 
+
+
+\section*{Tables}
+%%Tables supporting the Data Descriptor. These can provide summary information
+%%(sample numbers, demographics, etc.), but they should generally not
+%%be used to present primary data (i.e. measurements). Tables containing
+%%primary data should be submitted to an appropriate data repository. 
+%%
+%%Tables may be provided within the \LaTeX{} document or as separate
+%%files (tab-delimited text or Excel files). Legends, where needed,
+%%should be included here. Generally, a Data Descriptor should have
+%%fewer than ten Tables, but more may be allowed when needed. Tables
+%%may be of any size, but only Tables which fit onto a single printed
+%%page will be included in the PDF version of the article (up to a maximum
+%%of three). 
+
+
+
+\bibliography{references-etox-base}
+
+
+\end{document}
