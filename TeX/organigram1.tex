@@ -16,6 +16,8 @@
 	font = {\fontsize{13pt}{12}\selectfont},
 	io/.style = {rectangle, minimum width = 4cm, minimum height = 3cm, text centered, draw = black, fill = blue!10},
 	main/.style = {rectangle, draw = black, rounded corners, minimum width = 3cm, minimum height = 1.25cm, text centered},
+	etox-base/.style = {rectangle, rounded corners},
+	etox-base-shiny/.style = {circle},
 	ids/.style = {diamond, minimum width = 3cm, minimum height = 2cm, text centered, draw = black, fill = green!30},
 	res/.style = {rectangle, rounded corners, minimum width = 2cm, minimum height = 1cm, text centered, draw = black, fill = blue!30},
 	resvariables/.style = {rectangle, minimum width = 2cm, minimum height = 1cm, text centered},
@@ -33,16 +35,13 @@
 	
 	%%%%%%%% 1st part: downloading data %%%%%%%%
 	\node (io) [io, align = center] at (0cm,0cm) {EPA ECOTOX\\data base};
+	\node (chemprop) [io, dashed, right of=io, xshift=2cm] {CHEMPROP};
+	\node (etox) [io, dashed, right of=chemprop, xshift=2cm] {UBA etox};
 	%% chemicals
 	% id nodes
-	
-	
 	\node (cas) [ids, below of=io, yshift = -4cm, xshift = 3cm] {CAS};
-	
-	
 	% main nodes
-	\node (chemprop) [main, dashed, right of=cas, xshift=4.5cm, yshift=1.5cm] {CHEMPROP};
-	\node (chemscr) [main, right of=cas, yshift=-1cm, xshift=4.5cm] {PHYS-CHEM}
+	\node (chemscr) [main, right of=cas, xshift=4.5cm] {PHYS-CHEM}
 	child { node { Alan Wood Pesticide Compendium - \textbf{qu\_aw.R } }}
 	child { node { Pesticide Action Network - \textbf{ch\_pan.R} }}
 	child { node { PhysProp - \textbf{ch\_pp.R} }}
@@ -67,7 +66,7 @@
 	\node[rectangle, draw, rounded corners, minimum height = 2cm, minimum width = 7cm, fill = gray!10, right of = testres, xshift = 1.5cm, yshift = 4cm] (appbox_shiny) {};
 	\end{pgfonlayer}
 	\node (apptext) [above of = appbox_shiny, yshift = 0.5cm, xshift = -3cm] {Etox-Base Function};
-	\node (filtres) [res, right of = appbox_shiny, xshift = -3.5cm] {Filter};
+	\node (filtres) [res, right of = appbox_shiny, xshift = -3.5cm] {Combine};
 	\node (aggres) [res, right of = appbox_shiny, xshift = 0cm] {Aggregate};
 	
 	% database output
@@ -82,7 +81,6 @@
 	%%% arrows %%%
 	\begin{pgfonlayer}{bg1}
 	\draw [arrow, black] (io) |- (cas.west);
-	\draw [arrow, dashed] (cas.east) -- (chemprop.west);
 	\draw [arrow] (cas.east) -- (chemscr.west);
 	\draw [arrow] (chemscr.east) -| (testres.north);
 	
@@ -102,20 +100,22 @@
 	%%%%%%%% 2nd part: processing chain %%%%%%%%
 	% nodes
 	\node (testres2) [res] at (0cm,-24cm) {Result re\_merge.R}; % maybe connect it with testres ?
-	\node (filter) [res, right of = testres2, xshift = 2cm] {re\_filter.R};
-	\node (analyses) [res, right of = filter, xshift = 2cm] {re\_analyses.R};
+	\node (combine) [res, right of = testres2, xshift = 2cm] {re\_combine.R};
+	\node (analyses) [res, right of = combine, xshift = 2cm] {re\_analyses.R};
 	\node (checks) [res, right of = analyses, xshift = 2cm] {re\_checks.R};
 	\node (final) [res, right of = checks, xshift = 2cm] {re\_final.R};
 	    \node (stats) [res, right of = final, xshift = 2cm, yshift = 2cm] {re\_stats.R};
+	    \node (meta) [res, right of = final, xshift = 2cm, yshift = 4cm] {re\_meta.R};
 	    \node (write) [res, right of = final, xshift = 2cm, yshift = 0cm] {re\_write.R};
 	    \node (shinyvar) [res, right of = final, xshift = 2cm, yshift = -2cm] {re\_shiny\_variables.R};
 	
 	% arrows
-	\draw [arrow] (testres2.east) -- (filter.west);
-	\draw [arrow] (filter.east) -- (analyses.west);
+	\draw [arrow] (testres2.east) -- (combine.west);
+	\draw [arrow] (combine.east) -- (analyses.west);
 	\draw [arrow] (analyses.east) -- (checks.west);
 	\draw [arrow] (checks.east) -- (final.west);
 	\draw [arrow] (final.east) -- (stats.west);
+	\draw [arrow] (final.east) -- (meta.west);
 	\draw [arrow] (final.east) -- (write.west);
 	\draw [arrow] (final.east) -- (shinyvar.west);
 	
