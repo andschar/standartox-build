@@ -1,11 +1,18 @@
-\documentclass[english]{article}
+d\documentclass[english]{article}
 \usepackage{natbib}
 \usepackage{csvsimple}
+\usepackage{tikz}
+\usetikzlibrary{trees, arrows, shapes.geometric, positioning}
+\usepackage{standalone}
+%% text packages
+\usepackage{siunitx} % fake ° symbol \ang{}
+\usepackage[super]{nth} % for 1st, 2nd etc. \nth{}
 
 \newcommand{\etoxbase}{Etox-Base}
 \newcommand{\epa}{EPA ECOTOX data base}
 \newcommand{\app}{http://139.14.20.252:3838/etox-base-shiny/}
 \newcommand{\git}{https://github.com/andreasLD/etox-base}
+\newcommand{\gitapp}{https://github.com/andreasLD/etox-base-shiny}
 
 \listfiles
 
@@ -23,9 +30,24 @@
 
 \section*{Background \& Summary [max 700 words]}
 
-A vast amount of chemical compounds such as pharmaceuticals, pesticides, synthetic hormones and many more are used all over the world with insufficient knowledge about possible adverse effects on the environment. In Europe alone some 100,000 compounds are estimated to be in current use, whereof 30,000 are produced in quantities larger than one ton per year. Thereof less than one percent are thoroughly tested \citep{breithaupt_costs_2006}. For substances that have been tested adverse effects could be detected. Pesticides for exmaple reduce macro-invertebrate biodiversity in streams \citep{beketov_pesticides_2013} and estrogenic-associated effects were found in fish \citep{vethaak_integrated_2005}. However for many substance groups, especially newly emerging ones authorative test results remain scarce or not hard to find. To overcome such knowledge paucities it is paramount to accumulate and distribute existing knowledge on possible adverse effects of substances widely. The ECOTOXicology knowledgebase (ECOTOX) created by U.S. Environmental Protection Agency (EPA) represents one such initiative. It collects ecotoxicological test data on on aquatic and terrestrial wildlife as well as plants and publishes it on a quarterly basis freely accessible on the web. By the time of writing it contained 919,123 test results, comprising 11,655 chemical compounds tested on 12,630 different species \citep{elonen_ecotoxicology_2018}. The ecotoxicological tests are collected without limitation and comprise all sorts of measured endpoints such as Effective Concentrations - EC50 values, No-observed effect concentratons NOEC or lowest observed effect concentraitons - LOEC. Likewise the data set contains many different effect measures such as mortality, intoxication, growth etc. and test durations ranging from seconds to weeks or even years. These test results can be used to derive toxicity risk thresholds. As ecotoxicological risk assessment often relies on national and international quality thresholds such as EU-Environmtal quality standards (EQS) or Regulatory Aceptable concentrations (RAC) in Germany. In order to make this data more widely accessible we created a tool that downloads every new version of the \epa{} and performs several quality checks, e.g. unit harmonization, and cleaning steps on it. In addition to the test parameters that are retrieved from the \epa{} we query compound and organism parameters from other open data bases to adress missing information such as compound solubility or organism habitat or regional ocurrence patterns. Subsequently the data is provided online via a web app where users can filter the data according to needed test parameters. Furthermore the user can choose between several aggregation methods to retrieve individual values per compound. Compounds are identified by their CAS-number as this is also the key identifier in the \epa{}. Optionally the data base can also be downloaded as a whole for local useage. This is the first approach that tries to handle large amounts of toxicity test data to derive meaningful information about the susceptability of organisms towards individual compounds by aggregating test results. Researchers relying on ecotoxicological test data will benefit from the \etoxbase{} due to concise representation ecotoxicological test data.
+A large number of chemical compounds such as pharmaceuticals, pesticides and synthetic hormones are in daily use all over the world with insufficient knowledge about possible adverse effects on the environment. In Europe alone some 100,000 compounds are estimated to be in current use, whereof 30,000 are produced in quantities larger than one ton per year \citep{breithaupt_costs_2006}. Chemical compounds are brought to the environment deliberately - as it is the case for pesticides or arrive in the environment as a byproduct from other processes (e.g. as atmospheric emissions or as wastewater) \citep{schwarzenbach_challenge_2006}. Ecosystems provide essential services to human societies such as drinking and irrigation water, food and climate regulation. These ecosystem services are products of different ecosystem functions that crucially depend on the integrity of the populations and communities that drive these ecosystem functions.
+
+
+Pollution with man-made chemical toxicants was identified as one of three major environmental problems for which research gaps hamper the derivation of planetary boundaries, i.e. thresholds beyond which irreversible state shifts may occur { | Steffen, et al., 2015 | | |zu:0:4565WXWV}.
+
+
+# Überleitung Biodiversitätsverlust – Rolle von Chemikalien
+Hier ein Text von mir von einem internen Antrag, vielleicht kannst Du davon was recyclen:
+Ecosystems provide essential services to human societies such as drinking and irrigation water, food and climate regulation. These ecosystem services are products of different ecosystem functions that crucially depend on the integrity of the populations and communities that drive these ecosystem functions. Humans are altering ecosystems from regional (e.g. through land use change) to global (e.g. through ocean acidification) scales, which has been captured in defining the current era the Anthropocene { | Crutzen, 2002 | | |zu:0:QMD3ZN8K}. The anthropogenic alteration of ecosystems is associated with an accelerating rate of species extinctions { | Butchart, et al., 2010 | | |zu:0:PAKGEKAH}{ | Barnosky, et al., 2011 | | |zu:0:5WZP7PB6} that threaten the provisioning of the abovementioned services { | MEA, 2005 | | |zu:0:7MXCXGXS}{ | Barnosky, et al., 2014 | | |zu:0:DBW4NPGX}. The major anthropogenic stressors that have caused the deterioration of ecosystems include habitat degradation, climate change, nutrient enrichment, and chemical pollution (e.g. pesticides). Several of these stressors, such as climate change and nutrient enrichment, are close to or are already exceeding their planetary boundaries { | Steffen, et al., 2015 | | |zu:0:4565WXWV}, which may result in irreversible shifts in the biosphere { | Barnosky, et al., 2012 | | |zu:0:SXKWUBMG}. Pollution with man-made chemical toxicants was identified as one of three major environmental problems for which research gaps hamper the derivation of planetary boundaries, i.e. thresholds beyond which irreversible state shifts may occur { | Steffen, et al., 2015 | | |zu:0:4565WXWV}. Bernhardt et al. { | Bernhardt, et al., 2017 | | |zu:0:MCKMS8AZ} argue that the knowledge gap how chemicals affect biodiversity and ecosystem functions, and in turn ecosystem services, would also impede society’s ability to accomplish the Sustainable Development Goals of the United Nations. Hence, research on the effects of chemicals on ecosystems is required for establishing thresholds ensuring ecosystem integrity and enabling societies to effectively manage chemical risks. From the perspective of basic science, the scope of such a research program also involves basic scientific questions such as to which extent functions (e.g. nutrients and carbon cycling) and services are interdependent in their response to chemical stress, and to what extent non-linear feedbacks, as a potential consequence of transgenerational effects (such as induced mutation, population bottlenecks and selection ), occur.
+
+
+Biodiversitätsverlust - Rolle von chemikalien?
+
+
+Thereof less than one percent are thoroughly tested \citep{breithaupt_costs_2006}. For substances that have been tested adverse effects could be detected. Pesticides for exmaple reduce macro-invertebrate biodiversity in streams \citep{beketov_pesticides_2013} and estrogenic-associated effects were found in fish \citep{vethaak_integrated_2005}. However for many substance groups, especially newly emerging ones authorative test results remain scarce or not hard to find. To overcome such knowledge paucities it is paramount to accumulate and distribute existing knowledge on possible adverse effects of substances widely. The ECOTOXicology knowledgebase (ECOTOX) created by U.S. Environmental Protection Agency (EPA) represents one such initiative. It collects ecotoxicological test data on on aquatic and terrestrial wildlife as well as plants and publishes it on a quarterly basis freely accessible on the web. By the time of writing it contained 919,123 test results, comprising 11,655 chemical compounds tested on 12,630 different species \citep{elonen_ecotoxicology_2018}. The ecotoxicological tests are collected without limitation and comprise all sorts of measured endpoints such as Effective Concentrations - EC50 values, No-observed effect concentratons NOEC or lowest observed effect concentraitons - LOEC. Likewise the data set contains many different effect measures such as mortality, intoxication, growth etc. and test durations ranging from seconds to weeks or even years. These test results can be used to derive toxicity risk thresholds. As ecotoxicological risk assessment often relies on national and international quality thresholds such as EU-Environmtal quality standards (EQS) or Regulatory Aceptable concentrations (RAC) in Germany. In order to make this data more widely accessible we created a tool that downloads every new version of the \epa{} and performs several quality checks, e.g. unit harmonization, and cleaning steps on it. In addition to the test parameters that are retrieved from the \epa{} we query compound and organism parameters from other open data bases to adress missing information such as compound solubility or organism habitat or regional ocurrence patterns. Subsequently the data is provided online via a web app where users can filter the data according to needed test parameters. Furthermore the user can choose between several aggregation methods to retrieve individual values per compound. Compounds are identified by their CAS-number as this is also the key identifier in the \epa{}. Optionally the data base can also be downloaded as a whole for local useage. This is the first approach that tries to handle large amounts of toxicity test data to derive meaningful information about the susceptability of organisms towards individual compounds by aggregating test results. Researchers relying on ecotoxicological test data will benefit from the \etoxbase{} due to concise representation ecotoxicological test data.
 
 \section*{Methods}
+
 %%The Methods should include detailed text describing any steps or procedures 
 %%used in producing the data, including full descriptions of the experimental 
 %%design, data acquisition assays, and any computational processing (e.g. 
@@ -39,24 +61,24 @@ A vast amount of chemical compounds such as pharmaceuticals, pesticides, synthet
 %%the methods and processing steps without referring to associated publications. 
 %%There is no limit to the length of the Methods section.
 
-
 The EPA releases \epa{} on a quarterly basis through their website. The software downloads each new version and rebuilds it locally in a PostgreSQL data base. A processing pipline of several R \cite{r_core_team_r_2017} scripts prepares the data for the tool. The tool itself is a R function that is executed by a user acessing the R shiny \citep{chang_shiny_2018} application. In the following the steps for processing the data are explained in more detail (PATH-TO-OVERVIEW) as well as the scripts that have been used for it (REFER-TO-SCRIPTS-TABLE).
 
 \subsection*{Data acquisition \& preparation}
 
 The data is downloaded (bd\_epa\_download.R) and subsequently built into a PostgreSQL data base (bd\_epa\_postgres.R). Thereafter the data is imported into R for preparing it (da\_epa1.R, da\_epa2.R, da\_epa3.R), by removing special characters type conversions, unit harmonizations and by reducing the columns. At the end the data is stored locally (epa3.rds, epa2\_taxa.rds, epa2\_chem.rds). Obtained CAS numbers and taxon names are then used to query other data bases for additional information on compounds and biota respectively. Compound information is retrieved from the Pubchem data base \citep{CITE_PUBCHEM} (qu\_pc.R), from the Compendium of Pesticide Common Names \citep{CITE_AW} (qu\_aw.R), from the Physprop data base \citep{CITE_PHYSPROP} (qu\_pp.R), from EUROSTAT and the Chemspider data base \citep(CITE-CHEMSPIDER). These queries mostly rely on the webchem R-package \citep{szocs_webchem_2015-1}. Additional habitat and occurrence information for organisms is queried from the World Register of Marine Species (WORMS) \citep{WORMS} and from the Global Biodiversity Information Facility (GBIF) \citep{CITE_RGBIF} using the rgbif R-package. The acquired information is then merged (re\_merge.R), variables are combined and created (re\_combine.R), checked (re\_checks\_internal.R) and finally compiled in one final table (re\_final.R) This table is then used in the application to perform search queries on. For a detailed overview of what information is collected see table \ref{table:processing-scripts}.
 
-\begin{table}
-    \csvautotabular[respect all]{data/scripts.csv}
-    \caption{Processing scripts}
-    \label{table:processing-scripts}
-\end{table}
-
 \subsection*{The application}
-The application is accessible through \app{} and consitutes 
+The application is accessible through \etox-base{} and was built by using the shiny web application framework \citep{chang_shiny_2018} in R. Therein the user can choose to filter the data by several parameters such as chemical class, organism habitat, test duration and test endpoints amongst others. A detailed list with example entries of the possible filter parameters can be found in \ref{table:meta}. In order to derive single endpoints for an organism groups and a compound of the partly extensive test data, the \etox-base{} aggregates the test results according to the chosen filters in two steps. Firstly the filtered test results are aggregated by the CAS number, the chosen taxon plus the duration and secondly only by the CAS number. The former can't be influenced by the user and calculates either the minimum or the median depending on the amount of results to aggregate (n <= 2: minimum, if n > 2: median). Thereof the second step calculates the minimum, the maximum, the median, the mean or the geometric mean as aggregate. Besides the aggregation some cleaning can also be performed. The \etox-base{} allows to exclude test results exhibiting concentrations that are higher than the actual water solubility of the respective compound at \ang{20} C. In any case the user can choose to exclude outliers. The outliers are selected by excluding values that exceed lower (0.25) and the upper (0.75) quartile by 1.5 times the interquartile range. All the steps described in this section are executed at each click in the app which runs the function fun\_ec50filter\_aggregation.R (cf. table \ref{table:processing-scripts}). Fast, adequate and live data manipulation is possible thanks to the data.table package \citep{dowle_data.table_2018}.
 
+\subsection*{Future of the project}
+As new versions of the \epa{} are published on a quarterly basis the data acquisition process is automated and new versions of the data and the \app{} are planed to be released regularly.
 
-
+\begin{figure}
+    %\includestandalone[width=\textwidth]{article/tikz/organigram}
+    \input{article/tikz/organigram}
+    \caption{Organigram}
+    \label{fig:organigram}
+\end{figure}
 
 \subsection*{Code availability}
 %%For all studies using custom code in the generation or processing of datasets, 
@@ -65,8 +87,7 @@ The application is accessible through \app{} and consitutes
 %%information on the versions of any software used, if relevant, and any specific 
 %%variables or parameters used to generate, test, or process the current dataset. 
 
-The code for processing the data is stored in a Github reopsitory (\git{})
-
+The code for processing the data is stored in a Github reopsitory (\git{}). All processing scripts were written in R version 3.4.4. PostgreSQL 9.5 has been used to build the data base. Hence R together with its packages and PostgreSQL suffice to rebuild the process. The \app{} itself is stored in a second Github repostitory (\gitapp{}).
 
 \section*{Data Records}
 %%Please explain each data record associated with this work, including
@@ -109,7 +130,11 @@ The code for processing the data is stored in a Github reopsitory (\git{})
 %%to the data, this section should describe in detail these controls,
 %%including how authors can apply to access the data, and what criteria
 %%will be used to determine who may access the data, and any limitations
-%%on data use. 
+%%on data use.
+This data set is designed to support ecotoxicologists in assessing the risk of chemical compounds on the environment. As there is more and more ecotoxicological test data available, it becomes fundamental to provide such information in reasonable formats. This means, that it should be accessible for humans as well as computers. Up to now ecotoxicoloists rely on effect values of single publications or data bases such as the Pesticide Property Data Base (PPDB), having certain limitations such as encompassing only a few substance groups. The \epa{} tries to fill these gaps by collecting in peer-review articles published ecotoxicological test results. However due to lacking test information and un-harmonized data sets it is not always easily accessible. The \app{} tries to mitigate this gap. An ecotoxicologist can now access the \app{} and retrieve cleaned, harmonized and aggregated test data according to his or her needs.
+
+\subsection*{Limitations}
+Due to missing entries,... 
 
 
 \section*{Acknowledgements}
@@ -160,9 +185,19 @@ The code for processing the data is stored in a Github reopsitory (\git{})
 %%page will be included in the PDF version of the article (up to a maximum
 %%of three). 
 
+\begin{table}
+    \csvautotabular[respect all]{data/scripts.csv}
+    \caption{Processing scripts}
+    \label{table:processing-scripts}
+\end{table}
 
+\section*{Figure Legends}
 
+\begin{thebibliography}{}
 \bibliography{references-etox-base}
+\end{thebibliography}
+
+\section*{Data Citations}
 
 
 \end{document}
