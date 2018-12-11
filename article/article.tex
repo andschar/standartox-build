@@ -1,7 +1,6 @@
 \documentclass[english]{article}
 \usepackage{natbib}
-%\usepackage{pgfplotstable, filecontents}
-%\usepackage{csvsimple}
+\usepackage{csvsimple}
 
 \newcommand{\etoxbase}{Etox-Base}
 \newcommand{\epa}{EPA ECOTOX data base}
@@ -45,26 +44,17 @@ The EPA releases \epa{} on a quarterly basis through their website. The software
 
 \subsection*{Data acquisition \& preparation}
 
-The data is downloaded (bd\_epa\_download.R) and subsequently built into a PostgreSQL data base (bd\_epa\_postgres.R). Thereafter the data is imported into R for preparing it (da\_epa1.R, da\_epa2.R, da\_epa3.R), by removing special characters type conversions, unit harmonizations and by reducing the columns. At the end the data is stored locally (epa3.rds, epa2\_taxa.rds, epa2\_chem.rds). Obtained CAS numbers and taxon names are then used to query other data bases for additional information on compounds and biota respectively. Compound information is retrieved from the Pubchem data base \citep{CITE_PUBCHEM} (qu\_pc.R), from the Compendium of Pesticide Common Names \citep{CITE_AW} (qu\_aw.R), from the Physprop data base \citep{CITE_PHYSPROP} (qu\_pp.R), from EUROSTAT and the Chemspider data base \citep(CITE-CHEMSPIDER). These queries mostly rely on the webchem R-package \citep{szocs_webchem_2015-1}. Additional habitat and occurrence information for organisms is queried from the World Register of Marine Species (WORMS) \citep{WORMS} and from the Global Biodiversity Information Facility (GBIF) \citep{CITE_RGBIF} using the rgbif R-package. The acquired information is then merged (re\_merge.R), variables are combined and created (re\_combine.R), checked (re\_checks\_internal.R) and finally compiled in one final table (re\_final.R) This table is then used in the application to perform search queries on. For a detailed overview of what information is collected see table (REFERNCE-TO-VARIABLE-TABLE)
+The data is downloaded (bd\_epa\_download.R) and subsequently built into a PostgreSQL data base (bd\_epa\_postgres.R). Thereafter the data is imported into R for preparing it (da\_epa1.R, da\_epa2.R, da\_epa3.R), by removing special characters type conversions, unit harmonizations and by reducing the columns. At the end the data is stored locally (epa3.rds, epa2\_taxa.rds, epa2\_chem.rds). Obtained CAS numbers and taxon names are then used to query other data bases for additional information on compounds and biota respectively. Compound information is retrieved from the Pubchem data base \citep{CITE_PUBCHEM} (qu\_pc.R), from the Compendium of Pesticide Common Names \citep{CITE_AW} (qu\_aw.R), from the Physprop data base \citep{CITE_PHYSPROP} (qu\_pp.R), from EUROSTAT and the Chemspider data base \citep(CITE-CHEMSPIDER). These queries mostly rely on the webchem R-package \citep{szocs_webchem_2015-1}. Additional habitat and occurrence information for organisms is queried from the World Register of Marine Species (WORMS) \citep{WORMS} and from the Global Biodiversity Information Facility (GBIF) \citep{CITE_RGBIF} using the rgbif R-package. The acquired information is then merged (re\_merge.R), variables are combined and created (re\_combine.R), checked (re\_checks\_internal.R) and finally compiled in one final table (re\_final.R) This table is then used in the application to perform search queries on. For a detailed overview of what information is collected see table \ref{table:processing-scripts}.
+
+\begin{table}
+    \csvautotabular[respect all]{data/scripts.csv}
+    \caption{Processing scripts}
+    \label{table:processing-scripts}
+\end{table}
 
 \subsection*{The application}
 The application is accessible through \app{} and consitutes 
 
-
-%
-%\begin{filecontents*}{data/scripts.csv}
-%	
-%\end{filecontents*}
-
-
-%\input{data/scripts.csv}
-
-
-%
-%\begin{tabular}{l|c}
-%	
-%	\csvreader[head to column names]{data/scripts.csv}{}
-%	\end{tabular}
 
 
 
