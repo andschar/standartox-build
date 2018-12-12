@@ -37,7 +37,7 @@ article/*
 !article/R
 !article/article.Rmd
 !article/data
-!article/references-etox-base.bib
+!article/refs/references-etox-base.bib
 !article/article.tex
 !article/tikz/organigram.tex
 
@@ -47,7 +47,6 @@ share/*
 # misc
 misc/*
 notes/*
-*.bib
 
 # credentials
 cred/credentials.R
