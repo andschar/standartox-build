@@ -18,5 +18,5 @@ meta[ variable == 'inchikey', example := strsplit(example, ', ')[[1]] ]
 meta[ variable %in% c('ref_author', 'ref_title'), example := '' ]
 
 # writing -----------------------------------------------------------------
-fwrite(meta, file.path(cachedir, 'meta.csv'))
+fwrite(meta, file.path(datadir_ar, 'meta.csv'))
 

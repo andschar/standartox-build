@@ -52,6 +52,9 @@ shinydata = file.path(shinydir, 'data')
 cred = file.path(prj, 'cred')
 share = file.path(prj, 'share')
 norman = file.path(prj, 'norman')
+# article
+article = file.path(prj, 'article')
+datadir_ar = file.path(article, 'data')
 
 # path to phantomjs
 if (nodename == 'scharmueller') {
