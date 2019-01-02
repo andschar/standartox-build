@@ -31,21 +31,37 @@ server = function(input, output) {
   
   # data + reactivity function ----------------------------------------------
   thedata = reactive({
-    ec50_filagg(dt = dat,
-                conc_type = input$conc_type,
-                comp = input$comp,
-                effect = input$effect,
-                endpoint = input$endpoint,
-                chem_class = input$chem_class,
-                chck_solub = input$chck_solub,
-                chck_outlier = input$chck_outlier,
-                habitat = input$habitat,
-                continent = input$continent,
-                tax = input$tax,
-                dur = c(input$dur1, input$dur2),
-                agg = input$agg,
-                info = input$infocols,
-                cas = rv$data)
+    ## DEPRECATED
+    # ec50_filagg(dt = dat,
+    #             conc_type = input$conc_type,
+    #             comp = input$comp,
+    #             effect = input$effect,
+    #             endpoint = input$endpoint,
+    #             chem_class = input$chem_class,
+    #             chck_solub = input$chck_solub,
+    #             chck_outlier = input$chck_outlier,
+    #             habitat = input$habitat,
+    #             continent = input$continent,
+    #             tax = input$tax,
+    #             dur = c(input$dur1, input$dur2),
+    #             agg = input$agg,
+    #             info = input$infocols,
+    #             cas = rv$data)
+    fun_aggregate(dt = fun_filter(dt = dat,
+                                  tax = input$tax,
+                                  habitat = input$habitat,
+                                  continent = input$continent,
+                                  conc_type = input$conc_type,
+                                  effect = input$effect,
+                                  endpoint = input$endpoint,
+                                  chem_class = input$chem_class,
+                                  duration = c(input$dur1, input$dur2),
+                                  chck_solub = input$chck_solub,
+                                  cas = rv$data),
+                  agg = input$agg,
+                  info = input$infocols,
+                  comp = input$comp,
+                  chck_outlier = input$chck_outlier)
   })
 
 
