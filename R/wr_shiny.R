@@ -5,7 +5,7 @@ source(file.path(src, 'setup.R'))
 source(file.path(src, 'fun_shiny_variables_stat.R'))
 
 # data --------------------------------------------------------------------
-tests_fin = readRDS(file.path(cachedir, 'tests_fin.rds'))
+te_fin = readRDS(file.path(cachedir, 'tests_fin.rds'))
 
 # (1) write table to shiny directory --------------------------------------
 ## as .rds
@@ -35,19 +35,9 @@ log_msg(msg); rm(msg)
 ## preparation
 te_stats_l = list(
   ## long variables ----
-  tes_effect = data.table(
-    nam = out_stats_lng(te_fin, tes_effect)$nam,
-    val = out_stats_lng(te_fin, tes_effect)$tes_effect
-  ),
-  tes_endpoint = data.table(
-    nam = out_stats_lng(te_fin, tes_endpoint)$nam,
-    val = out_stats_lng(te_fin, tes_endpoint)$tes_endpoint
-  ),
-  tes_conc_type = data.table(
-    nam = out_stats_lng(te_fin, tes_conc_type)$nam,
-    val = out_stats_lng(te_fin, tes_conc_type)$tes_conc_type,
-    n = out_stats_lng(te_fin, tes_conc_type)$N
-  ),
+  tes_effect = out_stats_lng(te_fin, tes_effect),
+  tes_endpoint = out_stats_lng(te_fin, tes_endpoint),
+  tes_conc_type = out_stats_lng(te_fin, tes_conc_type),
   ## wide variables ----
   continent = out_stats_wid(
     te_fin,
@@ -66,36 +56,47 @@ te_stats_l = list(
 )
 
 ## additions
-te_stats_l$tes_conc_type[ , nam_long := ifelse(val == 'A', 'Active Ingredient',
-                                               ifelse(val == 'F', 'Formulation',
-                                                      ifelse(val == 'T', 'Total (Metals and single elements)',
-                                                             ifelse(is.na(val), '',
-                                                                    ifelse(val == 'U', 'Unionized',
-                                                                           ifelse(val == 'L', 'Labile',
-                                                                                  ifelse(val == 'D', 'Dissolved', NA))))))) ]
+# Effect
+te_stats_l$tes_effect[ , variable2 := variable ]
 
-te_stats_l$continent[ , nam_long := ifelse(variable == 'reg_america_north', 'North America',
-                                           ifelse(variable == 'reg_america_south', 'South America',
-                                                  ifelse(variable == 'reg_europe', 'Europe',
-                                                         ifelse(variable == 'reg_asia', 'Asia',
-                                                                ifelse(variable == 'reg_africa', 'Africa',
-                                                                       ifelse(variable == 'reg_oceania', 'Oceania', NA)))))) ]
-te_stats_l$continent[ , nam_long_stat := paste0(nam_long, ' (', N, ')') ]
+# Endpoint
+te_stats_l$tes_endpoint[ , variable2 := variable ]
 
-te_stats_l$habitat[ , nam_long := ifelse(variable == 'hab_marin', 'marin',
-                                         ifelse(variable == 'hab_brack', 'brackish',
-                                                ifelse(variable == 'hab_fresh', 'freshwater',
-                                                       ifelse(variable == 'hab_terre', 'terrestrial', NA)))) ]
-te_stats_l$habitat[ , nam_long_stat := paste0(nam_long, ' (', N, ')') ]
+# Concentration type
+te_stats_l$tes_conc_type[ variable == 'A', variable2 := 'Active Ingredient' ]
+te_stats_l$tes_conc_type[ variable == 'F', variable2 := 'Formulation' ]
+te_stats_l$tes_conc_type[ variable == 'T', variable2 := 'Total (Metals and single elements)' ]
+te_stats_l$tes_conc_type[ is.na(variable), variable2 := 'Not assigned' ]
+te_stats_l$tes_conc_type[ variable == 'U', variable2 := 'Unionized' ]
+te_stats_l$tes_conc_type[ variable == 'L', variable2 := 'Labile' ]
+te_stats_l$tes_conc_type[ variable == 'D', variable2 := 'Dissolved' ]
 
-te_stats_l$chem_class[ , nam_long := ifelse(variable == 'cgr_fungicide', 'Fungicides',
-                                            ifelse(variable == 'cgr_herbicide', 'Herbicides',
-                                                   ifelse(variable == 'cgr_insecticide', 'Insecticides',
-                                                          ifelse(variable == 'cgr_molluscicide', 'Molluscicides',
-                                                                 ifelse(variable == 'cgr_repellent', 'Repellents',
-                                                                        ifelse(variable == 'cgr_rodenticide', 'Rodenticides',
-                                                                               ifelse(variable == 'cgr_metal', 'Metals', NA))))))) ]
-te_stats_l$chem_class[ , nam_long_stat := paste0(nam_long, ' (', N, ')') ]
+# Continent
+te_stats_l$continent[ variable == 'reg_america_north', variable2 := 'North America' ]
+te_stats_l$continent[ variable == 'reg_america_south', variable2 := 'South America' ]
+te_stats_l$continent[ variable == 'reg_asia', variable2 := 'Asia' ]
+te_stats_l$continent[ variable == 'reg_oceania', variable2 := 'Oceania' ]
+te_stats_l$continent[ variable == 'reg_europe', variable2 := 'Europe' ]
+te_stats_l$continent[ variable == 'reg_africa', variable2 := 'Africa' ]
+
+# Habitat
+te_stats_l$habitat[ variable == 'hab_marin', variable2 := 'marine' ]
+te_stats_l$habitat[ variable == 'hab_brack', variable2 := 'brackish' ]
+te_stats_l$habitat[ variable == 'hab_fresh', variable2 := 'freshwater' ]
+te_stats_l$habitat[ variable == 'hab_terre', variable2 := 'terrestrial' ]
+
+# Chemical class
+te_stats_l$chem_class[ variable == 'cgr_fungicide', variable2 := 'Fungicides' ]
+te_stats_l$chem_class[ variable == 'cgr_herbicide', variable2 := 'Herbicides' ]
+te_stats_l$chem_class[ variable == 'cgr_insecticide', variable2 := 'Insecticides' ]
+te_stats_l$chem_class[ variable == 'cgr_molluscicide', variable2 := 'Molluscicides' ]
+te_stats_l$chem_class[ variable == 'cgr_repellent', variable2 := 'Repellents' ]
+te_stats_l$chem_class[ variable == 'cgr_rodenticide', variable2 := 'Rodenticide' ]
+te_stats_l$chem_class[ variable == 'cgr_metal', variable2 := 'Metals' ]
+
+# name column -------------------------------------------------------------
+lapply(te_stats_l,
+       function(dt) dt[ , nam_fin := paste0(variable2, ' - ', perc, '%') ])
 
 # write -------------------------------------------------------------------
 # to shinydir
