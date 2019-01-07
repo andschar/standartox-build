@@ -9,11 +9,12 @@ source(file.path(src, 'da_epa_query.R'))
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
 
 # merge: addition
-source(file.path(src, 'da_epa_taxonomy.R'))
-source(file.path(src, 'da_epa_media.R'))
-source(file.path(src, 'da_epa_endpoints.R'))
 source(file.path(src, 'da_epa_doses.R'))
+source(file.path(src, 'da_epa_endpoints.R'))
+source(file.path(src, 'da_epa_exposure_type.R'))
+source(file.path(src, 'da_epa_media.R'))
 source(file.path(src, 'da_epa_statistics.R'))
+source(file.path(src, 'da_epa_taxonomy.R'))
 
 # query -------------------------------------------------------------------
 if (online_db) {
@@ -70,11 +71,9 @@ epa1[ , conc1_mean := as.numeric(conc1_mean) ]
 epa1[ , obs_duration_mean := as.numeric(obs_duration_mean) ]
 
 # merges: additional ------------------------------------------------------
-# merge taxonomy ----------------------------------------------------------
-epa1 = merge(epa1, tax, by = 'latin_name'); rm(tax)
 
-# merge media characteristics ---------------------------------------------
-epa1 = merge(epa1, med, by = 'result_id'); rm(med)
+# merge doses -------------------------------------------------------------
+epa1 = merge(epa1, dose_dc, by = 'test_id', all.x = TRUE); rm(dose_dc)
 
 # merge entpoints ---------------------------------------------------------
 epa1 = merge(epa1, epts, by = 'endpoint', all.x = TRUE); rm(epts)
@@ -83,11 +82,17 @@ cols_rm = c('endpoint', 'n')
 epa1[ , (cols_rm) := NULL ]; rm(cols_rm)
 setnames(epa1, 'endpoint_cl', 'endpoint')
 
-# merge doses -------------------------------------------------------------
-epa1 = merge(epa1, dose_dc, by = 'test_id', all.x = TRUE); rm(dose_dc)
+# exposure type -----------------------------------------------------------
+epa1 = merge(epa1, exp_typ, by = 'exposure_type'); rm(exp_typ)
+
+# merge media characteristics ---------------------------------------------
+epa1 = merge(epa1, med, by = 'result_id'); rm(med)
 
 # merge statistics --------------------------------------------------------
 epa1 = merge(epa1, sta, by = 'result_id', all.x = TRUE); rm(sta)
+
+# merge taxonomy ----------------------------------------------------------
+epa1 = merge(epa1, tax, by = 'latin_name'); rm(tax)
 
 # preparation -------------------------------------------------------------
 # CAS

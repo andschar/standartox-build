@@ -41,6 +41,8 @@ q = "
          tests.modified_date,
          tests.published_date,
          tests.exposure_type,
+         tests.exposure_duration_mean,
+         tests.exposure_duration_unit,
          tests.control_type,
          tests.test_radiolabel,
          tests.test_purity_min,
