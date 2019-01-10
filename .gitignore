@@ -41,6 +41,9 @@ article/*
 !article/article.tex
 !article/tikz/organigram.tex
 
+# lookup
+# lookup/*
+
 # share
 share/*
 

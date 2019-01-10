@@ -66,10 +66,9 @@ tax[ tax_phylum == 'Dinoflagellata', tax_convgroup := 'Algae' ] # however they a
 rm(algae)
 
 # troph_lvl ---------------------------------------------------------------
-tax[ , tax_troph_lvl := 'heterotroph' ]
-tax[ tax_convgroup %in% c('Algae', 'Plants'), tax_troph_lvl := 'autotroph' ]
-tax[ tax_phylum == 'Dinoflagellata', tax_troph_lvl := 'mixotroph' ]
-
+tax[ tax_convgroup %in% c('Algae', 'Plants'), tax_autotroph := 1 ]
+tax[ tax_phylum == 'Dinoflagellata', tax_mixotroph := 1 ]
+tax[ is.na(tax_autotroph) & is.na(tax_mixotroph), tax_heterotroph := 1 ]
 
 # Makro and Mikro Invertebrates -------------------------------------------
 cols = grep('tax_', names(tax), ignore.case = TRUE, value = TRUE)
@@ -89,11 +88,11 @@ invertebrates_mikro = inv_mikro_phylum
 ## Makro Invertebrates
 tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
                               paste0('(?i)', invertebrates_makro, collapse = '|'))),
-         .SDcols = cols ], tax_invertebrate := 'Makro Invertebrates' ]
+         .SDcols = cols ], tax_invertebrate_makro := 1 ]
 ## Mikro Invertebrates
 tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
                               paste0('(?i)', invertebrates_mikro, collapse = '|'))),
-         .SDcols = cols ], tax_invertebrate := 'Mikro Invertebrates' ]
+         .SDcols = cols ], tax_invertebrate_mikro := 1 ]
 
 # Ecotox group ------------------------------------------------------------
 # column for convenient ecotox grouping

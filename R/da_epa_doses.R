@@ -13,16 +13,26 @@ if (online_db) {
   
   dose = dbGetQuery(con, "SELECT *
                           FROM ecotox.doses")
+  dose_responses = dbGetQuery(con, "SELECT *
+                                    FROM ecotox.dose_responses")
+  dose_response_details = dbGetQuery(con, "SELECT *
+                                           FROM ecotox.dose_response_details")
   setDT(dose)
+  setDT(dose_responses)
+  setDT(dose_response_details)
   
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
   saveRDS(dose, file.path(cachedir, 'dose.rds'))
+  saveRDS(dose_responses, file.path(cachedir, 'dose_responses.rds'))
+  saveRDS(dose_response_details, file.path(cachedir, 'dose_response_details.rds'))
   
 } else {
   
   dose = readRDS(file.path(cachedir, 'dose.rds'))
+  dose_responses = readRDS(file.path(cachedir, 'dose_responses.rds'))
+  dose_response_details = readRDS(file.path(cachedir, 'dose_response_details.rds'))
 }
 
 # preparation -------------------------------------------------------------
@@ -34,8 +44,68 @@ dose_dc = dcast(dose, test_id ~ dose_number,
 setnames(dose_dc, paste0('dose', names(dose_dc)))
 setnames(dose_dc, 'dosetest_id', 'test_id')
 
+# calculation -------------------------------------------------------------
+
+## Vehicle control (yes/no)
+# CONTINUE HERE!!!
+# WTF is going on here????
+# Why the hell is the filter not wirking?
+vc = unique(dose[ control_type %in% c('V', '', 'NR') ]$test_id)
+dose[test_id %in% vc, .N, control_type]
+vc = unique(dose[ grep('(?i)V', control_type) ]$test_id)
+dose_dc[ test_id %in% vc, control_vc := 'yes' ]
+### END WTF
+
+
+# control mortality -------------------------------------------------------
+# control types:
+# C - Concurrent control - controls are run simultaneously with the exposure
+# V - Carrier or solvent - Organisms are exposed to carrier or solvent as the only control
+# P - Positive controls - an exposure that causes a desired effect in the experiment, and document that the test and equipment are working, were used
+# p. 34 codeappendix
+
+dose2 = merge(dose, dose_response_details, by = 'dose_id', all.x = TRUE)
+dose2 = merge(dose2, dose_responses[ , .SD, .SDcols =! 'test_id' ],
+              by = 'dose_resp_id', all.x = TRUE)
+ctrl_mort_cols = c('test_id', 'dose_id', 'dose_resp_id', 'control_type', 'effect_code', 'response_mean', 'response_unit')
+
+## Control Mortality
+dose2 = dose2[ , .SD, .SDcols = ctrl_mort_cols ]
+
+cm =
+  dose2[ control_type == 'C' &
+           effect_code == 'MOR' &
+           response_unit == '%',
+         .(control_neg_mortality = paste(effect_code,
+                                         max(gsub('\\+', '', response_mean)),
+                                         response_unit,
+                                         sep = ' ')),
+         .(test_id, response_unit, effect_code) ]
+
+## Positive control mortality
+pm = 
+  dose2[ control_type == 'P' &
+           effect_code == 'MOR' &
+           response_unit == '%',
+         .(control_pos_mortality = paste(effect_code,
+                                         max(gsub('\\+', '', response_mean)),
+                                         response_unit,
+                                         sep = ' ')),
+         .(test_id, response_unit, effect_code) ]
+
+## Vehicle mortality
+vm = 
+  dose2[ control_type == 'V' &
+           effect_code == 'MOR' &
+           response_unit == '%',
+         .(control_vhc_mortality = paste(effect_code,
+                                         max(gsub('\\+', '', response_mean)),
+                                         response_unit,
+                                         sep = ' ')),
+         .(test_id, response_unit, effect_code) ]
+
 # cleaning ----------------------------------------------------------------
-rm(dose)
+rm(dose, dose_cm)
 
 
 

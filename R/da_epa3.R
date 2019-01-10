@@ -33,7 +33,18 @@ epa3 = epa3[ !is.na(obs_duration_mean_conv) &
                !is.na(effect) &
                !is.na(endpoint) ]
 
+
 # final columns -----------------------------------------------------------
+# TODO read final columns from lookup file
+
+look_var = fread(file.path(lookupdir, 'lookup_variables.csv'))
+
+cols_fin[ ! cols_fin %in% look_var$app_variable ]
+
+epa1[ , .N, exposure_type]
+
+# final columns -----------------------------------------------------------
+# TODO DEPRECATE THIS
 cols_fin = c('test_id', 'result_id', 'casnr', 'cas', 'chemical_name', 'ecotox_group',
              'conc1_mean', 'conc1_unit', 'conc1_mean_conv', 'conc1_unit_conv', 'qualifier', 'unit_conv',
              'obs_duration_mean', 'obs_duration_unit', 'obs_duration_mean_conv', 'obs_duration_unit_conv',
