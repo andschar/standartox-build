@@ -18,7 +18,7 @@ if (!require('pacman')) install.packages('pacman')
 
 pkg_cran = c('data.table',
              'feather',
-             'shiny', 'shinyjs', 'shinydashboard',
+             'shiny', 'shinyjs', 'shinyWidgets', 'shinydashboard',
              'knitr', 'DT',
              'ggplot2', 'cowplot',
              'ssdtools')
