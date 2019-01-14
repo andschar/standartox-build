@@ -20,7 +20,8 @@ pkg_cran = c('data.table',
              'feather',
              'shiny', 'shinyjs', 'shinyWidgets', 'shinydashboard',
              'knitr', 'DT',
-             'ggplot2', 'cowplot')
+             'ggplot2', 'cowplot',
+             'ssdtools')
 
 pacman::p_load(char = pkg_cran)
 
