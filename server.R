@@ -45,13 +45,22 @@ server = function(input, output) {
   })
   
   data_agg = reactive({
-    fun_aggregate(dt = data_fil,
+    fun_aggregate(dt = fun_filter(dt = dat,
+                                  tax = input$tax,
+                                  habitat = input$habitat,
+                                  continent = input$continent,
+                                  conc_type = input$conc_type,
+                                  effect = input$effect,
+                                  endpoint = input$endpoint,
+                                  chem_class = input$chem_class,
+                                  duration = c(input$dur1, input$dur2),
+                                  chck_solub = input$chck_solub,
+                                  cas = rv$data),
                   agg = input$agg,
                   info = input$infocols,
                   comp = input$comp,
                   chck_outlier = input$chck_outlier)
   })
-
 
   # plots -------------------------------------------------------------------
   plot_sensitivity = reactive({
@@ -76,33 +85,43 @@ server = function(input, output) {
 
   # plots ----
   output$plot_sensitivity = renderPlot({ plot_sensitivity() })
-  output$plot_meta = renderPlot({ gg_counter })
+  #! OUT-COMMENTED - NOT FINISHED
+  # output$plot_meta = renderPlot({ gg_counter })
   
   # download ----
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
+  output$download_fil = downloadHandler(
+    filename = function() { 
+      paste(input$tax, #input$habitat, input$continent,
+            paste0(input$dur1, input$dur2), 'data_fil.csv', sep = '_')
+    },
+    content = function(fname) {
+      write.csv(data_fil(), fname, row.names = FALSE)
+    }
+  )
+  
   output$download_agg = downloadHandler(
     filename = function() { 
       paste(input$tax, #input$habitat, input$continent,
-            paste0(input$dur1, input$dur2), 'data.csv', sep = '_')
+            paste0(input$dur1, input$dur2), 'data_agg.csv', sep = '_')
     },
     content = function(fname) {
       write.csv(data_agg(), fname, row.names = FALSE)
     }
   )
   
-  output$download_fil = downloadHandler(
-    filename = 'test_filter.csv',
-    content = function(fname) {
-      write.csv(data_fil(), fname, row.names = FALSE)
-    }
-  )
-  
-  # missing ----
-  # TODO maybe include with meta data on variables
-  output$missing = DT::renderDataTable(var_missing)
+  # plot ssd ----
+  #! REMOVED, TAKES TOO MUCH TIME!
+  # plot_ssd = reactive({
+  #   fun_ssd(data_fil)
+  # })
+  # output$plot_ssd = renderPlot({ plot_ssd() })
   
   # EPA ECOTOX version ----
   output$version = renderText(version_string)
+  
+  # debuging ----
+  #fwrite(data_agg, '/tmp/data_agg.csv')
   
 }
 

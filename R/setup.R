@@ -18,7 +18,7 @@ if (!require('pacman')) install.packages('pacman')
 
 pkg_cran = c('data.table',
              'feather',
-             'shiny', 'shinyjs', 'shinyWidgets', 'shinydashboard',
+             'shiny', 'shinyjs', 'shinyWidgets', 'shinydashboard', 'shinydashboardPlus',
              'knitr', 'DT',
              'ggplot2', 'cowplot',
              'ssdtools')
@@ -46,7 +46,10 @@ cache = file.path(prj, 'cache')
 
 # source ------------------------------------------------------------------
 # functions
-source(file.path(fundir, 'fun_ec50filter_aggregation.R'))
+source(file.path(fundir, 'fun_filter.R'))
+source(file.path(fundir, 'fun_aggregation.R'))
+source(file.path(fundir, 'fun_ssd.R'))
+
 source(file.path(fundir, 'fun_ec50filter_aggregation_plots.R'))
 source(file.path(fundir, 'fun_ec50filter_meta_plots.R'))
 source(file.path(fundir, 'fun_output_stats.R'))

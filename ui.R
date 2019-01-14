@@ -15,24 +15,11 @@ header = dashboardHeaderPlus(
   left_menu = tagList(
     dropdownBlock(
       id = 'download_agg',
-      title = 'Download aggregated data',
-      #icon = icon('download'),
-      # downloadButton(outputId = 'download_fil', 'Download the data'), # doesn't work!! -- Pull request??
-      downloadButton(outputId = 'download_agg', 'Download the data')
-    ),
-    dropdownBlock(
-      id = 'download_fil',
-      title = 'Download filtered data',
-      downloadButton(outputId = 'download_fil', 'Download the data')
+      title = 'Download data',
+      icon = icon('download'),
+      downloadButton(outputId = 'download_agg', 'Aggregated data'),
+      downloadButton(outputId = 'download_fil', 'Filtered data')
     )
-  ),
-  dropdownMenu(
-    type = "tasks",
-    badgeStatus = "danger",
-    taskItem(value = 20, color = "aqua", "Refactor code"),
-    taskItem(value = 40, color = "green", "Design new layout"),
-    taskItem(value = 60, color = "yellow", "Another task"),
-    taskItem(value = 80, color = "red", "Write documentation")
   )
 )
 
@@ -146,13 +133,18 @@ body = dashboardBody(
                      choiceValues = c('limout', 'log10'),
                      choiceNames = c('Limit to range', 'Log10 x-axis'),
                      selected = 'limout', inline = FALSE))
-  ),
-  fluidRow(
-    box(title = 'SSD',
-        status = 'primary',
-        width = 9,
-        textOutput('Include SSD plots'))
   )
+  #! REMOVED, TAKES TOO MUCH TIME
+  #,
+  # fluidRow(
+  #   box(title = 'SSD',
+  #       status = 'primary',
+  #       width = 9,
+  #       plotOutput(outputId = 'plot_ssd')),
+  #   box(title = 'Input',
+  #       status = 'primary',
+  #       width = 3)
+  # )
 )
   
 
