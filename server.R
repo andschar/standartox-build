@@ -76,11 +76,20 @@ server = function(input, output) {
   
   # download ----
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
-  output$download = downloadHandler(
-    filename = function() { paste(input$tax, #input$habitat, input$continent,
-                                  paste0(input$dur1, input$dur2), 'data.csv', sep = '_') }, 
-    content = function(fname){
+  output$download_agg = downloadHandler(
+    filename = function() { 
+      paste(input$tax, #input$habitat, input$continent,
+            paste0(input$dur1, input$dur2), 'data.csv', sep = '_')
+    },
+    content = function(fname) {
       write.csv(thedata(), fname, row.names = FALSE)
+    }
+  )
+  
+  output$download_fil = downloadHandler(
+    filename = 'test_filter.csv',
+    content = function(fname) {
+      write.csv(head(iris), fname, row.names = FALSE)
     }
   )
   

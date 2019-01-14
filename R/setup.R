@@ -18,7 +18,7 @@ if (!require('pacman')) install.packages('pacman')
 
 pacman::p_load(data.table,
                feather,
-               shiny, shinyjs, shinydashboard,
+               shiny, shinyjs, shinyWidgets, shinydashboard, shinydashboardPlus,
                knitr, DT,
                ggplot2, cowplot)
 
