@@ -16,13 +16,22 @@ rm(nodename)
 # packages ----------------------------------------------------------------
 if (!require('pacman')) install.packages('pacman')
 
-pacman::p_load(data.table,
-               feather,
-               shiny, shinyjs, shinyWidgets, shinydashboard, shinydashboardPlus,
-               knitr, DT,
-               ggplot2, cowplot)
+pkg_cran = c('data.table',
+             'feather',
+             'shiny', 'shinyjs', 'shinyWidgets', 'shinydashboard',
+             'knitr', 'DT',
+             'ggplot2', 'cowplot')
+
+pacman::p_load(char = pkg_cran)
 
 # p_update() #! do this manually, as unexpected consequences might occur
+
+## cite packages
+for (i in pkg_cran) {
+  capture.output(utils:::print.bibentry(citation(i), style = "Bibtex"),
+                 file = file.path(tempdir(), 'bibliography_etox_base_shiny.bib'),
+                 append = TRUE)
+}
 
 # options -----------------------------------------------------------------
 options(stringsAsFactors = FALSE)
