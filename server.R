@@ -5,9 +5,8 @@ src = file.path(getwd(), 'R')
 source(file.path(src, 'setup.R'))
 
 server = function(input, output) {
-
-  # (1) preparation ---------------------------------------------------------
   
+  # (1) preparation ---------------------------------------------------------
   # read csv + action button ------------------------------------------------
   # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
   rv = reactiveValues(
@@ -61,14 +60,8 @@ server = function(input, output) {
                   comp = input$comp,
                   chck_outlier = input$chck_outlier)
   })
-
-  # plots -------------------------------------------------------------------
-  plot_sensitivity = reactive({
-    ec50_filagg_plot(data_agg(), input$yaxis, input$xaxis, input$cutoff)
-  })
   
-  # (2) output ----
-  # data ----
+  # (2) output --------------------------------------------------------------
   output$dat = DT::renderDataTable({data_agg()},
                                    options = list(
                                      columnDefs = list(list(
@@ -82,13 +75,20 @@ server = function(input, output) {
                                    #dom = 't',
                                    rownames = FALSE,
                                    callback = JS('table.page(3).draw(false);'))
-
-  # plots ----
-  output$plot_sensitivity = renderPlot({ plot_sensitivity() })
-  #! OUT-COMMENTED - NOT FINISHED
-  # output$plot_meta = renderPlot({ gg_counter })
   
-  # download ----
+  
+  # plot --------------------------------------------------------------------
+  #pl = 
+  # n_pl = length(pl$x$data)
+  # write_feather(n_pl, file.path(cachedir, 'n_pl'))
+  
+  output$plotly_sensitivity = renderPlotly({ filagg_pl(data_agg(),
+                                                       plot_type = 'dynamic',
+                                                       xaxis = input$xaxis,
+                                                       yaxis = input$yaxis,
+                                                       cutoff = input$cutoff) })
+  output$npl = renderText('3')
+  # download ----------------------------------------------------------------
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
   output$download_fil = downloadHandler(
     filename = function() { 
@@ -110,18 +110,7 @@ server = function(input, output) {
     }
   )
   
-  # plot ssd ----
-  #! REMOVED, TAKES TOO MUCH TIME!
-  # plot_ssd = reactive({
-  #   fun_ssd(data_fil)
-  # })
-  # output$plot_ssd = renderPlot({ plot_ssd() })
-  
-  # EPA ECOTOX version ----
+  # version -----------------------------------------------------------------
   output$version = renderText(version_string)
   
-  # debuging ----
-  #fwrite(data_agg, '/tmp/data_agg.csv')
-  
 }
-

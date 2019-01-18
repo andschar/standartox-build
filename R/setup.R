@@ -20,7 +20,7 @@ pkg_cran = c('data.table',
              'feather',
              'shiny', 'shinyjs', 'shinyWidgets', 'shinydashboard', 'shinydashboardPlus',
              'knitr', 'DT',
-             'ggplot2', 'cowplot',
+             'ggplot2', 'cowplot', 'plotly',
              'ssdtools')
 
 pacman::p_load(char = pkg_cran)
@@ -49,10 +49,11 @@ cache = file.path(prj, 'cache')
 source(file.path(fundir, 'fun_filter.R'))
 source(file.path(fundir, 'fun_aggregation.R'))
 source(file.path(fundir, 'fun_ssd.R'))
+source(file.path(fundir, 'fun_filagg_plot_ly.R'))
 
-source(file.path(fundir, 'fun_ec50filter_aggregation_plots.R'))
-source(file.path(fundir, 'fun_ec50filter_meta_plots.R'))
-source(file.path(fundir, 'fun_output_stats.R'))
+# source(file.path(fundir, 'fun_ec50filter_aggregation_plots.R'))
+# source(file.path(fundir, 'fun_ec50filter_meta_plots.R'))
+# source(file.path(fundir, 'fun_output_stats.R'))
 source(file.path(fundir, 'fun_casconv.R'))
 # plot themes
 source(file.path(src, 'gg_theme.R'))
