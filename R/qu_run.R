@@ -1,7 +1,7 @@
 # script runs queries against 3rd party data bases
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'setup.R')) #!redundant
 
 # chemical data -----------------------------------------------------------
 source(file.path(src, 'qu_pc.R'), max.deparse.length = mdl)

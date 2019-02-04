@@ -1,7 +1,7 @@
 # script to write final table
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'setup.R')) #! redundant
 
 # scripts -----------------------------------------------------------------
 # write to database

@@ -1,7 +1,7 @@
 # script runs result scripts to compile final table
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'setup.R')) #!redundant
 
 # scripts -----------------------------------------------------------------
 source(file.path(src, 're_merge.R'), max.deparse.length = mdl)

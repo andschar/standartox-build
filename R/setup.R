@@ -7,6 +7,7 @@ pkg_cran = c('base', # only for citation
              'RCurl', 'stringr', 'R.utils',
              'rvest', 'httr', 'jsonlite',
              'readxl', 'openxlsx',
+             'purrr',
              'data.table', 'RPostgreSQL', 'vegan', 'plyr', 'outliers',
              'feather',
              'ggplot2', 'ggrepel', 'cowplot',

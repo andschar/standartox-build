@@ -7,7 +7,7 @@ source(file.path(src, 'setup.R'))
 taxa = readRDS(file.path(cachedir, 'epa2_taxa.rds'))
 # debuging
 if (debug_mode) {
-  taxa = taxa[1:10]  
+  taxa = taxa[1:10]
 }
 
 # query -------------------------------------------------------------------
@@ -38,87 +38,42 @@ if (online) {
   Sys.time() - time
   
   saveRDS(gbif_l, file.path(cachedir, 'gbif_l.rds'))
+
+  # retrieve data
+  gbif_data_l = purrr::map(gbif_l, 'data')
+  # bind to data.table
+  gbif_data = rbindlist(gbif_data_l, fill = TRUE, idcol = 'taxon')
   
-  # some preparation steps are done here and saved locally due to the size of gbif_l
-  oldw = getOption("warn")
-  options(warn = -1) # shuts off warnings
-  # lapply( sapply(gbif_l, '[', 'data'), '[', 'habitat') 
-  #! you can't simply do that, 'cause there might be taxa without a habitat column!
-  gbif_ccode_l = lapply(gbif_l,
-                        function(x) if (length(x) == 1 & is.na(x)) data.table(NA)
-                                    else data.table(unique(x$data$countryCode)))
-  
-  gbif_continent_l = lapply(gbif_l,
-                            function(x) if (length(x) == 1 & is.na(x)) data.table(NA)
-                            else data.table(unique(x$data$continent)))
-  
-  gbif_habitat_l = lapply(gbif_l,
-                          function(x) if (length(x) == 1 & is.na(x)) data.table(NA)
-                                      else data.table(unique(x$data$habitat)))
-  
-  gbif_waterBody_l = lapply(gbif_l,
-                            function(x) if (length(x) == 1 & is.na(x)) data.table(NA)
-                            else data.table(unique(x$data$waterBody)))
-  
-  options(warn = oldw); rm(oldw)
-  
-  saveRDS(gbif_ccode_l, file.path(cachedir, 'gbif_ccode_l.rds'))
-  saveRDS(gbif_continent_l, file.path(cachedir, 'gbif_continent_l.rds'))
-  saveRDS(gbif_habitat_l, file.path(cachedir, 'gbif_habitat_l.rds'))
-  saveRDS(gbif_waterBody_l, file.path(cachedir, 'gbif_waterBody_l.rds'))
+  saveRDS(gbif_data, file.path(cachedir, 'gbif_data.rds'))
   
 } else {
   
   if (full_gbif_l) {
     gbif_l = readRDS(file.path(cachedir, 'gbif_l.rds')) # takes time!  
   }
-  gbif_ccode_l = readRDS(file.path(cachedir, 'gbif_ccode_l.rds'))
-  gbif_continent_l = readRDS(file.path(cachedir, 'gbif_continent_l.rds'))
-  gbif_habitat_l = readRDS(file.path(cachedir, 'gbif_habitat_l.rds'))
-  gbif_waterBody_l = readRDS(file.path(cachedir, 'gbif_waterBody_l.rds'))
+  gbif_data = readRDS(file.path(cachedir, 'gbif_data.rds'))
 }
-
-
-# other variables that could possibly be usefull
-# # 1 elevation
-# head(gbif_l[[1]]$data$elevation)
-# head(gbif_l[[1]]$data$elevationAccuracy)
-# # 2 Lat Long - maybe intersection with oceanic layer? huge computational effort
-# head(gbif_l[[1]]$data$decimalLatitude)
-# head(gbif_l[[1]]$data$decimalLongitude)
-# head(gbif_l[[1]]$data$coordinateUncertaintyInMeters)
-# # 3 ID
-# head(gbif_l[[1]]$data$gbifID)
-# # 4 life stage (maybe for other projects)
-# head(gbif_l[[1]]$data$lifeStage)
-# # others
-# head(gbif_l[[1]]$datadepth)
-# head(gbif_l[[1]]$datadepthAccuracy)
-# head(gbif_l[[1]]$dataorganismQuantity)
-# head(gbif_l[[1]]$datalocationID)
-# head(gbif_l[[1]]$dataisland)
 
 # preparation -------------------------------------------------------------
 
 # country code ------------------------------------------------------------ 
-gbif_ccode = rbindlist(gbif_ccode_l, idcol = 'taxon')
-setnames(gbif_ccode, old = 'V1', new = 'ccode')
-gbif_ccode = gbif_ccode[ ccode != 'none' ] # delete 'none' entries
+gbif_ccode = gbif_data[ !is.na(countryCode) & countryCode != 'none',
+                       .(ccode = unique(countryCode)),
+                       taxon]
 gbif_ccode_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode',
                       fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
 
 # continent ---------------------------------------------------------------
-gbif_continent = rbindlist(gbif_continent_l, idcol = 'taxon')
-setnames(gbif_continent, old = 'V1', new = 'continent')
-gbif_continent[ , continent := tolower(continent) ]
+gbif_continent = gbif_data[ !is.na(continent) & continent != 'none',
+                           .(continent = unique(continent)),
+                           taxon]
 gbif_conti_dc = dcast(gbif_continent, taxon ~ continent, value.var = 'continent',
                       fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
-gbif_conti_dc[ , 'NA' := NULL]
 
 # habitat -----------------------------------------------------------------
-gbif_habitat = rbindlist(gbif_habitat_l, idcol = 'taxon')
-setnames(gbif_habitat, 'V1', 'habitat')
-gbif_habitat[ , habitat := tolower(habitat) ]
+gbif_habitat = gbif_data[ !is.na(habitat) & habitat != 'none',
+                         .(habitat = unique(habitat)),
+                         taxon]
 gbif_habitat_dc = dcast(gbif_habitat, taxon ~ ., value.var = 'habitat',
                         fun.aggregate = function(x) paste0(x, collapse=' '), fill = NA)
 setnames(gbif_habitat_dc, '.', 'habitat')
@@ -130,11 +85,24 @@ marin = c('sandstrand', 'sea', 'ocean', 'marin', 'litoral', 'littoral', 'pelági
 terre = c('terre', 'bush', 'wood', 'palma', 'spruce', 'birch', 'forest', 'foret', 'skog', 'barrskog', 'lövskog', 'hagmark', 'skogsmark', 'skräpmark', 'pasture', 'mud', 'jordhög', 'grassland', 'ruderat', 'ruderatmark', 'trädgård', 'marsh', 'vägkant', 'garden', 'kompost', 'bosque', 'åkerkant', 'roadside', 'meadow', 'culture', 'soil', 'urban', 'dunes', 'epifiton', 'soptipp', 'inomhus', 'åker', 'park', 'jordtipp', 'vägren', 'grustag', 'rock', 'industriavfall', 'tipp', 'farm', 'arboretum', 'greenhouse', 'savan', 'sabana', 'filed', 'grass', 'indoors')
 
 # waterBody ---------------------------------------------------------------
-gbif_waterbody = rbindlist(gbif_waterBody_l, idcol = 'taxon')
-setnames(gbif_waterbody, 'V1', 'waterbody')
-gbif_waterbody_dc = dcast(gbif_waterbody, taxon ~ ., value.var = 'waterbody',
-                    fun.aggregate = function(x) paste0(x, collpase = ' '), fill = NA)
+gbif_waterbody = gbif_data[ !is.na(waterBody) & waterBody != 'none',
+                            .(waterBody = unique(waterBody)),
+                            taxon]
+gbif_waterbody_dc = dcast(gbif_waterbody, taxon ~ ., value.var = 'waterBody',
+                          fun.aggregate = function(x) paste0(x, collpase = ' '), fill = NA)
 setnames(gbif_waterbody_dc, '.', 'waterbody')
+
+# elevation ---------------------------------------------------------------
+gbif_elevation = unique(gbif_data[ !is.na(elevation), 
+                                   elevation,
+                                   by = taxon])
+
+# geo data ----------------------------------------------------------------
+gbif_geo = unique(gbif_data[ , .SD, 
+                              .SDcols = c('decimalLatitude',
+                                          'decimalLongitude',
+                                          'geodeticDatum'),
+                              by = taxon])
 
 # merge + classify --------------------------------------------------------
 gbif_hab_wat_dc = merge(gbif_habitat_dc, gbif_waterbody_dc, by = 'taxon', all = TRUE)
