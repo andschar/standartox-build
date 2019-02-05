@@ -30,7 +30,16 @@
 \pgfplotstabletypeset[
     col sep=comma,
     string type,
-    columns={script,[index]2},
+    columns={Script,Description},
+    columns/Description/.style={column type={|l}},
+    columns/Script/.style={column type={|l}, % needed for replacing underscore
+                           postproc cell content/.code={%
+                                \pgfplotsutilstrreplace{_}{\_}{##1}%
+                                \pgfkeyslet{/pgfplots/table/@cell content}\pgfplotsretval
+                                },
+                            },
+    every head row/.style={before row=\hline,after row=\hline},
+	every last row/.style={after row=\hline},
     ]{data/scripts.csv}
 
 \end{document}
