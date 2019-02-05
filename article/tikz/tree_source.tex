@@ -1,0 +1,78 @@
+% TikZ to create script tree
+% taken from: https://tex.stackexchange.com/questions/328886/making-a-directory-tree-of-folders-and-files
+\documentclass[border=5pt]{standalone}
+\usepackage{forest}
+
+\definecolor{folderbg}{RGB}{124,166,198}
+\definecolor{folderborder}{RGB}{110,144,169}
+
+\def\Size{4pt}
+\tikzset{
+        folder/.pic={
+            \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+              (-1.05*\Size,0.2\Size+5pt) rectangle ++(.75*\Size,-0.2\Size-5pt);  
+            \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+              (-1.15*\Size,-\Size) rectangle (1.15*\Size,\Size);
+        r/.pic = {
+            %\node (rpic)
+            %\includestandalone{tikz/rlogo};
+            % TODO put R Logo here
+            %\node[inner sep=0pt] (russell) 
+            %{\includegraphics[width=.25\textwidth]{https://en.wikipedia.org/wiki/R_(programming_language)}};
+        }
+      }
+    }
+
+
+\begin{document}
+
+\begin{forest}
+  for tree={font=\ttfamily, grow'=0, child anchor=west, parent anchor=south, anchor=west, calign=first,
+    inner xsep=7pt,
+    edge path={
+      \noexpand\path [draw, \forestoption{edge}]
+      (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
+    },
+    % style for your file node 
+    file/.style={edge path={\noexpand\path [draw, \forestoption{edge}]
+      (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};},
+      inner xsep=2pt,font=\small\ttfamily
+                 },
+    before typesetting nodes={
+      if n=1
+        {insert before={[,phantom]}}
+        {}
+    },
+    fit=band,
+    before computing xy={l=15pt},
+  }  
+[run\_build.R
+    [setup.R]
+    [bd\_epa\_download.R]
+    [bd\_epa\_postgres.R]
+    [da\_epa\_run.R
+        [da\_epa1.R]
+        [da\_epa2.R]
+        [da\_epa3.R]]
+    [qu\_run.R
+        [qu\_pc.R]
+        [qu\_aw.R]
+        [qu\_pp.R]
+        [qu\_eurostat\_chem\_class.R]
+        [qu\_chemspider\_scrape.R]
+        [qu\_worms2.R]
+        [qu\_gbif.R]]
+    [re\_run.R
+        [re\_merge.R]
+        [re\_combine.R]
+        [re\_analyses.R]
+        [re\_checks\_internal.R]
+        [re\_final.R]]
+    [wr\_run.R
+        [wr\_dbase.R]
+        [wr\_shiny.R]]
+ ] 
+\end{forest}
+
+\end{document}
+
