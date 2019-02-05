@@ -1,8 +1,8 @@
-category,Script_0,script_1,script,description,issues,input,output,requirements,url
+Category,Script_0,Script_1,Script,Description,Issues,Input,Output,Requirements,Url
 build,run_build.R,,bd_epa_download.R,checks for newly published versions of the EPA Ecotox data base and downloads it ,,,ecotox_ascii_09_13_2018.exe,,
 build,run_build.R,,bd_epa_postgres.R,unpacks the downloaded version of the EPA Ecotox data base and builds it into a PostgreSQL data base,,ecotox_ascii_09_13_2018.exe,(data base),PostgreSQL needs to be installed,
 data,run_build.R,da_epa_run.R,da_epa1.R,prepares the data,,(data base),epa1.rds,,
-data,run_build.R,da_epa_run.R,da_epa2.R,harmonizes the data,,epa1.rds,epa2.rds; epa2_chem.rds,,
+data,run_build.R,da_epa_run.R,da_epa2.R,harmonizes the data,,epa1.rds,epa2.rds, epa2_chem.rds,
 data,run_build.R,da_epa_run.R,da_epa3.R,reduces the data,,epa2.rds,epa3.rds,,
 query,run_build.R,qu_run.R,qu_pc.R,takes CAS from the EPA Ecotox data and queries the Pubchem data base,,epa2_chem.rds,,,pubchem.ncbi.nlm.nih.gov/
 query,run_build.R,qu_run.R,qu_aw.R,takes CAS from the EPA Ecotox data base and queries the Compendium of Pesticide Common Names,,epa2_chem.rds,,,www.alanwood.net/pesticides/
