@@ -1,0 +1,35 @@
+\documentclass[tikz]{standalone}
+\definecolor{grayR}{HTML}{8A8990}
+\definecolor{grayL}{HTML}{C4C7C9}
+\definecolor{blueM}{HTML}{1F63B5}
+
+\begin{document}  
+\begin{tikzpicture}
+
+\shade [right color=grayR,left color=grayL,shading angle=60] 
+(-3.55,0.3) .. controls (-3.55,1.75) 
+and (-1.9,2.7) .. (0,2.7) .. controls (2.05,2.7)  
+and (3.5,1.6) .. (3.5,0.3) .. controls (3.5,-1.2) 
+and (1.55,-2) .. (0,-2) .. controls (-2.3,-2) 
+and (-3.55,-0.75) .. cycle;
+
+\fill[white] 
+(-2.15,0.2) .. controls (-2.15,1.2) 
+and (-0.7,1.8) .. (0.5,1.8) .. controls (2.2,1.8) 
+and (3.1,1.2) .. (3.1,0.2) .. controls (3.1,-0.75) 
+and (2.4,-1.45) .. (0.5,-1.45) .. controls (-1.1,-1.45) 
+and (-2.15,-0.7) .. cycle;
+
+\fill[blueM] 
+(1.75,1.25) -- (-0.65,1.25) -- (-0.65,-2.75) -- (0.55,-2.75) -- (0.55,-1.15) -- 
+(0.95,-1.15)  .. controls (1.15,-1.15) 
+and (1.5,-1.9) .. (1.9,-2.75) -- (3.25,-2.75)  .. controls (2.2,-1) 
+and (2.5,-1.2) .. (1.8,-0.95) .. controls (2.6,-0.9) 
+and (2.85,-0.35) .. (2.85,0.2) .. controls (2.85,0.7) 
+and (2.5,1.2) .. cycle;
+
+\fill[white]  (1.4,0.4) -- (0.55,0.4) -- (0.55,-0.3) -- (1.4,-0.3).. controls (1.75,-0.3) 
+and (1.75,0.4) .. cycle;
+
+\end{tikzpicture}
+\end{document}
