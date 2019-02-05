@@ -2,6 +2,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{natbib} % citations
 \usepackage{csvsimple}
+\usepackage{pgfplotstable}
 \usepackage{rotating} % to rotate tables
 %% tikz packages
 \usepackage{tikz}
@@ -227,19 +228,26 @@ other approaches: https://envirotoxdatabase.org/ - performs no aggregation, not 
 %%page will be included in the PDF version of the article (up to a maximum
 %%of three). 
 
-\begin{table}
-%\begin{sidewaystable}
-    \csvautotabular[respect underscore=true]{data/scripts.csv}
+%\begin{table}
+\begin{sidewaystable}
+    \pgfplotstabletypeset[
+    col sep=comma,
+    string type,
+    columns={Script,Description},
+    columns/Description/.style={column type={|l}},
+    columns/Script/.style={column type={|l}, % needed for replacing underscore
+                           postproc cell content/.code={%
+                                \pgfplotsutilstrreplace{_}{\_}{##1}%
+                                \pgfkeyslet{/pgfplots/table/@cell content}\pgfplotsretval
+                                },
+                            },
+    every head row/.style={before row=\hline,after row=\hline},
+	every last row/.style={after row=\hline},
+    ]{data/scripts.csv}
     \caption{R Scripts to query and process data obtained from various resources. The script tree, i.e. the order which script is processed can be found in}
     \label{table:processing-scripts};
-%\end{sidewaystable}
-\end{table}
-
-\csvreader[tabular=|l|l|,
-    table head=\hline & category & description\\\hline,
-    late after line=\\\hline]
-{data/scripts.csv}{name=\category,surname=\description}
-%{\thecsvrow & \surname~\name & \age}
+\end{sidewaystable}
+%\end{table}
 
 
 
