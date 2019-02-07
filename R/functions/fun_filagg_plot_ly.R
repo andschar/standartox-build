@@ -28,7 +28,8 @@ filagg_prep = function(dt_pl,
   
   # whole data --------------------------------------------------------------
   # read whole data set
-  dt_all_pl = read_feather(file.path(cache, 'dt.feather'))
+  #dt_all_pl = read_feather(file.path(cache, 'dt.feather'))
+  dt_all_pl = readRDS(file.path(cache, 'dt.rds'))
   setDT(dt_all_pl)
   # calculate outliers (as in fun_ec50filter_aggregation.R)
   dt_all_pl[,

@@ -65,7 +65,8 @@ source(file.path(src, 'gg_theme.R'))
 # Sys.time() - time
 # as feather (~0.7s) #! biut also much bigger file - don't commit
 time = Sys.time()
-dat = read_feather(file.path(datadir, 'tests_fin.feather'))
+#dat = read_feather(file.path(datadir, 'tests_fin.feather'))
+dat = readRDS(file.path(datadir, 'tests_fin.rds'))
 setDT(dat)
 Sys.time() - time
 
