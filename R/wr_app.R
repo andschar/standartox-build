@@ -10,11 +10,11 @@ te_fin = readRDS(file.path(cachedir, 'tests_fin.rds'))
 # (1) write table to shiny directory --------------------------------------
 ## as .rds
 time = Sys.time()
-saveRDS(tests_fin, file.path(shinydata, 'tests_fin.rds'))
+saveRDS(te_fin, file.path(shinydata, 'tests_fin.rds'))
 Sys.time() - time
 ## as feather
 time = Sys.time()
-write_feather(tests_fin, file.path(shinydata, 'tests_fin.feather'))
+write_feather(te_fin, file.path(shinydata, 'tests_fin.feather'))
 Sys.time() - time
 ## copy .feather via scp to server (github only allows 100MB)
 #! takes some time
@@ -36,7 +36,7 @@ log_msg(msg); rm(msg)
 te_stats_l = list(
   ## long variables ----
   tes_effect = out_stats_lng(te_fin, tes_effect),
-  tes_endpoint = out_stats_lng(te_fin, tes_endpoint),
+  tes_endpoint = out_stats_lng(te_fin, tes_endpoint_grp),
   tes_conc_type = out_stats_lng(te_fin, tes_conc_type),
   ## wide variables ----
   continent = out_stats_wid(

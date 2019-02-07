@@ -1,7 +1,7 @@
 # this script scrapes substance classifications and names from www.chemspider.org.
 # This is quite a detour, 'cause (1) chemspider has an API from which this data can be accessed (however the API is currently rebuilt) and 'cause (2) the classification data itself comes from www.chebi.ac.uk (https://www.ebi.ac.uk/chebi/webServices.do). However I can't use these PERL or Java clients properly.
 # Furthermore this script relies on phantomjs and additional dependancy which is also currently deprecated.
-# The classification data would also availavble through Pubchem. However, there
+# The classification data would also availavble through Pubchem.
 # TODO replace this script with a chebi API approach
 # TODO scrape additional parameters from website
 
