@@ -105,7 +105,7 @@ sidebar = dashboardSidebar(
       splitLayout(
         numericInput(
           inputId = 'dur1',
-          label = 'Test durations from',
+          label = 'Durations from',
           value = 24
         ),
         numericInput(
@@ -114,27 +114,29 @@ sidebar = dashboardSidebar(
           value = 48
         )
       ),
-      prettyCheckboxGroup(
-        inputId = 'acch',
-        label = 'TODO! Acute / Chronic',
-        # TODO take choices programatically!
-        choiceValues = c('acute', 'chronic', 'nc'),
-        choiceNames = c('acute', 'chronic', 'not classified')
-      ),
+      # TODO
+      # prettyCheckboxGroup(
+      #   inputId = 'acch',
+      #   label = 'TODO! Acute / Chronic',
+      #   # TODO take choices programatically!
+      #   choiceValues = c('acute', 'chronic', 'nc'),
+      #   choiceNames = c('acute', 'chronic', 'not classified')
+      # ),
+      # TODO END
       splitLayout(
         prettyCheckboxGroup(
           inputId = 'effect',
-          label = 'Effect group',
+          label = 'Effect groups',
           choiceValues = te_stats_l$tes_effect$variable,
           choiceNames = te_stats_l$tes_effect$nam_fin,
           selected = c('MOR', 'POP', 'GRO', 'ITX')
         ),
-        prettyCheckboxGroup(
+        prettyRadioButtons(
           inputId = 'endpoint',
           label = 'Endpoints',
           choiceValues = te_stats_l$tes_endpoint$variable,
           choiceNames = te_stats_l$tes_endpoint$nam_fin,
-          selected = c('LC50', 'EC50')
+          selected = c('XX50')
         )
       )
     ),

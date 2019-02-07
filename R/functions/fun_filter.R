@@ -50,7 +50,7 @@ fun_filter = function(dt,
   if (is.null(endpoint)) {
     dt = dt
   } else {
-    dt = dt[ tes_endpoint %in% endpoint ]
+    dt = dt[ tes_endpoint_grp %in% endpoint ]
   }
   
   ## solubility check ----
@@ -97,7 +97,9 @@ fun_filter = function(dt,
   dt = dt[ dur_fin %between% dur ]
   
   # write dt all for plot function
-  write_feather(dt, file.path(cache, 'dt.feather'))
+  #write_feather(dt, file.path(cache, 'dt.feather')) #! infinite recursion - problem with feather package
+  saveRDS(dt, file.path(cache, 'dt.rds'),
+          compress = FALSE)
   
   return(dt)
 }
