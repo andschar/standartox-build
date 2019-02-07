@@ -30,7 +30,8 @@ server = function(input, output) {
   data_fil = reactive({
     fun_filter(
       dt = dat,
-      tax = input$tax,
+      tax = trimws(unlist(strsplit(input$tax,","))), # handle multiple inputs
+      # tax = input$tax,
       habitat = input$habitat,
       continent = input$continent,
       conc_type = input$conc_type,

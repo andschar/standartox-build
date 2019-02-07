@@ -14,6 +14,12 @@ fun_filter = function(dt,
                       chck_solub = FALSE,
                       cas = NULL) {
   
+  # debug me!
+  # source('R/setup.R')
+  # tests_fin = readRDS(file.path(datadir, 'tests_fin.rds'))
+  # dt = tests_fin; cas = NULL; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = c('Daphniidae', 'Algae'); duration = c(24,48); effect = NULL; endpoint = 'XX50'; chem_class = c('cgr_herbicide'); conc_type = 'A'; comp = 'comp_name'; agg = c('min', 'max'); info = 'taxa'; chck_solub = FALSE; chck_outl = FALSE
+  
+  # CAS ---------------------------------------------------------------------
   if (!is.null(cas)) {
     casnr_todo = casconv(cas, direction = 'tocasnr')
     dt = dt[ casnr %in% casnr_todo ]
@@ -27,6 +33,7 @@ fun_filter = function(dt,
   
   # filters -----------------------------------------------------------------
   # counter
+  # DEPRECATE?
   dt_counter = list()
   dt_counter[[1]] = data.table(Variable = 'all',
                                N = nrow(dt))
@@ -56,7 +63,6 @@ fun_filter = function(dt,
   ## solubility check ----
   if (chck_solub) {
     dt = dt[ chck_solub_wat == TRUE ]
-    dt_counter[[3]] = data.table('Solubility check', nrow(dt))
   }
   
   ## chemical class ----
@@ -83,7 +89,7 @@ fun_filter = function(dt,
   
   ## taxon ----
   cols = grep('tax_', names(dt), ignore.case = TRUE, value = TRUE)
-  dt = dt[dt[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', tax))), .SDcols = cols ]]
+  dt = dt[dt[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', paste0(tax, collapse = '|')))), .SDcols = cols ]]
   
   ## duration ----
   if (is.null(duration)) {

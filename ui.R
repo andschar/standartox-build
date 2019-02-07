@@ -66,6 +66,7 @@ sidebar = dashboardSidebar(
     menuItem(
       'Taxon',
       tabName = 'taxon',
+    #  #### UNDER CONSTRUCTION ----
       selectInput(
         inputId = 'tax',
         label = 'Choose a taxon',
@@ -84,6 +85,12 @@ sidebar = dashboardSidebar(
           'Plants'
         )
       ),
+      # textInput(
+      #   inputId = 'tax',
+      #   label = 'Put in a taxon',
+      #   placeholder = 'Separate by comma'
+      # ),
+    ### END CONSTRUCTION
       prettyCheckboxGroup(
         inputId = 'habitat',
         label = 'Organism hatbitat',
