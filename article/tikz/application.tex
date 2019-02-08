@@ -1,0 +1,58 @@
+\documentclass[border = 1.5cm]{standalone}
+
+%%%% packages
+\usepackage{tikz}
+\usetikzlibrary{trees,
+                arrows,
+                shapes.geometric,
+                positioning,
+                calc,
+                backgrounds,
+                fit}
+
+%%%% document
+\begin{document}
+
+%%%% layers
+\pgfdeclarelayer{bg1}    % declare background layer
+\pgfdeclarelayer{bg2}
+\pgfdeclarelayer{bg3}
+\pgfsetlayers{bg3,bg2,bg1,main}  % set the order of the layers (main is the standard layer)
+
+%%%% styles
+\tikzset{
+	font = {\fontsize{13pt}{12}\sffamily},
+	children/.style = {anchor = west},
+	main/.style = {rectangle, draw = black, rounded corners, minimum width = 3cm, minimum height = 1.25cm, text centered, anchor = west},
+	arrow/.style = {<->, > = stealth, draw = black, color = gray!80, line width = 2.5pt},
+	background/.style = {rectangle, rounded corners, minimum width=23cm, fill=gray!10},
+}
+
+    %%%% picture
+    \begin{tikzpicture}[
+	grow via three points={one child at (0.5,-1) and
+		two children at (0.5,-1) and (0.5,-1.7)},
+	edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)},
+	inner sep = 0pt, outer sep = 0pt
+	]
+	
+    \begin{scope}
+	\node (server) [main, at(0cm,0cm), xshift = 4cm, align = center] {Server \\ \textbf{server.R}}
+	    child{ node [children, yshift = -0.5cm] { \textbf{setup.R} }}
+	    child{ node [children, yshift = -0.5cm] { \textbf{fun\_filter.R} }}
+	    child{ node [children, yshift = -0.5cm] { \textbf{fun\_aggregation.R} }};
+    
+	\node (ui) [main, right of = server, xshift = 5cm, align = center] {User Interface \\ \textbf{ui.R}};
+	\end{scope}
+	
+	\begin{pgfonlayer}{bg3}
+	\node (back_query) [background, minimum height=5cm, minimum width=14cm, above of=server, xshift=4cm, yshift=-2.25cm];
+	\node (back_query_label) [below of = back_query, xshift = 5cm, yshift = -1cm, rotate = 0]
+	    {\huge{Application}};
+	\end{pgfonlayer}
+	
+	\draw [arrow] (server.east) -- (ui.west);
+
+	\end{tikzpicture}
+\end{document}
+

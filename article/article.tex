@@ -42,17 +42,9 @@ Andreas Scharm{\"u}ller (scharmueller@uni-landau.de)
 
 \begin{abstract}
 
-this data will be useful for
+<WRITE ABSTRACT>
 
 \end{abstract}
-
-plan:
-- occurring in vast numbers
-- pathways
-- ecosystem services 
-- biodiversity loss
-- Übergang abschätzung von chemikalien
-
 
 \section*{Background \& Summary [max 700 words]}
 
@@ -79,26 +71,41 @@ The \etoxbase tool therefore aggregates test results to obtain single toxicity v
 %%the methods and processing steps without referring to associated publications. 
 %%There is no limit to the length of the Methods section.
 
-The EPA releases \epa{} on a quarterly basis through their website. The software downloads each new version and rebuilds it locally in a PostgreSQL data base. A processing pipeline of several R \citep{r_core_team_r_2017} scripts prepares the data for the tool. The tool itself is a R function that is executed by a user accessing the R shiny \citep{chang_shiny_2018} application. In the following the steps for processing the data are explained in more detail (PATH-TO-OVERVIEW) as well as the scripts that have been used for it (REFER-TO-SCRIPTS-TABLE).
+The \etoxbase{} consists of two parts of software: Firstly a processing pipeline \ref{fig:pipeline} downloads quarterly released new versions of the \epa{} and performs several preparation steps in R \citep{r_core_team_r_2017}, to then store the outcome in a PostgreSQL data base. This constitutes the basis upon which the R shiny web application is accessing the data \citep{r_core_team_r_2017}. The application itself is set of R functions that filter and aggregate the data according to a user's inputs \ref{fig:app}. Finally a data set, which can be downloaded and an interactive plot, for data exploration are returned. In the following the two parts are explained in detail.
 
 \subsection*{Data acquisition \& preparation}
 
-The data is downloaded (bd\_epa\_download.R) and subsequently built into a PostgreSQL data base (bd\_epa\_postgres.R). Thereafter the data is imported into R for pre-processing (da\_epa1.R, da\_epa2.R, da\_epa3.R), which includes validity checks, removal of special characters, unit harmonizations and selection of relevant variables. At the end the data is stored locally (epa3.rds, epa2\_taxa.rds, epa2\_chem.rds). CAS numbers, unique identifiers and taxon names are then used to query other data bases for additional information on chemicals and biota respectively. Chemical information is retrieved from the Pubchem data base \citep{CITE_PUBCHEM} (qu\_pc.R), from the Compendium of Pesticide Common Names \citep{CITE_AW} (qu\_aw.R), from the Physprop data base \citep{CITE_PHYSPROP} (qu\_pp.R), from EUROSTAT and the Chemspider data base \citep{CITE-CHEMSPIDER}. These queries mostly rely on the webchem R-package \citep{szocs_webchem_2015-1}. For biota, habitat and occurrence information is queried from the World Register of Marine Species (WORMS) \citep{WORMS} and from the Global Biodiversity Information Facility (GBIF) \citep{CITE_RGBIF} using the rgbif R-package. The acquired information is then merged (re\_merge.R), variables are combined and created (re\_combine.R), checked (re\_checks\_internal.R) and finally compiled in one final table (re\_final.R) This table is then used in the application to perform search queries on. For a detailed overview of what information is collected see table \ref{table:processing-scripts}.
-
-\subsection*{The application}
-The application is accessible through \etoxbase{} and was built by using the shiny web application framework \citep{chang_shiny_2018} in R. Therein the user can choose to filter the data by several parameters such as chemical class, organism habitat, test duration and test endpoints amongst others. A detailed list for possible filter parameters can be found in \ref{table:meta}. 
-
-In order to be able to calculate TUs and SSDs, derivation of single endpoint values for specific organism groups and a chemicals of the partly extensive test data, the \etoxbase{} aggregates the test results according to the chosen filters in two steps. Firstly the filtered test results are aggregated by the CAS number, the chosen taxon plus the duration and secondly only by the CAS number. The former can't be influenced by the user and calculates either the minimum or the median depending on the amount of results to aggregate (n <= 2: minimum, if n > 2: median). Thereof the second step calculates the minimum, the maximum, the median, the mean or the geometric mean as aggregate. Besides the aggregation some cleaning can also be performed. The \etoxbase{} allows to exclude test results exhibiting concentrations that are higher than the actual water solubility of the respective chemical at \ang{20} C. In any case the user can choose to exclude outliers. The outliers are selected as values that exceed lower (0.25) and the upper (0.75) quartile by 1.5 times the inter-quartile range. All the steps described in this section are executed at each click in the app which runs the function fun\_ec50filter\_aggregation.R (cf. table \ref{table:processing-scripts}). \citep{dowle_data.table_2018}.
-
-\subsection*{Future of the project}
-As new versions of the \epa{} is published on a quarterly basis the data acquisition process is automated and new versions of the data and the \app{} are planed to be released regularly.
-
+The data is downloaded (bd\_epa\_download.R) and then built into a PostgreSQL data base (bd\_epa\_postgres.R). Subsequently the data is imported into R for pre-processing (da\_epa1.R, da\_epa2.R, da\_epa3.R), which includes validity checks, removal of special characters, unit harmonizations and selection of relevant variables. Chemical abstract service (CAS) numbers, unique chemical identifiers together we taxon names are then used to query other data bases for additional information on chemicals and biota respectively. Chemical information is retrieved from the Pubchem data base \citep{CITE_PUBCHEM} (qu\_pc.R), from the Compendium of Pesticide Common Names \citep{CITE_AW} (qu\_aw.R), from the Physprop data base \citep{CITE_PHYSPROP} (qu\_pp.R), from EUROSTAT and the Chemspider data base \citep{CITE-CHEMSPIDER}. These queries mostly rely on the webchem R-package \citep{szocs_webchem_2015-1}. For biota, habitat and occurrence information is queried from the World Register of Marine Species (WORMS) \citep{WORMS} and from the Global Biodiversity Information Facility (GBIF) \citep{CITE_RGBIF} using the rgbif R-package \citep{chamberlain_rgbif_2018}. The acquired information is then merged (re\_merge.R), variables are combined and created (re\_combine.R), checked (re\_checks\_internal.R) and finally compiled in one table (re\_final.R) This table is then used in the application to perform search queries on. For a detailed overview of what information is collected see table \ref{tab:scripts-pipeline}.
 
 \begin{figure}
     \includestandalone[width=\textwidth, scale=0.1]{tikz/pipeline_organigram}
-    \caption{Organigram}
-    \label{fig:organigram}
+    \caption{Processing Pipeline}
+    \label{fig:pipeline}
 \end{figure}
+
+
+\subsection*{The application}
+The application is accessible through \app{} and was built in R by using the shiny web application framework \citep{chang_shiny_2018}. Users can define several input parameters \ref{tab:inputs} in the application's graphical user interface (GUI), handeled in the ui.R script in order to adjust the aggregation according specific requirements. In doing so users execute R functions (fun\_filter.R, fun\_aggregation.R, fun\_filagg\_plot\_ly.R) in the server.R script, which produce a 'filtered' and an 'aggregated' data set as well as an interactive overview plot. The 'aggregated' data set is presented in the GUI. Both data sets can be downloaded via a download button.
+
+\begin{figure}
+    \includestandalone[scale=0.75]{tikz/application}
+    \caption{Application}
+    \label{fig:app}
+\end{figure}
+
+\subsection*{Aggregating the data}
+In order to be able to calculate TUs and SSDs, derivation of single endpoint values for specific organism groups and a chemicals of the partly extensive test data, the \etoxbase{} aggregates the test results according to the chosen filters in two steps. Firstly the filtered test results are aggregated by the CAS number, the chosen taxon plus the duration and secondly only by the CAS number. The former can't be influenced by the user and calculates either the minimum or the median depending on the amount of results to aggregate (n <= 2: minimum, if n > 2: median). Thereof the second step calculates the minimum, the maximum, the median, the geometric mean, or the arithmetic mean as an aggregate. Besides the aggregation two cleaning can also be performed. Firstly the application allows to exclude test results exhibiting concentrations that are higher than the actual water solubility of the respective chemical at \ang{20} C. Secondly the user can choose to exclude outliers. The outliers are selected as values that exceed lower (0.25) and the upper (0.75) quartile by 1.5 times the inter-quartile range. All the steps described in this section are selectable in the GUI and are executed at each click by the server. (cf. table \ref{tab:scripts-app}). 
+
+
+
+
+\citep{dowle_data.table_2018}.
+
+\subsection*{Future of the project}
+
+
+
+
 
 \subsection*{Code availability}
 %%For all studies using custom code in the generation or processing of datasets, 
@@ -107,7 +114,21 @@ As new versions of the \epa{} is published on a quarterly basis the data acquisi
 %%information on the versions of any software used, if relevant, and any specific 
 %%variables or parameters used to generate, test, or process the current dataset. 
 
-The code for processing the data is stored in a Github reopsitory (\git{}). All processing scripts were written in R version 3.4.4. PostgreSQL 9.5 has been used to build the data base. Hence R together with its packages and PostgreSQL suffice to rebuild the process. The \app{} itself is stored in a second Github repostitory (\gitapp{}).
+The code for processing the data is stored in a Github reopsitory (\git{}). All processing scripts were written in R version 3.4.4. PostgreSQL 9.5 has been used to build the data base. Hence, R together with its packages and PostgreSQL suffice to rebuild the process. The \app{} itself is stored in a second Github repostitory (\gitapp{}).
+Since new versions of the \epa{} are published on a quarterly basis the data acquisition process is automated and new versions of the data and the \app{} are scheduled to be released regularly.
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{c|c}
+         Category       & Package       & Version   & Reference \\
+         processing     & RCurl         & \\
+         & 
+    \end{tabular}
+    \caption{List of R packages used in compiling the data}
+    \label{tab:rpackages}
+\end{table}
+
+
 
 \section*{Data Records}
 %%Please explain each data record associated with this work, including
@@ -124,11 +145,7 @@ The code for processing the data is stored in a Github reopsitory (\git{}). All 
 %%Please see the submission guidelines at the \emph{Scientific Data} website, and 
 %%our Word templates for more information on preparing such tables. 
 
-\begin{figure}
-    \includestandalone[scale=0.5]{tikz/tree_source}
-    \caption{Processing pipeline}
-    \label{fig:organigram}
-\end{figure}
+
 
 
 
@@ -139,6 +156,7 @@ The code for processing the data is stored in a Github reopsitory (\git{}). All 
 %%section; authors must present information justifying the reliability
 %%of their data.
 
+<PUT COMPARISON WITH PPDB DATA HERE?>
 
 \section*{Usage Notes}
 %%Brief instructions that may help other researchers reuse these dataset.
@@ -157,11 +175,37 @@ The code for processing the data is stored in a Github reopsitory (\git{}). All 
 %%including how authors can apply to access the data, and what criteria
 %%will be used to determine who may access the data, and any limitations
 %%on data use.
-This data set is designed to support ecotoxicologists in assessing the risk of chemicals on the environment. As there is more and more ecotoxicological test data available, it becomes fundamental to provide such information in reasonable formats. This means, that it should be accessible for humans as well as computers. Up to now ecotoxicoloists rely on effect values of single publications or data bases such as the Pesticide Property Data Base (PPDB), having certain limitations such as encompassing only a few substance groups. The \epa{} tries to fill these gaps by collecting in peer-review articles published ecotoxicological test results. However due to lacking test information and un-harmonized data sets it is not always easily accessible. The \app{} tries to mitigate this gap. An ecotoxicologist can now access the \app{} and retrieve cleaned, harmonized and aggregated test data according to his or her needs.
+
+The \etoxbase{} can be accessed via an application here: \app{}. The user can filter among different test parameters \ref{tab:inputs}.
+
+
+
+
+
+The \etoxbase{} is designed to support ecotoxicologists in assessing the risk of chemicals on the environment. With an increase of ecotoxicological test data available, it becomes fundamental to provide such information in reasonable formats, meaning accessible for humans as well as machines. Currently chemical risk assessment relies on test results of a few, well tested organism groups, such as \textit{Daphnia magna}, \textit{Pimephales promelas}, \textit{Selenastrum capricornutum} reported in publications on test procedures <CITE>, compiled published data sets \citep{malaj_organic_2014} or data bases such as the Pesticide Property Data Base (PPDB) \citep{lewis_international_2016}, whereby each source having its limitations: Collecting toxicity information from individual publications is laborious and using already compiled data from publications or data bases is often limited to specific chemical groups, such as pesticides, biozides etc. The \etoxbase{}, making use of the \epa{} data aims to provide holistic aggregates (\ecfifty{}, NOEC, LOEC) of ecotoxicological tests results in adequate formats in order to support researchers to in the compilation of SSDs, TUs and other risk indicators.
+
+Generally it has to be stated here that the returned values are subject to change, as new tests will be constantly incorporated into the data set. However, we expect values of well tested chemical-organism combinations (i.e. high N <MAYBE PUT NUMBER HERE - CITATION>) to be relatively stable. Yet, returned values from the \etoxbase{} are certainly influenced by individual tests procedures and characteristics, such as pH, temperature or conductivity to just name a few. However, using the geometric mean as an aggregate allows for an adequate estimation of the central tendency of the toxicity of a chemical towards an organism group. The geometric mean is in comparison to the arithmetic mean considerably less influenced by outliers and is suitable for skewed data. Also, the geometric mean is preferable in contrast to the median, since the median completely ignores the influence of large or small values, making it unreliable for small data sets <CITATION GEOMETRIC MEAN>.
+
+Other initiatives, with different, though partly overlapping aims accumulating existing ecotoxicological test data are published online. The PPDB provides validated ecotoxicological test results for pesticides, narrowing chemicals to this group \citep{lewis_international_2016}. The Network of reference laboratories, research centres and related organisations for monitoring of emerging environmental substances (NORMAN) focuses on assembling river basin specific pollutants\citep{von_der_ohe_new_2011}. The EnviroTox data base \href{https://envirotoxdatabase.org/} makes also use of the \epa{} data in order to derive Predicted no-effect concentrations (PNEC) \citep{health_and_environmental_sciences_institute_hesi_envirotox_2019}. In comparison to the \etoxbase, these examples partly rely on the same data, yet not aiming to derive \ecfifty, LOEC and NOEC from it automatically.
+
+
+
+
+
 
 \subsection*{Limitations}
 
 SSDs aim to extrapolate from species to the community level while not ignoring environmental variables (e.g. pH, temperature, etc.) which can effect the toxicity of a specific chemical greatly \citep{posthuma_species_2002}. For a large number of the \epa{} tests, environmental variables are not recorded (See \ref{table:meta-variables} for proportions of missing entries per variable). Hence to some extent the reported test results inherit uncertainty. In this context we also call for more emphasis on machine-readability when publishing ecotoxicological test results <CITATION ON AS OF HOW MANY DATA POINTS MACHINES ARE NEEDED>. A lot of important information is still confined in continuous text of articles and therefore not ascertainable for large scale analyses.
+
+
+
+
+
+
+
+
+PUT SSD HERE
+
 
 When using the data from the tool it is essential to think about which endpoint groups (e.g. EC50, LC50, NOEC etc.) and which effect measurements to use (e.g. MOR - Mortality, ITX - Intoxication, GRO - Growth etc.).
 
@@ -172,11 +216,10 @@ Likewise the data of the \epa{} doesn't allow for the in ecotoxicology so freque
 discuss flaws in column types (e.g some concentration entries contain '+' or '~' and are therefore not convertable to numeric) - This hampers large scale analysis greatly!
 
 
-write here that it is meant as an addition to PPDB
+
 
 in the futrue there will probably more of such resources. Als NORMAN which even performs encompasses expert judgment on the validity of tests
 
-other approaches: https://envirotoxdatabase.org/ - performs no aggregation, not open source
 
 
 
@@ -228,34 +271,80 @@ other approaches: https://envirotoxdatabase.org/ - performs no aggregation, not 
 %%page will be included in the PDF version of the article (up to a maximum
 %%of three). 
 
-%\begin{table}
-\begin{sidewaystable}
-    \pgfplotstabletypeset[
-    col sep=comma,
-    string type,
-    columns={Script,Description},
-    columns/Description/.style={column type={|l}},
-    columns/Script/.style={column type={|l}, % needed for replacing underscore
-                           postproc cell content/.code={%
-                                \pgfplotsutilstrreplace{_}{\_}{##1}%
-                                \pgfkeyslet{/pgfplots/table/@cell content}\pgfplotsretval
-                                },
-                            },
-    every head row/.style={before row=\hline,after row=\hline},
-	every last row/.style={after row=\hline},
-    ]{data/scripts.csv}
-    \caption{R Scripts to query and process data obtained from various resources. The script tree, i.e. the order which script is processed can be found in}
-    \label{table:processing-scripts};
-\end{sidewaystable}
-%\end{table}
+%\begin{sidewaystable}
+%    \csvautotabular[respect all]{data/meta.csv};
+%    \caption{Meta variables table};
+%    \label{table:meta-variables};
+%\end{sidewaystable}
 
 
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|}
+\hline
+Procedure   & Group       & Subgroups              & Options \\ \hline
+Filter      & Compound    & CAS                    & input CAS \\ \hline
+Filter      & Compound    & Concentration type     & Active Ingredient; Formulation; Total \\ \hline
+Filter      & Compound    & Chemical class         & Insecticides; Herbicides; Metals \\ \hline
+Filter      & Taxon       & Taxon                  & Choose a taxon \\ \hline
+Filter      & Taxon       & Organism habitat       & freshwater; terrestrial; marine; brackish \\ \hline
+Filter      & Taxon       & Continent              & North America; Asia; Europe \\ \hline
+Filter      & Test        & Duration               & enter duration in hours \\ \hline
+Filter      & Test        & Effect groups          & MOR - Mortality; POP - Population \\ \hline
+Filter      & Test        & Endpoins               & EC50, LOEC, LOEL \\ \hline
+Filter      & Checks      & Water solubility check & yes/no \\ \hline
+Filter      & Checks      & Remove outliers        & yes/no \\ \hline
+Aggregation & Aggregation & Aggregate              & Minimum; Maximum; Median \\ \hline
+\end{tabular}
+\caption{\etoxbase input possibilities}
+\label{tab:inputs}
+\end{table}
 
-\begin{sidewaystable}
-    \csvautotabular[respect all]{data/meta.csv};
-    \caption{Meta variables table};
-    \label{table:meta-variables};
-\end{sidewaystable}
+\begin{table}[]
+\begin{tabular}{|l|l|}
+\hline
+Script                      & Description                                      \\ \hline
+run_build.R                 & runs all sub scripts                             \\ \hline
+setup.R                     & sets up the environment                          \\ \hline
+bd\_epa\_download.R         & download EPA Ecotox data base                    \\ \hline
+bd\_epa\_postgres.R         & build EPA Ecotox data base locally               \\ \hline
+da\_epa1.R                  & raw EPA Ecotox data export                       \\ \hline
+da\_epa2.R                  & process EPA Ecotox data                          \\ \hline
+da\_epa3.R                  & reduce EPA Ecotox data                           \\ \hline
+qu\_pc.R                    & query PubChem data base                          \\ \hline
+qu\_aw.R                    & query Compendium of Pesticide Common Names       \\ \hline
+qu\_pp.R                    & query Physprop data base                         \\ \hline
+qu\_eurostat\_chem\_class.R & query Eurostat data set                          \\ \hline
+qu\_chemspider\_scrape.R    & query Chemspider data base                       \\ \hline
+qu\_worms2.R                & query WORMS data base                            \\ \hline
+qu\_gbif.R                  & query GBIF data base                             \\ \hline
+re\_merge.R                 & merge all data                                   \\ \hline
+re\_combine.R               & combine information                              \\ \hline
+re\_analyses.R              & ???                                              \\ \hline
+re\_checks\_internal.R      & ???                                              \\ \hline
+re\_final.R                 & create and write final table                     \\ \hline
+wr\_dbase.R                 & write final table to data base                   \\ \hline
+wr\_app.R                   & write final table and variables to app directory \\ \hline
+wr\_meta.R                  & ???                                              \\ \hline
+wr\_stats.R                 & ???                                              \\ \hline
+\end{tabular}
+\caption{Scripts that are used to process the data}
+\label{tab:scripts-pipeline}
+\end{table}
+
+\begin{table}[]
+\begin{tabular}{|l|l|}
+\hline
+Script                     & Description                                               \\ \hline
+setup.R                    & sets up the environment                                   \\ \hline
+ui.R                       & creates the graphical user interface of the application   \\ \hline
+server.R                   & handles functions and data input and output               \\ \hline
+fun\_filter.R              & function that filters the data                            \\ \hline
+fun\_aggregation.R         & function that performs the aggregation                    \\ \hline
+fun\_filagg\_plot\_ly.R    & creates interactive plot                                  \\ \hline
+\end{tabular}
+\caption{Scripts that used for the web application}
+\label{tab:scripts-app}
+\end{table}
 
 
 
@@ -263,13 +352,42 @@ other approaches: https://envirotoxdatabase.org/ - performs no aggregation, not 
 \section*{Figure Legends}
 
 \bibliographystyle{apalike}
-\bibliography{refs/references-etox-base}
+\bibliography{refs/references-etox-base,
+              refs/references-etox-base-rpackages,
+              refs/references-etox-base-rshinypackages}
+
+\section*{Data Citations}
+
+\pagebreak
+\section*{TODO}
+
+\begin{itemize}
+
+\item compare Etox-BAse output with PPDB
+
+\item plot example SSD and TU
+
+\pagebreak
+\section*{MISC}
+
+\begin{figure}
+    \includestandalone[scale=0.5]{tikz/tree_source}
+    \caption{Alternative processing pipeline}
+    \label{fig:pipeline-tree}
+\end{figure}
 
 \section*{not included citations}
 Put in citation \citep{hartung_chemical_2009} ? which claims that REACH won't meet their assumptions and say 54 million vertebrate animals are needed for tests that would cost €9.5 billion over the next ten years. I.e 20 times more animals, 6 times the costs in comparison to the official estimates 
 
 
-\section*{Data Citations}
+\end{itemize}
 
 
 \end{document}
+
+
+
+
+
+
+
