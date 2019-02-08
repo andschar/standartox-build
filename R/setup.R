@@ -1,11 +1,13 @@
-# shiny setup script 
+# shiny setup script
 
 # project folder ----------------------------------------------------------
 nodename = Sys.info()[4]
 if (nodename == 'scharmueller') {
   prj = '/home/andreas/Documents/Projects/etox-base-shiny'
+  prj_data = '/home/andreas/Documents/Projects/etox-base'
 } else if (nodename == 'uwigis') {
   prj = '/home/scharmueller/Projects/etox-base-shiny'
+  prj_data = '/home/scharmueller/Projects/etox-base'
 } else {
   stop('New system. Define prj and shinydir variables.')
 }
@@ -14,35 +16,38 @@ if (nodename == 'scharmueller') {
 rm(nodename)
 
 # packages ----------------------------------------------------------------
-if (!require('pacman')) install.packages('pacman')
+if (!require('pacman'))
+  install.packages('pacman')
 
-pkg_cran = c('data.table',
-             'feather',
-             'shiny', 'shinyjs', 'shinyWidgets', 'shinydashboard', 'shinydashboardPlus',
-             'knitr', 'DT',
-             'plotly',
-             'ssdtools')
+pkg_cran = c(
+  'data.table',
+  'feather',
+  'shiny',
+  'shinyjs',
+  'shinyWidgets',
+  'shinydashboard',
+  'shinydashboardPlus',
+  'knitr',
+  'DT',
+  'plotly',
+  'ssdtools'
+)
 
 pacman::p_load(char = pkg_cran)
 
 # p_update() #! do this manually, as unexpected consequences might occur
 
-## cite packages
-for (i in pkg_cran) {
-  capture.output(utils:::print.bibentry(citation(i), style = "Bibtex"),
-                 file = file.path(tempdir(), 'bibliography_etox_base_shiny.bib'),
-                 append = TRUE)
-}
-
 # options -----------------------------------------------------------------
 options(stringsAsFactors = FALSE)
 
 # variables ---------------------------------------------------------------
-#articledir = file.path(prj, 'article')
+# /etox-base-shiny
 src = file.path(prj, 'R')
 fundir = file.path(src,'functions')
 datadir = file.path(prj, 'data')
 cache = file.path(prj, 'cache')
+# /etox-base
+article = file.path(prj_data, 'article')
 
 # source ------------------------------------------------------------------
 # functions
@@ -60,7 +65,13 @@ source(file.path(fundir, 'fun_casconv.R'))
 # plot themes
 source(file.path(src, 'gg_theme.R'))
 
-
+# cite packages -----------------------------------------------------------
+for (i in pkg_cran) {
+  capture.output(
+    utils:::print.bibentry(citation(i), style = "Bibtex"),
+    file = file.path(article, 'refs', 'references-etox-base-rshinypackages.bib'),
+    append = TRUE)
+}
 
 
 
