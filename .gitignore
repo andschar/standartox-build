@@ -37,7 +37,7 @@ article/*
 !article/R
 !article/article.Rmd
 !article/data
-!article/refs/references-etox-base.bib
+!article/refs
 !article/article.tex
 !article/tikz/organigram.tex
 

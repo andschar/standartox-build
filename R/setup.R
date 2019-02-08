@@ -1,17 +1,36 @@
 # setup script for etox-base
 
 # packages ----------------------------------------------------------------
-if (!require('pacman')) install.packages('pacman')
+if (!require('pacman'))
+  install.packages('pacman')
 
-pkg_cran = c('base', # only for citation
-             'RCurl', 'stringr', 'R.utils',
-             'rvest', 'httr', 'jsonlite',
-             'readxl', 'openxlsx',
-             'purrr',
-             'data.table', 'RPostgreSQL', 'vegan', 'plyr', 'outliers',
-             'feather',
-             'ggplot2', 'ggrepel', 'cowplot',
-             'rgbif', 'webchem', 'taxize', 'countrycode')
+pkg_cran = c(
+  'base',
+  # only for citation
+  'RCurl',
+  'stringr',
+  'R.utils',
+  'rvest',
+  'httr',
+  'jsonlite',
+  'readxl',
+  'openxlsx',
+  'purrr',
+  'data.table',
+  'RPostgreSQL',
+  'vegan',
+  'plyr',
+  'outliers',
+  'feather',
+  'ggplot2',
+  'ggrepel',
+  'cowplot',
+  'rgbif',
+  'webchem',
+  'taxize',
+  'countrycode',
+  'bib2df'
+)
 pkg_gith = 'NIVANorge/chemspideR' # no citation available!
 
 ## install via CRAN
@@ -21,15 +40,6 @@ pacman::p_load(char = pkg_cran)
 pacman::p_load_gh(char = pkg_gith)
 
 # pacman::p_update()
-
-## cite packages
-pkg = c('pacman', pkg_cran)
-
-for (i in pkg) {
-  capture.output(utils:::print.bibentry(citation(i), style = "Bibtex"),
-                 file = file.path(tempdir(), 'bibliography_etox_base.bib'),
-                 append = TRUE)
-}
 
 # switches ----------------------------------------------------------------
 online = FALSE # should queries be run
@@ -85,10 +95,16 @@ source(file.path(src, 'fun_ln_na.R'))
 # phantomjs - headless browser - fun_scrape_phantomjs.R
 # libv8-3.14-dev - Google's open source JavaScript engine - fun_scrape_phantomjs.R
 
+# cite packages -----------------------------------------------------------
+pkg = c('pacman', pkg_cran)
 
-
-
-
+for (i in pkg) {
+  capture.output(
+    utils:::print.bibentry(citation(i), style = "Bibtex"),
+    file = file.path(article, 'refs', 'references-etox-base-rpackages.bib'),
+    append = TRUE
+  )
+}
 
 
 
