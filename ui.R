@@ -23,8 +23,8 @@ header = dashboardHeaderPlus(
       id = 'download_agg',
       title = 'Download data',
       icon = icon('download'),
-      downloadButton(outputId = 'download_agg', 'Aggregated data'),
-      downloadButton(outputId = 'download_fil', 'Filtered data')
+      downloadButton(outputId = 'download_fil', 'Filtered data'),
+      downloadButton(outputId = 'download_agg', 'Aggregated data')
     )
   )
 )
