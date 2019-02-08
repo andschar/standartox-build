@@ -4,6 +4,9 @@
 src = file.path(getwd(), 'R')
 source(file.path(src, 'setup.R'))
 
+# data --------------------------------------------------------------------
+source(file.path(src, 'data.R'))
+
 # variables ---------------------------------------------------------------
 sidewidth = 350
 
@@ -168,8 +171,8 @@ sidebar = dashboardSidebar(
       prettyCheckboxGroup(
         inputId = 'agg',
         label = 'Aggregate',
-        choiceValues = c('min', 'max', 'md', 'mn', 'sd'),
-        choiceNames = c('Minimum', 'Maximum', 'Median', 'Mean', 'Standard Deviation'),
+        choiceValues = c('min', 'max', 'md', 'gm', 'mn', 'sd'),
+        choiceNames = c('Minimum', 'Maximum', 'Median', 'Geometric Mean', 'Arithmetic Mean', 'Standard Deviation'),
         selected = 'md'
       )
     )

@@ -1,15 +1,4 @@
-
-
-
-
-# setup -------------------------------------------------------------------
-require(data.table)
-require(plotly)
-require(ggplot2)
-require(cowplot)
-
-# source ------------------------------------------------------------------
-source(file.path(fundir, 'fun_outliers.R'))
+# function to create plotly output
 
 # functions ---------------------------------------------------------------
 # debuging (has to be turned on in fun_ec50filter_aggregation.R)

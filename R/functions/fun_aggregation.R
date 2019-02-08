@@ -3,9 +3,7 @@
 # setup -------------------------------------------------------------------
 require(data.table)
 
-# source ------------------------------------------------------------------
-source(file.path(fundir, 'fun_outliers.R'))
-
+# setup -------------------------------------------------------------------
 fun_aggregate = function(dt, 
                          comp = NULL,
                          agg = NULL,
@@ -39,8 +37,7 @@ fun_aggregate = function(dt,
                 j = .(min = min(vl, na.rm = TRUE),
                       max = max(vl, na.rm = TRUE),
                       md = median(vl, na.rm = TRUE),
-                      # q95 = quantile(vl, 0.95, na.rm = TRUE),
-                      # q5 = quantile(vl, 0.05, na.rm = TRUE),
+                      gm = gm_mean(vl),
                       mn = mean(vl, na.rm = TRUE),
                       sd = sd(vl, na.rm = TRUE),
                       n = sum(n_tests),
