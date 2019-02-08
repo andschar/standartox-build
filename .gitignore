@@ -35,6 +35,7 @@ missing/*
 # article
 article/*
 !article/R
+!article/figures
 !article/article.Rmd
 !article/data
 !article/refs
