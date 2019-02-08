@@ -46,6 +46,7 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   # (1) Create data basse ---------------------------------------------------
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv,
+                  dbname = DBname,
                   user = DBuser,
                   host = DBhost,
                   port = DBport,
