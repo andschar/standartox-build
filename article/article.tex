@@ -46,9 +46,13 @@ Andreas Scharm{\"u}ller (scharmueller@uni-landau.de)
 
 \end{abstract}
 
+\pagebreak
+
 \section*{Background \& Summary [max 700 words]}
 
 A large number of chemicals such as pharmaceuticals, pesticides and synthetic hormones are in daily use all over the world with insufficient knowledge about possible adverse effects on the environment. In Europe alone some 100,000 chemicals are estimated to be in current use, whereof 30,000 are produced in quantities larger than one ton per year \citep{breithaupt_costs_2006}. Chemicals are brought to the environment deliberately - as it is the case of pesticides, or arrive therein as a byproduct from other processes (e.g. atmospheric emissions or wastewater) \citep{schwarzenbach_challenge_2006}. Ecosystems provide essential services to human societies such as drinking and irrigation water, food and climate regulation. These services are products of different ecosystem functions that crucially depend on the integrity of the populations and communities that drive these ecosystem functions. However, besides habitat degradation, climate change and nutrient enrichment, pollution with man-made chemical toxicants threatens these populations and communities in various ways which are currently not fully understood \citep{steffen_anthropocene_2007}. Pollution with man-made chemical toxicants was indeed identified as one of three major environmental problems for which research gaps hamper the derivation of planetary boundaries, i.e. thresholds beyond which irreversible state shifts may occur \citep{steffen_anthropocene_2007}. Bernhardt et al. \citet{bernhardt_synthetic_2017} argue further that the knowledge gap how chemicals effect populations and communities and hence ecosystem functions and ecosystem services, would also impede society’s ability to accomplish the Sustainable Development Goals of the United Nations. According to Breithaupt \citet{breithaupt_costs_2006} less than one percent of chemicals released to the environment are thoroughly tested. Although for some chemicals advanced and standardized \citep{oecd_oecd_2018} test methods have been developed, ecotoxicological tests for a lot of chemicals, especially newly emerging ones remain scarce and if existent, the information is represented sparsely and in inconsistent formats. \citep{gessner_fostering_2016}. Therefore we developed a data base that collects, processes and aggregates ecotoxicological tests results in order to subsequently publish it in an harmonized form as a web application - the \etoxbase tool: \href{http://139.14.20.252:3838/etox-base-shiny/}. This should facilitate researchers the access to ecotoxicological test results and support modern chemical risk assessment (CRA) workflows. The \etoxbase makes use of ecotoxicological test data, obtained from the ECOTOXicology knowledgebase (ECOTOX) created by the U.S. Environmental Protection Agency (EPA). ECOTOX collects raw, non harmonized ecotoxicological test data on on aquatic and terrestrial wildlife as well as plants and publishes it on a quarterly basis. By the time of writing it contained 926,108 test results, comprising 11,685 chemicals tested on 12,668 different species \citep{elonen_ecotoxicology_2018}. The collected ecotoxicological test data contain a variety of measured endpoints such as Effective Concentrations (\ecfifty{}) values, No-observed effect concentrations (NOEC) or lowest observed effect concentrations (LOEC). Likewise the data set contains different effect measures such as mortality, intoxication and growth as well as a multiplicity of test durations ranging from seconds to weeks or even years. The \etoxbase aggregates this information according to the user's inputs. These can then be used for the derivation of risk indicators such as Species Sensitivity Distributions (SSDs) \citep{posthuma_species_2002} and Toxic Units (TUs), which represent two prominent concepts to assess effects on organisms in ecotoxicology . The former combines toxicity data of several organism groups towards a chemicals to estimate effects on biotic communities, the latter refers to effects of a specific organism (group) towards a chemical. The two concepts are widely used in ecotoxicology \citep{kefford_definition_2011, schafer_effects_2011} since the allow for a comparison of toxicities across multiple chemicals and biological communities, respectively. Although performed on one and the same organism and chemical, outcomes of different ecotoxicological tests vary greatly due to differences in test parameters, genetic differences in individual populations or other irrepressible factors making a selection of appropriate test results for CRA laborious. The \etoxbase{} aims to relief this process and provide single toxicity values for organism, chemical and test duration combinations. The \etoxbase{} downloads every new version of the ECOTOX data base and performs several quality checks, e.g. unit harmonization, and cleaning steps on it. Hence, new scientific test results are constantly incorporated. Additionally the \etoxbase{} queries chemical- and organism-specific variables from other open data bases to fill information gaps such as water solubility, organism habitat or regional occurrence patterns in the ECOTOX data base.
+
+\pagebreak
 
 \section*{Methods}
 
@@ -120,7 +124,7 @@ The processing code is stored in a Github reopsitory (\git{}). All processing sc
     \label{tab:rpackages}
 \end{table}
 
-
+\pagebreak
 
 \section*{Data Records}
 %%Please explain each data record associated with this work, including
@@ -138,7 +142,7 @@ The processing code is stored in a Github reopsitory (\git{}). All processing sc
 %%our Word templates for more information on preparing such tables. 
 
 
-
+\pagebreak
 
 
 \section*{Technical Validation}
@@ -149,6 +153,9 @@ The processing code is stored in a Github reopsitory (\git{}). All processing sc
 %%of their data.
 
 <PUT COMPARISON WITH PPDB DATA HERE?>
+
+
+\pagebreak
 
 \section*{Usage Notes}
 %%Brief instructions that may help other researchers reuse these dataset.
@@ -210,31 +217,14 @@ Aggregation & Aggregation & Aggregate              & Minimum; Maximum; Median \\
 \end{table}
 
 
+\subsection*{Limitations}
 
-Generally it has to be stated here that the returned values are subject to change, as new tests will be constantly incorporated into the \etoxbase{}. However, we expect values of well tested chemical-organism combinations (i.e. high N <MAYBE PUT NUMBER HERE - CITATION>) to be relatively stable. Yet, returned values from the \etoxbase{} are certainly influenced by individual tests procedures and characteristics, such as pH, temperature or conductivity to just name a few. However, using the median or the geometric mean as an aggregate allows for an adequate estimation of the central tendency of the toxicity of a chemical towards an organism group. The geometric mean is recommended, as it is in comparison to the arithmetic mean considerably less influenced by outliers and is suitable for skewed data. Also, the geometric mean is preferable in contrast to the median, since the median completely ignores the influence of large or small values, making it unreliable for small data sets <CITATION GEOMETRIC MEAN>.
+Generally it has to be stated that the returned values are subject to change, as new tests will be constantly incorporated into the \etoxbase{}. However, we expect values of well tested chemical-organism combinations to be relatively stable. The returned values are certainly influenced by individual tests characteristics, such as pH, temperature or conductivity to just name a few, which influences the effect relationship between chemicals and organisms \citep{rosenkrantz_influence_2013,li_temperature_2011}. Unfortunately the EPA ECOTOX data base has only rare records on test parameters, which prevents incorporating such parameters in an aggregation <proportions of available data: Temperature:77\%, pH:56\%, hardness:27\%, dissolved oxygen:18\%, Alkalinity:15\%, salinity:9\%, others:<=5\%>. However, using the median or the geometric mean as an aggregate allows for an adequate estimation of the central tendency of the toxicity of a chemical towards an organism group. The geometric mean is recommended, as it is in comparison to the arithmetic mean considerably less influenced by outliers and is suitable for skewed data. Also, the geometric mean is preferable in contrast to the median, since the median completely ignores the influence of large or small values, making it unreliable for small data sets <CITATION GEOMETRIC MEAN>.
 
 Other initiatives, with different, though partly overlapping aims accumulating existing ecotoxicological test data are published online. The PPDB provides validated ecotoxicological test results for pesticides, narrowing chemicals to this group \citep{lewis_international_2016}. The Network of reference laboratories, research centres and related organisations for monitoring of emerging environmental substances (NORMAN) focuses on assembling river basin specific pollutants\citep{von_der_ohe_new_2011}. The EnviroTox data base \href{https://envirotoxdatabase.org/} makes also use of the \epa{} data in order to derive Predicted no-effect concentrations (PNEC) \citep{health_and_environmental_sciences_institute_hesi_envirotox_2019}. In comparison to the \etoxbase, these examples partly rely on the same data, yet not aiming to derive \ecfifty, LOEC and NOEC from it automatically.
 
 
-
-
-
-
-\subsection*{Limitations}
-
-SSDs aim to extrapolate from species to the community level while not ignoring environmental variables (e.g. pH, temperature, etc.) which can effect the toxicity of a specific chemical greatly \citep{posthuma_species_2002}. For a large number of the \epa{} tests, environmental variables are not recorded (See \ref{table:meta-variables} for proportions of missing entries per variable). Hence to some extent the reported test results inherit uncertainty. In this context we also call for more emphasis on machine-readability when publishing ecotoxicological test results <CITATION ON AS OF HOW MANY DATA POINTS MACHINES ARE NEEDED>. A lot of important information is still confined in continuous text of articles and therefore not ascertainable for large scale analyses.
-
-
-
-
-
-
-
-
-
-
-
-
+\pagebreak
 
 
 \section*{Acknowledgements}
@@ -340,7 +330,7 @@ fun\_filagg\_plot\_ly.R    & creates interactive plot                           
 \end{table}
 
 
-\section*{Figure Legends}
+\pagebreak
 
 \bibliographystyle{apalike}
 \bibliography{refs/references-etox-base.bib,refs/references-etox-base-rpackages.bib,refs/references-etox-base-rshinypackages.bib}
