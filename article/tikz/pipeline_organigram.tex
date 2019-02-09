@@ -86,14 +86,14 @@
 	% main nodes
 	\node (chemscr) [main, right of=cas, xshift=4.5cm] {PHYS-CHEM}
     	child { node [children] { Alan Wood Pesticide Compendium - \textbf{qu\_aw.R } }}
-    	child { node [children] { Pesticide Action Network - \textbf{qu\_pan.R} }}
-    	child { node [children] { PhysProp - \textbf{qu\_pp.R} }}
-    	child { node [children] { PubChem - \textbf{qu\_pubchem.R} }};
+    	child { node [children] { Chemspider - \textbf{qu\_chemspider\_scrape.R } }}
+    	child { node [children] { Eurostat - \textbf{qu\_eurostat\_chem\_class.R} }}
+    	child { node [children] { PubChem - \textbf{qu\_pc.R} }}
+    	child { node [children] { PhysProp - \textbf{qu\_pp.R} }};
 	\node (taxon) [ids, below of=cas, yshift=-6cm, align = center] {Taxon};
 	% main nodes
 	\node (habitat) [main, right of = taxon, xshift = 4.5cm, yshift = 1.5cm] {Habitats}
-    	child { node [children] { WORMS data base - \textbf{qu\_worms.R} }}
-    	child { node [children] { Manual Search - \textbf{qu\_manual.R} }};
+    	child { node [children] { WORMS data base - \textbf{qu\_worms2.R} }};
 	\node (region) [main, right of = taxon, xshift = 4.5cm, yshift = -1.5cm] {Regions}
 	    child { node [children] { GBIF - \textbf{qu\_gbif.R} }};
 	\end{scope}
@@ -111,7 +111,7 @@
 	\node (analysesres) [main, left of = testres, xshift = -4.5cm] {Analyses}
 	    child { node [children]  { \textbf{re\_analyses.R} }};
 	\node (checksres) [main, left of = analysesres, xshift = -4.5cm] {checks}
-	    child { node [children]  { \textbf{re\_checks.R} }};
+	    child { node [children]  { \textbf{re\_checks\_internal.R} }};
 	\node (finalres) [main, left of = checksres, xshift = -4.5cm] {Final Table}
 	    child { node [children]  { \textbf{re\_final.R} }};
 	% bbox
