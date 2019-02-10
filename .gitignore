@@ -11,3 +11,6 @@
 # data
 # too big
 /data/*.feather
+
+# notes
+deploy_shiny_app.txt
