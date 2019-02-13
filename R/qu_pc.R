@@ -29,39 +29,51 @@ if (online) {
   cid_l = sapply(seq_along(todo_pc), get_cid2)
   
   # Data query
-  pc_l = list()
+  pc_pro_l = list()
+  pc_syn_l = list()
   for (i in seq_along(cid_l)) {
     qu_cas = names(cid_l[i])
     qu_cid = cid_l[[i]]
     message('Pubchem: CAS:', qu_cas, '; CID:', paste0(qu_cid, collapse = '\n'),
             ' (', i, '/', length(cid_l), ') -> to retrieve data.')
     
-    pc_res = pc_prop(qu_cid, verbose = FALSE)
+    pc_pro = pc_prop(qu_cid, verbose = FALSE)
+    pc_syn = pc_synonyms(qu_cid, from = 'cid')
     
-    pc_l[[i]] = pc_res
-    names(pc_l)[i] = qu_cas
+    pc_pro_l[[i]] = pc_pro
+    names(pc_pro_l)[i] = qu_cas
+    pc_syn_l[[i]] = unname(unlist(pc_syn))
+    names(pc_syn_l)[i] = qu_cas
   } 
   
   saveRDS(cid_l, file.path(cachedir, 'cid_l.rds'))
-  saveRDS(pc_l, file.path(cachedir, 'pc_l.rds'))
+  saveRDS(pc_pro_l, file.path(cachedir, 'pc_pro_l.rds'))
+  saveRDS(pc_syn_l, file.path(cachedir, 'pc_syn_l.rds'))
   
 } else {
   cid_l = readRDS(file.path(cachedir, 'cid_l.rds'))
-  pc_l = readRDS(file.path(cachedir, 'pc_l.rds'))
+  pc_pro_l = readRDS(file.path(cachedir, 'pc_pro_l.rds'))
+  pc_syn_l = readRDS(file.path(cachedir, 'pc_syn_l.rds'))
 }
 
 # save InchIKeys ----------------------------------------------------------
-ikey = lapply(pc_l, `[`, 'InChIKey')
+ikey = lapply(pc_pro_l, `[`, 'InChIKey')
 saveRDS(ikey, file.path(cachedir, 'pc_inchikeys.rds'))
 
 # preparation -------------------------------------------------------------
 # convert all entries to data.tables
 # 1 col, 1 row DTs are NAs
 # 1 col, >1 row DT are multiple results
-pc_l = lapply(pc_l, data.table)
+pc_pro_l = lapply(pc_pro_l, data.table)
 
-pc = rbindlist(pc_l, fill = TRUE, idcol = 'cas')
-pc[ , V1 := NULL ] # not needed
+pc = rbindlist(pc_pro_l, fill = TRUE, idcol = 'cas')
+
+# Synonyms
+syn = sapply(pc_syn_l, `[`, 2)
+syn_fin = rbindlist(lapply(syn, as.data.frame.list),
+                    idcol = 'cas')
+setnames(syn_fin, 2, 'pc_common_name')
+syn_fin[ , pc_common_name := tolower(pc_common_name) ]
 
 # final dt ----------------------------------------------------------------
 # https://pubchemdocs.ncbi.nlm.nih.gov/about
@@ -73,6 +85,9 @@ setnames(pc_fin, tolower(names(pc_fin)))
 setnames(pc_fin,
          old = c('inchikey', 'iupacname', 'exactmass'),
          new = c('pc_inchikey', 'pc_iupacname', 'pc_exactmass'))
+
+# merge synonyms
+pc_fin = merge(pc_fin, syn_fin, by = 'cas')
 
 # missing entries ---------------------------------------------------------
 na_pc_fin_inchi = pc_fin[ is.na(inchikey) ]

@@ -21,6 +21,7 @@ tests[ , taxon_src := 'ep' ]
 # (1) compound name ----
 cols = c('comp_name', 'comp_name_src')
 tests[ , (cols) := list(pp_cname, 'pp') ]
+tests[ , is.na(comp_name), (cols) := list(pc_common_name, 'pc') ]
 #tests[ is.na(comp_name), (cols) := list(aw_cname, 'aw') ]
 # tests[ is.na(comp_name), (cols) := list(fr_cname, 'fr')  ]
 tests[ is.na(comp_name), (cols) := list(pc_iupacname, 'pc')  ]
