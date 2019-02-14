@@ -55,5 +55,8 @@ notes/*
 # credentials
 cred/credentials.R
 
+# ag
+ag/*
+
 # log
 log

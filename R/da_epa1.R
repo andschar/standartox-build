@@ -274,7 +274,7 @@ saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # NORMAN variables --------------------------------------------------------
 look_var = fread(file.path(lookupdir, 'lookup_variables.csv'))
-look_var = look_var[ !is.na(key) & key != '' ] #! still an issue in data.taböe_1.11.8
+look_var = look_var[ !is.na(key) & key != '' ] #! still an issue in data.table_1.11.8
 # https://stackoverflow.com/questions/51019041/blank-space-not-recognised-as-na-in-fread
 # check 
 chck_look_var = nrow( look_var[ ! key %in% names(epa1) ] )

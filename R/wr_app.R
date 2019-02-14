@@ -22,7 +22,7 @@ if (nodename == 'scharmueller' & scp_feather) {
   system(
     paste('scp',
           file.path(shinydata, 'tests_fin.feather'),
-          'scharmueller@139.14.20.252:/home/scharmueller/Projects/etox-base-shiny/data/tests_fin.feather',
+          shinydir_remote, 'data/tests_fin.feather',
           sep = ' ')
   )
 }
