@@ -255,72 +255,38 @@ if (nrow(chck_dupl_res_id) > 1) {
   stop(msg)
 }
 
-# subseting ---------------------------------------------------------------
-## duplicated result_id
-# they all have the same result - see chck_dupl_res_id
+# duplicated results ------------------------------------------------------
 epa1 = epa1[ !result_id %in% dupl_result_id ]
 
 # writing -----------------------------------------------------------------
-#### Etox-Base ----
+# data (rds)
+# TODO think of a way to store in in Postgres (for being able to look at it quickly)
 time = Sys.time()
 saveRDS(epa1, file.path(cachedir, 'epa1.rds'))
-Sys.time() - time
+Sys.time() - time # 1 min - 75MB
 # taxa
 taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'tax_genus', 'tax_family') ])
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 # chemical data
 chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'chemical_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
-
-# NORMAN variables --------------------------------------------------------
-look_var = fread(file.path(lookupdir, 'lookup_variables.csv'))
-look_var = look_var[ !is.na(key) & key != '' ] #! still an issue in data.table_1.11.8
-# https://stackoverflow.com/questions/51019041/blank-space-not-recognised-as-na-in-fread
-# check 
-chck_look_var = nrow( look_var[ ! key %in% names(epa1) ] )
-if (chck_look_var != 0) {
-  msg = 'Some NORMAN lookup variables can not be found in names(epa1)'
-  log_msg(msg)
-  stop(msg)
-}; rm(chck_no_look)
-
-# integer column names
-cols = look_var$key
-names(cols) = look_var$id1
-cols = cols[ which(cols %in% names(epa1)) ]
-
-# NORMAN table
-epa1_norman = epa1[ , .SD, .SDcols = cols ]
-setnames(epa1_norman, names(cols))
-
-# epa ecotox_raw data for sharing
-time = Sys.time()
-fwrite(epa1_norman, file.path(share, 'epa1_raw.csv'))
-Sys.time() - time
-# epa ecotox raw data example (Triclosan) for sharing
-time = Sys.time()
-fwrite(epa1_norman[ `21` == '3380345' ],
-       file.path(share, 'epa1_raw_triclosan.csv'))
-Sys.time() - time
-# meta data
-epa1_norman_meta = ln_na(epa1_norman)
-setnames(epa1_norman_meta, 'variable', 'id')
-epa1_norman_meta[ , variable := cols[ match(epa1_norman_meta$id, names(cols)) ] ] # named v update
-setcolorder(epa1_norman_meta, c('id', 'variable'))
-setorder(epa1_norman_meta, variable)
-fwrite(epa1_norman_meta,
-       file.path(share, 'epa1_raw_variables.csv'))
+# postgres
+# time = Sys.time()
+# write_tbl(epa1, dbname = 'etox20180913', schema = 'public', tbl = 'test', info = 'whatever',
+#           user = DBuser, host = DBhost, port = 5432, password = DBpassword)
+# Sys.time() - time # 1 min - 1.5 GB - WTF??!?
+# melt
+# # too big: 222e6
+# epa1_m = melt(
+#   epa1,
+#   id.vars = 'result_id'
+# )
 
 # log ---------------------------------------------------------------------
 msg = 'EPA1: raw script run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(q, epa1_l, epa1, epa1_norman, epa1_norman_meta, no_look)
-rm(cas_chck, chck_dupl_res_id, dupl_result_id)
-rm(taxa, chem)
-rm(res, i)
-rm(time)
-
+rm(list = ls()[ !ls() %in% c('prj', 'src') ] )
 
 
