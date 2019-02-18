@@ -13,10 +13,8 @@
 nodename = Sys.info()[4]
 if (nodename == 'scharmueller') {
   prj = '/home/andreas/Documents/Projects/etox-base'
-  shinydir = '/home/andreas/Documents/Projects/etox-base-shiny'
 } else if (nodename == 'uwigis') {
   prj = '/home/scharmueller/Projects/etox-base'
-  shinydir = '/home/scharmueller/Projects/etox-base-shiny'
 } else {
   stop('New system. Define prj and shinydir variables.')
 }

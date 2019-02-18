@@ -4,7 +4,8 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-chem = readRDS(file.path(cachedir, 'epa2_chem.rds'))
+chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
+
 # debuging
 if (debug_mode) {
   chem = chem[1:10]
@@ -90,7 +91,7 @@ setnames(pc_fin,
 pc_fin = merge(pc_fin, syn_fin, by = 'cas')
 
 # missing entries ---------------------------------------------------------
-na_pc_fin_inchi = pc_fin[ is.na(inchikey) ]
+na_pc_fin_inchi = pc_fin[ is.na(pc_inchikey) ]
 
 msg = paste0('PubChem: For ', nrow(na_pc_fin_inchi), '/', nrow(pc_fin),
              ' CAS no InchiKeys were found.')
@@ -106,13 +107,5 @@ if (nrow(na_pc_fin_inchi) > 0) {
 saveRDS(pc_fin, file.path(cachedir, 'pc_fin.rds'))
 
 # cleaning ----------------------------------------------------------------
-oldw = getOption("warn")
-options(warn = -1) # shuts off warnings
-
-rm(cir, chem, todo_pc)
-
-options(warn = oldw); rm(oldw)
-
-
-
+rm(list = ls()[ !ls() %in% c('nodename', 'prj', 'src') ])
 

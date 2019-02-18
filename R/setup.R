@@ -42,13 +42,13 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = FALSE # should queries be run
+online = TRUE # should queries be run
 online_db = FALSE # should database query be run
 plots = FALSE # should output plots be created
 scp_feather = FALSE # scp feather object # TODO remove this in the end
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
 # debuging
-debug_mode = FALSE # should only 10 input rows for each quering script be run
+debug_mode = TRUE # should only 10 input rows for each quering script be run
 sink_console = FALSE # sink console to file
 
 # variables ---------------------------------------------------------------
@@ -59,6 +59,7 @@ plotdir = file.path(prj, 'plots')
 src = file.path(prj, 'R')
 datadir = file.path(prj, 'data')
 lookupdir = file.path(prj, 'lookup')
+shinydir = file.path(prj, 'etox-base-shiny')
 shinydata = file.path(shinydir, 'data')
 cred = file.path(prj, 'cred')
 share = file.path(prj, 'share')
