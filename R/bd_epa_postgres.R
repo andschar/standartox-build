@@ -131,6 +131,7 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   
   # move to ecotox schema --------
   dbSendQuery(con, "CREATE SCHEMA IF NOT EXISTS ecotox;")
+  dbSendQuery(con, paste0("COMMENT ON SCHEMA ecotox IS 'rebuild of EPA ECOTOX data base';"))
   for (i in names) {
     q = paste0("ALTER TABLE ", i, " SET SCHEMA ecotox;")
     dbSendQuery(con, q)
