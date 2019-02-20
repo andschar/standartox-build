@@ -54,10 +54,7 @@ if (length(releases) == 0) {
 }
 
 # cleaning ----------------------------------------------------------------
-rm(baseurl, ftp, date_pattern,
-   ascii_dt, baseurl,
-   file, date, ascii_dt, file_fin, file_url, output,
-   etoxdirs, releases, etoxdir_lookup)
+rm(list = grep('chck', ls(), value = TRUE))
 
 
 
