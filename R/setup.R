@@ -70,6 +70,12 @@ norman = file.path(prj, 'norman')
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')
 
+DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
+
+if(inherits(DBetox, 'try-error')) {
+  DBetox = 'DBetox not yet defined'
+}
+
 # path to phantomjs
 if (nodename == 'scharmueller') {
   phantompath = '/usr/bin/phantomjs'

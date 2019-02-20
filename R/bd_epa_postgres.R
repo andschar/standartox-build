@@ -4,14 +4,13 @@
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 
-DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
 etoxdir = readRDS(file.path(cachedir, 'etox_data_path.rds'))
 
 # Check if data.base exists -----------------------------------------------
 # (Ch1) check existance
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv,
-                dbname = DBname,
+                dbname = DBgeneric,
                 user = DBuser,
                 host = DBhost,
                 port = DBport,
@@ -52,7 +51,7 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   # (1) Create data basse ---------------------------------------------------
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv,
-                  dbname = DBname,
+                  dbname = DBgeneric,
                   user = DBuser,
                   host = DBhost,
                   port = DBport,

@@ -3,7 +3,7 @@
 
 clean_workspace <- function(not_to_be_removed, envir = .GlobalEnv) {
   
-  not_to_be_removed = c('prj', 'src', 'nodename')
+  not_to_be_removed = c('prj', 'src', 'nodename', 'DBetox')
   
   rm(list = setdiff(
     ls(envir = envir),
