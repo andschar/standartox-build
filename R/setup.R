@@ -57,7 +57,9 @@ missingdir = file.path(prj, 'missing')
 fundir = file.path(prj, 'functions')
 plotdir = file.path(prj, 'plots')
 src = file.path(prj, 'R')
-datadir = file.path(prj, 'data')
+data = file.path(prj, 'data')
+data_ecotox = file.path(data, 'ecotox')
+data_chebi = file.path(data, 'chebi')
 lookupdir = file.path(prj, 'lookup')
 shinydir = paste0(prj, '-shiny')
 shinydata = file.path(shinydir, 'data')
@@ -81,6 +83,7 @@ mdl = 1e6 # max deparse length for writing to sink console
 # source ------------------------------------------------------------------
 source(file.path(cred, 'credentials.R')) # data base credentials
 source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
+source(file.path(src, 'fun_clean_workspace.R'))
 source(file.path(src, 'fun_product_na.R'))
 source(file.path(src, 'fun_extr_vec.R'))
 source(file.path(src, 'fun_log_message.R'))

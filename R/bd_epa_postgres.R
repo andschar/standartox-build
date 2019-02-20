@@ -1,6 +1,12 @@
 # script to upload the test data into PostgreSQL tables
 # mainly taken from: http://edild.github.io/localecotox/
 
+# setup -------------------------------------------------------------------
+source(file.path(src, 'setup.R'))
+
+DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
+etoxdir = readRDS(file.path(cachedir, 'etox_data_path.rds'))
+
 # Check if data.base exists -----------------------------------------------
 # (Ch1) check existance
 drv = dbDriver("PostgreSQL")
@@ -231,5 +237,5 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
 }
 
 # cleaning ----------------------------------------------------------------
-rm(DBetox_chck1, DBetox_chck2)
+clean_workspace()
 

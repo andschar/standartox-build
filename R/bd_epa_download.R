@@ -1,6 +1,9 @@
 # this is a script that builds the EPA ECOTOX data base locally
 # it follows roughly this guide: https://edild.github.io/localecotox/
 
+# setup -------------------------------------------------------------------
+source(file.path(src, 'setup.R'))
+
 # download ----------------------------------------------------------------
 baseurl = 'ftp://newftp.epa.gov/ECOTOX/' # removing the trailing '/' causes an error
 ftp = getURL(baseurl)
@@ -15,13 +18,13 @@ setorder(ascii_dt, -date)
 
 file_fin = ascii_dt$file[1]
 file_url = paste0(baseurl, file_fin)
-output = file.path(datadir, file_fin)
+output = file.path(data_ecotox, file_fin)
 
 # download file + unzip ---------------------------------------------------
-if (!basename(output) %in% list.files(datadir)) {
+if (!basename(output) %in% list.files(data_ecotox)) {
   
-  system(sprintf('wget -P %s %s', datadir, file_url)) # quite slow
-  system(sprintf('unzip %s -d %s', output, datadir))
+  system(sprintf('wget -P %s %s', data_ecotox, file_url)) # quite slow
+  system(sprintf('unzip %s -d %s', output, data_ecotox))
 } else {
   
   msg = 'ECOTOX up to date - no new build needed.'
@@ -29,7 +32,7 @@ if (!basename(output) %in% list.files(datadir)) {
 }
 
 # setup ECOTOX variables --------------------------------------------------
-etoxdirs = grep('ecotox', list.dirs(datadir, recursive = FALSE), value = TRUE)
+etoxdirs = grep('ecotox', list.dirs(data_ecotox, recursive = FALSE), value = TRUE)
 releases = regmatches(etoxdirs, regexpr(date_pattern, etoxdirs))
 
 etoxdir_lookup = data.table(
@@ -46,6 +49,7 @@ etoxdir = etoxdir_lookup$path[1]
 # ECOTOX version
 saveRDS(DBetox, file.path(cachedir, 'data_base_name_version.rds'))
 saveRDS(DBetox, file.path(shinydata, 'data_base_name_version.rds'))
+saveRDS(etoxdir, file.path(cachedir, 'etox_data_path.rds'))
 
 # check -------------------------------------------------------------------
 if (length(releases) == 0) {
@@ -54,7 +58,7 @@ if (length(releases) == 0) {
 }
 
 # cleaning ----------------------------------------------------------------
-rm(list = grep('chck', ls(), value = TRUE))
+clean_workspace()
 
 
 
