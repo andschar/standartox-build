@@ -3,11 +3,8 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
+# query
 source(file.path(src, 'da_epa_query.R'))
-
-# data base
-DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
-
 # merge: addition
 source(file.path(src, 'da_epa_doses.R'))
 source(file.path(src, 'da_epa_endpoints.R'))
@@ -256,37 +253,33 @@ if (nrow(chck_dupl_res_id) > 1) {
 }
 
 # duplicated results ------------------------------------------------------
-epa1 = epa1[ !result_id %in% dupl_result_id ]
+epa1 = epa1[ !result_id %in% dupl_result_id ] # duplicated entries
 
 # writing -----------------------------------------------------------------
+## data
+# postgres
+time = Sys.time()
+write_tbl(epa1, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'ecotox_export', tbl = 'epa1',
+          comment = 'EPA ECOTOX raw export')
+Sys.time() - time
 # data (rds)
-# TODO think of a way to store in in Postgres (for being able to look at it quickly)
 time = Sys.time()
 saveRDS(epa1, file.path(cachedir, 'epa1.rds'))
 Sys.time() - time # 1 min - 75MB
+## identifiers
 # taxa
 taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'tax_genus', 'tax_family') ])
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 # chemical data
 chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'chemical_name')])
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
-# postgres
-# time = Sys.time()
-# write_tbl(epa1, dbname = 'etox20180913', schema = 'public', tbl = 'test', info = 'whatever',
-#           user = DBuser, host = DBhost, port = 5432, password = DBpassword)
-# Sys.time() - time # 1 min - 1.5 GB - WTF??!?
-# melt
-# # too big: 222e6
-# epa1_m = melt(
-#   epa1,
-#   id.vars = 'result_id'
-# )
 
 # log ---------------------------------------------------------------------
 msg = 'EPA1: raw script run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(list = ls()[ !ls() %in% c('prj', 'src') ] )
+clean_workspace()
 
 

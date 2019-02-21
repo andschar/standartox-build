@@ -90,6 +90,7 @@ mdl = 1e6 # max deparse length for writing to sink console
 source(file.path(cred, 'credentials.R')) # data base credentials
 source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
 source(file.path(src, 'fun_clean_workspace.R'))
+source(file.path(src, 'fun_write_db.R'))
 source(file.path(src, 'fun_product_na.R'))
 source(file.path(src, 'fun_extr_vec.R'))
 source(file.path(src, 'fun_log_message.R'))
