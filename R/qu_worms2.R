@@ -8,7 +8,7 @@ source(file.path(src, 'fun_worms_query.R'))
 # http://www.marinespecies.org/rest/
 
 # data --------------------------------------------------------------------
-taxa = readRDS(file.path(cachedir, 'epa2_taxa.rds'))
+taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
 if (debug_mode) {
   taxa = taxa[1:10] # debuging
 }
@@ -95,10 +95,7 @@ msg = 'WoRMS query run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(taxa, todo, todo_wo, todo_wo_id, 
-   res,
-   worms_aphiaid_l, worms_l,
-   wo)
+clean_workspace()
 
 
 

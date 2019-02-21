@@ -5,7 +5,7 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-chem = readRDS(file.path(cachedir, 'epa2_chem.rds'))
+chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 # debuging
 if (debug_mode) {
   chem = chem[1:10]  
@@ -13,7 +13,6 @@ if (debug_mode) {
 
 # query -------------------------------------------------------------------
 todo_pp = sort(chem$cas)
-# todo_pp = todo_pp[1:10] # debug me!
 
 if (online) {
   
@@ -56,7 +55,7 @@ pp_l[is.na(pp_l)] = lapply(pp_l[is.na(pp_l)], data.table)
 
 pp = rbindlist(pp_l, fill = TRUE, idcol = 'cas')
 pp[ , V1 := NULL ]
-pp = pp[!is.na(cas)] # TODO why are NAs created in the first place?
+pp = pp[ !is.na(cas) ] # TODO why are NAs created in the first place?
 setcolorder(pp, c('cas', 'cname'))
 
 # names
@@ -88,8 +87,11 @@ if (nrow(na_pp_fin_cname) > 0) {
 # writing -----------------------------------------------------------------
 saveRDS(pp_fin, file.path(cachedir, 'pp_fin.rds'))
 
-# cleaning ----------------------------------------------------------------
-rm(chem, todo_pp)
+# log ---------------------------------------------------------------------
+msg = 'Physprop script run'
+log_msg(msg); rm(msg)
 
+# cleaning ----------------------------------------------------------------
+clean_workspace()
 
 

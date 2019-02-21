@@ -4,7 +4,7 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-chem = readRDS(file.path(cachedir, 'epa2_chem.rds'))
+chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 # debuging
 if (debug_mode) {
   chem = chem[1:10]
@@ -63,21 +63,15 @@ for (i in names(aw_fin)) {
 
 aw_fin[ , aw_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ aw_pest == 0, aw_pest := NA ]
 
+# writing -----------------------------------------------------------------
+saveRDS(aw_fin, file.path(cachedir, 'aw_fin.rds'))
+
 # log ---------------------------------------------------------------------
 msg = paste0('AlanWood: For ', length(aw_l) - nrow(aw_fin), '/', length(aw_l),
              ' CAS no cnames were found.')
 log_msg(msg); rm(msg)
 
-# writing -----------------------------------------------------------------
-saveRDS(aw_fin, file.path(cachedir, 'aw_fin.rds'))
-
 # cleaning ----------------------------------------------------------------
-oldw = getOption("warn")
-options(warn = -1) # shuts off warnings
-
-rm(chem, cas, todo_aw, qu_cas, i, n_sa_cols,
-   aw, aw_l, aw_l2, aw2, aw2m, aw2_m, aw_fin, cols)
-
-options(warn = oldw); rm(oldw)
+clean_workspace()
 
 

@@ -61,7 +61,7 @@ dt[ , group2 := fill(group2) ]
 dt2 = dt[ grep('^[A-Z]+[0-9]+_[0-9]+_.+$', code) ]
 
 # is pesticide
-dt2[ , eu_pesticide := TRUE ]
+dt2[ , eu_pesticide := 1L ]
 # pesticide sub-groups
 dt2[ group1 == 'fungicides and bactericides', eu_fungicide := 1L ]
 dt2[ group1 == 'herbicides. haulm destructors and moss killers', eu_herbicide := 1L ]
@@ -79,8 +79,12 @@ eu_fin = eu_fin[!is.na(cas)] # as the whole approach is based on CAS
 # writing -----------------------------------------------------------------
 saveRDS(eu_fin, file.path(cachedir, 'eu_fin.rds'))
 
+# log ---------------------------------------------------------------------
+msg = 'Eurostat chemical classification script run'
+log_msg(msg); rm(msg)
+
 # cleaning ----------------------------------------------------------------
-rm(cols, dt, dt2)
+clean_workspace()
 
 
 

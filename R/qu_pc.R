@@ -106,6 +106,10 @@ if (nrow(na_pc_fin_inchi) > 0) {
 # writing -----------------------------------------------------------------
 saveRDS(pc_fin, file.path(cachedir, 'pc_fin.rds'))
 
+# log ---------------------------------------------------------------------
+msg = 'PubChem script run'
+log_msg(msg); rm(msg)
+
 # cleaning ----------------------------------------------------------------
-rm(list = ls()[ !ls() %in% c('nodename', 'prj', 'src') ])
+clean_workspace()
 

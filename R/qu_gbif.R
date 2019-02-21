@@ -4,7 +4,7 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-taxa = readRDS(file.path(cachedir, 'epa2_taxa.rds'))
+taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
 # debuging
 if (debug_mode) {
   taxa = taxa[1:10]
@@ -161,18 +161,12 @@ setnames(gbif_hab_wat_dc, 'gb_taxon', 'taxon')
 saveRDS(gbif_conti_dc, file.path(cachedir, 'gbif_conti_dc.rds'))
 saveRDS(gbif_hab_wat_dc, file.path(cachedir, 'gbif_hab_wat_dc.rds'))
 
+# log ---------------------------------------------------------------------
+msg = 'GBIF script run'
+log_msg(msg); rm(msg)
+
 # cleaning ----------------------------------------------------------------
-oldw = getOption("warn")
-options(warn = -1) # shuts off warnings
-
-rm(epa, i, key, taxon, todo_gbif, time, full_gbif_l, gbif_l,
-   na_conti, na_habi, missing_l,
-   cols_conti, cols_habi,
-   gbif_ccode_l, gbif_ccode, gbif_continent_l, gbif_continent,
-   gbif_habitat_l, gbif_habitat, gbif_habitat_dc,
-   gbif_waterBody_l, gbif_waterbody, gbif_waterbody_dc)
-
-options(warn = oldw); rm(oldw)
+clean_workspace()
 
 
 

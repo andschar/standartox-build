@@ -115,11 +115,11 @@ cs_fin = cs_scrape[ , .SD, .SDcols = cols ]
 saveRDS(cs_fin, file.path(cachedir, 'cs_fin.rds'))
 
 # log ---------------------------------------------------------------------
-msg = 'ChemSpider Scrape run'
+msg = 'ChemSpider Scrape script run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(tags, names_new, cols)
+clean_workspace()
 
 
 
