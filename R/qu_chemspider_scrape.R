@@ -105,8 +105,8 @@ if (online) {
 }
 
 # final dt ----------------------------------------------------------------
-setnames(cs_scrape, 'name', 'cs_name')
-cols = c('cas', 'cs_name', 'cs_fungicide', 'cs_herbicide', 'cs_insecticide',
+setnames(cs_scrape, 'name', 'cs_cname')
+cols = c('cas', 'cs_cname', 'cs_fungicide', 'cs_herbicide', 'cs_insecticide',
          'cs_rodenticide')
 cols = names(cs_scrape)[ names(cs_scrape) %in% cols ] # prevents errors
 cs_fin = cs_scrape[ , .SD, .SDcols = cols ]

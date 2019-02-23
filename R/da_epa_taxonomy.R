@@ -3,78 +3,69 @@
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 
-# data base
-DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
-
 # (1) query ---------------------------------------------------------------
 if (online_db) {
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
 
-  tax = dbGetQuery(con, "SELECT DISTINCT ON (latin_name) *
-                         FROM ecotox.species")
-  setDT(tax)
+  taxa = dbGetQuery(con, "SELECT DISTINCT ON (latin_name) *
+                          FROM ecotox.species")
+  setDT(taxa)
   
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
-  saveRDS(tax, file.path(cachedir, 'source_epa_taxa.rds'))
+  saveRDS(taxa, file.path(cachedir, 'source_epa_taxa.rds'))
   
 } else {
   
-  tax = readRDS(file.path(cachedir, 'source_epa_taxa.rds'))  
+  taxa = readRDS(file.path(cachedir, 'source_epa_taxa.rds'))  
 }
 
 # (2) preparation ---------------------------------------------------------
-tax[ , c('subspecies', 'variety', 'species',  'ecotox_group') := NULL ]
+taxa[ , c('subspecies', 'variety', 'species',  'ecotox_group') := NULL ]
 tax_names = c('common_name', 'genus', 'family', 'class', 'superclass', 'subphylum_div', 'phylum_division', 'kingdom')
-setnames(tax, old = tax_names, paste0('tax_', tax_names))
-setkey(tax, 'latin_name') # use for merge later
+setnames(taxa, old = tax_names, paste0('tax_', tax_names))
+setkey(taxa, 'latin_name') # use for merge later
 # Species columns
-tax[ , taxon := gsub('\\sx\\s', ' X ', latin_name, ignore.case = TRUE) ] # transform all Hybrid X to capital letters => they aren't seen as species-names in the next REGEX
-tax[ , taxon := trimws(gsub('([A-z]+)\\s([a-z]+\\s)(.+)*', '\\1 \\2', taxon)) ]
-tax[ , taxon := trimws(gsub('sp.', '', taxon)) ] # remove sp.
-
-# cleaning
-rm(tax_names)
+taxa[ , taxon := gsub('\\sx\\s', ' X ', latin_name, ignore.case = TRUE) ] # transform all Hybrid X to capital letters => they aren't seen as species-names in the next REGEX
+taxa[ , taxon := trimws(gsub('([A-z]+)\\s([a-z]+\\s)(.+)*', '\\1 \\2', taxon)) ]
+taxa[ , taxon := trimws(gsub('sp.', '', taxon)) ] # remove sp.
 
 # (3) errata --------------------------------------------------------------
-tax[ tax_phylum_division == 'Cyanophycota', tax_phylum_division := 'Cyanobacteria' ]
-tax[ tax_phylum_division == 'Rhodophycota', tax_phylum_division := 'Rhodophyta' ]
+taxa[ tax_phylum_division == 'Cyanophycota', tax_phylum_division := 'Cyanobacteria' ]
+taxa[ tax_phylum_division == 'Rhodophycota', tax_phylum_division := 'Rhodophyta' ]
 
 # as the taxonomic classification such as phylum and dividin is subject to changes a convenient variable is introduced
-tax[ tax_phylum_division == 'Pyrrophycophyta', tax_phylum := 'Dinoflagellata' ]
+taxa[ tax_phylum_division == 'Pyrrophycophyta', tax_phylum := 'Dinoflagellata' ]
 
 
 # (4) classification ------------------------------------------------------
 # convenience grouping ----------------------------------------------------
-tax[ tax_superclass == 'Osteichthyes', tax_convgroup := 'Fish' ]
-tax[ , tax_convgroup := ifelse(tax_kingdom == 'Plantae', 'Plants', NA) ]
-tax[ , tax_convgroup := ifelse(tax_kingdom == 'Plantae', 'Plants', NA) ]
-tax[ tax_phylum_division == 'Oomycota', tax_convgroup := 'Pseudofungi'] # colorless heterokonts (pseudofungi, bigyra) https://en.wikipedia.org/wiki/Heterokont
-tax[ tax_phylum_division == 'Cyanophycota', tax_convgroup := 'Nematoda']
-tax[ tax_phylum_division == 'Nemata', tax_convgroup := 'Nematoda']
+taxa[ tax_superclass == 'Osteichthyes', tax_convgroup := 'Fish' ]
+taxa[ , tax_convgroup := ifelse(tax_kingdom == 'Plantae', 'Plants', NA) ]
+taxa[ , tax_convgroup := ifelse(tax_kingdom == 'Plantae', 'Plants', NA) ]
+taxa[ tax_phylum_division == 'Oomycota', tax_convgroup := 'Pseudofungi'] # colorless heterokonts (pseudofungi, bigyra) https://en.wikipedia.org/wiki/Heterokont
+taxa[ tax_phylum_division == 'Cyanophycota', tax_convgroup := 'Nematoda']
+taxa[ tax_phylum_division == 'Nemata', tax_convgroup := 'Nematoda']
 algae = c('Chlorophyta', 'Bacillariophyta', 'Cyanobacteria', 'Rhodophyta', 'Phaeophyta', 'Charophyta', 'Chrysophyta', 'Haptophyta', 'Xanthophyta', 'Cryptophycophyta', 'Prasinophyta', 'Ochrophyta')
-tax[ tax_phylum_division %in% algae, tax_convgroup := 'Algae']
-tax[ tax_phylum == 'Dinoflagellata', tax_convgroup := 'Algae' ] # however they are mixotrophic
+taxa[ tax_phylum_division %in% algae, tax_convgroup := 'Algae']
+taxa[ tax_phylum == 'Dinoflagellata', tax_convgroup := 'Algae' ] # however they are mixotrophic
 
 # impairments:
 # Sarcomastigophora - can also be autotroph - here: Animalia
 # Euglenophycota - troph is not clear - here: Plantae
 
-# cleaning
-rm(algae)
-
 # troph_lvl ---------------------------------------------------------------
-tax[ tax_convgroup %in% c('Algae', 'Plants'), tax_autotroph := 1 ]
-tax[ tax_phylum == 'Dinoflagellata', tax_mixotroph := 1 ]
-tax[ is.na(tax_autotroph) & is.na(tax_mixotroph), tax_heterotroph := 1 ]
+taxa[ tax_convgroup %in% c('Algae', 'Plants'), tax_autotroph := 1 ]
+taxa[ tax_phylum == 'Dinoflagellata', tax_mixotroph := 1 ]
+taxa[ is.na(tax_autotroph) & is.na(tax_mixotroph), tax_heterotroph := 1 ]
 
 # Makro and Mikro Invertebrates -------------------------------------------
-cols = grep('tax_', names(tax), ignore.case = TRUE, value = TRUE)
+cols = grep('tax_', names(taxa), ignore.case = TRUE, value = TRUE)
 #### out-commented for now -> maybe this column will again be needed
 # freshwater_info_inv = c('Porifera',	'Coelenterata',	'Turbellaria',	'Nematomorpha', 'Nemertini',	'Gastropoda',	'Bivalvia',	'Polychaeta', 'Oligochaeta',	'Hirudinea',	'Branchiobdellida',	'Araneae', 'Hydrachnidia',	'Crustacea',	'Ephemeroptera',	'Odonata', 'Plecoptera',	'Heteroptera',	'Megaloptera',	'Planipennia', 'Coleoptera',	'Hymenoptera',	'Trichoptera', 'Lepidoptera', 'Diptera',	'Chironomidae',	'Bryozoa')
-# tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
+# taxa[axa[ , Reduce(`|`, lapply(.SD, `%like%`,
 #                               paste0('(?i)', freshwater_info_inv, collapse = '|'))),
 #          .SDcols = cols], tax_aqu_inv := 'yes' ]
 ### END
@@ -86,70 +77,95 @@ inv_makro_class = c('Arachnida', 'Diplopoda', 'Entognatha', 'Insecta') # phylum:
 invertebrates_makro = c(inv_makro_phylum, inv_makro_subphylum, inv_makro_class)
 invertebrates_mikro = inv_mikro_phylum
 ## Makro Invertebrates
-tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
-                              paste0('(?i)', invertebrates_makro, collapse = '|'))),
-         .SDcols = cols ], tax_invertebrate_makro := 1 ]
+taxa[taxa[ , Reduce(`|`, lapply(.SD, `%like%`,
+                                paste0('(?i)', invertebrates_makro, collapse = '|'))),
+           .SDcols = cols ], tax_invertebrate_makro := 1 ]
 ## Mikro Invertebrates
-tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`,
-                              paste0('(?i)', invertebrates_mikro, collapse = '|'))),
-         .SDcols = cols ], tax_invertebrate_mikro := 1 ]
+taxa[taxa[ , Reduce(`|`, lapply(.SD, `%like%`,
+                                paste0('(?i)', invertebrates_mikro, collapse = '|'))),
+           .SDcols = cols ], tax_invertebrate_mikro := 1 ]
 
 # Ecotox group ------------------------------------------------------------
 # column for convenient ecotox grouping
 # sometimes redundant!
 # assign first the big groups, then smaller ones
-tax[ tax_phylum_division %in% c('Ascomycota', 'Basidiomycota'),
+taxa[ tax_phylum_division %in% c('Ascomycota', 'Basidiomycota'),
      tax_ecotox_grp := 'Fungi' ]
-tax[ tax_class == 'Insecta',
+taxa[ tax_class == 'Insecta',
      tax_ecotox_grp := 'Insects' ]
-tax[ tax_class == 'Entognatha',
+taxa[ tax_class == 'Entognatha',
      tax_ecotox_grp := 'Entognatha' ]
-tax[ tax_class == 'Arachnida',
+taxa[ tax_class == 'Arachnida',
      tax_ecotox_grp := 'Arachnida' ]
-tax[ tax_class %in% c('Magnoliopsida', 'Liliopsida', 'Bryopsida'),
+taxa[ tax_class %in% c('Bryopsida', 'Magnoliopsida', 'Liliopsida', 'Pinopsida'),
      tax_ecotox_grp := 'Plants' ]
-tax[ tax_superclass == 'Osteichthyes',
+taxa[ tax_superclass == 'Osteichthyes',
      tax_ecotox_grp := 'Fish' ]
-tax[ tax_convgroup == 'Algae',
+taxa[ tax_convgroup == 'Algae',
      tax_ecotox_grp := 'Algae' ]
-tax[ tax_phylum_division == 'Cyanobacteria',
+taxa[ tax_phylum_division == 'Cyanobacteria',
      tax_ecotox_grp := 'Cyanobacteria' ]
-tax[ tax_class == 'Aves',
+taxa[ tax_class == 'Aves',
      tax_ecotox_grp := 'Birds' ]
-tax[ tax_class == 'Amphibia',
+taxa[ tax_class == 'Amphibia',
      tax_ecotox_grp := 'Amphibia' ]
-tax[ tax_phylum_division == 'Annelida',
+taxa[ tax_phylum_division == 'Annelida',
      tax_ecotox_grp := 'Annelida' ]
-tax[ tax_phylum_division == 'Echinodermata',
+taxa[ tax_phylum_division == 'Echinodermata',
      tax_ecotox_grp := 'Echinodermata' ]
-tax[ tax_class == 'Mammalia',
+taxa[ tax_class == 'Mammalia',
      tax_ecotox_grp := 'Mammalia' ]
-tax[ tax_class == 'Reptilia',
+taxa[ tax_class == 'Reptilia',
      tax_ecotox_grp := 'Reptilia' ]
-tax[ tax_phylum_division == 'Mollusca',
+taxa[ tax_phylum_division == 'Mollusca',
      tax_ecotox_grp := 'Mollusca' ]
-tax[ tax_convgroup == 'Nematoda',
+taxa[ tax_convgroup == 'Nematoda',
      tax_ecotox_grp := 'Nematoda' ]
-tax[ tax_phylum_division == 'Protozoa',
+taxa[ tax_phylum_division == 'Protozoa',
      tax_ecotox_grp := 'Protozoa' ]
-tax[ tax_phylum_division == 'Rotifera',
+taxa[ tax_phylum_division == 'Rotifera',
      tax_ecotox_grp := 'Rotifera' ]
-tax[ tax_genus == 'Daphnia',
+taxa[ tax_genus == 'Daphnia',
      tax_ecotox_grp := 'Daphnia' ]
-tax[ tax_genus %in% c('Lemna', 'Myriophyllum'),
+taxa[ tax_genus %in% c('Lemna', 'Myriophyllum'),
      tax_ecotox_grp := 'Makrophytes' ]
-tax[ tax_genus != 'Daphnia' & tax_subphylum_div == 'Crustacea',
+taxa[ tax_genus != 'Daphnia' & tax_subphylum_div == 'Crustacea',
      tax_ecotox_grp := 'Crustacea' ]
-tax[ tax_family == 'Chironomidae',
+taxa[ tax_family == 'Chironomidae',
      tax_ecotox_grp := 'Chrionomidae' ]
+taxa[ tax_class == 'Anthozoa',
+      tax_ecotox_grp := 'Anthozoa' ]
+taxa[ tax_class == 'Ciliatea',
+      tax_ecotox_grp := 'Ciliatea' ]
+taxa[ tax_class == 'Filicopsida',
+      tax_ecotox_grp := 'Filicopsida' ]
+taxa[ tax_class == 'Oomycetes',
+      tax_ecotox_grp := 'Oomycetes' ]
+
 # TODO
 # sediment dwellers
 # worms sind eigentlich Annelida
 # aquatic invertebrates is hard to determine
 
+# writing -----------------------------------------------------------------
+saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
+
+# missing -----------------------------------------------------------------
+# missing (mostly because they were only identified to a certain level)
+# sapply(taxa, function(x) length(which(x == '')))
+# sapply(taxa, function(x) length(which(is.na(x))))
+
+# log ---------------------------------------------------------------------
+msg = 'EPA1: taxonomic cleaning script run'
+log_msg(msg)
+
 # cleaning ----------------------------------------------------------------
-rm(inv_makro_phylum, inv_mikro_phylum, inv_makro_subphylum, inv_makro_class,
-   invertebrates_makro, invertebrates_mikro)
+clean_workspace()
+
+
+
+
+
 
 # TODO --------------------------------------------------------------------
 
@@ -162,7 +178,7 @@ rm(inv_makro_phylum, inv_mikro_phylum, inv_makro_subphylum, inv_makro_class,
 # test = freshwater_info_inv
 # test_l = list()
 # for (i in test) {
-#   dt = tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', i))), .SDcols = cols]] # , ..cols  
+#   dt = taxa[axa[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', i))), .SDcols = cols]] # , ..cols  
 #   test_l[[i]] = dt
 # 
 # }
@@ -172,13 +188,13 @@ rm(inv_makro_phylum, inv_mikro_phylum, inv_makro_subphylum, inv_makro_class,
 # 
 # taxon_input = 'invertebrate'
 # 
-# cols = grep('tax_', names(tax), ignore.case = TRUE, value = TRUE)
-# tax[tax[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', taxon_input))), .SDcols = cols]]
+# cols = grep('tax_', names(taxa), ignore.case = TRUE, value = TRUE)
+# taxa[axa[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', taxon_input))), .SDcols = cols]]
 # 
 # dt[dt[, Reduce(`|`, lapply(.SD, `==`, 4)),.SDcols = sel.col], ..sel.col]
 # 
 # 
-# grep('mollusca', names(tax), ignore.case = TRUE, value = TRUE)
+# grep('mollusca', names(taxa), ignore.case = TRUE, value = TRUE)
 # 
 # 
 
@@ -188,7 +204,7 @@ rm(inv_makro_phylum, inv_mikro_phylum, inv_makro_subphylum, inv_makro_class,
 # 
 # 
 # 
-# sort(names(tax))
+# sort(names(taxa))
 
 # TODO final table should include
 # errata
@@ -199,10 +215,10 @@ rm(inv_makro_phylum, inv_mikro_phylum, inv_makro_subphylum, inv_makro_class,
 # maybe do latin_BIname also here?
 # create mikro and makroinvertebrate column
 
-# tax[ , .N, kingdom][order(-N)]
-# tax[ kingdom == 'Community' | kingdom == '' ]
-# tax[ , .N, ecotox_group][order(-N)]
-# names(tax[ , .SD, .SDcols =! c('subspecies', 'variety') ])
+# taxa[ , .N, kingdom][order(-N)]
+# taxa[ kingdom == 'Community' | kingdom == '' ]
+# taxa[ , .N, ecotox_group][order(-N)]
+# names(taxa[ , .SD, .SDcols =! c('subspecies', 'variety') ])
 
 
 
@@ -211,13 +227,13 @@ rm(inv_makro_phylum, inv_mikro_phylum, inv_makro_subphylum, inv_makro_class,
 
 
 
-# sort(names(tax))
+# sort(names(taxa))
 # 
 
 # 
 # # errata ------------------------------------------------------------------
 # # missing taxonomic classes
-# tax[latin_name == 'Photinus pyralis']
+# taxa[atin_name == 'Photinus pyralis']
 
 
 # errata ------------------------------------------------------------------

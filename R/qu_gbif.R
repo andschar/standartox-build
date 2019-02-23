@@ -121,10 +121,7 @@ gbif_conti_dc[ , count := sum(.SD, na.rm = TRUE),
                  .SDcols = cols_conti,
                  by = 1:nrow(gbif_conti_dc) ]
 na_conti = gbif_conti_dc[count == 0]
-msg = paste0('GBIF: For ', nrow(na_conti), '/', nrow(gbif_conti_dc),
-             ' taxa no continent information was found.')
-log_msg(msg); rm(msg)
-gbif_conti_dc[ , count := NULL]
+gbif_conti_dc[ , count := NULL ]
 
 # habitat
 cols_habi = grep('(?i)isfre|isbra|ismar|ister', names(gbif_hab_wat_dc), value = TRUE)
@@ -132,10 +129,10 @@ gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
                    .SDcols = cols_habi,
                    by = 1:nrow(gbif_hab_wat_dc) ]
 na_habi = gbif_hab_wat_dc[ count == 0]
-msg = paste0('GBIF: For ', nrow(na_habi), '/', nrow(gbif_hab_wat_dc),
-             ' taxa no habitat information was found.')
-log_msg(msg); rm(msg)
-gbif_hab_wat_dc[ , count := NULL]
+gbif_hab_wat_dc[ , `:=`
+                 (habitat = NULL,
+                   waterbody = NULL,
+                   count = NULL) ]
 
 # save missing data to .csv
 missing_l = list(gbif_na_conti = na_conti, gbif_na_habi = na_habi)
@@ -162,8 +159,12 @@ saveRDS(gbif_conti_dc, file.path(cachedir, 'gbif_conti_dc.rds'))
 saveRDS(gbif_hab_wat_dc, file.path(cachedir, 'gbif_hab_wat_dc.rds'))
 
 # log ---------------------------------------------------------------------
-msg = 'GBIF script run'
-log_msg(msg); rm(msg)
+msg = paste0('GBIF: For ', nrow(na_conti), '/', nrow(gbif_conti_dc),
+             ' taxa no continent information was found.')
+log_msg(msg)
+msg = paste0('GBIF: For ', nrow(na_habi), '/', nrow(gbif_hab_wat_dc),
+             ' taxa no habitat information was found.')
+log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

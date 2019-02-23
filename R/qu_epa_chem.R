@@ -1,4 +1,5 @@
 # script to classify chemicals and organisms accoring to EPA data
+# TODO additional super groups/classes
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
@@ -8,7 +9,7 @@ if (online_db) {
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
   
-  cla_che = dbGetQuery(con, "SELECT cas_number, ecotox_group
+  cla_che = dbGetQuery(con, "SELECT cas_number, chemical_name AS cname, ecotox_group
                              FROM ecotox.chemicals")
   setDT(cla_che)
   cla_che[ , cas_number := as.character(cas_number) ]
@@ -65,17 +66,32 @@ cla_che[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
          ep_pesticide := 1L ]
 cla_che[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
          ep_pesticide := 1L ]
+cla_che[ grep('(?i)conazoles', ecotox_group),
+         ep_fungicide := 1L ]
+cla_che[ grep('(?i)pfoa', ecotox_group),
+         ep_pfoa := 1L ]
+cla_che[ grep('(?i)ppcp', ecotox_group),
+         ep_pcp := 1L ]
+cla_che[ grep('(?i)pcb', ecotox_group),
+         ep_pcb := 1L ]
+cla_che[ grep('(?i)edc', ecotox_group),
+         ep_edc := 1L ]
+cla_che[ grep('(?i)organotin', ecotox_group),
+         ep_organotin := 1L ]
+
+cla_che[ , .N, ecotox_group][order(-N)] # TODO CONTINUE HERE!
 
 # final table -------------------------------------------------------------
-cla_che = cla_che[ , .SD, .SDcols =! 'ecotox_group' ]
-ep_chem_fin = cla_che[ , lapply(.SD, as.integer), .SDcols =! 'cas', cas ]
+ep_chem_fin = cla_che[ , lapply(.SD, as.integer),
+                       .SDcols =! c('cas', 'cname', 'ecotox_group'), cas ]
+ep_chem_fin[cla_che, ep_cname := i.cname, on = 'cas']
 
 # writing -----------------------------------------------------------------
 saveRDS(ep_chem_fin, file.path(cachedir, 'ep_chem_fin.rds'))
 
 # log ---------------------------------------------------------------------
 msg = 'EPA chemicals script run'
-log_msg(msg); rm(msg)
+log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

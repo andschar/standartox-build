@@ -35,17 +35,21 @@ source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
 # build
 source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
 
-# (2) prepare data --------------------------------------------------------
-# run EPA preparation files
-source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
+# (2) identifiers ---------------------------------------------------------
+source(file.path(src, 'da_epa_chemicals.R'), max.deparse.length = mdl) # extracts identifiers
+source(file.path(src, 'da_epa_taxonomy.R'), max.deparse.length = mdl) # extracts identifiers
 
 # (3) queries + data preparation ------------------------------------------
 source(file.path(src, 'qu_run.R'), max.deparse.length = mdl)
 
-# (4) results -------------------------------------------------------------
+# (4) prepare data --------------------------------------------------------
+# run EPA preparation files
+source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
+
+# (5) results -------------------------------------------------------------
 source(file.path(src, 're_run.R'), max.deparse.length = mdl)
 
-# (5) writing -------------------------------------------------------------
+# (6) writing -------------------------------------------------------------
 source(file.path(src, 'wr_run.R'), max.deparse.length = mdl)
 
 # file copies -------------------------------------------------------------

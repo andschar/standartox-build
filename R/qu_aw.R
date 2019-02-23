@@ -33,38 +33,46 @@ if (online) {
 
 # preparation -------------------------------------------------------------
 aw_l2 = aw_l[ !is.na(aw_l) ] # remove NAs
-aw = rbindlist(lapply(aw_l2, function(x) data.table(t(x))),
-                  idcol = 'cas') # columns are lists
+aw = rbindlist(lapply(aw_l2, function(x) data.table(t(x)))) # columns are lists
+aw = aw[, lapply(.SD, as.character), by = 1:nrow(aw) ]
 n_sa_cols = max(sapply(aw$subactivity, length)) # up to 3 length vectors 
 
 aw[ , paste0('subactivity', n_sa_cols) := sapply(subactivity, `[`, n_sa_cols)]
 
 # identify pesticide groups -----------------------------------------------
 cols = c('activity', paste0('subactivity', n_sa_cols))
-aw2 = aw[ , .SD, .SDcols = c('cas', 'cname', cols) ]
-aw2_m = melt(aw2, id.var = c('cas', 'cname'))
-aw2_m[ , cas := as.character(cas) ]
-aw2_m[ , cname := as.character(cname) ]
 
-aw2_m[ grep('(?i)acaric', value) , aw_acaricide := 1L ]
-aw2_m[ grep('(?i)fungic', value) , aw_fungicide := 1L ]
-aw2_m[ grep('(?i)herbic', value) , aw_herbicide := 1L ]
-aw2_m[ grep('(?i)inhibitor', value) , aw_inhibitors := 1L ]
-aw2_m[ grep('(?i)insectic', value) , aw_insecticide := 1L ]
-aw2_m[ grep('(?i)molluscic', value) , aw_molluscicide := 1L ]
-aw2_m[ grep('(?i)repellent', value) , aw_repellent := 1L ]
-aw2_m[ grep('(?i)rodentic', value) , aw_rodenticide := 1L ]
+aw[ , activ_subactiv := paste(get(cols)) ]
+aw[ grep('(?i)acaric', activ_subactiv) , acaricide := 1L ]
+aw[ grep('(?i)fungic', activ_subactiv) , fungicide := 1L ]
+aw[ grep('(?i)herbic', activ_subactiv) , herbicide := 1L ]
+aw[ grep('(?i)inhibitor', activ_subactiv) , inhibitors := 1L ]
+aw[ grep('(?i)insectic', activ_subactiv) , insecticide := 1L ]
+aw[ grep('(?i)molluscic', activ_subactiv) , molluscicide := 1L ]
+aw[ grep('(?i)repellent', activ_subactiv) , repellent := 1L ]
+aw[ grep('(?i)rodentic', activ_subactiv) , rodenticide := 1L ]
+aw[ grep('(?i)oxazole.+fungicide', activ_subactiv) , fungicide_oxazole := 1L ]
+aw[ grep('(?i)benzoic.+herbicide', activ_subactiv) , herbicide_benzoic_acid := 1L ]
+aw[ grep('(?i)plant.+growth.+regulator', activ_subactiv) , plant_growth_regulator := 1L ]
+aw[ grep('(?i)growth.+stimulator', activ_subactiv) , growth_stimulator := 1L ]
+# TODO continue groups! - subgroups of pesticides (e.g. oxazle fungicides)
+cols = c('acaricide', 'fungicide', 'herbicide', 'inhibitors', 'insecticide', 'molluscicide', 'repellent', 'rodenticide')
+aw[ , pesticide := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), 
+    .SDcols = cols ][ pesticide == 0, pesticide := NA ]
 
-cols = c('aw_acaricide', 'aw_fungicide', 'aw_herbicide', 'aw_inhibitors', 'aw_insecticide', 'aw_molluscicide', 'aw_repellent', 'aw_rodenticide')
-aw_fin = aw2_m[ , lapply(.SD, min, na.rm = TRUE), .SDcols = cols, by = .(cas, cname) ]
-for (i in names(aw_fin)) {
-  aw_fin[ get(i) == Inf, (i) := NA ]
-}
-
-aw_fin[ , aw_pest := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), .SDcols = cols ][ aw_pest == 0, aw_pest := NA ]
+# final table -------------------------------------------------------------
+setcolorder(aw, 'cas')
+aw_fin = aw
+setnames(aw_fin, paste0('aw_', names(aw_fin)))
+setnames(aw_fin, 'aw_cas', 'cas')
 
 # writing -----------------------------------------------------------------
+## rds
 saveRDS(aw_fin, file.path(cachedir, 'aw_fin.rds'))
+## postgres (all data)
+write_tbl(aw, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'phch', tbl = 'alanwood',
+          comment = 'Results from the Alan Wood pesticide compendium query')
 
 # log ---------------------------------------------------------------------
 msg = paste0('AlanWood: For ', length(aw_l) - nrow(aw_fin), '/', length(aw_l),

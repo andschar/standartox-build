@@ -68,7 +68,9 @@ q = "
          tests.organism_habitat, -- ('soil')
          tests.subhabitat, -- ('P', 'R', 'L', 'E', 'D', 'F', 'G', 'M') -- Palustrine, Riverine, Lacustrine, Estuarine
       -- species parameters
+         species.species_number,
          species.latin_name, -- only latin_name. Other entries are merged: eu_epa_taxonomy.R
+         species.common_name,
          species.ecotox_group AS spec_ecotox_group,
          tests.organism_init_wt_mean,
          tests.organism_init_wt_unit,

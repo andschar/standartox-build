@@ -67,28 +67,27 @@ saveRDS(ikey, file.path(cachedir, 'pc_inchikeys.rds'))
 # 1 col, >1 row DT are multiple results
 pc_pro_l = lapply(pc_pro_l, data.table)
 
-pc = rbindlist(pc_pro_l, fill = TRUE, idcol = 'cas')
+pc = rbindlist(pc_pro_l, fill = TRUE, idcol = 'cas')[ , V1 := NULL ]
+setnames(pc, names(pc), tolower(names(pc)))
 
 # Synonyms
 syn = sapply(pc_syn_l, `[`, 2)
-syn_fin = rbindlist(lapply(syn, as.data.frame.list),
-                    idcol = 'cas')
-setnames(syn_fin, 2, 'pc_common_name')
-syn_fin[ , pc_common_name := tolower(pc_common_name) ]
+syn = rbindlist(lapply(syn, as.data.frame.list),
+                idcol = 'cas')
+setnames(syn, 2, 'cname')
+syn[ , cname := tolower(cname) ]
+
+# merge synonyms
+pc = merge(pc, syn, by = 'cas')
+setcolorder(pc, c('cas', 'cid', 'cname', 'iupacname', 'inchi', 'inchikey', 'canonicalsmiles', 'isomericsmiles'))
 
 # final dt ----------------------------------------------------------------
 # https://pubchemdocs.ncbi.nlm.nih.gov/about
 # CID - non-zero integer PubChem ID
 # XLogP - Log P calculated Log P
-pc_fin = pc[ , .SD, .SDcols = c('cas', 'CID', 'InChIKey', 'IUPACName', 'ExactMass')]
+pc_fin = pc[ , .SD, .SDcols = c('cas', 'cid', 'cname', 'inchikey', 'canonicalsmiles', 'isomericsmiles', 'iupacname', 'exactmass')]
 pc_fin = pc_fin[!duplicated(cas)] #! easy way out, although pubchem doesn't provide important information
-setnames(pc_fin, tolower(names(pc_fin)))
-setnames(pc_fin,
-         old = c('inchikey', 'iupacname', 'exactmass'),
-         new = c('pc_inchikey', 'pc_iupacname', 'pc_exactmass'))
-
-# merge synonyms
-pc_fin = merge(pc_fin, syn_fin, by = 'cas')
+setnames(pc_fin, names(pc_fin), paste0('pc_', names(pc_fin)))
 
 # missing entries ---------------------------------------------------------
 na_pc_fin_inchi = pc_fin[ is.na(pc_inchikey) ]
@@ -103,12 +102,21 @@ if (nrow(na_pc_fin_inchi) > 0) {
           file.path(missingdir, 'na_pc_fin_inchi.csv'))
 }
 
+# names -------------------------------------------------------------------
+setnames(pc_fin, tolower(names(pc_fin)))
+setnames(pc_fin, 'pc_cas', 'cas')
+
 # writing -----------------------------------------------------------------
+## rds
 saveRDS(pc_fin, file.path(cachedir, 'pc_fin.rds'))
+## postgres (all data)
+write_tbl(pc, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'phch', tbl = 'pubchem',
+          comment = 'Results from the PubChem query')
 
 # log ---------------------------------------------------------------------
 msg = 'PubChem script run'
-log_msg(msg); rm(msg)
+log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

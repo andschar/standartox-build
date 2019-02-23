@@ -1,5 +1,4 @@
 # script to prepare EPA ECOTOX data
-# raw data appart from some preparation steps (for use with NORMAN)
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
@@ -11,7 +10,6 @@ source(file.path(src, 'da_epa_endpoints.R'))
 source(file.path(src, 'da_epa_exposure_type.R'))
 source(file.path(src, 'da_epa_media.R'))
 source(file.path(src, 'da_epa_statistics.R'))
-source(file.path(src, 'da_epa_taxonomy.R'))
 
 # query -------------------------------------------------------------------
 if (online_db) {
@@ -267,17 +265,10 @@ Sys.time() - time
 time = Sys.time()
 saveRDS(epa1, file.path(cachedir, 'epa1.rds'))
 Sys.time() - time # 1 min - 75MB
-## identifiers
-# taxa
-taxa = unique(epa1[ , .SD, .SDcols = c('taxon', 'tax_genus', 'tax_family') ])
-saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
-# chemical data
-chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'chemical_name')])
-saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 
 # log ---------------------------------------------------------------------
 msg = 'EPA1: raw script run'
-log_msg(msg); rm(msg)
+log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

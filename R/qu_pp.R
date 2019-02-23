@@ -48,29 +48,23 @@ pp_resolve = function(l) {
   return(dt)
 }
 
-
 # preparation -------------------------------------------------------------
 pp_l[!is.na(pp_l)] = lapply(pp_l[!is.na(pp_l)], pp_resolve)
 pp_l[is.na(pp_l)] = lapply(pp_l[is.na(pp_l)], data.table)
 
-pp = rbindlist(pp_l, fill = TRUE, idcol = 'cas')
-pp[ , V1 := NULL ]
+pp = rbindlist(pp_l, fill = TRUE, idcol = 'cas')[ , V1 := NULL ]
 pp = pp[ !is.na(cas) ] # TODO why are NAs created in the first place?
 setcolorder(pp, c('cas', 'cname'))
-
 # names
 setnames(pp, c('Water Solubility', 'Log P (octanol-water)'), c('solubility_water', 'p_log'))
-
-# tolower
 pp[ , cname := tolower(cname) ]
-
 # conversions
 pp[ , solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 
 # final dt ----------------------------------------------------------------
 pp_fin = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
-
-setnames(pp_fin, c('cas', paste0('pp_', tolower(names(pp_fin[ ,2:length(names(pp_fin))])))))
+setnames(pp_fin, paste0('pp_', tolower(names(pp_fin))))
+setnames(pp_fin, 'pp_cas', 'cas')
 
 # missing entries ---------------------------------------------------------
 na_pp_fin_cname = pp_fin[ is.na(pp_cname) ]
@@ -85,11 +79,17 @@ if (nrow(na_pp_fin_cname) > 0) {
 }
 
 # writing -----------------------------------------------------------------
+## rds
 saveRDS(pp_fin, file.path(cachedir, 'pp_fin.rds'))
+## postgres
+## postgres (all data)
+write_tbl(pp, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'phch', tbl = 'physprop',
+          comment = 'Results from the PhysProp query')
 
 # log ---------------------------------------------------------------------
 msg = 'Physprop script run'
-log_msg(msg); rm(msg)
+log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
