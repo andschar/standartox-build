@@ -34,6 +34,8 @@ if (sink_console) {
 source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
 # build
 source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
+# meta files
+source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl)
 
 # (2) identifiers ---------------------------------------------------------
 source(file.path(src, 'da_epa_chemicals.R'), max.deparse.length = mdl) # extracts identifiers
@@ -59,6 +61,9 @@ file.copy('README.md', file.path(shinydir, 'README.md'),
 if (nodename == 'scharmueller') {
   source(file.path(src, 'no_share.R'))
 }
+
+# end ---------------------------------------------------------------------
+source(file.path(src, 'end.R'))
 
 # # (0b) console log 2 --------------------------------------------------------
 if (sink_console) {
