@@ -42,7 +42,7 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = TRUE # should queries be run
+online = FALSE # should queries be run
 online_db = FALSE # should database query be run
 plots = FALSE # should output plots be created
 scp_feather = FALSE # scp feather object # TODO remove this in the end
@@ -70,10 +70,14 @@ norman = file.path(prj, 'norman')
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')
 
-DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
-
-if(inherits(DBetox, 'try-error')) {
-  DBetox = 'DBetox not yet defined'
+# data base to write to
+if (debug_mode) {
+  DBetox = 'testdb'
+} else {
+  DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
+  if(inherits(DBetox, 'try-error')) {
+    DBetox = 'DBetox not yet defined'
+  }
 }
 
 # path to phantomjs
