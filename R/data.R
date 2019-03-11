@@ -1,8 +1,7 @@
 # script to load data
 
 # setup -------------------------------------------------------------------
-src = file.path(getwd(), 'R')
-source(file.path(src, 'setup.R'))
+source('R/setup.R')
 
 # data --------------------------------------------------------------------
 # as .rds (~2.5s)

@@ -58,7 +58,7 @@ fun_aggregate = function(dt,
   # counter
   # saveRDS(dt_counter, file.path(cache, 'dt_counter.rds'))
   # debuging
-  fwrite(out, file.path(tempdir(), 'out.csv'))
+  # fwrite(out, file.path(tempdir(), 'out.csv'))
   
   return(out)
 }
