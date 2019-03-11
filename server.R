@@ -60,6 +60,7 @@ server = function(input, output) {
         endpoint = input$endpoint,
         chem_class = input$chem_class,
         duration = c(input$dur1, input$dur2),
+        year = c(input$yr1, input$yr2),
         chck_solub = input$chck_solub,
         cas = rv$data
       ),

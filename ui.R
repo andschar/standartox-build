@@ -124,15 +124,33 @@ sidebar = dashboardSidebar(
           value = 48
         )
       ),
-      # TODO
-      # prettyCheckboxGroup(
-      #   inputId = 'acch',
-      #   label = 'TODO! Acute / Chronic',
-      #   # TODO take choices programatically!
-      #   choiceValues = c('acute', 'chronic', 'nc'),
-      #   choiceNames = c('acute', 'chronic', 'not classified')
-      # ),
-      # TODO END
+      splitLayout(
+        numericInput(
+          inputId = 'yr1',
+          label = 'Publication year from',
+          value = 1900
+        ),
+        numericInput(
+          inputId = 'yr2',
+          label = 'to',
+          value = substr(Sys.Date(),1,4)
+        )
+      ),
+      splitLayout(
+        prettyCheckboxGroup(
+          inputId = 'acch',
+          label = 'TODO! Acute / Chronic',
+          # TODO take choices programatically!
+          choiceValues = c('acute', 'chronic', 'nc'),
+          choiceNames = c('acute', 'chronic', 'not classified')
+        ),
+        prettyCheckboxGroup(
+          inputId = 'exposure', # exposure_type
+          label = 'TODO! Exposure',
+          choiceValues = c('diet'),
+          choiceNames = c('diet')
+        )
+      ),
       splitLayout(
         prettyCheckboxGroup(
           inputId = 'effect',

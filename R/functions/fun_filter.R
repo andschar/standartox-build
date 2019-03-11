@@ -11,13 +11,14 @@ fun_filter = function(dt,
                       endpoint = NULL,
                       chem_class = NULL,
                       duration = NULL,
+                      year = NULL,
                       chck_solub = FALSE,
                       cas = NULL) {
   
   # debug me!
   # source('R/setup.R')
   # tests_fin = readRDS(file.path(datadir, 'tests_fin.rds'))
-  # dt = tests_fin; cas = NULL; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = c('Daphniidae', 'Algae'); duration = c(24,48); effect = NULL; endpoint = 'XX50'; chem_class = c('cgr_herbicide'); conc_type = 'A'; comp = 'comp_name'; agg = c('min', 'max'); info = 'taxa'; chck_solub = FALSE; chck_outl = FALSE
+  # dt = tests_fin; cas = NULL; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = c('Daphniidae', 'Algae'); duration = c(24,48); year = c(1900,2019); effect = NULL; endpoint = 'XX50'; chem_class = c('cgr_herbicide'); conc_type = 'A'; comp = 'comp_name'; agg = c('min', 'max'); info = 'taxa'; chck_solub = FALSE; chck_outl = FALSE
   
   # CAS ---------------------------------------------------------------------
   if (!is.null(cas)) {
@@ -99,8 +100,17 @@ fun_filter = function(dt,
   } else {
     dur = duration
   }
-  dur_id = paste0(dur, collapse = '')
   dt = dt[ dur_fin %between% dur ]
+  
+  ## year ----
+  if (is.null(year)) {
+    yr = range(dt$ref_publ_year)
+  } else if (length(year) == 1) {
+    yr = rep(year, 2)
+  } else {
+    yr = year
+  }
+  dt = dt[ ref_publ_year %between% yr ]
   
   # write dt all for plot function
   #write_feather(dt, file.path(cache, 'dt.feather')) #! infinite recursion - problem with feather package
