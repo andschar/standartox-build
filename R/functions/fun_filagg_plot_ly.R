@@ -1,10 +1,6 @@
-# function to create plotly output
+# function to create plotly or ggplot output
 
 # functions ---------------------------------------------------------------
-# debuging (has to be turned on in fun_ec50filter_aggregation.R)
-# dt_pl = fread(file.path(tempdir(), 'out.csv')); cutoff = 25; yaxis = 'casnr'
-
-# fun_ec50filter_aggregation() data ---------------------------------------
 filagg_prep = function(dt_pl,
                        cutoff = 25) {
   setDT(dt_pl)
@@ -22,16 +18,16 @@ filagg_prep = function(dt_pl,
   setDT(dt_all_pl)
   # calculate outliers (as in fun_ec50filter_aggregation.R)
   dt_all_pl[,
-            #outl := outliers::scores(value_fin, type = 'iqr', lim = 1.5), # DEPR
-            outl := rm_outliers(value_fin, lim = 1.5, na.rm = TRUE),
-            by = .(casnr, taxon, dur_fin)]
+            #outl := outliers::scores(conc1_mean_conv, type = 'iqr', lim = 1.5), # DEPR
+            outl := rm_outliers(conc1_mean_conv, lim = 1.5, na.rm = TRUE),
+            by = .(casnr, taxon, obs_duration_mean_conv)]
   dt_all_pl[, outl := ifelse(is.na(outl), TRUE, FALSE)]
   
   dt_all_pl[, comp_type := 'test']
   cols = c('casnr',
            'comp_name',
            'comp_type',
-           'value_fin',
+           'conc1_mean_conv',
            'outl',
            'ref_num')
   dt_all_pl = dt_all_pl[, .SD, .SDcols = cols]
@@ -77,7 +73,7 @@ filagg_gg = function(dt,
       data = dt_all,
       aes(
         y = get(yaxis),
-        x = value_fin,
+        x = conc1_mean_conv,
         col = outl
       ),
       shape = 1,
@@ -134,7 +130,7 @@ filagg_ly = function(dt,
   ly_out = plot_ly() %>%
     add_trace(
       data = dt_all,
-      x = ~ value_fin,
+      x = ~ conc1_mean_conv,
       y = ~ get(yaxis),
       text = paste0('EPA Reference number: ', dt_all$ref_num),
       name = 'Test data',

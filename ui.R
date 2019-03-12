@@ -10,9 +10,6 @@ source(file.path(src, 'data.R'))
 # variables ---------------------------------------------------------------
 sidewidth = 350
 
-# data --------------------------------------------------------------------
-#n_pl = read_feather(file.path(cache, 'n_pl'))
-
 # header ------------------------------------------------------------------
 header = dashboardHeaderPlus(
   title = 'Etox Base',
@@ -54,8 +51,8 @@ sidebar = dashboardSidebar(
       prettyCheckboxGroup(
         inputId = 'conc_type',
         label = 'Concentration type',
-        choiceValues = te_stats_l$tes_conc_type$variable,
-        choiceNames = te_stats_l$tes_conc_type$nam_fin,
+        choiceValues = te_stats_l$tes_conc1_type$variable,
+        choiceNames = te_stats_l$tes_conc1_type$nam_fin,
         selected = c('A')
       ),
       prettyCheckboxGroup(

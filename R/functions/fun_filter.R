@@ -1,5 +1,4 @@
-# setup -------------------------------------------------------------------
-require(data.table)
+# function to filter data according to user's inputs
 
 # function ----------------------------------------------------------------
 fun_filter = function(dt, 
@@ -94,13 +93,13 @@ fun_filter = function(dt,
   
   ## duration ----
   if (is.null(duration)) {
-    dur = range(dt$dur_fin)
+    dur = range(dt$obs_duration_mean_conv)
   } else if (length(duration) == 1) {
     dur = rep(duration, 2)
   } else {
     dur = duration
   }
-  dt = dt[ dur_fin %between% dur ]
+  dt = dt[ obs_duration_mean_conv %between% dur ]
   
   ## year ----
   if (is.null(year)) {

@@ -1,7 +1,4 @@
-# function to filter EC50 data according to habitat, continent and conc_type
-
-# setup -------------------------------------------------------------------
-require(data.table)
+# function to aggregate inout from fun_filter()
 
 # setup -------------------------------------------------------------------
 fun_aggregate = function(dt, 
@@ -14,16 +11,16 @@ fun_aggregate = function(dt,
   ## (1a) Aggregate by casnr, taxon and duration ----
   dt_agg = dt[ ,
                j = .(info = paste0(unlist(lapply(strsplit(taxon, '\\s'), paste0, collapse = '_')),
-                                   '_', dur_fin, 'h_', ref_num, '_(', sort(value_fin), 'ug/L)',
+                                   '_', obs_duration_mean_conv, 'h_', ref_num, '_(', sort(conc1_mean_conv), 'ug/L)',
                                    collapse = ' - '),
-                     vls = paste0(as.character(sort(value_fin)), collapse = '-'),
+                     vls = paste0(as.character(sort(conc1_mean_conv)), collapse = '-'),
                      taxa = paste0(unique(taxon), collapse = '-'),
-                     md = median(value_fin, na.rm = TRUE),
-                     min = min(value_fin, na.rm = TRUE),
-                     # outl = outliers::scores(value_fin, type = 'iqr', lim = 1.5),
-                     outl = rm_outliers(value_fin, lim = 1.5, na.rm = TRUE),
+                     md = median(conc1_mean_conv, na.rm = TRUE),
+                     min = min(conc1_mean_conv, na.rm = TRUE),
+                     # outl = outliers::scores(conc1_mean_conv, type = 'iqr', lim = 1.5),
+                     outl = rm_outliers(conc1_mean_conv, lim = 1.5, na.rm = TRUE),
                      n_tests = .N),
-               by = .(casnr, taxon, dur_fin)]
+               by = .(casnr, taxon, obs_duration_mean_conv)]
   ## outliers
   if (chck_outlier) {
     dt_agg = dt_agg[ !is.na(outl) ] # exclude outliers
