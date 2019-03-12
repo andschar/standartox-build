@@ -2,7 +2,7 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
-online_db = T
+
 # query -------------------------------------------------------------------
 if (online_db) {
   drv = dbDriver("PostgreSQL")
@@ -40,7 +40,7 @@ ep_habi[ subhabitat %in% c('M'), ep_isMar := 1L ]
 # final table
 ep_habi_fin = ep_habi[ , 
                         lapply(.SD, min), 
-                        by = latin_name, 
+                        by = .(latin_name, species_number), 
                         .SDcols = c('ep_isFre', 'ep_isMar', 'ep_isTer', 'ep_isBra') ]
 setnames(ep_habi_fin, 'latin_name', 'taxon')
 
@@ -49,7 +49,7 @@ saveRDS(ep_habi_fin, file.path(cachedir, 'ep_habi_fin.rds'))
 
 # log ---------------------------------------------------------------------
 msg = 'EPA taxa habitat script run'
-log_msg(msg); rm(msg)
+log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

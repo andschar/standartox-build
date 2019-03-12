@@ -5,35 +5,65 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 epa1 = readRDS(file.path(cachedir, 'epa1.rds'))
+look = fread(file.path(lookupdir, 'lookup_variables.csv'))
+
+# NORMAN filters ----------------------------------------------------------
+# TODO insert filters here! Also in da_epaX_nor2.R
+
+# TODO how to only export new data with every new epa version?
+# Maybe find identifier in Postgres for releases
+# select to_date(created_date, 'DD/MM/YYYY'), to_date(modified_date
+# from ecotox.tests
+# order by created_date desc
+# limit 100
+
+
 
 # NORMAN variables --------------------------------------------------------
-look = fread(file.path(lookupdir, 'lookup_variables.csv'))
-look = look[ !is.na(no1_variable) & no1_variable != '' ] #! still an issue in data.table_1.11.8
-# https://stackoverflow.com/questions/51019041/blank-space-not-recognised-as-na-in-fread
-# check 
-chck_look_var = nrow( look_var[ ! no1_variable %in% names(epa1) ] )
-if (chck_look_var != 0) {
-  msg = 'Some NORMAN lookup variables can not be found in names(epa1)'
+time = Sys.time()
+nor1 = norman(epa1)
+Sys.time() - time
+
+# NORMAN variables numbers ------------------------------------------------
+## checks
+# unique NORMAN ids
+if (any(duplicated(look$id))){
+  print(paste0('Duplicates: ', look[ duplicated(look$id), id ]))
+}
+# all NORMAN variables in nor1 
+chck_look = nrow( look[ ! norman1 %in% names(nor1) ] )
+if (chck_look != 0) {
+  msg = 'Some NORMAN lookup variables can not be found in names(nor1)'
   log_msg(msg)
   stop(msg)
-}; rm(chck_no_look)
+}
 
-# integer column names
-cols = look_var$no1_variable
-names(cols) = look_var$id1
-cols = cols[ cols %in% names(epa1) ]
-
-# NORMAN table
-nor1 = epa1[ , .SD, .SDcols = cols ]
+## subset
+look = look[ nor_variable == 1L ]
+cols = look$norman1
+names(cols) = look$id
+# data
+nor1 = nor1[ , .SD, .SDcols = cols ]
 setnames(nor1, names(cols))
 
-
 # writing -----------------------------------------------------------------
-# raw export
+## data
+# postgres
+time = Sys.time()
+write_tbl(nor1, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'norman', tbl = 'nor1',
+          comment = 'EPA ECOTOX raw export for NORMAN')
+Sys.time() - time
+# data (rds)
+time = Sys.time()
+saveRDS(nor1, file.path(cachedir, 'nor1.rds'))
+Sys.time() - time
+# raw csv export
 time = Sys.time()
 fwrite(nor1, file.path(share, 'nor1_raw.csv'))
 Sys.time() - time
-# example (Triclosan) export
+## example
+# Triclosan
 time = Sys.time()
 fwrite(nor1[ `21` == '3380345' ],
        file.path(share, 'nor1_raw_triclosan.csv'))
@@ -52,6 +82,5 @@ msg = 'NORMAN: raw script run'
 log_msg(msg); rm(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(list = ls()[ !ls() %in% c('src') ] )
-
+clean_workspace()
 

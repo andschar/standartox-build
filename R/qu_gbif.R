@@ -122,6 +122,7 @@ gbif_conti_dc[ , count := sum(.SD, na.rm = TRUE),
                  by = 1:nrow(gbif_conti_dc) ]
 na_conti = gbif_conti_dc[count == 0]
 gbif_conti_dc[ , count := NULL ]
+setnames(gbif_conti_dc, tolower(names(gbif_conti_dc)))
 
 # habitat
 cols_habi = grep('(?i)isfre|isbra|ismar|ister', names(gbif_hab_wat_dc), value = TRUE)

@@ -19,5 +19,6 @@ source(file.path(src, 'qu_worms2.R'), max.deparse.length = mdl)
 source(file.path(src, 'qu_gbif.R'), max.deparse.length = mdl) # contains also habitat information
 
 # merge script ------------------------------------------------------------
-source(file.path(src, 're_merge.R'), max.deparse.length = mdl)
+source(file.path(src, 're_merge_chem.R'), max.deparse.length = mdl)
+source(file.path(src, 're_merge_taxa.R'), max.deparse.length = mdl)
 

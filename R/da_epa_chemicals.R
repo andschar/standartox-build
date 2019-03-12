@@ -1,13 +1,28 @@
-# script to clean cas numbers
+# script to retrieve cas numbers
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 
-# data --------------------------------------------------------------------
-epa1 = readRDS(file.path(cachedir, 'epa1.rds'))
-
-chem = unique(epa1[ , .SD, .SDcols = c('casnr', 'cas', 'chemical_name')])
-setorder(chem, casnr)
+# (1) query ---------------------------------------------------------------
+if (online_db) {
+  drv = dbDriver("PostgreSQL")
+  con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
+  
+  chem = dbGetQuery(con, "SELECT *
+                          FROM ecotox.chemicals")
+  setDT(chem)
+  setnames(chem, 'cas_number', 'casnr')
+  setorder(chem, casnr)
+  
+  dbDisconnect(con)
+  dbUnloadDriver(drv)
+  
+  saveRDS(chem, file.path(cachedir, 'source_epa_chem.rds'))
+  
+} else {
+  
+  chem = readRDS(file.path(cachedir, 'source_epa_chem.rds'))  
+}
 
 # writing -----------------------------------------------------------------
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))

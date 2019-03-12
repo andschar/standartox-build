@@ -1,35 +1,11 @@
-# script to write table to shiny directory
+# script to write variables from final table to shiny directory
+# for dynamic shiny UI inputs
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
-source(file.path(src, 'fun_shiny_variables_stat.R'))
 
 # data --------------------------------------------------------------------
-te_fin = readRDS(file.path(cachedir, 'tests_fin.rds'))
-
-# (1) write table to shiny directory --------------------------------------
-## as .rds
-time = Sys.time()
-saveRDS(te_fin, file.path(shinydata, 'tests_fin.rds'))
-Sys.time() - time
-## as feather
-time = Sys.time()
-write_feather(te_fin, file.path(shinydata, 'tests_fin.feather'))
-Sys.time() - time
-## copy .feather via scp to server (github only allows 100MB)
-#! takes some time
-if (nodename == 'scharmueller' & scp_feather) {
-  system(
-    paste('scp',
-          file.path(shinydata, 'tests_fin.feather'),
-          shinydir_remote, 'data/tests_fin.feather',
-          sep = ' ')
-  )
-}
-
-# log
-msg = paste0('Final table (tests_fin) written to shiny data dir:\n', shinydata)
-log_msg(msg); rm(msg)
+te_fin = readRDS(file.path(cachedir, 'epa3.rds'))
 
 # (2) write variables for shiny UI ----------------------------------------
 ## preparation
@@ -37,7 +13,7 @@ te_stats_l = list(
   ## long variables ----
   tes_effect = out_stats_lng(te_fin, tes_effect),
   tes_endpoint = out_stats_lng(te_fin, tes_endpoint_grp),
-  tes_conc_type = out_stats_lng(te_fin, tes_conc_type),
+  tes_conc_type = out_stats_lng(te_fin, tes_conc1_type),
   ## wide variables ----
   continent = out_stats_wid(
     te_fin,
@@ -51,7 +27,6 @@ te_stats_l = list(
     te_fin,
     c('cgr_fungicide', 'cgr_herbicide', 'cgr_insecticide', 'cgr_molluscicide', 
       'cgr_repellent', 'cgr_rodenticide', 'cgr_metal')
-    
   )
 )
 
@@ -104,9 +79,10 @@ saveRDS(te_stats_l, file.path(shinydata, 'te_stats_l.rds'))
 
 # log ---------------------------------------------------------------------
 msg = 'Shiny variables written'
-log_msg(msg); rm(msg)
+log_msg(msg)
 
-
+# cleaning ----------------------------------------------------------------
+clean_workspace()
 
 
 

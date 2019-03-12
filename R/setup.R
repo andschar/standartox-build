@@ -42,7 +42,7 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = FALSE # should queries be run
+online = TRUE # should queries be run
 online_db = FALSE # should database query be run
 plots = FALSE # should output plots be created
 scp_feather = FALSE # scp feather object # TODO remove this in the end
@@ -54,6 +54,7 @@ sink_console = FALSE # sink console to file
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
 missingdir = file.path(prj, 'missing')
+meta = file.path(prj, 'meta')
 fundir = file.path(prj, 'functions')
 plotdir = file.path(prj, 'plots')
 src = file.path(prj, 'R')
@@ -101,6 +102,9 @@ source(file.path(src, 'fun_log_message.R'))
 source(file.path(src, 'fun_scrape_phantomjs.R'))
 source(file.path(src, 'fun_worms_query.R'))
 source(file.path(src, 'fun_ln_na.R'))
+source(file.path(src, 'fun_paste2.R'))
+source(file.path(src, 'fun_norman.R'))
+source(file.path(src, 'fun_shiny_variables_stat.R'))
 
 # database ----------------------------------------------------------------
 # put database credentials here?
