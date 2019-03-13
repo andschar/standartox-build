@@ -24,6 +24,10 @@ if (online_db) {
   chem = readRDS(file.path(cachedir, 'source_epa_chem.rds'))  
 }
 
+# preparation -------------------------------------------------------------
+chem[ , cas := casconv(casnr) ]
+setcolorder(chem, c('casnr', 'cas'))
+
 # writing -----------------------------------------------------------------
 saveRDS(chem, file.path(cachedir, 'epa_chem.rds'))
 

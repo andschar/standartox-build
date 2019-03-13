@@ -10,7 +10,7 @@ if (online_db) {
   
   ep_habi = dbGetQuery(
     con, 
-    "SELECT species.latin_name, tests.media_type, tests.organism_habitat, tests.subhabitat
+    "SELECT species.latin_name, species.species_number, tests.media_type, tests.organism_habitat, tests.subhabitat
      FROM ecotox.species species
      RIGHT JOIN ecotox.tests tests ON tests.species_number = species.species_number;"
   )

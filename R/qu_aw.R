@@ -12,6 +12,7 @@ if (debug_mode) {
 
 # query -------------------------------------------------------------------
 todo_aw = sort(chem$cas)
+# todo_aw = c(todo_aw, '1071-83-6') # debuging (+ Glyphosate)
 
 if (online) {
   
