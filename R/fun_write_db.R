@@ -31,9 +31,16 @@ write_tbl = function(df = NULL, dbname = NULL, schema = NULL, tbl = NULL, commen
   # comment
   dbSendQuery(con, paste0("COMMENT ON TABLE ", schema, ".", tbl, " IS '",
                           paste0(comment, '\n', paste0('Creation date: ', Sys.Date())), "';"))
+  # get table path
+  path = data.table(dbGetQuery(con, paste0("SELECT *
+                                            FROM information_schema.tables
+                                            WHERE table_name = '", tbl, "';")))
+  path = path[ , .SD, .SDcols = c('table_catalog', 'table_schema', 'table_name') ]
+  path = paste0(path[1], collapse = '.')
   
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
+  message('Table created in: ', path)
 }
 
