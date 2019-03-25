@@ -34,6 +34,8 @@ if (sink_console) {
 source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
 # build
 source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
+# errata
+source(file.path(src, 'bd_errata.R'), max.deparse.length = mdl)
 # meta files
 source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
 
