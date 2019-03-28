@@ -278,8 +278,21 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
+  # (6) Lookup schema -------------------------------------------------------
+  drv = dbDriver("PostgreSQL")
+  con = dbConnect(drv, user = DBuser,
+                  dbname = DBetox,
+                  host = DBhost,
+                  port = DBport,
+                  password = DBpassword)
   
-  # (4) DB Cleaning ---------------------------------------------------------
+  dbSendQuery(con, "DROP SCHEMA IF EXISTS lookup;")
+  dbSendQuery(con, "CREATE SCHEMA lookup;")
+  
+  dbDisconnect(con)
+  dbUnloadDriver(drv)
+  
+  # (5) DB Cleaning ---------------------------------------------------------
   # Postgres
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser,
