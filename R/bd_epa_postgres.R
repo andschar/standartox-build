@@ -278,20 +278,6 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
-  # (6) Lookup schema -------------------------------------------------------
-  drv = dbDriver("PostgreSQL")
-  con = dbConnect(drv, user = DBuser,
-                  dbname = DBetox,
-                  host = DBhost,
-                  port = DBport,
-                  password = DBpassword)
-  
-  dbSendQuery(con, "DROP SCHEMA IF EXISTS lookup;")
-  dbSendQuery(con, "CREATE SCHEMA lookup;")
-  
-  dbDisconnect(con)
-  dbUnloadDriver(drv)
-  
   # (5) DB Cleaning ---------------------------------------------------------
   # Postgres
   drv = dbDriver("PostgreSQL")
@@ -306,16 +292,13 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
-  # R
-  rm(con, df, drv, i, files, files2)
-  
   msg = paste(DBetox, 'built into PostgresDB', sep = ' ')
-  log_msg(msg); rm(msg)
+  log_msg(msg)
   
 } else {
   
   msg = 'ECOTOX already built into Postgres DB.'
-  log_msg(msg); rm(msg)
+  log_msg(msg)
   
 }
 

@@ -57,10 +57,6 @@ norman = function(dt) {
   nor[ , loq := 'n.a.' ] # 70
   # Controls and study design
   nor[ , control_pos_substance := 'n.a.' ] # 78
-  # TODO frome Edi
-  # dd.vc AS "80", --Vehicle control",
-  # vm.vehicle_mortality AS "81", --Effects in vehicle control",
-  # TODO END
   nor[ , wat_quality_int := 'n.a.' ] # 82
   nor[ , wat_quality_int_unit := 'n.a.' ] # 83
   nor[ , media_ph_all := paste0(media_ph_mean, '(',

@@ -75,6 +75,7 @@ re_info_fin = re_info[ , .SD, .SDcols = cols ]
 
 ## final table
 tx_info_fin = merge(ha_sp_fin, re_info_fin, by = 'taxon')
+tx_info_fin = merge(epa_taxa, tx_info_fin, by = 'taxon', all = TRUE)
 
 # writing -----------------------------------------------------------------
 # rds
@@ -90,10 +91,6 @@ log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
-
-
-
-
 
 
 

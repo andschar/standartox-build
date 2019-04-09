@@ -11,13 +11,6 @@ chemical_analysis = data.table(dbGetQuery(con,
   "SELECT * FROM ecotox.chemical_analysis_codes"
 ))
 
-ecotox_group = data.table(dbGetQuery(con,
-  "SELECT ecotox_group, COUNT(ecotox_group) n
-   FROM ecotox.chemicals
-   GROUP BY ecotox_group
-   ORDER BY n DESC"
-))
-
 effect_codes = data.table(dbGetQuery(con,
   "SELECT effect_codes.*, COUNT(effect) n
    FROM ecotox.results
@@ -47,10 +40,14 @@ test_location = data.table(dbGetQuery(con,
    FROM ecotox.test_location_codes"
 ))
 
+test_type = data.table(dbGetQuery(con,
+  "SELECT test_type, COUNT(test_type) n
+   FROM ecotox.tests
+   GROUP BY test_type
+   ORDER BY n DESC"))
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
-
 
 # build lookup tables -----------------------------------------------------
 # chemical analysis codes (e.g. C - Calculated, M - Measured)
@@ -77,9 +74,11 @@ endpoint[ code %like% paste0(rem, collapse = '|'), code_norman := 'remove' ]
 rem = c('AGR', 'CUL', 'FAB', 'FLT', 'HUM', 'LIT', 'POP', 'SLG', 'UKN', 'NC')
 soil = c('ART', 'MIN', 'NAT', 'UKS')
 other = c('AQU', 'HYP', 'MAN', 'MIX', 'NONE')
+nr = c('NR', '--')
 media_type[ code %in% rem, description_norman := 'remove' ]
 media_type[ code %in% soil, description_norman := 'soil' ]
 media_type[ code %in% other, description_norman := 'other' ]
+media_type[ code %in% nr, description_norman := 'not reported' ]
 media_type[ code == 'FW', description_norman := 'freshwater' ]
 media_type[ code == 'SW', description_norman := 'saltwater' ]
 media_type[ code == 'SED', description_norman := 'sediment' ]
@@ -91,14 +90,23 @@ test_location[ code == 'FIELDN', description_norman := 'field study result' ]
 test_location[ code == 'FIELDU', description_norman := 'field study result' ]
 test_location[ code == 'LAB', description_norman := 'experimental result' ]
 test_location[ code == 'NR', description_norman := 'not reported' ]
+# test type
+test_type[ test_type %in% c('NR', 'NC', '', ' ',  '--'),
+           description_norman := 'not reported' ]
+test_type[ test_type == 'SBACUTE', description_norman := 'sub-acute' ]
+test_type[ test_type == 'SBCHRON', description_norman := 'sub-chronic' ]
+test_type[ test_type %in% c('ACUTE', 'ACTELS'),
+           description_norman := 'acute' ]
+test_type[ test_type %in% c('CHRONIC', 'CHRELS', 'ELS', 'FLC', 'GEN', 'PLC'),
+           description_norman := 'chronic' ]
 
 # list --------------------------------------------------------------------
 lookup_l = list(chemical_analysis = chemical_analysis,
-                ecotox_group = ecotox_group,
                 effect_codes = effect_codes,
                 endpoint = endpoint,
                 media_type = media_type,
-                test_location = test_location)
+                test_location = test_location,
+                test_type = test_type)
 
 # check -------------------------------------------------------------------
 ## check if there are NAs in the description_norman column
@@ -115,7 +123,7 @@ lookup_l = list(chemical_analysis = chemical_analysis,
 # write lookup tables -----------------------------------------------------
 for (i in seq_along(lookup_l)) {
   
-  schema = 'lookup'
+  schema = 'ecotox'
   tbl = lookup_l[[i]]
   name = names(lookup_l[i])
   name = paste0(name, '_lookup')
@@ -125,7 +133,7 @@ for (i in seq_along(lookup_l)) {
             dbname = DBetox, schema = schema, tbl = name,
             comment = paste0(name, ' ', 'lookup table'))
   ## to .csv
-  fwrite(tbl, file.path(normandir, name))
+  fwrite(tbl, file.path(normandir, paste0(name, '.csv')))
   
 }
 

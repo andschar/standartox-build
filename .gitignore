@@ -34,13 +34,14 @@ missing/*
 
 # article
 article/*
-!article/R
-!article/figures
-!article/article.Rmd
-!article/data
-!article/refs
-!article/article.tex
-!article/tikz/organigram.tex
+# TODO remove comments in the end!
+# !article/R
+# !article/figures
+# !article/article.Rmd
+# !article/data
+# !article/refs
+# !article/article.tex
+# !article/tikz/organigram.tex
 
 # lookup
 # lookup/*

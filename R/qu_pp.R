@@ -8,7 +8,7 @@ source(file.path(src, 'setup.R'))
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 # debuging
 if (debug_mode) {
-  chem = chem[1:10]  
+  chem = chem[1:10]
 }
 
 # query -------------------------------------------------------------------
@@ -49,10 +49,12 @@ pp_resolve = function(l) {
 }
 
 # preparation -------------------------------------------------------------
+pp_l2 = pp_l
+
 pp_l[!is.na(pp_l)] = lapply(pp_l[!is.na(pp_l)], pp_resolve)
 pp_l[is.na(pp_l)] = lapply(pp_l[is.na(pp_l)], data.table)
 
-pp = rbindlist(pp_l, fill = TRUE, idcol = 'cas')[ , V1 := NULL ]
+pp = rbindlist(pp_l, fill = TRUE, idcol = 'cas')
 pp = pp[ !is.na(cas) ] # TODO why are NAs created in the first place?
 setcolorder(pp, c('cas', 'cname'))
 # names
@@ -61,28 +63,8 @@ pp[ , cname := tolower(cname) ]
 # conversions
 pp[ , solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 
-# final dt ----------------------------------------------------------------
-pp_fin = pp[ , .SD, .SDcols = c('cas', 'cname', 'p_log', 'solubility_water')]
-setnames(pp_fin, paste0('pp_', tolower(names(pp_fin))))
-setnames(pp_fin, 'pp_cas', 'cas')
-
-# missing entries ---------------------------------------------------------
-na_pp_fin_cname = pp_fin[ is.na(pp_cname) ]
-msg = paste0('PhysProp: For ', nrow(na_pp_fin_cname), '/', nrow(pp_fin),
-             ' CAS no Cnames were found.')
-log_msg(msg); rm(msg)
-
-if (nrow(na_pp_fin_cname) > 0) {
-  fwrite(na_pp_fin_cname, file.path(missingdir, 'na_pp_fin_cname.csv'))
-  message('Writing missing data to:\n',
-          file.path(missingdir, 'na_pp_fin_cname.csv'))
-}
-
 # writing -----------------------------------------------------------------
-## rds
-saveRDS(pp_fin, file.path(cachedir, 'pp_fin.rds'))
 ## postgres
-## postgres (all data)
 write_tbl(pp, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'physprop',
           comment = 'Results from the PhysProp query')

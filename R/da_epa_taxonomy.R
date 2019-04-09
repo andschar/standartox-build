@@ -188,6 +188,11 @@ taxa[taxa[ , Reduce(`|`, lapply(.SD, `%like%`,
 # writing -----------------------------------------------------------------
 tax_names = c('common_name', 'species', 'genus', 'family', 'class', 'superclass', 'subphylum_div', 'phylum_division', 'kingdom', 'ecotox_grp')
 setnames(taxa, old = tax_names, paste0('tax_', tax_names))
+tax_ord = c('taxon', 'latin_name', 'tax_common_name', 'species_number', 'tax_species', 'tax_genus',
+            'tax_family', 'tax_order', 'tax_class', 'tax_superclass', 'tax_subphylum_div', 'tax_phylum_division',
+            'tax_kingdom', 'tax_ecotox_grp', 'autotroph', 'mixotroph', 'heterotroph', 'tax_invertebrate_makro',
+            'tax_invertebrate_mikro')
+setcolorder(taxa, tax_ord)
 
 saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
 

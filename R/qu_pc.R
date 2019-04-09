@@ -1,20 +1,7 @@
 # script to query the PubChem data base
 
 # setup -------------------------------------------------------------------
-# source(file.path(src, 'setup.R'))
-
-### tmp
-nodename = Sys.info()[4]
-if (nodename == 'scharmueller') {
-  prj = '/home/andreas/Documents/Projects/etox-base'
-} else if (nodename == 'uwigis') {
-  prj = '/home/scharmueller/Projects/etox-base'
-} else {
-  stop('New system. Define prj and shinydir variables.')
-}
-source(file.path(prj, 'R/setup.R'), max.deparse.length = mdl)
-### END tmp
-
+source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
@@ -111,34 +98,7 @@ syn[ , cname := tolower(cname) ]
 pc = merge(pro, syn, by = 'cas')
 setcolorder(pc, c('cas', 'cid', 'cname', 'iupacname', 'inchi', 'inchikey', 'canonicalsmiles', 'isomericsmiles'))
 
-# final dt ----------------------------------------------------------------
-# https://pubchemdocs.ncbi.nlm.nih.gov/about
-# CID - non-zero integer PubChem ID
-# XLogP - Log P calculated Log P
-pc_fin = pc[ , .SD, .SDcols = c('cas', 'cid', 'cname', 'inchikey', 'canonicalsmiles', 'isomericsmiles', 'iupacname', 'exactmass')]
-pc_fin = pc_fin[!duplicated(cas)] #! easy way out, although pubchem doesn't provide important information
-setnames(pc_fin, names(pc_fin), paste0('pc_', names(pc_fin)))
-
-# missing entries ---------------------------------------------------------
-na_pc_fin_inchi = pc_fin[ is.na(pc_inchikey) ]
-
-msg = paste0('PubChem: For ', nrow(na_pc_fin_inchi), '/', nrow(pc_fin),
-             ' CAS no InchiKeys were found.')
-log_msg(msg); rm(msg)
-
-if (nrow(na_pc_fin_inchi) > 0) {
-  fwrite(na_pc_fin_inchi, file.path(missingdir, 'na_pc_fin_inchi.csv'))
-  message('Writing missing data to:\n',
-          file.path(missingdir, 'na_pc_fin_inchi.csv'))
-}
-
-# names -------------------------------------------------------------------
-setnames(pc_fin, tolower(names(pc_fin)))
-setnames(pc_fin, 'pc_cas', 'cas')
-
 # writing -----------------------------------------------------------------
-## rds
-saveRDS(pc_fin, file.path(cachedir, 'pc_fin.rds'))
 ## postgres (all data)
 write_tbl(pc, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'pubchem',

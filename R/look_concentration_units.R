@@ -211,7 +211,7 @@ units[ conv == 'FALSE', conv := 'no' ]
 # writing -----------------------------------------------------------------
 ## postgres
 write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'lookup', tbl = 'concentration_unit_lookup',
+          dbname = DBetox, schema = 'ecotox', tbl = 'concentration_unit_lookup',
           comment = 'Lookup table for concentration units')
 # to .csv
 fwrite(units, file.path(normandir, 'lookup_concentration_all.csv'))

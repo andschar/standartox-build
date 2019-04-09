@@ -11,8 +11,8 @@
 # shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE)[1] # locate shiny dir
 ## pre-defined
 nodename = Sys.info()[4]
-if (nodename == 'scharmueller') {
-  prj = '/home/andreas/Documents/Projects/etox-base'
+if (nodename == 'scharmueller-t460s') {
+  prj = '/home/scharmueller/Projects/etox-base'
 } else if (nodename == 'uwigis') {
   prj = '/home/scharmueller/Projects/etox-base'
 } else {
@@ -34,8 +34,10 @@ if (sink_console) {
 source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
 # build
 source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
+# lookup
+source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
 # errata
-source(file.path(src, 'bd_errata.R'), max.deparse.length = mdl)
+source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
 # meta files
 source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
 
@@ -48,9 +50,9 @@ source(file.path(src, 'qu_run.R'), max.deparse.length = mdl)
 
 # (4) prepare data --------------------------------------------------------
 # EPA data scripts
-source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
+# source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
 # NORMAN export scripts
-source(file.path(src, 'da_norman_run.R'), max.deparse.length = mdl)
+# source(file.path(src, 'da_norman_run.R'), max.deparse.length = mdl)
 
 # file copies -------------------------------------------------------------
 # copy README.md to shiny repo

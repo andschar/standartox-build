@@ -1,15 +1,17 @@
 # setup script for etox-base
 
 # packages ----------------------------------------------------------------
-if (!require('pacman'))
+if (!require('pacman')) {
   install.packages('pacman')
+}
 
 pkg_cran = c(
-  'base',
-  # only for citation
+  'base', # only for citation
+  'devtools',
   'RCurl',
   'stringr',
   'R.utils',
+  'udunits2',
   'rvest',
   'httr',
   'jsonlite',
@@ -26,12 +28,10 @@ pkg_cran = c(
   'ggrepel',
   'cowplot',
   'rgbif',
-  'webchem',
   'taxize',
-  'countrycode',
-  'bib2df'
+  'countrycode'
 )
-pkg_gith = 'NIVANorge/chemspideR' # no citation available!
+pkg_gith = c('ropensci/bib2df', 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
 
 ## install via CRAN
 pacman::p_load(char = pkg_cran)
@@ -48,8 +48,8 @@ plots = FALSE # should output plots be created
 scp_feather = FALSE # scp feather object # TODO remove this in the end
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
 # debuging
-debug_mode = TRUE # should only 10 input rows for each quering script be run
-sink_console = FALSE # sink console to file
+debug_mode = FALSE # should only 10 input rows for each quering script be run
+sink_console = TRUE # sink console to file
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
@@ -66,7 +66,8 @@ shinydir = paste0(prj, '-shiny')
 shinydata = file.path(shinydir, 'data')
 cred = file.path(prj, 'cred')
 share = file.path(prj, 'share')
-norman = file.path(prj, 'norman')
+normandir = file.path(prj, 'norman')
+sql = file.path(prj, 'sql')
 # article
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')
@@ -82,10 +83,12 @@ if (debug_mode) {
 }
 
 # path to phantomjs
-if (nodename == 'scharmueller') {
+if (nodename == 'scharmueller-t460s') {
   phantompath = '/usr/bin/phantomjs'
 } else if (nodename == 'uwigis') {
   phantompath = '/usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs'
+} else {
+  stop('No nodename matches.')
 }
 
 # other
@@ -105,6 +108,7 @@ source(file.path(src, 'fun_ln_na.R'))
 source(file.path(src, 'fun_paste2.R'))
 source(file.path(src, 'fun_norman.R'))
 source(file.path(src, 'fun_shiny_variables_stat.R'))
+source(file.path(src, 'fun_udunits2_vectorize.R'))
 
 # database ----------------------------------------------------------------
 # put database credentials here?

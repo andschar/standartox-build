@@ -1,4 +1,4 @@
-unit,word,si,multiplier,conv,conv_to,exclude,group
+unit,word,si,multiplier,conv,conv_to,remove,group
 dpm,days post moult,yes,24,yes,h,no,duration
 s,second,yes,0.000277777777778,yes,h,no,duration
 mi,minute,yes,0.016666666666667,yes,h,no,duration
