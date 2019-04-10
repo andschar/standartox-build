@@ -4,7 +4,7 @@
 source(file.path(src, 'setup.R')) #!redundant
 
 # chemical data -----------------------------------------------------------
-source(file.path(src, 'cir.R'), max.deparse.length = mdl)
+source(file.path(src, 'qu_cir.R'), max.deparse.length = mdl)
 source(file.path(src, 'qu_aw.R'), max.deparse.length = mdl)
 source(file.path(src, 'qu_chemspider_scrape.R'), max.deparse.length = mdl)
 source(file.path(src, 'qu_epa_chem.R'), max.deparse.length = mdl) # epa chemical classification
