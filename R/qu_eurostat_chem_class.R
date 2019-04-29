@@ -61,27 +61,28 @@ dt[ , group2 := fill(group2) ]
 dt2 = dt[ grep('^[A-Z]+[0-9]+_[0-9]+_.+$', code) ]
 
 # is pesticide
-dt2[ , eu_pesticide := 1L ]
+dt2[ , is_pesticide := 1L ]
 # pesticide sub-groups
-dt2[ group1 == 'fungicides and bactericides', eu_fungicide := 1L ]
-dt2[ group1 == 'herbicides. haulm destructors and moss killers', eu_herbicide := 1L ]
-dt2[ group1 == 'insecticides and acaricides', eu_insecticide := 1L ]
-dt2[ group2 == 'molluscicides', eu_molluscicide := 1L ]
-dt2[ group2 == 'rodenticides', eu_rodenticide := 1L ]
-dt2[ group2 == 'repellents', eu_repellent := 1L ]
+dt2[ group1 == 'fungicides and bactericides', is_fungicide := 1L ]
+dt2[ group1 == 'herbicides. haulm destructors and moss killers', is_herbicide := 1L ]
+dt2[ group1 == 'insecticides and acaricides', is_insecticide := 1L ]
+dt2[ group2 == 'molluscicides', is_molluscicide := 1L ]
+dt2[ group2 == 'rodenticides', is_rodenticide := 1L ]
+dt2[ group2 == 'repellents', is_repellent := 1L ]
 
 # final dt ----------------------------------------------------------------
-cols = c('cas', 'eu_pesticide', 'eu_fungicide', 'eu_herbicide', 'eu_insecticide', 
-         'eu_molluscicide', 'eu_rodenticide', 'eu_repellent')
+cols = c('cas', 'is_pesticide', 'is_fungicide', 'is_herbicide', 'is_insecticide', 
+         'is_molluscicide', 'is_rodenticide', 'is_repellent')
 eu_fin = dt2[ , .SD, .SDcols = cols ]
 eu_fin = eu_fin[!is.na(cas)] # as the whole approach is based on CAS
 
 # writing -----------------------------------------------------------------
-saveRDS(eu_fin, file.path(cachedir, 'eu_fin.rds'))
+write_tbl(eu_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'phch', tbl = 'eurostat',
+          comment = 'Chemical Information from EUROSTAT.')
 
 # log ---------------------------------------------------------------------
-msg = 'Eurostat chemical classification script run'
-log_msg(msg); rm(msg)
+log_msg('Eurostat chemical classification script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

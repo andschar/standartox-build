@@ -1,16 +1,14 @@
 # functions to query AphiaID and records from WORMS via REST
 # http://www.marinespecies.org/rest/
 
-wo_get_aphia = function(taxon, marine_only = FALSE, verbose = TRUE) {
+wo_get_aphia = function(taxon, verbose = TRUE) {
   # URL
   baseurl = 'http://www.marinespecies.org/rest/'
   what = 'AphiaIDByName/'
-  taxon2 = gsub('\\s', '%20', taxon)
-  if (marine_only) {
-    marine_only = '?marine_only=true'
-  } else {
-    marine_only = '?marine_only=false'
-  }
+  taxon2 = gsub('\\s', '%20', taxon) # 20 represents a space in hexadecimal
+  marine_only = '?marine_only=false'
+  
+  # qurl
   qurl = paste0(baseurl,
                 what,
                 taxon2,
@@ -19,8 +17,8 @@ wo_get_aphia = function(taxon, marine_only = FALSE, verbose = TRUE) {
   if (verbose) {
     message('WoRMS: AphiaID: Querying taxon: ', taxon)
   }
-  Sys.sleep( rgamma(1, shape = 5, scale = 1/10))
-  res = GET(qurl)
+  Sys.sleep(rgamma(1, shape = 5, scale = 1/10))
+  res = GET(qurl)#, add_headers(.headers =  "Accept: application/json"))
   if (res$status_code == 200) {
     id = unlist(content(res))
   }
@@ -39,17 +37,23 @@ wo_get_aphia = function(taxon, marine_only = FALSE, verbose = TRUE) {
   return(id)
 }
 
-wo_get_record = function(aphiaid, verbose = TRUE) {
+wo_get_record = function(input, type = 'aphiaid', verbose = TRUE) {
   
   baseurl = 'http://www.marinespecies.org/rest/'
-  what = 'AphiaRecordByAphiaID/'
+  if (type == 'aphiaid') {
+    what = 'AphiaRecordByAphiaID/'  
+  } else if (type == 'name') {
+    what = 'AphiaRecordsByName/'
+  }
+  input2 = gsub('\\s', '%20', input)
   
+  # query url
   qurl = paste0(baseurl,
                 what,
-                aphiaid)
+                input2)
   # query
   if (verbose) {
-    message('WoRMS: Record by AphiaID: ', aphiaid)
+    message(qurl)
   }
   Sys.sleep( rgamma(1, shape = 5, scale = 1/10))
   res = GET(qurl)

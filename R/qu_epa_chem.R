@@ -59,39 +59,40 @@ metals = c(metal_alkaline_earth, metal_trans, metal_posttrans, metalloid)
 
 # variables
 cla_che[ grep(paste0(metals, collapse = '|'), ecotox_group),
-         ep_metal := 1L ]
+         is_metal := 1L ]
 cla_che[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
-         ep_pesticide := 1L ]
+         is_pesticide := 1L ]
 cla_che[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
-         ep_pesticide := 1L ]
+         is_pesticide := 1L ]
 cla_che[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
-         ep_pesticide := 1L ]
+         is_pesticide := 1L ]
 cla_che[ grep('(?i)conazoles', ecotox_group),
-         ep_fungicide := 1L ]
+         is_fungicide := 1L ]
 cla_che[ grep('(?i)pfoa', ecotox_group),
-         ep_pfoa := 1L ]
+         is_pfoa := 1L ]
 cla_che[ grep('(?i)ppcp', ecotox_group),
-         ep_pcp := 1L ]
+         is_pcp := 1L ]
 cla_che[ grep('(?i)pcb', ecotox_group),
-         ep_pcb := 1L ]
+         is_pcb := 1L ]
 cla_che[ grep('(?i)edc', ecotox_group),
-         ep_edc := 1L ]
+         is_edc := 1L ]
 cla_che[ grep('(?i)organotin', ecotox_group),
-         ep_organotin := 1L ]
+         is_organotin := 1L ]
 
 cla_che[ , .N, ecotox_group][order(-N)] # TODO CONTINUE HERE!
 
 # final table -------------------------------------------------------------
 ep_chem_fin = cla_che[ , lapply(.SD, as.integer),
                        .SDcols =! c('cas', 'cname', 'ecotox_group'), cas ]
-ep_chem_fin[cla_che, ep_cname := i.cname, on = 'cas']
+ep_chem_fin[cla_che, cname := i.cname, on = 'cas']
 
 # writing -----------------------------------------------------------------
-saveRDS(ep_chem_fin, file.path(cachedir, 'ep_chem_fin.rds'))
+write_tbl(ep_chem_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'phch', tbl = 'epa',
+          comment = 'Chemical Information from EPA ECotox DB.')
 
 # log ---------------------------------------------------------------------
-msg = 'EPA chemicals script run'
-log_msg(msg)
+log_msg('EPA chemicals script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

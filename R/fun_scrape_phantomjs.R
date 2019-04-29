@@ -26,7 +26,7 @@ writeLines(
 # R -----------------------------------------------------------------------
 js_scrape = function(url = 'http://www.example.com',
                      js_path = file.path(tempdir(), 'scrape.js'),
-                     phantompath = '/usr/bin/phantomjs',
+                     phantompath = '/usr/local/bin/phantomjs',
                      file = file.path(tempdir(), 'file.html')) {
   
   lines = readLines(js_path)

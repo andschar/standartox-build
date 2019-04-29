@@ -112,11 +112,12 @@ cols = names(cs_scrape)[ names(cs_scrape) %in% cols ] # prevents errors
 cs_fin = cs_scrape[ , .SD, .SDcols = cols ]
 
 # writing -----------------------------------------------------------------
-saveRDS(cs_fin, file.path(cachedir, 'cs_fin.rds'))
+write_tbl(cs_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'phch', tbl = 'chemspider',
+          comment = 'Results from the Chemspider query')
 
 # log ---------------------------------------------------------------------
-msg = 'ChemSpider Scrape script run'
-log_msg(msg); rm(msg)
+log_msg('ChemSpider Scrape script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

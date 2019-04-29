@@ -13,12 +13,10 @@ if (debug_mode) {
   taxa = taxa[1:10] # debuging
 }
 
-# query -------------------------------------------------------------------
-# query habitat data on three taxonomic levels
-# todo_family = unique(taxa$tax_family)
-# todo_genus = unique(taxa$tax_genus)
-# todo_taxon = unique(taxa$taxon)
+# TODO  distributions
+# /AphiaDistributionsByAphiaID/{ID}
 
+# query -------------------------------------------------------------------
 todo_wo_id = sort(unique(c(taxa$tax_family, taxa$tax_genus, taxa$taxon)))
 todo_wo_id = todo_wo_id[ todo_wo_id != '' ]
 
@@ -26,7 +24,7 @@ if (online) {
   worms_aphiaid_l = list()
   for (i in seq_along(todo_wo_id)) {
     todo = todo_wo_id[i]
-    aphiaid = wo_get_aphia(todo, verbose = FALSE)
+    aphiaid = wo_get_aphia(todo, verbose = TRUE)
     message('WoRMS: ', todo, ' --> AphiaID: ',
             aphiaid, ' (', i, '/', length(todo_wo_id), ')')
     
@@ -46,7 +44,7 @@ if (online) {
   worms_l = list()
   for (i in seq_along(todo_wo)) {
     todo = todo_wo[i]
-    res = wo_get_record(todo, verbose = FALSE)
+    res = wo_get_record(todo, verbose = TRUE)
     message('WoRMS: ', names(todo), ': aphiaid: ',
             todo, ' (', i, '/', length(todo_wo), ')')
     
@@ -64,35 +62,33 @@ if (online) {
 # preparation -------------------------------------------------------------
 worms_l = worms_l[ !is.na(worms_l) ]
 wo = rbindlist(worms_l, idcol = 'id')
-wo = wo[ ind %in% c('AphiaID', 'scientificname', 'rank',
-                    'isTerrestrial', 'isFreshwater', 'isBrackish', 'isMarine') ]
 wo2 = dcast(wo, id ~ ind,
             value.var = 'values')[ , id := NULL]
+# names
+setnames(wo2, tolower(names(wo2)))
 setnames(wo2,
-         c('isMarine', 'isBrackish', 'isFreshwater', 'isTerrestrial'),
-         c('wo_isMar', 'wo_isBra', 'wo_isFre', 'wo_isTer'))
-cols = c('wo_isMar', 'wo_isBra', 'wo_isFre', 'wo_isTer')
-wo2[ , (cols) := lapply(.SD, as.integer), .SDcols = cols ]
-# separate into single objects (spec, genus, family)
-cols = c('scientificname', grep('wo_', names(wo2), value = TRUE))
-wo_sp_fin = wo2[ rank == 'Species', .SD, .SDcols = cols ]
-setnames(wo_sp_fin, paste0(names(wo_sp_fin), '_sp'))
-setnames(wo_sp_fin, 'scientificname_sp', 'taxon')
-wo_gn_fin = wo2[ rank == 'Genus', .SD, .SDcols = cols ]
-setnames(wo_gn_fin, paste0(names(wo_gn_fin), '_gn'))
-setnames(wo_gn_fin, 'scientificname_gn', 'tax_genus')
-wo_fm_fin = wo2[ rank == 'Family', .SD, .SDcols = cols ]
-setnames(wo_fm_fin, paste0(names(wo_fm_fin), '_fm'))
-setnames(wo_fm_fin, 'scientificname_fm', 'tax_family')
+         c('scientificname', 'ismarine', 'isbrackish', 'isfreshwater', 'isterrestrial', 'isextinct'),
+         c('taxon', 'is_mar', 'is_bra', 'is_fre', 'is_ter', 'is_extinct'))
+setcolorder(wo2, c('aphiaid', 'taxon', 'genus', 'family', 'order', 'class', 'phylum', 'kingdom',
+                   'is_mar', 'is_bra', 'is_fre', 'is_ter', 'is_extinct'))
+# types
+cols = c('is_mar', 'is_bra', 'is_fre', 'is_ter', 'is_extinct')
+wo2[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
 
 # writing -----------------------------------------------------------------
-saveRDS(wo_sp_fin, file.path(cachedir, 'wo_sp_fin.rds'))
-saveRDS(wo_gn_fin, file.path(cachedir, 'wo_gn_fin.rds'))
-saveRDS(wo_fm_fin, file.path(cachedir, 'wo_fm_fin.rds'))
+wo2_l = split(wo2, wo2$rank)
+names(wo2_l) = c('fm', 'gn', 'sp')
+
+for (i in seq_along(wo2_l)) {
+  dat = wo2_l[[i]]
+  nam = names(wo2_l)[i]
+  write_tbl(dat, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+            dbname = DBetox, schema = 'taxa', tbl = paste0('worms_', nam),
+            comment = 'Results from the WoRMS query')
+}
 
 # log ---------------------------------------------------------------------
-msg = 'WoRMS query run'
-log_msg(msg); rm(msg)
+log_msg('WoRMS query run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

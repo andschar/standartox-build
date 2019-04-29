@@ -14,7 +14,8 @@ if (online_db) {
   dose = dbGetQuery(con, "SELECT *
                           FROM ecotox.doses")
   dose_responses = dbGetQuery(con, "SELECT *
-                                    FROM ecotox.dose_responses")
+                                    FROM ecotox.dose_responses
+                                    LEFT JOIN ecotox.effect_codes ON dose_responses.effect_code = effect_codes.code")
   dose_response_details = dbGetQuery(con, "SELECT *
                                            FROM ecotox.dose_response_details")
   setDT(dose)
@@ -49,12 +50,24 @@ setnames(dose_dc, 'dosetest_id', 'test_id')
 ## Vehicle control (yes/no)
 # CONTINUE HERE!!!
 # WTF is going on here????
-# Why the hell is the filter not wirking?
+# Why is the filter not wirking?
 vc = unique(dose[ control_type %in% c('V', '', 'NR') ]$test_id)
 dose[test_id %in% vc, .N, control_type]
 vc = unique(dose[ grep('(?i)V', control_type) ]$test_id)
 dose_dc[ test_id %in% vc, control_vc := 'yes' ]
 ### END WTF
+
+
+## dd (80)
+dd =
+  dose[ ! dose1_mean %in% c('NR', 'NC', '', ' ',  '--'),
+        .(do = paste0(dose1_mean, ' ', dose_conc_unit, collapse = ' '),
+          co_ty = trimws(paste0(control_type, collapse = ' '))),
+        test_id ][order(test_id)]
+dd[ co_ty %like% 'V', vc := 'yes' ]
+dd[ co_ty %like% 'NR', vc := 'not reported' ]
+dd[ co_ty %like% 'NC', vc := 'not reported' ]
+dd[ is.na(vc), vc := 'no' ]
 
 
 # control mortality -------------------------------------------------------
@@ -70,10 +83,10 @@ dose2 = merge(dose2, dose_responses[ , .SD, .SDcols =! 'test_id' ],
 ctrl_mort_cols = c('test_id', 'dose_id', 'dose_resp_id', 'control_type', 'effect_code', 'response_mean', 'response_unit')
 
 ## Control Mortality
-dose2 = dose2[ , .SD, .SDcols = ctrl_mort_cols ]
+dose3 = dose2[ , .SD, .SDcols = ctrl_mort_cols ]
 
 cm =
-  dose2[ control_type == 'C' &
+  dose3[ control_type == 'C' &
            effect_code == 'MOR' &
            response_unit == '%',
          .(control_neg_mortality = paste(effect_code,
@@ -84,7 +97,7 @@ cm =
 
 ## Positive control mortality
 pm = 
-  dose2[ control_type == 'P' &
+  dose3[ control_type == 'P' &
            effect_code == 'MOR' &
            response_unit == '%',
          .(control_pos_mortality = paste(effect_code,
@@ -95,7 +108,7 @@ pm =
 
 ## Vehicle mortality
 vm = 
-  dose2[ control_type == 'V' &
+  dose3[ control_type == 'V' &
            effect_code == 'MOR' &
            response_unit == '%',
          .(control_vhc_mortality = paste(effect_code,
@@ -104,8 +117,20 @@ vm =
                                          sep = ' ')),
          .(test_id, response_unit, effect_code) ]
 
-# cleaning ----------------------------------------------------------------
-rm(dose, dose_cm)
+
+# dose response -----------------------------------------------------------
+dose2
+
+## drm (129)
+dose2[ , dose1_mean := as.numeric(gsub('+|*|NR', '',  dose1_mean)) ]
+dose2[ ,
+       .(test_id = test_id,
+         effect = description)]
+
+
+
+
+
 
 
 

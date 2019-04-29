@@ -1,26 +1,55 @@
 # script runs queries against 3rd party data bases
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R')) #!redundant
+source(file.path(src, 'setup.R'))
 
-# chemical data -----------------------------------------------------------
-source(file.path(src, 'qu_cir.R'), max.deparse.length = mdl)
-source(file.path(src, 'qu_aw.R'), max.deparse.length = mdl)
-source(file.path(src, 'qu_chemspider_scrape.R'), max.deparse.length = mdl)
-source(file.path(src, 'qu_epa_chem.R'), max.deparse.length = mdl) # epa chemical classification
-source(file.path(src, 'qu_eurostat_chem_class.R'), max.deparse.length = mdl)
-# source(file.path(src, 'qu_pc.R'), max.deparse.length = mdl)
-source(file.path(src, 'qu_pp.R'), max.deparse.length = mdl)
+# chemical scripts --------------------------------------------------------
+scripts = c('qu_aw.R',
+            'qu_chemspider_scrape.R',
+            #'qu_pc.R',
+            'qu_pp.R',
+            'qu_epa_chem.R',
+            'qu_eurostat_chem_class.R')
 
-# habitat scripts ---------------------------------------------------------
-source(file.path(src, 'qu_epa_habitat.R'), max.deparse.length = mdl) # epa habitat classification
-source(file.path(src, 'qu_worms2.R'), max.deparse.length = mdl)
+# slow scripts
+time = Sys.time()
+n_cores = detectCores() - 1
+cl = makeCluster(n_cores, type = 'FORK')
+doParallel::registerDoParallel(cl)
 
-# regional scripts --------------------------------------------------------
-source(file.path(src, 'qu_gbif.R'), max.deparse.length = mdl) # contains also habitat information
+foreach(i = scripts,
+        .errorhandling = 'pass',
+        .verbose = TRUE) %dopar% {
+  source(file.path(src, i),
+         local = TRUE,
+         max.deparse.length = mdl)
+}
+
+stopCluster(cl)
+Sys.time() - time
+
+# taxa: habitat and region scripts ----------------------------------------
+scripts = c('qu_worms2.R',
+            'qu_gbif.R',
+            'qu_epa_habitat.R')
+
+time = Sys.time()
+n_cores = detectCores() - 1
+cl = makeCluster(n_cores, type = 'FORK')
+doParallel::registerDoParallel(cl)
+
+foreach(i = scripts,
+        .errorhandling = 'pass',
+        .verbose = TRUE) %dopar% {
+          source(file.path(src, i),
+                 local = TRUE,
+                 max.deparse.length = mdl)
+        }
+
+stopCluster(cl)
+Sys.time() - time
 
 # merge script ------------------------------------------------------------
 # MOVE TO MERGE SCRIPT!!
 # source(file.path(src, 're_merge_chem.R'), max.deparse.length = mdl)
 # source(file.path(src, 're_merge_taxa.R'), max.deparse.length = mdl)
-

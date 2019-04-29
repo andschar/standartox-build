@@ -40,13 +40,23 @@ source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
 source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
 # meta files
 source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
+# bd CIR (chemical identifier resolver)
+source(file.path(src, 'bd_cir.R'), max.deparse.length = mld)
 
-# (2) identifiers ---------------------------------------------------------
+
+# identifiers -------------------------------------------------------------
 source(file.path(src, 'da_epa_chemicals.R'), max.deparse.length = mdl) # extracts identifiers
 source(file.path(src, 'da_epa_taxonomy.R'), max.deparse.length = mdl) # extracts identifiers
 
-# (3) queries + data preparation ------------------------------------------
+# queries + results -------------------------------------------------------
+# query additional data
 source(file.path(src, 'qu_run.R'), max.deparse.length = mdl)
+# merge information from additional data
+source(file.path(src, 'qu_merge.R'), max.deparse.length = mdl)
+
+
+
+
 
 # (4) prepare data --------------------------------------------------------
 # EPA data scripts

@@ -68,6 +68,7 @@ epa1 = merge(epa1, epa_taxa, by = 'species_number', all.x = TRUE)
 epa1 = merge(epa1, dose_dc, by = 'test_id', all.x = TRUE); rm(dose_dc)
 epa1[cm, control_neg_mortality := i.control_neg_mortality, on = 'test_id' ]; rm(cm) # 51
 epa1[pm, control_pos_mortality := i.control_pos_mortality, on = 'test_id' ]; rm(pm) # 79
+epa1[dd, control_vhc := i.vc, on = 'test_id' ]; rm(dd) # 80
 epa1[vm, control_vhc_mortality := i.control_vhc_mortality, on = 'test_id' ]; rm(vm) # 81
 
 # merge entpoints ---------------------------------------------------------

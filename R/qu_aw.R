@@ -68,17 +68,15 @@ setnames(aw_fin, paste0('aw_', names(aw_fin)))
 setnames(aw_fin, 'aw_cas', 'cas')
 
 # writing -----------------------------------------------------------------
-## rds
-saveRDS(aw_fin, file.path(cachedir, 'aw_fin.rds'))
-## postgres (all data)
-write_tbl(aw, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+write_tbl(aw_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'alanwood',
-          comment = 'Results from the Alan Wood pesticide compendium query')
+          comment = 'Results from the Alan Wood Pesticide Compendium query')
 
 # log ---------------------------------------------------------------------
-msg = paste0('AlanWood: For ', length(aw_l) - nrow(aw_fin), '/', length(aw_l),
-             ' CAS no cnames were found.')
-log_msg(msg); rm(msg)
+log_msg(
+  paste0('AlanWood: For ', length(aw_l) - nrow(aw_fin), '/', length(aw_l),
+         ' CAS no cnames were found.')
+)
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

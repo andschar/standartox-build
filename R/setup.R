@@ -29,7 +29,9 @@ pkg_cran = c(
   'cowplot',
   'rgbif',
   'taxize',
-  'countrycode'
+  'countrycode',
+  'foreach',
+  'doParallel'
 )
 pkg_gith = c('ropensci/bib2df', 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
 
@@ -48,7 +50,7 @@ plots = FALSE # should output plots be created
 scp_feather = FALSE # scp feather object # TODO remove this in the end
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
 # debuging
-debug_mode = FALSE # should only 10 input rows for each quering script be run
+debug_mode = TRUE # should only 10 input rows for each quering script be run
 sink_console = TRUE # sink console to file
 
 # variables ---------------------------------------------------------------
@@ -84,7 +86,7 @@ if (debug_mode) {
 
 # path to phantomjs
 if (nodename == 'scharmueller-t460s') {
-  phantompath = '/usr/bin/phantomjs'
+  phantompath = '/usr/local/bin/phantomjs'
 } else if (nodename == 'uwigis') {
   phantompath = '/usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs'
 } else {

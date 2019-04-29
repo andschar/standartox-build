@@ -6,6 +6,7 @@ source(file.path(src, 'setup.R'))
 # data --------------------------------------------------------------------
 epa1 = readRDS(file.path(cachedir, 'epa1.rds'))
 look = fread(file.path(lookupdir, 'lookup_variables.csv'))
+look = look[ nor_variable == 1L ]
 
 # NORMAN filters ----------------------------------------------------------
 # TODO insert filters here! Also in da_epaX_nor2.R
@@ -39,7 +40,6 @@ if (chck_look != 0) {
 }
 
 ## subset
-look = look[ nor_variable == 1L ]
 cols = look$norman1
 names(cols) = look$id
 # data

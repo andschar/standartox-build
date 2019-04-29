@@ -5,6 +5,21 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
+
+drv = dbDriver("PostgreSQL")
+con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
+
+chem = dbGetQuery(con, "SELECT *
+                        FROM ecotox.chemicals")
+setDT(chem)
+chem[ , cas := casconv(cas_number) ]
+setnames(chem, 'cas_number', 'casnr')
+setorder(chem, casnr)
+setcolorder(chem, c('casnr', 'cas'))
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
+
 # debuging
 if (debug_mode) {
   chem = chem[1:10]
@@ -32,14 +47,11 @@ if (online) {
     SIMPLIFY = FALSE
   )
   Sys.time() - time
-  # res_cas = cir_query(todo_cir, representation = 'cas')
-  # res_names = cir_query(todo_cir, 'names')
-  # res_formula = cir_query(todo_cir, 'formula')
-  # res_stdinchi = cir_query(todo_cir, 'stdinchi')
-  # res_stdinchikey = cir_query(todo_cir, 'stdinchikey')
-  # res_smiles = cir_query(todo_cir, 'smiles')
-  # res_cs = cir_query(todo_cir, 'chemspider_id')
-  # res_pc = cir_query(todo_cir, 'pubchem_sid')
+  
+  # extract chebi identifier of names
+  l$chebiid = lapply(l$names, function(x) grep('chebi', x, ignore.case = TRUE, value = TRUE))
+  # clean common names
+  l$names_clean = lapply(l$names, function(x) grep('^[A-z]{1}[a-z]+$', x, value = TRUE))
   
   saveRDS(l, file.path(cachedir, 'cir_l.rds'))
   
@@ -48,7 +60,7 @@ if (online) {
 }
 
 # list results
-l2 = l[!names(l) %in% 'names']
+l2 = l[!names(l) %in% c('names', 'names_clean', 'chebiid', 'pubchem_sid') ]
 names(l2)[1] = 'cas_number' # for merge below
 # exceptions
 chem_names = rbindlist(lapply(l[['names']], data.table), idcol = 'cas')
@@ -75,6 +87,12 @@ cir = Reduce(function(...)
   ),
   l3)
 cir[chem_names, name := tolower(i.name), on = 'cas']
+
+# merge with initial table
+cir[chem, `:=`
+    (chemical_name = i.chemical_name,
+     ecotox_group = i.ecotox_group),
+    on = 'cas' ]
 
 # writing -----------------------------------------------------------------
 ## postgres
