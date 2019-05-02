@@ -1,12 +1,10 @@
-# sctipt to query the annex files from the meta data on pesticide sales in Europe
-# why? because they contain information on the classification of chemicals
+# prepare Eurostat data
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 
-url = 'https://ec.europa.eu/eurostat/cache/metadata/Annexes/aei_fm_salpest09_esms_an5.xls'
-file = tempfile()
-
+# data --------------------------------------------------------------------
+dt = readRDS(file.path(cachedir, 'eurostat_annexes.rds'))
 
 # function ----------------------------------------------------------------
 # taken from:
@@ -23,18 +21,6 @@ fill = function(x, blank = is.na) {
   x[which(isnotblank)][cumsum(isnotblank)]
 }
 
-# data --------------------------------------------------------------------
-if (online) {
-  download.file(url = url, destfile = file)
-  dt = as.data.table(read_excel(file, skip = 1))
-  setnames(dt, c('code', 'cname', 'cas', 'cipac'))
-  
-  saveRDS(dt, file.path(cachedir, 'eurostat_annexes.rds'))
-} else {
-  
-  dt = readRDS(file.path(cachedir, 'eurostat_annexes.rds'))
-}
-
 # errata ------------------------------------------------------------------
 dt[ cas == '0', cas := NA ]
 # some cas are written in the same cell - pretty anoying!
@@ -48,7 +34,6 @@ cas_dt = rbindlist(lapply(vl, as.data.frame.list))
 setnames(cas_dt, c('cas', paste0('cas', 1:3)))
 dt[ , cas := NULL ]
 dt = cbind(dt, cas_dt)
-
 
 # preparation -------------------------------------------------------------
 # retrieve group data into separate columns
@@ -82,12 +67,7 @@ write_tbl(eu_fin, user = DBuser, host = DBhost, port = DBport, password = DBpass
           comment = 'Chemical Information from EUROSTAT.')
 
 # log ---------------------------------------------------------------------
-log_msg('Eurostat chemical classification script run')
+log_msg('Eurostat preparation script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
-
-
-
-
-

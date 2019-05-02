@@ -4,33 +4,7 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
-# debuging
-if (debug_mode) {
-  chem = chem[1:10]
-}
-
-# query -------------------------------------------------------------------
-todo_aw = sort(chem$cas)
-# todo_aw = c(todo_aw, '1071-83-6') # debuging (+ Glyphosate)
-
-if (online) {
-  
-  aw_l = list()
-  for (i in seq_along(todo_aw)) {
-    qu_cas = todo_aw[i]
-    message('Alan Wood: CAS:', qu_cas, ' (', i, '/', length(todo_aw), ')')
-    
-    aw_res = aw_query(qu_cas, type = 'cas', verbose = FALSE)[[1]]
-    
-    aw_l[[i]] = aw_res
-    names(aw_l)[i] = qu_cas
-  }
-  
-  saveRDS(aw_l, file.path(cachedir, 'aw_l.rds'))
-} else {
-  aw_l = readRDS(file.path(cachedir, 'aw_l.rds'))
-}
+aw_l = readRDS(file.path(cachedir, 'aw_l.rds'))
 
 # preparation -------------------------------------------------------------
 aw_l2 = aw_l[ !is.na(aw_l) ] # remove NAs
@@ -67,18 +41,16 @@ aw_fin = aw
 setnames(aw_fin, paste0('aw_', names(aw_fin)))
 setnames(aw_fin, 'aw_cas', 'cas')
 
-# writing -----------------------------------------------------------------
+# write -------------------------------------------------------------------
 write_tbl(aw_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'alanwood',
           comment = 'Results from the Alan Wood Pesticide Compendium query')
 
 # log ---------------------------------------------------------------------
-log_msg(
-  paste0('AlanWood: For ', length(aw_l) - nrow(aw_fin), '/', length(aw_l),
-         ' CAS no cnames were found.')
-)
+log_msg('AlanWood preparation script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
+
 
 

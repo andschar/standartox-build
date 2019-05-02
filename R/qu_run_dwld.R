@@ -4,14 +4,14 @@
 source(file.path(src, 'setup.R'))
 
 # chemical scripts --------------------------------------------------------
-scripts = c('qu_aw.R',
-            'qu_chemspider_scrape.R',
-            #'qu_pc.R',
-            'qu_pp.R',
-            'qu_epa_chem.R',
-            'qu_eurostat_chem_class.R')
+scripts = c('qu_aw_dwld.R',
+            'qu_cs_scrape_dwld.R',
+            'qu_pc_dwld.R',
+            'qu_chebi_dwld.R',
+            'qu_pp_dwld.R',
+            'qu_epa_chem_dwld.R',
+            'qu_eurostat_dwld.R')
 
-# slow scripts
 time = Sys.time()
 n_cores = detectCores() - 1
 cl = makeCluster(n_cores, type = 'FORK')
@@ -29,9 +29,9 @@ stopCluster(cl)
 Sys.time() - time
 
 # taxa: habitat and region scripts ----------------------------------------
-scripts = c('qu_worms2.R',
-            'qu_gbif.R',
-            'qu_epa_habitat.R')
+scripts = c('qu_worms_dwld.R',
+            'qu_gbif_dwld.R',
+            'qu_epa_habi_dwld.R')
 
 time = Sys.time()
 n_cores = detectCores() - 1
@@ -49,7 +49,3 @@ foreach(i = scripts,
 stopCluster(cl)
 Sys.time() - time
 
-# merge script ------------------------------------------------------------
-# MOVE TO MERGE SCRIPT!!
-# source(file.path(src, 're_merge_chem.R'), max.deparse.length = mdl)
-# source(file.path(src, 're_merge_taxa.R'), max.deparse.length = mdl)

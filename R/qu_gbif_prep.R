@@ -1,80 +1,31 @@
-# script to scrap occurrence data from the Global Biodiversity Information Facility (GBIF)
+# script to prepare occurrence data from the Global Biodiversity Information Facility (GBIF)
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
-# debuging
-if (debug_mode) {
-  taxa = taxa[1:10]
-}
+gbif_data = readRDS(file.path(cachedir, 'gbif_data.rds'))
 
-# query -------------------------------------------------------------------
-todo_gbif = sort(unique(taxa$taxon))
-# todo_gbif = todo_gbif[818:820] # debug me!
-
-if (online) {
-#! takes 1.7h for 1500 taxa
-  time = Sys.time()
-  gbif_l = list()
-  for (i in seq_along(todo_gbif)) {
-    taxon = todo_gbif[i]
-    message('GBIF: Querying (', i, '/', length(todo_gbif), '): ', taxon)
-    
-    key = name_backbone(taxon)$speciesKey
-    
-    if (!is.null(key)) {
-      gbif = tryCatch({
-        occ_search(taxonKey = key)
-      }, error = function(e) { cat('ERROR: ', conditionMessage(e), '\n'); return(NA) })
-    } else {
-      gbif = NA
-    }
-    
-    gbif_l[[i]] = gbif
-    names(gbif_l)[i] = taxon
-  }
-  Sys.time() - time
-  
-  saveRDS(gbif_l, file.path(cachedir, 'gbif_l.rds'))
-
-  # retrieve data
-  gbif_data_l = purrr::map(gbif_l, 'data')
-  # bind to data.table
-  gbif_data = rbindlist(gbif_data_l, fill = TRUE, idcol = 'taxon')
-  setnames(gbif_data, tolower(names(gbif_data)))
-  
-  saveRDS(gbif_data, file.path(cachedir, 'gbif_data.rds'))
-  
-} else {
-  
-  if (full_gbif_l) {
-    gbif_l = readRDS(file.path(cachedir, 'gbif_l.rds')) # takes time!  
-  }
-  gbif_data = readRDS(file.path(cachedir, 'gbif_data.rds'))
-}
-
-# preparation -------------------------------------------------------------
+## preparation ------------------------------------------------------------
 
 # country code ------------------------------------------------------------ 
 gbif_ccode = gbif_data[ !is.na(countrycode) & countrycode != 'none',
-                       .(ccode = unique(countrycode)),
-                       taxon]
+                        .(ccode = unique(countrycode)),
+                        taxon]
 gbif_ccode_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode',
                       fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
 
 # continent ---------------------------------------------------------------
 gbif_continent = gbif_data[ !is.na(continent) & continent != 'none',
-                           .(continent = unique(continent)),
-                           taxon]
+                            .(continent = unique(continent)),
+                            taxon]
 gbif_conti_dc = dcast(gbif_continent, taxon ~ continent, value.var = 'continent',
                       fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
 
 # habitat -----------------------------------------------------------------
 gbif_habitat = gbif_data[ !is.na(habitat) & habitat != 'none',
-                         .(habitat = unique(habitat)),
-                         taxon]
+                          .(habitat = unique(habitat)),
+                          taxon]
 gbif_habitat_dc = dcast(gbif_habitat, taxon ~ ., value.var = 'habitat',
                         fun.aggregate = function(x) paste0(x, collapse=' '), fill = NA)
 setnames(gbif_habitat_dc, '.', 'habitat')
@@ -100,27 +51,27 @@ gbif_elevation = unique(gbif_data[ !is.na(elevation),
 
 # geo data ----------------------------------------------------------------
 gbif_geo = unique(gbif_data[ , .SD, 
-                              .SDcols = c('decimallatitude',
-                                          'decimallongitude',
-                                          'geodeticdatum'),
-                              by = taxon])
+                             .SDcols = c('decimallatitude',
+                                         'decimallongitude',
+                                         'geodeticdatum'),
+                             by = taxon])
 
 # merge + classify --------------------------------------------------------
 gbif_hab_wat_dc = merge(gbif_habitat_dc, gbif_waterbody_dc, by = 'taxon', all = TRUE)
 gbif_hab_wat_dc[ , is_fre := ifelse(tolower(habitat) %like% paste0(fresh, collapse = '|') |
-                                    tolower(waterbody) %like% paste0(fresh, collapse = '|'), 1L, NA) ]
+                                      tolower(waterbody) %like% paste0(fresh, collapse = '|'), 1L, NA) ]
 gbif_hab_wat_dc[ , is_bra := ifelse(tolower(habitat) %like% paste0(brack, collapse = '|') |
-                                    tolower(waterbody) %like% paste0(brack, collapse = '|'), 1L, NA) ]
+                                      tolower(waterbody) %like% paste0(brack, collapse = '|'), 1L, NA) ]
 gbif_hab_wat_dc[ , is_mar := ifelse(tolower(habitat) %like% paste0(marin, collapse = '|') |
-                                    tolower(waterbody) %like% paste0(marin, collapse = '|'), 1L, NA) ]
+                                      tolower(waterbody) %like% paste0(marin, collapse = '|'), 1L, NA) ]
 gbif_hab_wat_dc[ , is_ter := ifelse(tolower(habitat) %like% paste0(terre, collapse = '|'), 1L, NA) ]
 
 # missing data ------------------------------------------------------------
 # continent
 cols_conti = grep('taxon', names(gbif_conti_dc), value = TRUE, invert = TRUE)
 gbif_conti_dc[ , count := sum(.SD, na.rm = TRUE),
-                 .SDcols = cols_conti,
-                 by = 1:nrow(gbif_conti_dc) ]
+               .SDcols = cols_conti,
+               by = 1:nrow(gbif_conti_dc) ]
 na_conti = gbif_conti_dc[count == 0]
 gbif_conti_dc[ , count := NULL ]
 setnames(gbif_conti_dc, tolower(names(gbif_conti_dc)))
@@ -128,8 +79,8 @@ setnames(gbif_conti_dc, tolower(names(gbif_conti_dc)))
 # habitat
 cols_habi = grep('(?i)is_fre|is_bra|is_mar|is_ter', names(gbif_hab_wat_dc), value = TRUE)
 gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
-                   .SDcols = cols_habi,
-                   by = 1:nrow(gbif_hab_wat_dc) ]
+                 .SDcols = cols_habi,
+                 by = 1:nrow(gbif_hab_wat_dc) ]
 na_habi = gbif_hab_wat_dc[ count == 0]
 gbif_hab_wat_dc[ , `:=`
                  (habitat = NULL,
@@ -174,11 +125,9 @@ write_tbl(gbif_data, user = DBuser, host = DBhost, port = DBport, password = DBp
           comment = 'Results from the GBIF query (all)')
 
 # log ---------------------------------------------------------------------
-log_msg('GBIF script run')
+log_msg('GBIF preparation script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
-
-
 
 
