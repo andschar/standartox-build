@@ -70,7 +70,10 @@ ep_chem_fin[cla_che, cname := i.cname, on = 'cas']
 setnames(ep_chem_fin, clean_names(ep_chem_fin))
 setcolorder(ep_chem_fin, c('cas', 'cname'))
 
-# writing -----------------------------------------------------------------
+# check -------------------------------------------------------------------
+chck_dupl(ep_chem_fin, 'cas')
+
+# write -------------------------------------------------------------------
 write_tbl(ep_chem_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'epa',
           comment = 'Chemical Information from EPA ECotox DB.')

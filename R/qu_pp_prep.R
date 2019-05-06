@@ -37,7 +37,10 @@ pp[, solubility_water := solubility_water * 1000] # orignianly in mg/L
 # names
 setnames(pp, clean_names(pp))
 
-# writing -----------------------------------------------------------------
+# check -------------------------------------------------------------------
+chck_dupl(pp, 'cas')
+
+# write -------------------------------------------------------------------
 write_tbl(
   pp,
   user = DBuser,

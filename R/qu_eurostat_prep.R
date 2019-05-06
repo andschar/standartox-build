@@ -60,8 +60,13 @@ cols = c('cas', 'is_pesticide', 'is_fungicide', 'is_herbicide', 'is_insecticide'
          'is_molluscicide', 'is_rodenticide', 'is_repellent')
 eu_fin = dt2[ , .SD, .SDcols = cols ]
 eu_fin = eu_fin[!is.na(cas)] # as the whole approach is based on CAS
+# unique
+eu_fin = unique(eu_fin)
 
-# writing -----------------------------------------------------------------
+# check -------------------------------------------------------------------
+dupl = chck_dupl(eu_fin, 'cas')
+
+# write -------------------------------------------------------------------
 write_tbl(eu_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'eurostat',
           comment = 'Chemical Information from EUROSTAT.')
