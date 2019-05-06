@@ -9,7 +9,7 @@ aw_l = readRDS(file.path(cachedir, 'aw_l.rds'))
 # preparation -------------------------------------------------------------
 aw_l2 = aw_l[ !is.na(aw_l) ] # remove NAs
 aw = rbindlist(lapply(aw_l2, function(x) data.table(t(x)))) # columns are lists
-aw = aw[, lapply(.SD, as.character), by = 1:nrow(aw) ]
+aw = aw[, lapply(.SD, as.character) ]
 n_sa_cols = max(sapply(aw$subactivity, length)) # up to 3 length vectors 
 
 aw[ , paste0('subactivity', n_sa_cols) := sapply(subactivity, `[`, n_sa_cols)]
@@ -38,8 +38,7 @@ aw[ , pesticide := as.numeric(rowSums(.SD, na.rm = TRUE) > 0),
 # final table -------------------------------------------------------------
 setcolorder(aw, 'cas')
 aw_fin = aw
-setnames(aw_fin, paste0('aw_', names(aw_fin)))
-setnames(aw_fin, 'aw_cas', 'cas')
+setnames(aw, clean_names(aw))
 
 # write -------------------------------------------------------------------
 write_tbl(aw_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,

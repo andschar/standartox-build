@@ -5,6 +5,7 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 l = readRDS(file.path(cachedir, 'cir_l.rds'))
+chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
 # preparation -------------------------------------------------------------
 # list results
@@ -13,7 +14,7 @@ names(l2)[1] = 'cas_number' # for merge below
 # exceptions
 chem_names = rbindlist(lapply(l[['names']], data.table), idcol = 'cas')
 chem_names = chem_names[, .SD[1], by = cas]
-setnames(chem_names, 'V1', 'name')
+setnames(chem_names, 'V1', 'cname')
 
 # convert list to data.tables
 l3 = list()
@@ -34,13 +35,16 @@ cir = Reduce(function(...)
     allow.cartesian = TRUE
   ),
   l3)
-cir[chem_names, name := tolower(i.name), on = 'cas']
+cir[chem_names, cname := tolower(i.cname), on = 'cas']
 
 # merge with initial table
 cir[chem, `:=`
     (chemical_name = i.chemical_name,
       ecotox_group = i.ecotox_group),
     on = 'cas' ]
+# names
+setnames(cir, clean_names(cir))
+setcolorder(cir, c('cas', 'cname'))
 
 # writing -----------------------------------------------------------------
 ## postgres

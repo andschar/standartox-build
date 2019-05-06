@@ -66,6 +66,9 @@ cla_che[ , .N, ecotox_group][order(-N)] # TODO CONTINUE HERE!
 ep_chem_fin = cla_che[ , lapply(.SD, as.integer),
                        .SDcols =! c('cas', 'cname', 'ecotox_group'), cas ]
 ep_chem_fin[cla_che, cname := i.cname, on = 'cas']
+# names
+setnames(ep_chem_fin, clean_names(ep_chem_fin))
+setcolorder(ep_chem_fin, c('cas', 'cname'))
 
 # writing -----------------------------------------------------------------
 write_tbl(ep_chem_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,

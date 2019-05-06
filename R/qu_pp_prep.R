@@ -34,6 +34,8 @@ pp[, cname := tolower(cname)]
 pp[, `.` := NULL]
 # conversions
 pp[, solubility_water := solubility_water * 1000] # orignianly in mg/L
+# names
+setnames(pp, clean_names(pp))
 
 # writing -----------------------------------------------------------------
 write_tbl(
