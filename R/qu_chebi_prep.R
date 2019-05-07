@@ -11,55 +11,71 @@ comp = readRDS(file.path(cachedir, 'chebi_comp.rds'))
 # properties
 prop = rbindlist(lapply(comp, '[[', 'properties'))
 # registry numbers
-reg = rbindlist(lapply(comp, '[[', 'RegistryNumbers'), fill = TRUE, idcol = 'chebiid')
+reg = rbindlist(lapply(comp, '[[', 'regnumbers'), fill = TRUE, idcol = 'chebiid')
 reg[ , type := gsub(' Registry Number', '', type) ]
-reg2 = reg[ , paste0(unique(data)), by = .(chebiid, type, source) ]
-reg2 = dcast(reg2, chebiid ~ type, value.var = 'V1',
-             fun.aggregate = function(x) coalesce2(unique(x)), # MIND simply takes 1st non-NA
-             fill = NA)
-setnames(reg2, tolower(names(reg2)))
+reg2 = reg[ , paste0(unique(data)), by = .(chebiid, type) ]
+reg2 = dcast(reg2, chebiid ~ type, value.var = 'V1', fill = NA,
+             fun.aggregate = function(x) coalesce2(x)) # take the first non-NA argument
 # chemical classes
-ont_par = rbindlist(lapply(comp, '[[', 'OntologyParents'), idcol = 'chebiid')
-ont_par = ont_par[ type %in% c('has role', 'is a'), .SD, .SDcols = c('chebiid', 'chebiName') ]
-setnames(ont_par, tolower(names(ont_par)))
-cl_envi = c('fungicide', 'herbicide', 'insecticide', 'pesticide', 'environmental contaminent', 'environmental food contaminent', 'biocide')
-cl_drug  = 'drug'
-cols_envi = sort(unique(grep(paste0(cl_envi, collapse = '|'),
-                             ont_par$chebiname, ignore.case = TRUE, value = TRUE)))
-chebi_envi = dcast(ont_par[ chebiname %in% cols_envi ],
-                   chebiid ~ chebiname, value.var = 'chebiname',
-                   fill = NA,
-                   fun.aggregate = function(x) length(x) / length(x))
+ont_par = rbindlist(lapply(comp, '[[', 'parents'), idcol = 'chebiid')
+ont_par = ont_par[ type %in% c('has role', 'is a') ]
+ont_par2 = dcast(ont_par, chebiid ~ chebiName, value.var = 'chebiName', fill = NA,
+                 fun.aggregate = function(x) length(x) / length(x))
+# merge
+l = list(prop, reg2)
+chebi_fin = Reduce(function(...) merge(..., by = 'chebiid', all = TRUE), l)
+chebi_fin = chebi_fin[ !duplicated(CAS) & !is.na(CAS) ]
+# names
+setnames(chebi_fin, clean_names(chebi_fin))
+
+# split tables ------------------------------------------------------------
+## environmental table
+# TODO ? more categories
+envi = c('biocide', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'environmental.contaminent', 'agrochemical')
+cols = grep(paste0(envi, collapse = '|'), names(ont_par2), value = TRUE)
+chebi_envi = ont_par2[ , .SD, .SDcols = c('chebiid', cols) ]
+#! necessary 'cause it can be that a chemical is an azole fungicide but not classifed as a fungicide
 fung = grep('fungicide', names(chebi_envi), value = TRUE)
 chebi_envi[ , fungicide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = fung ]
 herb = grep('herbicide', names(chebi_envi), value = TRUE)
 chebi_envi[ , herbicide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = herb ]
 inse = grep('insecticide', names(chebi_envi), value = TRUE)
 chebi_envi[ , insecticide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = inse ]
-# drugs
-cols_drug = sort(unique(grep(paste0(cl_drug, collapse = '|'),
-                             ont_par$chebiname, ignore.case = TRUE, value = TRUE)))
-chebi_drug = dcast(ont_par[ chebiname %in% cols_drug ],
-                   chebiid ~ chebiname, value.var = 'chebiname',
-                   fill = NA,
-                   fun.aggregate = function(x) length(x) / length(x))
-## merge
-l = list(prop, reg2)
-chebi_fin = Reduce(function(...) merge(..., by = 'chebiid', all = TRUE), l)
+chebi_envi[ fungicide == 1, pesticide := 1 ]
+chebi_envi[ herbicide == 1, pesticide := 1 ]
+chebi_envi[ insecticide == 1, pesticide := 1 ]
+# names
+setnames(chebi_envi, clean_names(chebi_envi))
+
+## drugs
+drug = c('drug')
+cols = grep(paste0(drug, collapse = '|'), names(ont_par2), value = TRUE)
+chebi_drug = ont_par2[ , .SD, .SDcols = c('chebiid', cols) ]
+chebi_drug[ , drug := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = cols ]
+# names
+setnames(chebi_drug, clean_names(chebi_drug))
+
+# check -------------------------------------------------------------------
+chck_dupl(chebi_fin, 'cas')
+chck_dupl(chebi_envi, 'chebiid')
+chck_dupl(chebi_drug, 'chebiid')
 
 # write -------------------------------------------------------------------
-# general ChEBI data
+# chebi general
 write_tbl(chebi_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'chebi',
-          comment = 'Results from ChEBI: general data')
-# environmental classes
+          key = 'cas',
+          comment = 'Results from ChEBI (general)')
+# environmental table
 write_tbl(chebi_envi, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'chebi_envi',
-          comment = 'Results from ChEBI: environmental contaminants')
-# drug classes
+          key = 'chebiid',
+          comment = 'Results from ChEBI (enrionmental chemicals)')
+# drug table
 write_tbl(chebi_drug, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'chebi_drug',
-          comment = 'Results from ChEBI: drugs')
+          key = 'chebiid',
+          comment = 'Results from ChEBI (drug chemicals)')
 
 # log ---------------------------------------------------------------------
 log_msg('ChEBI preparation script run')

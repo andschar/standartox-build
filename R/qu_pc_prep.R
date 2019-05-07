@@ -4,29 +4,34 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-
+pc_syn_l = readRDS(file.path(cachedir, 'pc_syn_l.rds'))
+pc_prop = readRDS(file.path(cachedir, 'pc_prop.rds'))
 
 # preparation -------------------------------------------------------------
-# convert all entries to data.tables
-# 1 col, 1 row DTs are NAs
-# 1 col, >1 row DT are multiple results
-pro = rbindlist(pc_pro_l, fill = TRUE, idcol = 'cas')
-setnames(pro, names(pro), tolower(names(pro)))
+## properties
+setDT(pc_prop)
+setnames(pc_prop, clean_names(pc_prop))
+pc_prop = pc_prop[ !duplicated(inchikey) & !is.na(inchikey) ] #! maybe loss of data
 
-# Synonyms
-syn = sapply(pc_syn_l, `[`, 2)
-syn = rbindlist(lapply(syn, as.data.frame.list),
-                idcol = 'cas')
-setnames(syn, 2, 'cname')
-syn[ , cname := tolower(cname) ]
+## synonyms
+syn = lapply(pc_syn_l, data.table)
+syn2 = rbindlist(syn, idcol = 'inchikey')
+setnames(syn2, 'V1', 'synonym')
+syn2[ , synonym := tolower(synonym) ]
 
-# merge synonyms
-pc = merge(pro, syn, by = 'cas')
-setcolorder(pc, c('cas', 'cid', 'cname', 'iupacname', 'inchi', 'inchikey', 'canonicalsmiles', 'isomericsmiles'))
+# check -------------------------------------------------------------------
+chck_dupl(pc_prop, 'inchikey')
 
-# writing -----------------------------------------------------------------
-write_tbl(pc, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+# write -------------------------------------------------------------------
+# general
+write_tbl(pc_prop, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'pubchem',
+          key = 'inchikey',
+          comment = 'Results from the PubChem query')
+# synonyms
+write_tbl(syn2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'phch', tbl = 'pubchem_synonyms',
+          key = NULL,
           comment = 'Results from the PubChem query')
 
 # log ---------------------------------------------------------------------

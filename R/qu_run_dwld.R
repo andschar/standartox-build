@@ -49,3 +49,13 @@ foreach(i = scripts,
 stopCluster(cl)
 Sys.time() - time
 
+# log ---------------------------------------------------------------------
+log_msg('Download scripts run')
+
+# cleaning ----------------------------------------------------------------
+clean_workspace()
+
+
+
+
+

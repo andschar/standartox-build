@@ -33,7 +33,7 @@ pkg_cran = c(
   'foreach',
   'doParallel'
 )
-pkg_gith = c('ropensci/bib2df', 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
+pkg_gith = c('ropensci/bib2df')#, 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
 
 ## install via CRAN
 pacman::p_load(char = pkg_cran)
@@ -111,9 +111,13 @@ source(file.path(src, 'fun_paste2.R'))
 source(file.path(src, 'fun_norman.R'))
 source(file.path(src, 'fun_shiny_variables_stat.R'))
 source(file.path(src, 'fun_udunits2_vectorize.R'))
+source(file.path(src, 'fun_coalesce.R'))
+source(file.path(src, 'fun_clean_names.R'))
+source(file.path(src, 'fun_chck_dupl.R'))
 
 # database ----------------------------------------------------------------
-# put database credentials here?
+fl = file.path(cred, 'chemspider_apikey.txt')
+csapikey = readChar(fl, file.info(fl)$size)
 
 # library dependencies ----------------------------------------------------
 # libsodium - for JS module fs - fun_scrape_phantomjs.R

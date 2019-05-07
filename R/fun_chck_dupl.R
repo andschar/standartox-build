@@ -1,4 +1,5 @@
 # function to check if a specific column is duplicated
+# TODO check also for NAs to let it behave like Postgres constraint
 
 chck_dupl = function(obj, col) {
   setDT(obj)

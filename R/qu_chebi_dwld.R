@@ -2,11 +2,12 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
-source('/home/scharmueller/Projects/webchem/R/chebi.R') # TODO replace this in the future
+# source('/home/scharmueller/Projects/webchem/R/chebi.R') # TODO replace this in the future
 
 # data --------------------------------------------------------------------
 if (online) {
   drv = dbDriver("PostgreSQL")
+  # DBetox = 'etox20190314' # TODO remove in future
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
   
   dat = dbGetQuery(con, "SELECT DISTINCT ON (stdinchikey) *
@@ -32,18 +33,29 @@ if (debug_mode) {
 }
 
 # query -------------------------------------------------------------------
-
-## get chebi IDs
 time = Sys.time()
-lite = get_lite_entity(q1, category = 'INCHI/INCHI KEY', verbose = TRUE)
+lite = chebi_lite_entity(q1, category = 'ALL', verbose = TRUE)
 Sys.time() - time # ~2h
+## get chebi IDs
+#! takes 3 times as long as the vectorized version
+# time = Sys.time()
+# l_lite = list()
+# for (i in seq_along(q1)) { # the for-loop isn't necessary, however it allows for messagin' the progress
+#   q = q1[i]
+#   message(q, ' (', i, '/', length(q1), ')')
+#   lite = chebi_lite_entity(q1, category = 'ALL', verbose = FALSE)
+#   l_lite[[i]] = lite
+# }
+# Sys.time() - time
+
 # save
 saveRDS(lite, file.path(cachedir, 'chebi_lite.rds'))
-q2 = unlist(lapply(lite, '[[', 'chebiid'))
+
+q2 = unique(unlist(lapply(lite, '[[', 'chebiid')))
 
 ## complete entities
 time = Sys.time()
-comp = get_comp_entity(q2, verbose = TRUE)
+comp = chebi_comp_entity(q2, verbose = TRUE)
 Sys.time() - time # ~1h
 # save
 saveRDS(comp, file.path(cachedir, 'chebi_comp.rds'))

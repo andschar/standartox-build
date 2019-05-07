@@ -50,9 +50,18 @@ source(file.path(src, 'da_epa_taxonomy.R'), max.deparse.length = mdl) # extracts
 
 # queries + results -------------------------------------------------------
 # query additional data
-source(file.path(src, 'qu_run.R'), max.deparse.length = mdl)
+source(file.path(src, 'qu_run_dwld.R'), max.deparse.length = mdl)
+source(file.path(src, 'qu_run_prep.R'), max.deparse.length = mdl)
 # merge information from additional data
-source(file.path(src, 'qu_merge.R'), max.deparse.length = mdl)
+
+
+
+# CONTINUE HERE!
+
+# source(file.path(src, 'qu_merge.R'), max.deparse.length = mdl)
+# # or in scripts ????
+# 're_merge_chem.R'
+# 're_merge_taxa.R'
 
 
 
