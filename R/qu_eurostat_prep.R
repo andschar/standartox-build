@@ -69,6 +69,7 @@ dupl = chck_dupl(eu_fin, 'cas')
 # write -------------------------------------------------------------------
 write_tbl(eu_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'eurostat',
+          key = 'cas',
           comment = 'Chemical Information from EUROSTAT.')
 
 # log ---------------------------------------------------------------------

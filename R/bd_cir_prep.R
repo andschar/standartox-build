@@ -50,6 +50,7 @@ chck_dupl(cir, 'cas')
 ## postgres
 write_tbl(cir, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'cir',
+          key = 'cas',
           comment = 'Results from the CIR (cas, inchi, smiles)')
 write_tbl(nam, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'cir_names',

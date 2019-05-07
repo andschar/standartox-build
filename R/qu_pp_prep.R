@@ -50,6 +50,7 @@ write_tbl(
   dbname = DBetox,
   schema = 'phch',
   tbl = 'physprop',
+  key = 'cas',
   comment = 'Results from the PhysProp query'
 )
 

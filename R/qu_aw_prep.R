@@ -38,6 +38,7 @@ aw[ , pesticide := as.numeric(rowSums(.SD, na.rm = TRUE) > 0),
 # final table -------------------------------------------------------------
 setcolorder(aw, 'cas')
 setnames(aw, clean_names(aw))
+setnames(aw, 'inch', 'inchi')
 
 # check -------------------------------------------------------------------
 chck_dupl(aw, 'cas')
@@ -45,6 +46,7 @@ chck_dupl(aw, 'cas')
 # write -------------------------------------------------------------------
 write_tbl(aw, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'alanwood',
+          key = 'cas',
           comment = 'Results from the Alan Wood Pesticide Compendium query')
 
 # log ---------------------------------------------------------------------
