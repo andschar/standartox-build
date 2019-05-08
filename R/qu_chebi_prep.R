@@ -36,14 +36,21 @@ cols = grep(paste0(envi, collapse = '|'), names(ont_par2), value = TRUE)
 chebi_envi = ont_par2[ , .SD, .SDcols = c('chebiid', cols) ]
 #! necessary 'cause it can be that a chemical is an azole fungicide but not classifed as a fungicide
 fung = grep('fungicide', names(chebi_envi), value = TRUE)
-chebi_envi[ , fungicide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = fung ]
+if (length(fung) > 0) {
+  chebi_envi[ , fungicide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = fung ]
+  chebi_envi[ fungicide == 1, pesticide := 1 ]
+}
 herb = grep('herbicide', names(chebi_envi), value = TRUE)
-chebi_envi[ , herbicide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = herb ]
+if (length(herb) > 0) {
+  chebi_envi[ , herbicide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = herb ]
+  chebi_envi[ herbicide == 1, pesticide := 1 ]
+}
 inse = grep('insecticide', names(chebi_envi), value = TRUE)
-chebi_envi[ , insecticide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = inse ]
-chebi_envi[ fungicide == 1, pesticide := 1 ]
-chebi_envi[ herbicide == 1, pesticide := 1 ]
-chebi_envi[ insecticide == 1, pesticide := 1 ]
+if (length(inse) > 0) {
+  chebi_envi[ , insecticide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = inse ]  
+  chebi_envi[ insecticide == 1, pesticide := 1 ]
+}
+
 # names
 setnames(chebi_envi, clean_names(chebi_envi))
 

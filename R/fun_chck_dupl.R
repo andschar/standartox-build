@@ -1,5 +1,5 @@
 # function to check if a specific column is duplicated
-obj = pp; col = 'cas'
+
 chck_dupl = function(obj, col, ret = FALSE) {
   setDT(obj)
   idx_dup = which(duplicated(obj[ , get(col)]))
