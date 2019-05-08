@@ -4,13 +4,13 @@
 source(file.path(src, 'setup.R'))
 
 # chemical scripts --------------------------------------------------------
-scripts_c = c('qu_aw_prep.R',
-              'qu_cs_scrape_prep.R',
-              'qu_pc_prep.R',
-              'qu_chebi_prep.R',
-              'qu_pp_prep.R',
-              'qu_epa_chem_prep.R',
-              'qu_eurostat_prep.R')
+scripts_chem = c('qu_aw_prep.R',
+                 'qu_cs_scrape_prep.R',
+                 'qu_pc_prep.R',
+                 'qu_chebi_prep.R',
+                 'qu_pp_prep.R',
+                 'qu_epa_chem_prep.R',
+                 'qu_eurostat_prep.R')
 
 mapply(source,
        file = scripts_chem,

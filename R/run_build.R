@@ -41,8 +41,8 @@ source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
 # meta files
 source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
 # bd CIR (chemical identifier resolver)
-source(file.path(src, 'bd_cir.R'), max.deparse.length = mld)
-
+source(file.path(src, 'bd_cir_dwld.R'), max.deparse.length = mld)
+source(file.path(src, 'bd_cir_prep.R'), max.deparse.length = mld)
 
 # identifiers -------------------------------------------------------------
 source(file.path(src, 'da_epa_chemicals.R'), max.deparse.length = mdl) # extracts identifiers
@@ -50,7 +50,10 @@ source(file.path(src, 'da_epa_taxonomy.R'), max.deparse.length = mdl) # extracts
 
 # queries + results -------------------------------------------------------
 # query additional data
-source(file.path(src, 'qu_run_dwld.R'), max.deparse.length = mdl)
+if (online) {
+  source(file.path(src, 'qu_run_dwld.R'), max.deparse.length = mdl)  
+}
+
 source(file.path(src, 'qu_run_prep.R'), max.deparse.length = mdl)
 # merge information from additional data
 

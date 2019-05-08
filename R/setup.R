@@ -33,7 +33,7 @@ pkg_cran = c(
   'foreach',
   'doParallel'
 )
-pkg_gith = c('ropensci/bib2df')#, 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
+pkg_gith = c('ropensci/bib2df', 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
 
 ## install via CRAN
 pacman::p_load(char = pkg_cran)
@@ -44,7 +44,7 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = TRUE # should queries be run
+online = FALSE # should queries be run
 online_db = FALSE # should database query be run
 plots = FALSE # should output plots be created
 scp_feather = FALSE # scp feather object # TODO remove this in the end
