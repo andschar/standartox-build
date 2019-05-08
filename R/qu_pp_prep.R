@@ -22,6 +22,8 @@ pp_resolve = function(l) {
 # data --------------------------------------------------------------------
 pp_l = readRDS(file.path(cachedir, 'pp_l.rds'))
 
+prop = rbindlist(lapply(pp_l, function(x) x$prop), fill = TRUE, idcol = 'cas')
+
 # preparation -------------------------------------------------------------
 pp_l = lapply(pp_l, pp_resolve)
 pp = rbindlist(pp_l, fill = TRUE, idcol = 'cas')
@@ -36,6 +38,10 @@ pp[, `.` := NULL]
 pp[, solubility_water := solubility_water * 1000] # orignianly in mg/L
 # names
 setnames(pp, clean_names(pp))
+
+# encoding ----------------------------------------------------------------
+pp = pp[ , lapply(.SD, iconv, from = 'ASCII', to = 'UTF-8') ]
+# https://stackoverflow.com/questions/23699271/force-character-vector-encoding-from-unknown-to-utf-8-in-r
 
 # check -------------------------------------------------------------------
 chck_dupl(pp, 'cas')

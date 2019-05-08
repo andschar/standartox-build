@@ -14,7 +14,7 @@ scripts_chem = c('qu_wiki_prep.R',
                  'qu_eurostat_prep.R')
 
 mapply(source,
-       file = scripts_chem,
+       file = file.path(src, scripts_chem),
        MoreArgs = list(max.deparse.length = mdl),
        SIMPLIFY = FALSE)
 
@@ -25,7 +25,7 @@ scripts_taxa = c('qu_worms_prep.R',
 
 
 mapply(source,
-       file = scripts_taxa,
+       file = file.path(src, scripts_taxa),
        MoreArgs = list(max.deparse.length = mdl),
        SIMPLIFY = FALSE)
 
