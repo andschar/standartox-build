@@ -4,7 +4,8 @@
 source(file.path(src, 'setup.R'))
 
 # chemical scripts --------------------------------------------------------
-scripts = c('qu_aw_dwld.R',
+scripts = c('qu_wiki_dwld.R',
+            'qu_aw_dwld.R',
             'qu_cs_scrape_dwld.R',
             'qu_pc_dwld.R',
             'qu_chebi_dwld.R',
