@@ -22,8 +22,6 @@ pp_resolve = function(l) {
 # data --------------------------------------------------------------------
 pp_l = readRDS(file.path(cachedir, 'pp_l.rds'))
 
-prop = rbindlist(lapply(pp_l, function(x) x$prop), fill = TRUE, idcol = 'cas')
-
 # preparation -------------------------------------------------------------
 pp_l = lapply(pp_l, pp_resolve)
 pp = rbindlist(pp_l, fill = TRUE, idcol = 'cas')

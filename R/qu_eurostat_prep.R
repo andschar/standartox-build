@@ -24,16 +24,19 @@ fill = function(x, blank = is.na) {
 # errata ------------------------------------------------------------------
 dt[ cas == '0', cas := NA ]
 # some cas are written in the same cell - pretty anoying!
-dt[ , cas := trimws(dt$cas) ]
-broken_cas = strsplit(dt$cas, split = '\n|,|\\s') # split cas within cells
-pos = lapply(broken_cas, function(x) which(sapply(x, function(y) nchar(y) > 0L))) # positions without ''
-broken_cas2 = Map(`[`, broken_cas, pos) # https://stackoverflow.com/questions/42373902/subset-list-of-vectors-with-vector-of-positions
-max_cas = max(sapply(broken_cas2, length)) # get maximum of CAS numbers
-vl = lapply(broken_cas2, `[`, 1:max_cas)
-cas_dt = rbindlist(lapply(vl, as.data.frame.list))
-setnames(cas_dt, c('cas', paste0('cas', 1:3)))
-dt[ , cas := NULL ]
-dt = cbind(dt, cas_dt)
+dt[ , cas := trimws(cas) ]
+
+#### TODO what about this?
+# broken_cas = strsplit(dt$cas, split = '\n|,|\\s') # split cas within cells
+# pos = lapply(broken_cas, function(x) which(sapply(x, function(y) nchar(y) > 0L))) # positions without ''
+# broken_cas2 = Map(`[`, broken_cas, pos) # https://stackoverflow.com/questions/42373902/subset-list-of-vectors-with-vector-of-positions
+# max_cas = max(sapply(broken_cas2, length)) # get maximum of CAS numbers
+# vl = lapply(broken_cas2, `[`, 1:max_cas)
+# cas_dt = rbindlist(lapply(vl, as.data.frame.list), fill = TRUE)
+# setnames(cas_dt, c('cas', paste0('cas', 1:3)))
+# dt[ , cas := NULL ]
+# dt = cbind(dt, cas_dt)
+### END
 
 # preparation -------------------------------------------------------------
 # retrieve group data into separate columns
@@ -64,7 +67,7 @@ eu_fin = eu_fin[!is.na(cas)] # as the whole approach is based on CAS
 eu_fin = unique(eu_fin)
 
 # check -------------------------------------------------------------------
-dupl = chck_dupl(eu_fin, 'cas')
+chck_dupl(eu_fin, 'cas')
 
 # write -------------------------------------------------------------------
 write_tbl(eu_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,

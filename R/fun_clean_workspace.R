@@ -3,13 +3,14 @@
 
 clean_workspace <- function(not_to_be_removed, envir = .GlobalEnv) {
   
-  not_to_be_removed = c('prj', 'src', 'nodename', 'DBetox', 'time',
+  not_to_be_removed = c('prj', 'src', 'nodename', 'DBetox', 'time', 'mdl',
                         'online',
                         'online_db',
                         'scp_feather',
                         'full_gbif_l',
                         'debug_mode',
-                        'sink_console')
+                        'sink_console',
+                        'log_msg')
   
   rm(list = setdiff(
     ls(envir = envir),
