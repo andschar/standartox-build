@@ -40,25 +40,21 @@ metals = c(metal_alkaline_earth, metal_trans, metal_posttrans, metalloid)
 
 # variables
 cla_che[ grep(paste0(metals, collapse = '|'), ecotox_group),
-         is_metal := 1L ]
+         metal := 1L ]
 cla_che[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
-         is_pesticide := 1L ]
-cla_che[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
-         is_pesticide := 1L ]
-cla_che[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
-         is_pesticide := 1L ]
+         pesticide := 1L ]
 cla_che[ grep('(?i)conazoles', ecotox_group),
-         is_fungicide := 1L ]
+         fungicide := 1L ]
 cla_che[ grep('(?i)pfoa', ecotox_group),
-         is_pfoa := 1L ]
+         pfoa := 1L ]
 cla_che[ grep('(?i)ppcp', ecotox_group),
-         is_pcp := 1L ]
+         pcp := 1L ]
 cla_che[ grep('(?i)pcb', ecotox_group),
-         is_pcb := 1L ]
+         pcb := 1L ]
 cla_che[ grep('(?i)edc', ecotox_group),
-         is_edc := 1L ]
+         edc := 1L ]
 cla_che[ grep('(?i)organotin', ecotox_group),
-         is_organotin := 1L ]
+         organotin := 1L ]
 
 cla_che[ , .N, ecotox_group][order(-N)] # TODO CONTINUE HERE!
 
@@ -76,6 +72,7 @@ chck_dupl(ep_chem_fin, 'cas')
 # write -------------------------------------------------------------------
 write_tbl(ep_chem_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'epa',
+          key = 'cas',
           comment = 'Chemical Information from EPA ECotox DB.')
 
 # log ---------------------------------------------------------------------

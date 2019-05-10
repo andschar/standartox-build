@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-
 # self defined:
 *.Rproj
 *.log
@@ -10,28 +9,21 @@
 /data
 /plots
 TODO.*
-
 # cache -> is done via /cache/.gitignore
 # commit .gitignore files to also commit the folders (work around)
 # https://stackoverflow.com/questions/115983/how-can-i-add-an-empty-directory-to-a-git-repository
-
 # missing -> is done via /missing/.gitignore
-
 # Tex
 TeX/*
 !TeX/organigram1.tex
 !TeX/organigram2.tex
-
 # /functions
 functions/ppdb*
-
 # talk
 presentation/*
 # !presentation/talk_internal.html
-
 # missing directory
 missing/*
-
 # article
 article/*
 # TODO remove comments in the end!
@@ -42,22 +34,16 @@ article/*
 # !article/refs
 # !article/article.tex
 # !article/tikz/organigram.tex
-
 # lookup
 # lookup/*
-
 # share
 share/*
-
 # misc
 misc/*
 notes/*
-
 # credentials
 cred/credentials.R
-
 # ag
 ag/*
-
 # log
 log

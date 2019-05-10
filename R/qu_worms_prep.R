@@ -15,11 +15,11 @@ wo2 = dcast(wo, id ~ ind,
 setnames(wo2, tolower(names(wo2)))
 setnames(wo2,
          c('scientificname', 'ismarine', 'isbrackish', 'isfreshwater', 'isterrestrial', 'isextinct'),
-         c('taxon', 'is_mar', 'is_bra', 'is_fre', 'is_ter', 'is_extinct'))
+         c('taxon', 'marin', 'brack', 'freah', 'terre', 'extinct'))
 setcolorder(wo2, c('aphiaid', 'taxon', 'genus', 'family', 'order', 'class', 'phylum', 'kingdom',
-                   'is_mar', 'is_bra', 'is_fre', 'is_ter', 'is_extinct'))
+                   'marin', 'brack', 'fresh', 'terre', 'extinct'))
 # types
-cols = c('is_mar', 'is_bra', 'is_fre', 'is_ter', 'is_extinct')
+cols = c('marin', 'brack', 'fresh', 'terre', 'extinct')
 wo2[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
 
 # write -------------------------------------------------------------------

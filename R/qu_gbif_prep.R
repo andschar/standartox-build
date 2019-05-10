@@ -58,13 +58,13 @@ gbif_geo = unique(gbif_data[ , .SD,
 
 # merge + classify --------------------------------------------------------
 gbif_hab_wat_dc = merge(gbif_habitat_dc, gbif_waterbody_dc, by = 'taxon', all = TRUE)
-gbif_hab_wat_dc[ , is_fre := ifelse(tolower(habitat) %like% paste0(fresh, collapse = '|') |
-                                      tolower(waterbody) %like% paste0(fresh, collapse = '|'), 1L, NA) ]
-gbif_hab_wat_dc[ , is_bra := ifelse(tolower(habitat) %like% paste0(brack, collapse = '|') |
-                                      tolower(waterbody) %like% paste0(brack, collapse = '|'), 1L, NA) ]
-gbif_hab_wat_dc[ , is_mar := ifelse(tolower(habitat) %like% paste0(marin, collapse = '|') |
-                                      tolower(waterbody) %like% paste0(marin, collapse = '|'), 1L, NA) ]
-gbif_hab_wat_dc[ , is_ter := ifelse(tolower(habitat) %like% paste0(terre, collapse = '|'), 1L, NA) ]
+gbif_hab_wat_dc[ , fresh := ifelse(tolower(habitat) %like% paste0(fresh, collapse = '|') |
+                                     tolower(waterbody) %like% paste0(fresh, collapse = '|'), 1L, NA) ]
+gbif_hab_wat_dc[ , brack := ifelse(tolower(habitat) %like% paste0(brack, collapse = '|') |
+                                     tolower(waterbody) %like% paste0(brack, collapse = '|'), 1L, NA) ]
+gbif_hab_wat_dc[ , marin := ifelse(tolower(habitat) %like% paste0(marin, collapse = '|') |
+                                     tolower(waterbody) %like% paste0(marin, collapse = '|'), 1L, NA) ]
+gbif_hab_wat_dc[ , terre := ifelse(tolower(habitat) %like% paste0(terre, collapse = '|'), 1L, NA) ]
 
 # missing data ------------------------------------------------------------
 # continent
@@ -77,7 +77,7 @@ gbif_conti_dc[ , count := NULL ]
 setnames(gbif_conti_dc, tolower(names(gbif_conti_dc)))
 
 # habitat
-cols_habi = grep('(?i)is_fre|is_bra|is_mar|is_ter', names(gbif_hab_wat_dc), value = TRUE)
+cols_habi = grep('(?i)fresh|brack|marin|terre', names(gbif_hab_wat_dc), value = TRUE)
 gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
                  .SDcols = cols_habi,
                  by = 1:nrow(gbif_hab_wat_dc) ]
@@ -100,14 +100,10 @@ for (i in 1:length(missing_l)) {
   }
 }
 
-# names -------------------------------------------------------------------
-setnames(gbif_conti_dc, paste0('is_', names(gbif_conti_dc)))
-setnames(gbif_conti_dc, 'is_taxon', 'taxon')
-
 # types -------------------------------------------------------------------
-cols = c('is_africa', 'is_asia', 'is_europe', 'is_north_america', 'is_oceania', 'is_south_america')
+cols = c('africa', 'asia', 'europe', 'north_america', 'oceania', 'south_america')
 gbif_conti_dc[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
-cols = c('is_mar', 'is_bra', 'is_fre', 'is_ter')
+cols = c('marin', 'brack', 'fresh', 'terre')
 gbif_hab_wat_dc[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
 
 # writing -----------------------------------------------------------------
