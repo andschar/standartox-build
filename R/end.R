@@ -3,12 +3,23 @@
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 
+# data --------------------------------------------------------------------
+crd = read.csv(file.path(cred, 'mail.csv'),
+               stringsAsFactors = FALSE)
+
 # mail --------------------------------------------------------------------
-# TODO implement!
+# via swaks
+recip = crd$recipient
+subj = 'Pipline finished'
+msg = subj
+user = crd$sender
+pw = crd$pw
+attach = c('console.log', 'script.log')
+
+swaks_mail(recip, subj, msg, user, pw, attach)
 
 # log ---------------------------------------------------------------------
-msg = 'END: All scripts successfully run.'
-log_msg(msg)
+log_msg('END: All scripts successfully run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

@@ -34,6 +34,9 @@ setnames(chebi_fin, clean_names(chebi_fin))
 envi = c('biocide', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'environmental.contaminent', 'agrochemical')
 cols = grep(paste0(envi, collapse = '|'), names(ont_par2), value = TRUE)
 chebi_envi = ont_par2[ , .SD, .SDcols = c('chebiid', cols) ]
+chebi_envi[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
+chebi_envi = chebi_envi[ , unique(.SD, by = 'cas') ] # take the first in case of duplicates
+
 #! necessary 'cause it can be that a chemical is an azole fungicide but not classifed as a fungicide
 fung = grep('fungicide', names(chebi_envi), value = TRUE)
 if (length(fung) > 0) {
@@ -59,13 +62,16 @@ drug = c('drug')
 cols = grep(paste0(drug, collapse = '|'), names(ont_par2), value = TRUE)
 chebi_drug = ont_par2[ , .SD, .SDcols = c('chebiid', cols) ]
 chebi_drug[ , drug := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = cols ]
+chebi_drug[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
+chebi_drug = chebi_drug[ , unique(.SD, by = 'cas') ] # take the first in case of duplicates
+
 # names
 setnames(chebi_drug, clean_names(chebi_drug))
 
 # check -------------------------------------------------------------------
 chck_dupl(chebi_fin, 'cas')
-chck_dupl(chebi_envi, 'chebiid')
-chck_dupl(chebi_drug, 'chebiid')
+chck_dupl(chebi_envi, 'cas')
+chck_dupl(chebi_drug, 'cas')
 
 # write -------------------------------------------------------------------
 # chebi general
@@ -76,12 +82,12 @@ write_tbl(chebi_fin, user = DBuser, host = DBhost, port = DBport, password = DBp
 # environmental table
 write_tbl(chebi_envi, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'chebi_envi',
-          key = 'chebiid',
+          key = 'cas',
           comment = 'Results from ChEBI (enrionmental chemicals)')
 # drug table
 write_tbl(chebi_drug, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'chebi_drug',
-          key = 'chebiid',
+          key = 'cas',
           comment = 'Results from ChEBI (drug chemicals)')
 
 # log ---------------------------------------------------------------------

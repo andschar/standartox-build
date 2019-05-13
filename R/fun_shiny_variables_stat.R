@@ -14,7 +14,7 @@ out_stats_lng = function(dt, variable) {
   return(out)
 }
 
-# for wide variables (i.e. is_fresh = 1,NA; is_terre = 1,NA)
+# for wide variables (i.e. fresh = 1,NA; terre = 1,NA)
 out_stats_wid = function(dt, vars) {
   dtmp = copy(dt)
   dtmp = dtmp[ , .SD, .SDcols = vars ]
