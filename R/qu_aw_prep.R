@@ -35,6 +35,11 @@ cols = c('acaricide', 'fungicide', 'herbicide', 'inhibitors', 'insecticide', 'mo
 aw[ , pesticide := as.numeric(rowSums(.SD, na.rm = TRUE) > 0), 
     .SDcols = cols ][ pesticide == 0, pesticide := NA ]
 
+# duplicates --------------------------------------------------------------
+# remove duplicates automatically 
+# TODO check in future differently
+aw = aw[ !duplicated(cas) ]
+
 # final table -------------------------------------------------------------
 setcolorder(aw, 'cas')
 setnames(aw, clean_names(aw))
