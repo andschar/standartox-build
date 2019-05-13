@@ -29,21 +29,25 @@ if (sink_console) {
   sink(con, append = TRUE, type = 'message')
 }
 
-# (1) build data base -----------------------------------------------------
-# download
-source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
-# build
-source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
-# lookup
-source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
-# errata
-source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
-# meta files
-source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
-# bd CIR (chemical identifier resolver)
-source(file.path(src, 'bd_cir_dwld.R'), max.deparse.length = mld)
-source(file.path(src, 'bd_cir_prep.R'), max.deparse.length = mld)
 
+# build scripts -----------------------------------------------------------
+
+if (build) {
+  # download
+  source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
+  # build
+  source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
+  # lookup
+  source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
+  # errata
+  source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
+  # meta files
+  source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
+  # bd CIR (chemical identifier resolver)
+  source(file.path(src, 'bd_cir_dwld.R'), max.deparse.length = mld)
+  source(file.path(src, 'bd_cir_prep.R'), max.deparse.length = mld)
+}
+  
 # identifiers -------------------------------------------------------------
 source(file.path(src, 'da_epa_chemicals.R'), max.deparse.length = mdl) # extracts identifiers
 source(file.path(src, 'da_epa_taxonomy.R'), max.deparse.length = mdl) # extracts identifiers

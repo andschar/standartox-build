@@ -46,6 +46,7 @@ pacman::p_load_gh(char = pkg_gith)
 # switches ----------------------------------------------------------------
 online = FALSE # should queries be run
 online_db = FALSE # should database query be run
+build = FALSE # should data base be rebuilt
 plots = FALSE # should output plots be created
 scp_feather = FALSE # scp feather object # TODO remove this in the end
 full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
