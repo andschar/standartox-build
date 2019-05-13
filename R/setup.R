@@ -115,6 +115,7 @@ source(file.path(src, 'fun_udunits2_vectorize.R'))
 source(file.path(src, 'fun_coalesce.R'))
 source(file.path(src, 'fun_clean_names.R'))
 source(file.path(src, 'fun_chck_dupl.R'))
+source(file.path(src, 'fun_sql_builder.R'))
 
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')

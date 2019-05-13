@@ -15,7 +15,7 @@ wo2 = dcast(wo, id ~ ind,
 setnames(wo2, tolower(names(wo2)))
 setnames(wo2,
          c('scientificname', 'ismarine', 'isbrackish', 'isfreshwater', 'isterrestrial', 'isextinct'),
-         c('taxon', 'marin', 'brack', 'freah', 'terre', 'extinct'))
+         c('taxon', 'marin', 'brack', 'fresh', 'terre', 'extinct'))
 setcolorder(wo2, c('aphiaid', 'taxon', 'genus', 'family', 'order', 'class', 'phylum', 'kingdom',
                    'marin', 'brack', 'fresh', 'terre', 'extinct'))
 # types
@@ -31,6 +31,7 @@ for (i in seq_along(wo2_l)) {
   nam = names(wo2_l)[i]
   write_tbl(dat, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
             dbname = DBetox, schema = 'taxa', tbl = paste0('worms_', nam),
+            key = 'taxon',
             comment = 'Results from the WoRMS query')
 }
 

@@ -54,7 +54,7 @@ source(file.path(src, 'da_epa_taxonomy.R'), max.deparse.length = mdl) # extracts
 
 # queries + results -------------------------------------------------------
 # query additional data
-if (online) {
+if (build) {
   source(file.path(src, 'qu_run_dwld.R'), max.deparse.length = mdl)  
 }
 
