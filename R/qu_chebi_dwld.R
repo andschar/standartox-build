@@ -2,7 +2,6 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
-# source('/home/scharmueller/Projects/webchem/R/chebi.R') # TODO replace this in the future
 
 # data --------------------------------------------------------------------
 if (online) {

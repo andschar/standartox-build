@@ -2,7 +2,7 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
-source('/home/scharmueller/Projects/webchem/R/pubchem.R')
+source('/home/scharmueller/Projects/etox-base/R/PUBCHEM_HTTP_PROBLEM.R')
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
@@ -23,7 +23,6 @@ if (debug_mode) {
 
 inchikey = chem$inchikey
 inchikey = gsub('InChIKey=', '', inchikey) # TODO remove in future
-# inchikey = inchikey[1:100] # TODO remove
 
 # query -------------------------------------------------------------------
 ## CIDs
