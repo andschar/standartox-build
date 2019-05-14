@@ -2,9 +2,9 @@
 
 # project folder ----------------------------------------------------------
 nodename = Sys.info()[4]
-if (nodename == 'scharmueller') {
-  prj = '/home/andreas/Documents/Projects/etox-base-shiny'
-  prj_data = '/home/andreas/Documents/Projects/etox-base'
+if (nodename == 'scharmueller-t460s') {
+  prj = '/home/scharmueller/Projects/etox-base-shiny'
+  prj_data = '/home/scharmueller/Projects/etox-base'
 } else if (nodename == 'uwigis') {
   prj = '/home/scharmueller/Projects/etox-base-shiny'
   prj_data = '/home/scharmueller/Projects/etox-base'
