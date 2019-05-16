@@ -8,16 +8,11 @@ url = 'https://ec.europa.eu/eurostat/cache/metadata/Annexes/aei_fm_salpest09_esm
 file = tempfile()
 
 # data --------------------------------------------------------------------
-if (online) {
-  download.file(url = url, destfile = file)
-  dt = as.data.table(read_excel(file, skip = 1))
-  setnames(dt, c('code', 'cname', 'cas', 'cipac'))
-  
-  saveRDS(dt, file.path(cachedir, 'eurostat_annexes.rds'))
-} else {
-  
-  dt = readRDS(file.path(cachedir, 'eurostat_annexes.rds'))
-}
+download.file(url = url, destfile = file)
+dt = as.data.table(read_excel(file, skip = 1))
+setnames(dt, c('code', 'cname', 'cas', 'cipac'))
+
+saveRDS(dt, file.path(cachedir, 'eurostat_annexes.rds'))
 
 # log ---------------------------------------------------------------------
 log_msg('Eurostat download script run')

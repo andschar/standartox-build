@@ -1,4 +1,5 @@
 # script to prepare EPA chemical classification data
+# TODO additional super groups/classes
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))

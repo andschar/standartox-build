@@ -1,7 +1,8 @@
-# script to download wikidata
+# script to query the PubChem data base: properties
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
+source('/home/scharmueller/Projects/etox-base/R/PUBCHEM_HTTP_PROBLEM.R')
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
@@ -14,32 +15,37 @@ con = dbConnect(
   password = DBpassword
 )
 
-chem = dbGetQuery(con, "SELECT *
-                        FROM phch.cir")
-setDT(chem)
+cid_l = dbGetQuery(con, "SELECT *
+                         FROM phch.pc_cid")
+setDT(cid_l)
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # debuging
 if (debug_mode) {
-  chem = chem[1:10]
+  cid_l = cid_l[1:10]
 }
 
-todo = as.character(chem$cas)
+todo = cid_l$cid
 
 # query -------------------------------------------------------------------
-## identifier
-wd_id = get_wdid(todo)
-# save
-saveRDS(wd_id, file.path(cachedir, 'wd_id.rds'))
-## data
-wd = wd_ident(wd_id$id)
-# save
-saveRDS(wd, file.path(cachedir, 'wd.rds'))
+time = Sys.time()
+pc_prop_l = list()
+for (i in seq_along(todo)) {
+  
+  cid = todo[i]
+  message('Pubchem (pc_rop): CID: ', cid)
+  res = pc_prop(cid, verbose = FALSE)
+  pc_prop_l[[i]] = res
+  names(pc_prop_l)[i] = names(cid)
+}
+Sys.time() - time
+
+saveRDS(pc_prop_l, file.path(cachedir, 'pc_prop_l.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('WIKIDATA download script run')
+log_msg('PubChem download (properties) script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

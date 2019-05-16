@@ -4,11 +4,29 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
+drv = dbDriver("PostgreSQL")
+con = dbConnect(
+  drv,
+  user = DBuser,
+  dbname = DBetox,
+  host = DBhost,
+  port = DBport,
+  password = DBpassword
+)
+
+chem = dbGetQuery(con, "SELECT *
+                        FROM phch.cir")
+setDT(chem)
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
+
 # debuging
 if (debug_mode) {
   chem = chem[1:10]
 }
+
+todo = as.character(chem$cas)
 
 # query -------------------------------------------------------------------
 todo_aw = sort(chem$cas)

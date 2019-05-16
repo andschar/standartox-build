@@ -1,7 +1,8 @@
-# script to download wikidata
+# script to query the PubChem data base: synonyms
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
+source('/home/scharmueller/Projects/etox-base/R/PUBCHEM_HTTP_PROBLEM.R')
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
@@ -14,32 +15,29 @@ con = dbConnect(
   password = DBpassword
 )
 
-chem = dbGetQuery(con, "SELECT *
-                        FROM phch.cir")
-setDT(chem)
+cid_l = dbGetQuery(con, "SELECT *
+                         FROM phch.pc_cid")
+setDT(cid_l)
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # debuging
 if (debug_mode) {
-  chem = chem[1:10]
+  cid_l = cid_l[1:10]
 }
 
-todo = as.character(chem$cas)
+todo = cid_l$cid
 
 # query -------------------------------------------------------------------
-## identifier
-wd_id = get_wdid(todo)
-# save
-saveRDS(wd_id, file.path(cachedir, 'wd_id.rds'))
-## data
-wd = wd_ident(wd_id$id)
-# save
-saveRDS(wd, file.path(cachedir, 'wd.rds'))
+time = Sys.time()
+pc_syn_l = pc_synonyms(todo, from = 'cid', verbose = TRUE)
+Sys.time() - time
+
+saveRDS(pc_syn_l, file.path(cachedir, 'pc_syn_l.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('WIKIDATA download script run')
+log_msg('PubChem download (synonyms) script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

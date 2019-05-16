@@ -40,10 +40,23 @@ js_scrape = function(url = 'http://www.example.com',
   message('Saving to: ', file)
 }
 
-
-
-
-
-
-
+# taken from: https://stackoverflow.com/questions/26631511/scraping-javascript-website-in-r
+# js_scrape = function(url, file) {
+#   
+#   file_js = gsub('\\..+', '.js', file)
+#   writeLines(
+#     sprintf(
+#       "var page = require('webpage').create();
+#            page.open('%s', function () {
+#              console.log(page.content); //page source
+#              phantom.exit();
+#            });", url
+#     ),
+#     con = file_js
+#   )
+#   
+#   cmd = sprintf("phantomjs %s > %s", file_js, file)
+#   system(cmd, intern = TRUE)
+#   message('Written to ', file)
+# }
 

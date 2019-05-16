@@ -1,20 +1,15 @@
-# script to download wikidata
+# script to query the PubChem (CID) data base
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
+source('/home/scharmueller/Projects/etox-base/R/PUBCHEM_HTTP_PROBLEM.R')
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
-con = dbConnect(
-  drv,
-  user = DBuser,
-  dbname = DBetox,
-  host = DBhost,
-  port = DBport,
-  password = DBpassword
-)
+DBetox = 'etox20190314'
+con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
 
-chem = dbGetQuery(con, "SELECT *
+chem = dbGetQuery(con, "SELECT DISTINCT ON (inchikey) inchikey
                         FROM phch.cir")
 setDT(chem)
 
@@ -26,20 +21,16 @@ if (debug_mode) {
   chem = chem[1:10]
 }
 
-todo = as.character(chem$cas)
+todo = chem$inchikey
 
 # query -------------------------------------------------------------------
-## identifier
-wd_id = get_wdid(todo)
-# save
-saveRDS(wd_id, file.path(cachedir, 'wd_id.rds'))
-## data
-wd = wd_ident(wd_id$id)
-# save
-saveRDS(wd, file.path(cachedir, 'wd.rds'))
+cid_l = get_cid(todo, from = 'inchikey', verbose = TRUE)
+
+saveRDS(cid_l, file.path(cachedir, 'pc_cid_l.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('WIKIDATA download script run')
+log_msg('PubChem download (CID) script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
+

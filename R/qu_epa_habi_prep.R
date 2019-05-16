@@ -29,7 +29,7 @@ chck_dupl(ep_habi_fin, 'taxon')
 
 # write -------------------------------------------------------------------
 write_tbl(ep_habi_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'taxa', tbl = 'epa',
+          dbname = DBetox, schema = 'taxa', tbl = 'epa_habi',
           key = 'taxon',
           comment = 'EPA habitat data')
 

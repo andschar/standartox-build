@@ -1,15 +1,33 @@
 # script to query habitat information from the WORMS marine data base
+# debuging
+# http://www.marinespecies.org/rest/
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 source(file.path(src, 'fun_worms_query.R'))
-# debuging
-# http://www.marinespecies.org/rest/
 
 # data --------------------------------------------------------------------
-taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
+drv = dbDriver("PostgreSQL")
+con = dbConnect(
+  drv,
+  user = DBuser,
+  dbname = DBetox,
+  host = DBhost,
+  port = DBport,
+  password = DBpassword
+)
+
+taxa = dbGetQuery(con, "SELECT *
+                        FROM taxa.epa
+                        ORDER BY taxon ASC")
+setDT(taxa)
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
+
+# debuging
 if (debug_mode) {
-  taxa = taxa[1:10] # debuging
+  taxa = taxa[1:10]
 }
 
 # TODO  distributions

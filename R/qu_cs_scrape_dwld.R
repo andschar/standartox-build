@@ -7,82 +7,82 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
+fl = file.path(tempdir(), 'file.html')
 
 # data --------------------------------------------------------------------
-csid = readRDS(file.path(cachedir, 'csid.rds'))
-csid2 = csid[ !is.na(csid) ]
-# debuging
-if (debug_mode) {
-  csid2 = csid2[1:10]
-}
+csid_l = readRDS(file.path(cachedir, 'csid_l.rds'))
+csid = rbindlist(csid_l, idcol = 'inchikey')
+setnames(csid, 'results', 'csid')
+
+todo = csid$csid
+names(todo) = csid$inchikey
+
+todo = '3376'
+names(todo) = 'blub'
 
 # query -------------------------------------------------------------------
-if (online) {
+l = list()
+for (i in seq_along(todo)) {
+  # url
+  prolog = 'http://www.chemspider.com/Chemical-Structure.'  
+  csid = todo[i]
+  inchikey = names(todo)[i]
+  header = '.html?rid='
+  # random token
+  # token = '46421728-92be-4b35-9c51-2cef6ede1cf2'
+  token = paste(paste0(sample(0:9, 8), collapse = ''),
+                paste0(sample(letters, 2), sample(0:9, 2), collapse = ''),
+                paste0(sample(0:9, 1), sample(letters, 1), sample(0:9, 2), collapse = ''),
+                paste0(sample(c(letters, 0:9), 12), collapse = ''),
+                sep = '-') # random token
   
-  l = list()
-  for (i in seq_along(csid2)) {
-    # url
-    prolog = 'http://www.chemspider.com/Chemical-Structure.'  
-    qu_csid = csid2[i]
-    qu_cas = names(qu_csid)
-    header = '.html?rid='
-    token = paste(paste0(sample(0:9, 8), collapse = ''),
-                  paste0(sample(letters, 2), sample(0:9, 2), collapse = ''),
-                  paste0(sample(0:9, 1), sample(letters, 1), sample(0:9, 2), collapse = ''),
-                  paste0(sample(c(letters, 0:9), 12), collapse = ''),
-                  sep = '-') # random token
-    # token = '46421728-92be-4b35-9c51-2cef6ede1cf2'
-    qurl = paste0(prolog, qu_csid, header, token)
+  qurl = paste0(prolog, csid, header, token)
+  
+  message('Chemspider Scrape: CSID:', csid,
+          ' (', i, '/', length(todo), ')')
+  # scrape
+  Sys.sleep(rgamma(1, shape = 5, scale = 1/10))
+  js_scrape(url = qurl,
+            phantompath = phantompath,
+            file = fl)
+  site = try(read_html(fl))
+  if (inherits(site, 'try-error')) {
+    name = NA_character_
+    tags = NA_character_
+  } else {
+  
+    name = site %>%
+      html_nodes(xpath = '//*[@id="ctl00_ctl00_ContentSection_ContentPlaceHolder1_RecordViewDetails_rptDetailsView_ctl00_WrapTitle"]') %>%
+      html_text()
     
-    message('Chemspider Scrape: CAS:', qu_cas, '; CSID:', qu_csid,
-            ' (', i, '/', length(csid2), ')')
-    # scrape
-    Sys.sleep(rgamma(1, shape = 5, scale = 1/10))
-    js_scrape(qurl, phantompath = phantompath)
-    site = try(read_html(file.path(tempdir(), 'file.html')))
-    
-    if (inherits(site, 'try-error')) {
+    if (length(name) == 0) {
       name = NA_character_
-      tags = NA_character_
-    } else {
-    
-      name = site %>%
-        html_nodes(xpath = '//*[@id="ctl00_ctl00_ContentSection_ContentPlaceHolder1_RecordViewDetails_rptDetailsView_ctl00_WrapTitle"]') %>%
-        html_text()
-      
-      if (length(name) == 0) {
-        name = NA_character_
-      }
-      
-      tags = site %>% 
-        html_nodes(xpath = '//*[@id="tags-list"]') %>% 
-        html_children() %>% 
-        html_text() %>% 
-        grep('(?i)tag', ., value = TRUE, invert = TRUE) # remove tag entry
-      
-      if (length(tags) == 0) {
-        tags = NA_character_
-      }
-      
     }
-    # list
-    l[[i]] = data.table(csid = qu_csid,
-                        cas = names(qu_csid),
-                        name = name,
-                        tags = tags)
-    names(l)[i] = qu_csid
+    
+    tags = site %>%
+      html_nodes(xpath = '//*[@id="tags-list"]') %>% 
+      html_children() %>% 
+      html_text() %>% 
+      grep('(?i)tag', ., value = TRUE, invert = TRUE) # remove tag entry
+    
+    if (length(tags) == 0) {
+      tags = NA_character_
+    }
+    
   }
-  
-  # save
-  saveRDS(l, file.path(cachedir, 'cs_scrape_l.rds'))
-  
-} else {
-  
-  l = readRDS(file.path(cachedir, 'cs_scrape_l.rds'))
+  # list
+  l[[i]] = data.table(csid = csid,
+                      inchikey = inchikey,
+                      name = name,
+                      tags = tags)
+  names(l)[i] = inchikey
 }
 
+# save --------------------------------------------------------------------
+saveRDS(l, file.path(cachedir, 'cs_scrape_l.rds'))
+  
 # log ---------------------------------------------------------------------
-log_msg('ChemSpider download script run')
+log_msg('ChemSpider download (scrape) script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

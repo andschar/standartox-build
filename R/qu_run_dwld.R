@@ -4,17 +4,18 @@
 source(file.path(src, 'setup.R'))
 
 # chemical scripts --------------------------------------------------------
-scripts = c('qu_wiki_dwld.R',
-            'qu_aw_dwld.R',
-            'qu_cs_scrape_dwld.R',
-            'qu_pc_dwld.R',
+scripts = c('qu_aw_dwld.R',
             'qu_chebi_dwld.R',
+            # 'qu_cs_scrape_dwld.R', # TODO make javascript scrape work
+            'qu_pc_prop_dwld.R',
+            'qu_pc_syn_dwld.R',
             'qu_pp_dwld.R',
             'qu_epa_chem_dwld.R',
-            'qu_eurostat_dwld.R')
+            'qu_eurostat_dwld.R',
+            'qu_wiki_dwld.R')
 
 time = Sys.time()
-n_cores = detectCores() - 1
+n_cores = length(scripts)
 cl = makeCluster(n_cores, type = 'FORK')
 doParallel::registerDoParallel(cl)
 
@@ -35,7 +36,7 @@ scripts = c('qu_worms_dwld.R',
             'qu_epa_habi_dwld.R')
 
 time = Sys.time()
-n_cores = detectCores() - 1
+n_cores = length(scripts)
 cl = makeCluster(n_cores, type = 'FORK')
 doParallel::registerDoParallel(cl)
 

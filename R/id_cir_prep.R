@@ -5,7 +5,6 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 l = readRDS(file.path(cachedir, 'cir_l.rds'))
-chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 
 # preparation -------------------------------------------------------------
 # convert list to data.tables
@@ -27,6 +26,9 @@ cir = Reduce(function(...)
   ),
   l3[ names(l3) %in% c('stdinchi', 'stdinchikey', 'smiles') ])
 cir[ , stdinchikey := gsub('InChIKey=', '', stdinchikey) ]
+cir[ , casnr := casconv(cas, direction = 'tocasnr') ]
+setcolorder(cir, c('cas', 'casnr', 'stdinchi', 'stdinchikey', 'smiles'))
+setorder(cir, 'cas')
 setnames(cir, c('stdinchi', 'stdinchikey'), c('inchi', 'inchikey'))
 ## names
 nam = l3$names
@@ -42,12 +44,10 @@ cs_id = l3$chemspider_id
 ## ChEBIid
 chebiid = l3$chebiid # TODO if unique, put into cir[]
 
-# checks ------------------------------------------------------------------
-## duplicates
+# check -------------------------------------------------------------------
 chck_dupl(cir, 'cas')
 
-# writing -----------------------------------------------------------------
-## postgres
+# write -------------------------------------------------------------------
 write_tbl(cir, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'cir',
           key = 'cas',

@@ -4,7 +4,7 @@
 source(file.path(src, 'setup.R'))
 
 # chemical scripts --------------------------------------------------------
-if (online_db) {
+if (online) {
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
   
@@ -58,7 +58,7 @@ if (online_db) {
 }
 
 # taxa: habitat and region scripts ----------------------------------------
-if (online_db) { 
+if (online) { 
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
   

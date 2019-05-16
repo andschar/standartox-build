@@ -5,11 +5,14 @@ source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
 pc_syn_l = readRDS(file.path(cachedir, 'pc_syn_l.rds'))
-pc_prop = readRDS(file.path(cachedir, 'pc_prop.rds'))
+pc_prop_l = readRDS(file.path(cachedir, 'pc_prop_l.rds'))
 
 # preparation -------------------------------------------------------------
 ## properties
-setDT(pc_prop)
+pc_prop_l[ is.na(pc_prop_l) ] = lapply(pc_prop_l[ is.na(pc_prop_l) ], data.table)
+pc_prop = rbindlist(pc_prop_l, fill = TRUE)
+pc_prop[ , V1 := NULL ]
+
 setnames(pc_prop, clean_names(pc_prop))
 pc_prop = pc_prop[ !duplicated(inchikey) & !is.na(inchikey) ] #! maybe loss of data
 

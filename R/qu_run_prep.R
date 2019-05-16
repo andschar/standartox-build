@@ -6,7 +6,7 @@ source(file.path(src, 'setup.R'))
 # chemical scripts --------------------------------------------------------
 scripts_chem = c('qu_wiki_prep.R',
                  'qu_aw_prep.R',
-                 'qu_cs_scrape_prep.R',
+                 # 'qu_cs_scrape_prep.R', # TODO make javascript scrape work
                  'qu_pc_prep.R',
                  'qu_chebi_prep.R',
                  'qu_pp_prep.R',

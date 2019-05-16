@@ -44,7 +44,7 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = FALSE # should queries be run
+online = TRUE # should queries be run
 online_db = FALSE # should database query be run
 build = FALSE # should data base be rebuilt
 plots = FALSE # should output plots be created
@@ -55,7 +55,7 @@ debug_mode = TRUE # should only 10 input rows for each quering script be run
 sink_console = TRUE # sink console to file
 
 # variables ---------------------------------------------------------------
-cachedir = file.path(prj, 'cache')
+cachedir = file.path(prj, 'cache2')
 missingdir = file.path(prj, 'missing')
 meta = file.path(prj, 'meta')
 fundir = file.path(prj, 'functions')
@@ -120,6 +120,7 @@ source(file.path(src, 'fun_sql_builder.R'))
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')
 csapikey = readChar(fl, file.info(fl)$size)
+rm(fl)
 
 # library dependencies ----------------------------------------------------
 # libsodium - for JS module fs - fun_scrape_phantomjs.R

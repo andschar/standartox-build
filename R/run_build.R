@@ -29,9 +29,8 @@ if (sink_console) {
   sink(con, append = TRUE, type = 'message')
 }
 
-
 # build scripts -----------------------------------------------------------
-
+## EPA ECOTOX data base
 if (build) {
   # download
   source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
@@ -43,36 +42,36 @@ if (build) {
   source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
   # meta files
   source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
-  # bd CIR (chemical identifier resolver)
-  source(file.path(src, 'bd_cir_dwld.R'), max.deparse.length = mld)
-  source(file.path(src, 'bd_cir_prep.R'), max.deparse.length = mld)
 }
-  
+
 # identifiers -------------------------------------------------------------
-source(file.path(src, 'da_epa_chemicals.R'), max.deparse.length = mdl) # extracts identifiers
-source(file.path(src, 'da_epa_taxonomy.R'), max.deparse.length = mdl) # extracts identifiers
+## chemicals
+if (build) {
+  # CIR (chemical identifier resolver)
+  source(file.path(src, 'id_cir_dwld.R'), max.deparse.length = mdl)
+  source(file.path(src, 'id_cir_prep.R'), max.deparse.length = mdl)
+  # PubChem CID
+  source(file.path(src, 'id_pc_dwld_cid.R'), max.deparse.length = mld)
+  source(file.path(src, 'id_pc_prep_cid.R'), max.deparse.length = mld)
+  
+  # source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mld) # TODO make javascript scrape work
+}
+
+## biota
+if (build) {
+source(file.path(src, 'id_epa_taxonomy.R'), max.deparse.length = mdl) # extracts identifiers
+}
 
 # queries + results -------------------------------------------------------
-# query additional data
+## chemical and biota parameters
 if (build) {
   source(file.path(src, 'qu_run_dwld.R'), max.deparse.length = mdl)  
 }
 
 source(file.path(src, 'qu_run_prep.R'), max.deparse.length = mdl)
-# merge information from additional data
 
-
-
-# CONTINUE HERE!
-
-# source(file.path(src, 'qu_merge.R'), max.deparse.length = mdl)
-# # or in scripts ????
-# 're_merge_chem.R'
-# 're_merge_taxa.R'
-
-
-
-
+# merge -------------------------------------------------------------------
+source(file.path(src, 'qu_merge.R'), max.deparse.length = mdl)
 
 # (4) prepare data --------------------------------------------------------
 # EPA data scripts

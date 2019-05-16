@@ -1,27 +1,10 @@
-# script to query taxonomic entities from the EPA data to retain meaningfull ecotoxicological groups
+# script to prepare taxonomic entities from the EPA data to retain meaningfull ecotoxicological groups
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-## EPA
-if (online_db) {
-  drv = dbDriver("PostgreSQL")
-  con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
-
-  taxa = dbGetQuery(con, "SELECT DISTINCT ON (latin_name) *
-                          FROM ecotox.species")
-  setDT(taxa)
-  
-  dbDisconnect(con)
-  dbUnloadDriver(drv)
-  
-  saveRDS(taxa, file.path(cachedir, 'source_epa_taxa.rds'))
-  
-} else {
-  
-  taxa = readRDS(file.path(cachedir, 'source_epa_taxa.rds'))  
-}
+taxa = readRDS(file.path(cachedir, 'source_epa_taxa.rds'))
 
 ## lookup
 look_taxgrp = fread(file.path(lookupdir, 'lookup_ecotox_habitat_group.csv'))
@@ -37,6 +20,9 @@ taxa[ , c('subspecies', 'variety', 'ecotox_group') := NULL ]
 taxa[ , taxon := gsub('\\sx\\s', ' X ', latin_name, ignore.case = TRUE) ] # transform all Hybrid X to capital letters => they aren't seen as species-names in the next REGEX
 taxa[ , taxon := trimws(gsub('([A-z]+)\\s([a-z]+\\s)(.+)*', '\\1 \\2', taxon)) ]
 taxa[ , taxon := trimws(gsub('sp.', '', taxon)) ] # remove sp.
+
+# unique identifier (taxon) -----------------------------------------------
+taxa = unique(taxa, by = 'taxon')
 
 # errata ------------------------------------------------------------------
 taxa[ phylum_division == 'Cyanophycota', phylum_division := 'Cyanobacteria' ]
@@ -185,7 +171,7 @@ taxa[taxa[ , Reduce(`|`, lapply(.SD, `%like%`,
 # worms sind eigentlich Annelida
 # aquatic invertebrates is hard to determine
 
-# writing -----------------------------------------------------------------
+# final table -------------------------------------------------------------
 tax_names = c('common_name', 'species', 'genus', 'family', 'class', 'superclass', 'subphylum_div', 'phylum_division', 'kingdom', 'ecotox_grp')
 setnames(taxa, old = tax_names, paste0('tax_', tax_names))
 tax_ord = c('taxon', 'latin_name', 'tax_common_name', 'species_number', 'tax_species', 'tax_genus',
@@ -194,11 +180,17 @@ tax_ord = c('taxon', 'latin_name', 'tax_common_name', 'species_number', 'tax_spe
             'tax_invertebrate_mikro')
 setcolorder(taxa, tax_ord)
 
-saveRDS(taxa, file.path(cachedir, 'epa_taxa.rds'))
+# check -------------------------------------------------------------------
+chck_dupl(taxa, 'taxon')
+
+# write -------------------------------------------------------------------
+write_tbl(taxa, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'taxa', tbl = 'epa',
+          key = 'taxon',
+          comment = 'EPA taxonomic data')
 
 # log ---------------------------------------------------------------------
-msg = 'EPA1: taxonomic cleaning script run'
-log_msg(msg)
+log_msg('EPA: taxonomic preparation script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
