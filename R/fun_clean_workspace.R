@@ -4,8 +4,10 @@
 clean_workspace <- function(not_to_be_removed, envir = .GlobalEnv) {
   
   not_to_be_removed = c('prj', 'src', 'nodename', 'DBetox', 'time', 'mdl',
-                        'build',
+                        'download_db',
+                        'build_db',
                         'download',
+                        'build',
                         'debug_mode',
                         'sink_console',
                         'log_msg')
