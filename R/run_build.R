@@ -50,27 +50,25 @@ if (build_db) {
 }
 
 # identifiers -------------------------------------------------------------
+## 1st identifiers
 if (download) {
-  ## chemicals
-  # CIR (chemical identifier resolver)
-  source(file.path(src, 'id_cir_dwld.R'), max.deparse.length = mdl)
-  # PubChem CID
-  source(file.path(src, 'id_pc_cid_dwld.R'), max.deparse.length = mld)
-  # Chemspider CSID
-  source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mld)
-  
-  ## biota
-  source(file.path(src, 'id_epa_tax_dwld.R'), max.deparse.length = mdl) # extracts identifiers
+  source(file.path(src, 'id_cir_dwld.R'), max.deparse.length = mdl) # CIR
 }
 
-# build -------------------------------------------------------------------
 if (build) {
-  ## chemicals
   source(file.path(src, 'id_cir_prep.R'), max.deparse.length = mdl)
+}
+
+## 2nd identifiers 
+if (download) {
+  source(file.path(src, 'id_pc_cid_dwld.R'), max.deparse.length = mld) # PubChem
+  source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mld) # Chemspider
+  source(file.path(src, 'id_epa_tax_dwld.R'), max.deparse.length = mdl) # EPA: extracts identifiers
+}
+
+if (build) {
   source(file.path(src, 'id_pc_cid_prep.R'), max.deparse.length = mld)
   source(file.path(src, 'id_epa_tax_prep.R'), max.deparse.length = mdl)
-  
-  ## biota
   source(file.path(src, 'id_epa_tax_prep.R'), max.deparse.length = mdl)
 }
 
