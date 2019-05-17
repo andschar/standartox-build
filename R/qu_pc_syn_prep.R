@@ -4,28 +4,26 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-pc_prop_l = readRDS(file.path(cachedir, 'pc_prop_l.rds'))
+pc_syn_l = readRDS(file.path(cachedir, 'pc_syn_l.rds'))
 
 # preparation -------------------------------------------------------------
-pc_prop_l[ is.na(pc_prop_l) ] = lapply(pc_prop_l[ is.na(pc_prop_l) ], data.table)
-pc_prop = rbindlist(pc_prop_l, fill = TRUE)
-pc_prop[ , V1 := NULL ]
-
-setnames(pc_prop, clean_names(pc_prop))
-pc_prop = pc_prop[ !duplicated(inchikey) & !is.na(inchikey) ] #! maybe loss of data
+syn = lapply(pc_syn_l, data.table)
+syn2 = rbindlist(syn, idcol = 'inchikey')
+setnames(syn2, 'V1', 'synonym')
+syn2[ , synonym := tolower(synonym) ]
 
 # check -------------------------------------------------------------------
-chck_dupl(pc_prop, 'inchikey')
+
 
 # write -------------------------------------------------------------------
-# general
-write_tbl(pc_prop, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'pubchem',
-          key = 'inchikey',
+# synonyms
+write_tbl(syn2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'phch', tbl = 'pubchem_synonyms',
+          key = NULL,
           comment = 'Results from the PubChem query')
 
 # log ---------------------------------------------------------------------
-log_msg('PubChem (properties) preparation script run')
+log_msg('PubChem (synonyms) preparation script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
