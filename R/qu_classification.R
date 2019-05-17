@@ -40,7 +40,7 @@ if (former) {
   message('Setting online = FALSE')
 }
 
-if (online) {
+if (download) {
 # ITIS - Integrated Taxonomic Inforamtion System --------------------------
   itis_todo = todo_taxa
   # itis_todo = itis_todo[1:5] # debug me!

@@ -99,6 +99,7 @@ test_type[ test_type %in% c('ACUTE', 'ACTELS'),
            description_norman := 'acute' ]
 test_type[ test_type %in% c('CHRONIC', 'CHRELS', 'ELS', 'FLC', 'GEN', 'PLC'),
            description_norman := 'chronic' ]
+setnames(test_type, 'test_type', 'code')
 
 # list --------------------------------------------------------------------
 lookup_l = list(chemical_analysis = chemical_analysis,
@@ -109,16 +110,7 @@ lookup_l = list(chemical_analysis = chemical_analysis,
                 test_type = test_type)
 
 # check -------------------------------------------------------------------
-## check if there are NAs in the description_norman column
-# tot_ln = sapply(lookup_l, function(x) sum(length(which(is.na(x[ , .SD, .SDcols = grep('norman', names(x))])))))
-# if (sum(tot_ln) != 0) {
-#   stop('For ', sum(tot_ln), ' variables a NORMAN description is missing')
-# }
-# 
-# for (i in lookup_l) {
-#   ln = length(which(is.na(i$description_norman)))
-#   tot_ln = tot_ln + ln
-# }
+sapply(lookup_l, chck_dupl, col = 'code')
 
 # write lookup tables -----------------------------------------------------
 for (i in seq_along(lookup_l)) {
@@ -131,15 +123,13 @@ for (i in seq_along(lookup_l)) {
   ## to postgres
   write_tbl(tbl, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
             dbname = DBetox, schema = schema, tbl = name,
+            key = 'code',
             comment = paste0(name, ' ', 'lookup table'))
-  ## to .csv
-  fwrite(tbl, file.path(normandir, paste0(name, '.csv')))
   
 }
 
 # log ---------------------------------------------------------------------
-msg = 'LOOK: Duration lookup tables script run.'
-log_msg(msg)
+log_msg('LOOK: Duration lookup tables script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

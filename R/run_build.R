@@ -22,58 +22,75 @@ if (nodename == 'scharmueller-t460s') {
 # (0) setup ---------------------------------------------------------------
 source(file.path(prj, 'R/setup.R'), max.deparse.length = mdl)
 
-# (0a) console log ---------------------------------------------------------
+# console log -------------------------------------------------------------
 if (sink_console) {
   con = file(file.path(prj, 'console.log'))
   sink(con, append = TRUE)
   sink(con, append = TRUE, type = 'message')
 }
 
-# build scripts -----------------------------------------------------------
-## EPA ECOTOX data base
-if (build) {
+# build EPA ECOTOX data base ----------------------------------------------
+## download
+if (download_db) {
+  ## EPA ECOTOX data base
   # download
   source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
+}
+
+## build
+if (build_db) {
   # build
   source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
-  # lookup
-  source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
   # errata
   source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
   # meta files
   source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
+  # lookup tables
+  source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
 }
 
 # identifiers -------------------------------------------------------------
-## chemicals
-if (build) {
+if (download) {
+  ## chemicals
   # CIR (chemical identifier resolver)
   source(file.path(src, 'id_cir_dwld.R'), max.deparse.length = mdl)
-  source(file.path(src, 'id_cir_prep.R'), max.deparse.length = mdl)
   # PubChem CID
-  source(file.path(src, 'id_pc_dwld_cid.R'), max.deparse.length = mld)
-  source(file.path(src, 'id_pc_prep_cid.R'), max.deparse.length = mld)
+  source(file.path(src, 'id_pc_cid_dwld.R'), max.deparse.length = mld)
+  # Chemspider CSID
+  source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mld)
   
-  # source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mld) # TODO make javascript scrape work
+  ## biota
+  source(file.path(src, 'id_epa_tax_dwld.R'), max.deparse.length = mdl) # extracts identifiers
 }
 
-## biota
+# build -------------------------------------------------------------------
 if (build) {
-source(file.path(src, 'id_epa_taxonomy.R'), max.deparse.length = mdl) # extracts identifiers
+  ## chemicals
+  source(file.path(src, 'id_cir_prep.R'), max.deparse.length = mdl)
+  source(file.path(src, 'id_pc_cid_prep.R'), max.deparse.length = mld)
+  source(file.path(src, 'id_epa_tax_prep.R'), max.deparse.length = mdl)
+  
+  ## biota
+  source(file.path(src, 'id_epa_tax_prep.R'), max.deparse.length = mdl)
 }
 
 # queries + results -------------------------------------------------------
 ## chemical and biota parameters
-if (build) {
+if (download) {
   source(file.path(src, 'qu_run_dwld.R'), max.deparse.length = mdl)  
 }
 
-source(file.path(src, 'qu_run_prep.R'), max.deparse.length = mdl)
+if (build) {
+  source(file.path(src, 'qu_run_prep.R'), max.deparse.length = mdl)
+}
 
-# merge -------------------------------------------------------------------
-source(file.path(src, 'qu_merge.R'), max.deparse.length = mdl)
+# merge tables ------------------------------------------------------------
+if (build) {
+  source(file.path(src, 'qu_merge.R'), max.deparse.length = mdl)
+}
 
 # (4) prepare data --------------------------------------------------------
+# TODO
 # EPA data scripts
 # source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
 # NORMAN export scripts

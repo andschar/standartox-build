@@ -7,22 +7,14 @@ source(file.path(src, 'setup.R'))
 l = readRDS(file.path(cachedir, 'cs_scrape_l.rds'))
 
 # preparation -------------------------------------------------------------
-if (online) {
-  l_dt = rbindlist(l)
-  cs_scrape = dcast(l_dt, csid + inchikey + name ~ tags,
-                    fun.aggregate = length,
-                    value.var = 'tags')  
-  cs_scrape[ , "NA" := NULL ]
-  
-  for (i in names(cs_scrape)) {
-    cs_scrape[ get(i) == 0, (i) := NA_integer_ ]
-  }
-  
-  saveRDS(cs_scrape, file.path(cachedir, 'cs_scrape.rds'))
-  
-} else {
-  
-  cs_scrape = readRDS(file.path(cachedir, 'cs_scrape.rds'))
+l_dt = rbindlist(l)
+cs_scrape = dcast(l_dt, csid + inchikey + name ~ tags,
+                  fun.aggregate = length,
+                  value.var = 'tags')  
+cs_scrape[ , "NA" := NULL ]
+
+for (i in names(cs_scrape)) {
+  cs_scrape[ get(i) == 0, (i) := NA_integer_ ]
 }
 
 # final dt ----------------------------------------------------------------

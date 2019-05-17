@@ -1,5 +1,7 @@
+# script which creates lookup variables automatically
 
-
+# setup -------------------------------------------------------------------
+source(file.path(src, 'setup.R'))
 
 # source ------------------------------------------------------------------
 source(file.path(src, 'look_concentration_units.R'), max.deparse.length = mdl)

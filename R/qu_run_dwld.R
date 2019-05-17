@@ -7,6 +7,7 @@ source(file.path(src, 'setup.R'))
 scripts = c('qu_aw_dwld.R',
             'qu_chebi_dwld.R',
             # 'qu_cs_scrape_dwld.R', # TODO make javascript scrape work
+            'qu_pan_dwld.R',
             'qu_pc_prop_dwld.R',
             'qu_pc_syn_dwld.R',
             'qu_pp_dwld.R',
@@ -31,9 +32,10 @@ stopCluster(cl)
 Sys.time() - time
 
 # taxa: habitat and region scripts ----------------------------------------
-scripts = c('qu_worms_dwld.R',
+scripts = c(#'qu_diatomsorg_dwld.R' # TODO
+            'qu_epa_habi_dwld.R',
             'qu_gbif_dwld.R',
-            'qu_epa_habi_dwld.R')
+            'qu_worms_dwld.R')
 
 time = Sys.time()
 n_cores = length(scripts)

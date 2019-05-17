@@ -4,37 +4,30 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-## postgres
-if (online_db) {
-  drv = dbDriver("PostgreSQL")
-  con = dbConnect(
-    drv,
-    user = DBuser,
-    dbname = DBetox,
-    host = DBhost,
-    port = DBport,
-    password = DBpassword
-  )
-  
-  unit = dbGetQuery(
-    con,
-    "SELECT conc1_unit, count(conc1_unit) AS n
-    FROM ecotox.results
-    GROUP BY conc1_unit
-    ORDER BY n DESC"
-  )
-  setDT(unit)
-  unit[conc1_unit == '', conc1_unit := NA]
-  unit = unit[!is.na(conc1_unit)]
-  
-  dbDisconnect(con)
-  dbUnloadDriver(drv)
-  
-  saveRDS(unit, file.path(cachedir, 'epa_units_concentration.rds'))
-  
-} else {
-  unit = readRDS(file.path(cachedir, 'epa_units_concentration.rds'))
-}
+drv = dbDriver("PostgreSQL")
+con = dbConnect(
+  drv,
+  user = DBuser,
+  dbname = DBetox,
+  host = DBhost,
+  port = DBport,
+  password = DBpassword
+)
+
+unit = dbGetQuery(
+  con,
+  "SELECT conc1_unit, count(conc1_unit) AS n
+  FROM ecotox.results
+  GROUP BY conc1_unit
+  ORDER BY n DESC"
+)
+setDT(unit)
+unit[conc1_unit == '', conc1_unit := NA]
+unit = unit[!is.na(conc1_unit)]
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
+
 ## lookup
 look_unit = fread(file.path(lookupdir, 'lookup_result_unit.csv'), na.strings = '')
 look_str = paste0(look_unit$unit, collapse = '|')
@@ -208,17 +201,18 @@ units[ , conv := as.character(conv) ]
 units[ conv == 'TRUE', conv := 'yes' ]
 units[ conv == 'FALSE', conv := 'no' ]
 
-# writing -----------------------------------------------------------------
+# check -------------------------------------------------------------------
+chck_dupl(units, 'conc1_unit')
+
+# write -------------------------------------------------------------------
 ## postgres
 write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'ecotox', tbl = 'concentration_unit_lookup',
+          key = 'conc1_unit',
           comment = 'Lookup table for concentration units')
-# to .csv
-fwrite(units, file.path(normandir, 'lookup_concentration_all.csv'))
 
 # log ---------------------------------------------------------------------
-msg = 'LOOK: Concentration lookup tables script run.'
-log_msg(msg)
+log_msg('LOOK: Concentration lookup tables script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

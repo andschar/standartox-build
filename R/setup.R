@@ -44,18 +44,18 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-online = TRUE # should queries be run
-online_db = FALSE # should database query be run
-build = FALSE # should data base be rebuilt
-plots = FALSE # should output plots be created
-scp_feather = FALSE # scp feather object # TODO remove this in the end
-full_gbif_l = FALSE # loads the full result list if online=FALSE (big!)
-# debuging
+download_db = TRUE # should database query be run
+build_db = TRUE # build data base?
+download = TRUE # run download scripts?
+build = TRUE # run build scripts?
+online_db = FALSE # TODO deprecate when looking over da_epa1.... etc
+# TODO rework scp_feather = FALSE # scp feather object # TODO remove this in the end
+## debuging
 debug_mode = TRUE # should only 10 input rows for each quering script be run
 sink_console = TRUE # sink console to file
 
 # variables ---------------------------------------------------------------
-cachedir = file.path(prj, 'cache2')
+cachedir = file.path(prj, 'cache')
 missingdir = file.path(prj, 'missing')
 meta = file.path(prj, 'meta')
 fundir = file.path(prj, 'functions')
