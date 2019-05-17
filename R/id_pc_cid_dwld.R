@@ -6,7 +6,6 @@ source('/home/scharmueller/Projects/etox-base/R/PUBCHEM_HTTP_PROBLEM.R')
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
-DBetox = 'etox20190314'
 con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
 
 chem = dbGetQuery(con, "SELECT DISTINCT ON (inchikey) inchikey
@@ -21,7 +20,7 @@ if (debug_mode) {
   chem = chem[1:10]
 }
 
-todo = chem$inchikey
+todo = na.omit(chem$inchikey)
 
 # query -------------------------------------------------------------------
 cid_l = get_cid(todo, from = 'inchikey', verbose = TRUE)

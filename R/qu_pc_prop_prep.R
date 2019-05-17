@@ -11,7 +11,7 @@ pc_prop_l[ is.na(pc_prop_l) ] = lapply(pc_prop_l[ is.na(pc_prop_l) ], data.table
 pc_prop = rbindlist(pc_prop_l, fill = TRUE)
 pc_prop[ , V1 := NULL ]
 
-setnames(pc_prop, clean_names(pc_prop))
+clean_names(pc_prop)
 pc_prop = pc_prop[ !duplicated(inchikey) & !is.na(inchikey) ] #! maybe loss of data
 
 # check -------------------------------------------------------------------

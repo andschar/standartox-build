@@ -33,9 +33,9 @@ setcolorder(pp, c('cas', 'cname'))
 pp[, cname := tolower(cname)]
 pp[, `.` := NULL]
 # conversions
-pp[, solubility_water := solubility_water * 1000] # orignianly in mg/L
+pp[, solubility_water := solubility_water * 1000 ] # orignianly in mg/L
 # names
-setnames(pp, clean_names(pp))
+clean_names(pp)
 
 # encoding ----------------------------------------------------------------
 pp = pp[ , lapply(.SD, iconv, from = 'ASCII', to = 'UTF-8') ]

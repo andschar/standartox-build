@@ -13,12 +13,12 @@ chck_dupl(wd, 'cas')
 
 # write -------------------------------------------------------------------
 write_tbl(wd, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'chem', tbl = 'wiki',
+          dbname = DBetox, schema = 'phch', tbl = 'wiki',
           key = 'cas',
           comment = 'Results from Wikidata')
 
 # log ---------------------------------------------------------------------
-log_msg('WIKIDATA preparation script run')
+log_msg('WIKIDATA: preparation script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

@@ -10,7 +10,7 @@ pan_l = readRDS(file.path(cachedir, 'pan_l.rds'))
 pan_l = pan_l[ !is.na(pan_l) ]
 pan = rbindlist(pan_l, fill = TRUE)
 setnames(pan, 'CAS Number', 'cas')
-setnames(pan, clean_names(pan))
+clean_names(pan)
 
 
 ######################### OLD ###############################################

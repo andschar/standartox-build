@@ -15,6 +15,8 @@ mail = function(sender, recipients, pw, subj, body) {
                    send = TRUE)  
 }
 
+# swaks -------------------------------------------------------------------
+# needs swaks installed
 swaks_mail = function(recip, subj, msg, user, pw, attach) {
   to = paste0('--to ', recip, collapse = ' ')
   header = paste0('--header "Subject:', subj, '"')
@@ -33,3 +35,33 @@ swaks_mail = function(recip, subj, msg, user, pw, attach) {
   system(cmd)
   message(cmd)
 }
+
+# linux: mailx ------------------------------------------------------------
+mailx = function(recip = NULL, sub = NULL, body = NULL, attachment = NULL) {
+  if (is.null(recip)) {
+    stop('Provide recipient.')
+  }
+  if (is.null(sub)) {
+    sub = ''
+  }
+  if (is.null(body)) {
+    body = ''
+  }
+  if (is.null(attachment)) {
+    attachment = ''
+  } else {
+    attachment = paste0('-A ', attachment, collapse = ' ')
+  }
+
+  cmd = sprintf('echo "%s" | mail -s "%s" %s %s',
+                body, sub, attachment, recipient)
+  
+  system(cmd)
+  print(cmd)
+  message('Sent mail to: ', recip)
+}
+
+
+
+
+

@@ -102,8 +102,12 @@ if (build) {
 #   source(file.path(src, 'no_share.R'))
 # }
 
+
+# backup ------------------------------------------------------------------
+source(file.path(src, 'gn_backup.R'))
+
 # end ---------------------------------------------------------------------
-source(file.path(src, 'end.R'))
+source(file.path(src, 'gn_end.R'))
 
 # # (0b) console log 2 --------------------------------------------------------
 if (sink_console) {

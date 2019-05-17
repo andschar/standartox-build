@@ -42,8 +42,8 @@ aw = aw[ !duplicated(cas) ]
 
 # final table -------------------------------------------------------------
 setcolorder(aw, 'cas')
-setnames(aw, clean_names(aw))
-setnames(aw, 'inch', 'inchi')
+clean_names(aw)
+setnames(aw, 'inch', 'inchi') # TODO errer
 
 # check -------------------------------------------------------------------
 chck_dupl(aw, 'cas')

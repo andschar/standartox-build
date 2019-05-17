@@ -21,7 +21,7 @@ mapply(source,
        SIMPLIFY = FALSE)
 
 # taxa: habitat and region scripts ----------------------------------------
-scripts_taxa = c('qu_diatomsorg_prep.R',
+scripts_taxa = c(#'qu_diatomsorg_prep.R',
                  'qu_epa_habi_prep.R',
                  'qu_gbif_prep.R',
                  'qu_worms_prep.R')

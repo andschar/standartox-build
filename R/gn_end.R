@@ -4,22 +4,15 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-crd = read.csv(file.path(cred, 'mail.csv'),
-               stringsAsFactors = FALSE)
+recip = 'scharmueller@uni-landau.de'
+msg = 'END: All scripts successfully run.'
+fl = list.files(pattern = 'script.log')
 
 # mail --------------------------------------------------------------------
-# via swaks
-recip = crd$recipient
-subj = 'Pipline finished'
-msg = subj
-user = crd$sender
-pw = crd$pw
-attach = c('console.log', 'script.log')
-
-swaks_mail(recip, subj, msg, user, pw, attach)
+mailx(recip, sub = msg, attachment = fl)
 
 # log ---------------------------------------------------------------------
-log_msg('END: All scripts successfully run.')
+log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

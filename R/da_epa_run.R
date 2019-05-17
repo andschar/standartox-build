@@ -1,7 +1,7 @@
 # script to process EPA data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R')) #! redundant
+source(file.path(src, 'setup.R'))
 
 # sub scripts -------------------------------------------------------------
 source(file.path(src, 'da_epa1.R'), max.deparse.length = mdl)

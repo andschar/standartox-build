@@ -26,7 +26,7 @@ l = list(prop, reg2)
 chebi_fin = Reduce(function(...) merge(..., by = 'chebiid', all = TRUE), l)
 chebi_fin = chebi_fin[ !duplicated(CAS) & !is.na(CAS) ]
 # names
-setnames(chebi_fin, clean_names(chebi_fin))
+clean_names(chebi_fin)
 
 # split tables ------------------------------------------------------------
 ## environmental table
@@ -55,7 +55,7 @@ if (length(inse) > 0) {
 }
 
 # names
-setnames(chebi_envi, clean_names(chebi_envi))
+clean_names(chebi_envi)
 
 ## drugs
 drug = c('drug')
@@ -66,7 +66,7 @@ chebi_drug[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
 chebi_drug = chebi_drug[ , unique(.SD, by = 'cas') ] # take the first in case of duplicates
 
 # names
-setnames(chebi_drug, clean_names(chebi_drug))
+clean_names(chebi_drug)
 
 # check -------------------------------------------------------------------
 chck_dupl(chebi_fin, 'cas')

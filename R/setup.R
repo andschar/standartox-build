@@ -116,6 +116,7 @@ source(file.path(src, 'fun_coalesce.R'))
 source(file.path(src, 'fun_clean_names.R'))
 source(file.path(src, 'fun_chck_dupl.R'))
 source(file.path(src, 'fun_sql_builder.R'))
+source(file.path(src, 'fun_chck_http_response.R'))
 
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')
@@ -126,6 +127,10 @@ rm(fl)
 # libsodium - for JS module fs - fun_scrape_phantomjs.R
 # phantomjs - headless browser - fun_scrape_phantomjs.R
 # libv8-3.14-dev - Google's open source JavaScript engine - fun_scrape_phantomjs.R
+
+## create pgpass file locally in $HOME (for command line data base acces (e.g. pg_dumb))
+pgpass = paste(DBhost, DBport, DBetox, DBuser, DBpassword, sep = ':')
+write(pgpass, '~/.pgpass')
 
 # cite packages -----------------------------------------------------------
 pkg = c('pacman', pkg_cran)
