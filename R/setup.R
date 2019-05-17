@@ -51,7 +51,7 @@ build = TRUE # run build scripts?
 online_db = FALSE # TODO deprecate when looking over da_epa1.... etc
 # TODO rework scp_feather = FALSE # scp feather object # TODO remove this in the end
 ## debuging
-debug_mode = TRUE # should only 10 input rows for each quering script be run
+debug_mode = T # should only 10 input rows for each quering script be run
 sink_console = TRUE # sink console to file
 
 # variables ---------------------------------------------------------------

@@ -82,12 +82,12 @@ write_tbl(chebi_fin, user = DBuser, host = DBhost, port = DBport, password = DBp
 # environmental table
 write_tbl(chebi_envi, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'chebi_envi',
-          key = 'cas',
+          # key = 'cas',
           comment = 'Results from ChEBI (enrionmental chemicals)')
 # drug table
 write_tbl(chebi_drug, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'chebi_drug',
-          key = 'cas',
+          # key = 'cas',
           comment = 'Results from ChEBI (drug chemicals)')
 
 # log ---------------------------------------------------------------------

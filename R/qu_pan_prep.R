@@ -4,12 +4,10 @@
 source(file.path(src, 'setup.R'))
 
 # data --------------------------------------------------------------------
-pan_l = readRDS(file.path(cachedir, 'pan_l2.rds'))
-pan_l = test
-
-
+pan_l = readRDS(file.path(cachedir, 'pan_l.rds'))
 
 # prepare -----------------------------------------------------------------
+pan_l = pan_l[ !is.na(pan_l) ]
 pan = rbindlist(pan_l, fill = TRUE)
 setnames(pan, 'CAS Number', 'cas')
 setnames(pan, clean_names(pan))

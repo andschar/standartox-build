@@ -6,7 +6,6 @@ source(file.path(src, 'setup.R'))
 # source('/home/scharmueller/Projects/webchem/R/pan.R') # TODO replace this in the future
 
 # data --------------------------------------------------------------------
-chem = readRDS(file.path(cachedir, 'epa_chem.rds'))
 drv = dbDriver("PostgreSQL")
 con = dbConnect(
   drv,
