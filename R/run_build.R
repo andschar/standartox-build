@@ -104,7 +104,9 @@ if (build) {
 
 
 # backup ------------------------------------------------------------------
-source(file.path(src, 'gn_backup.R'))
+if (general) {
+  source(file.path(src, 'gn_backup.R'))
+}
 
 # end ---------------------------------------------------------------------
 source(file.path(src, 'gn_end.R'))

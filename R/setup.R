@@ -48,6 +48,9 @@ download_db = TRUE # should database query be run
 build_db = TRUE # build data base?
 download = TRUE # run download scripts?
 build = TRUE # run build scripts?
+general = FALSE # run general database scripts?
+
+# old:
 online_db = FALSE # TODO deprecate when looking over da_epa1.... etc
 # TODO rework scp_feather = FALSE # scp feather object # TODO remove this in the end
 ## debuging
