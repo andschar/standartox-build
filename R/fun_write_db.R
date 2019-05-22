@@ -52,6 +52,6 @@ write_tbl = function(df = NULL, user = NULL, host = NULL, port = NULL, password 
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
-  message('Table created in: ', path)
+  message(Sys.time(), ' Table created in: ', path)
 }
 
