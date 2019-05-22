@@ -44,17 +44,17 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-download_db = TRUE # should database query be run
-build_db = TRUE # build data base?
-download = TRUE # run download scripts?
+download_db = F # should database query be run
+build_db = F # build data base?
+download = F # run download scripts?
 build = TRUE # run build scripts?
-general = FALSE # run general database scripts?
+general = TRUE # run general database scripts?
 
 # old:
 online_db = FALSE # TODO deprecate when looking over da_epa1.... etc
 # TODO rework scp_feather = FALSE # scp feather object # TODO remove this in the end
 ## debuging
-debug_mode = T # should only 10 input rows for each quering script be run
+debug_mode = F # should only 10 input rows for each quering script be run
 sink_console = TRUE # sink console to file
 
 # variables ---------------------------------------------------------------
