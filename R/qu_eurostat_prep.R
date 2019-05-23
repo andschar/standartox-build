@@ -1,7 +1,7 @@
 # prepare Eurostat data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 dt = readRDS(file.path(cachedir, 'eurostat_annexes.rds'))

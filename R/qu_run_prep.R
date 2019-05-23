@@ -1,7 +1,7 @@
 # script prepares data downloaded from 3rd party data bases
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # chemical scripts --------------------------------------------------------
 scripts_chem = c('qu_aw_prep.R',

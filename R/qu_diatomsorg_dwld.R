@@ -3,7 +3,7 @@
 # TODO not finished
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # scrape ------------------------------------------------------------------
 url = 'https://diatoms.org/species'

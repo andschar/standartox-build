@@ -1,7 +1,7 @@
 # create lookup tables
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # retrieve values ---------------------------------------------------------
 drv = dbDriver("PostgreSQL")

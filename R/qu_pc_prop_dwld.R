@@ -1,7 +1,7 @@
 # script to query the PubChem data base: properties
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 source('/home/scharmueller/Projects/etox-base/R/PUBCHEM_HTTP_PROBLEM.R')
 
 # data --------------------------------------------------------------------

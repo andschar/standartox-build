@@ -1,7 +1,7 @@
 # script to assign exposure type entries (e.g. S - Static (water), GV - Gavage, etc.)
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data base
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))

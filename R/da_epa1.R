@@ -1,7 +1,7 @@
 # script to prepare EPA ECOTOX data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 # query
 source(file.path(src, 'da_epa_query.R'))
 # merge: addition

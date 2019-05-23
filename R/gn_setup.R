@@ -120,6 +120,7 @@ source(file.path(src, 'fun_clean_names.R'))
 source(file.path(src, 'fun_chck_dupl.R'))
 source(file.path(src, 'fun_sql_builder.R'))
 source(file.path(src, 'fun_chck_http_response.R'))
+source(file.path(src, 'fun_mail.R'))
 
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')

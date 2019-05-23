@@ -2,7 +2,7 @@
 # data export for Etox-Base
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 epa3 = readRDS(file.path(cachedir, 'epa2.rds'))

@@ -1,7 +1,7 @@
 # plot test number of tests per durations
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 source(file.path(src, 'fun_duration_plots.R'))
 
 # data --------------------------------------------------------------------

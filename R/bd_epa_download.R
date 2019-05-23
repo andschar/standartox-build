@@ -2,7 +2,7 @@
 # it follows roughly this guide: https://edild.github.io/localecotox/
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # download ----------------------------------------------------------------
 baseurl = 'ftp://newftp.epa.gov/ECOTOX/' # removing the trailing '/' causes an error

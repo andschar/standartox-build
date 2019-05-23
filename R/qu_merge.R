@@ -1,7 +1,7 @@
 # script aggregates data from 3rd party data bases
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # chemical scripts --------------------------------------------------------
 drv = dbDriver("PostgreSQL")

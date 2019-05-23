@@ -6,7 +6,7 @@
 # TODO scrape additional parameters from website
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 fl = file.path(tempdir(), 'file.html')
 
 # data --------------------------------------------------------------------

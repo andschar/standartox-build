@@ -1,7 +1,7 @@
 # script to write final log entry and send an accomplishment mail
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 recip = 'scharmueller@uni-landau.de'

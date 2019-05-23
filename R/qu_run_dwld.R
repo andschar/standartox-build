@@ -1,7 +1,7 @@
 # script runs queries against 3rd party data bases
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # chemical scripts --------------------------------------------------------
 scripts = c('qu_aw_dwld.R',

@@ -1,7 +1,7 @@
 # script to prepare EPA habitat classification data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 ep_habi = readRDS(file.path(cachedir, 'ep_habi_source.rds'))

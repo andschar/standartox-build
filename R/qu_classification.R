@@ -2,7 +2,7 @@
 # also contains info on habitat: terrestrial, freshwater, brackish, marine
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))

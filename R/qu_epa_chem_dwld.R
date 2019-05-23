@@ -1,7 +1,7 @@
 # script to download EPA chemical classification data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # query ---------------------------------------------------------------
 

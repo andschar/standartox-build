@@ -1,7 +1,7 @@
 # script to convert concentration units and extract additional infos
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")

@@ -1,7 +1,7 @@
 # script to prepare data from chebi
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 lite = readRDS(file.path(cachedir, 'chebi_lite.rds'))

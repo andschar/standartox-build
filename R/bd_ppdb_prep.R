@@ -1,7 +1,7 @@
 # script to compare STANDARTOX results with PPDB values
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 ppdb_l = readRDS(file.path(data, 'ppdb', 'ppdb_full_20180427.rds'))

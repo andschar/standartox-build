@@ -1,7 +1,7 @@
 # script to write final data to shiny directory
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 te_fin = readRDS(file.path(cachedir, 'epa3.rds'))

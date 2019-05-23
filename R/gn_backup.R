@@ -1,7 +1,7 @@
 # script to backup final data base
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # backup ------------------------------------------------------------------
 cmd = sprintf("pg_dump -Fc -h %s -p %s %s > %s2.bak",

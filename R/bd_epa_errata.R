@@ -1,7 +1,7 @@
 # script to correct errors in the US EPA ECOTOX data base
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # Error1: 153793 ----------------------------------------------------------
 # reference_number: 153793

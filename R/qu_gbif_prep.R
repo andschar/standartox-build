@@ -1,7 +1,7 @@
 # script to prepare occurrence data from the Global Biodiversity Information Facility (GBIF)
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 gbif_data = readRDS(file.path(cachedir, 'gbif_data.rds'))

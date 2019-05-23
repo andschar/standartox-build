@@ -2,7 +2,7 @@
 # TODO additional super groups/classes
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 cla_che = readRDS(file.path(cachedir, 'ep_chemicals_source.rds'))

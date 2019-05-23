@@ -1,7 +1,7 @@
 # script to query habitat information from the WORMS marine data base
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 worms_l = readRDS(file.path(cachedir, 'worms_l.rds'))

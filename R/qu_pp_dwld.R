@@ -2,7 +2,7 @@
 # https://www.srcinc.com/what-we-do/environmental/scientific-databases.html
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 source(file.path(src, 'pp_query2.R')) # TODO PR on github
 
 # data --------------------------------------------------------------------

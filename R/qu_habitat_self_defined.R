@@ -1,7 +1,7 @@
 # script to manually get habitat information
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 todo_habitat = readRDS(file.path(cachedir, 'epa_taxa.rds'))

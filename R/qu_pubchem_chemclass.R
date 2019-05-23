@@ -1,7 +1,7 @@
 # script to query taxonomic entities from the EPA data to retain meaningfull ecotoxicological groups
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # functions ---------------------------------------------------------------
 source(file.path(src, 'pc_prop_class.R'))

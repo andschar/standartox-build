@@ -1,7 +1,7 @@
 # script to prepare the PubChem (CID) data base
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 cid_l = readRDS(file.path(cachedir, 'pc_cid_l.rds'))

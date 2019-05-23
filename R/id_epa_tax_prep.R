@@ -1,7 +1,7 @@
 # script to prepare taxonomic entities from the EPA data to retain meaningfull ecotoxicological groups
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 taxa = readRDS(file.path(cachedir, 'source_epa_taxa.rds'))

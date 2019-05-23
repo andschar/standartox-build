@@ -1,7 +1,7 @@
 # script to query information from the Alan Wood compendium
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")

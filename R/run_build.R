@@ -20,7 +20,7 @@ if (nodename == 'scharmueller-t460s') {
 }
 
 # (0) setup ---------------------------------------------------------------
-source(file.path(prj, 'R/setup.R'), max.deparse.length = mdl)
+source(file.path(prj, 'R/gn_setup.R'), max.deparse.length = mdl)
 
 # console log -------------------------------------------------------------
 if (sink_console) {

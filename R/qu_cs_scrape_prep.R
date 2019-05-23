@@ -1,7 +1,7 @@
 # script to prepare ChemSpider data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 l = readRDS(file.path(cachedir, 'cs_scrape_l.rds'))

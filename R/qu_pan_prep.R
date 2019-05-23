@@ -1,7 +1,7 @@
 # script to prepare PAN data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 pan_l = readRDS(file.path(cachedir, 'pan_l.rds'))

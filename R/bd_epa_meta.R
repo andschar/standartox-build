@@ -1,7 +1,7 @@
 # script to prepare and clean EPA ECOTOX data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 # code appendix

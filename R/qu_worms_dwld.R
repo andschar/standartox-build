@@ -5,7 +5,7 @@
 # /AphiaDistributionsByAphiaID/{ID}
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 source(file.path(src, 'fun_worms_query.R'))
 
 # data --------------------------------------------------------------------

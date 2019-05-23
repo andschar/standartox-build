@@ -1,7 +1,7 @@
 # script to download EPA habitat classification data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # query -------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")

@@ -2,7 +2,7 @@
 #! up to the used API key has a limit of 1000 requests
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 source('/home/scharmueller/Projects/etox-base/R/get_csid_INTERMEDIATE.R')
 
 # data --------------------------------------------------------------------

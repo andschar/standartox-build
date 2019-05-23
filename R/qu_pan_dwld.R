@@ -2,7 +2,7 @@
 #! Pan isn't so reliable, hence it's exclude for now
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 # source('/home/scharmueller/Projects/webchem/R/pan.R') # TODO replace this in the future
 
 # data --------------------------------------------------------------------

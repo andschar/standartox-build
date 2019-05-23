@@ -2,7 +2,7 @@
 # mainly taken from: http://edild.github.io/localecotox/
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 etoxdir = readRDS(file.path(cachedir, 'etox_data_path.rds'))
 

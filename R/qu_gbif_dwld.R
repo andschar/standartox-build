@@ -1,7 +1,7 @@
 # script to query occurrence data from the Global Biodiversity Information Facility (GBIF)
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")

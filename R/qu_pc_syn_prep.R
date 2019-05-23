@@ -1,7 +1,7 @@
 # script to prepare the PubChem data base
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 pc_syn_l = readRDS(file.path(cachedir, 'pc_syn_l.rds'))

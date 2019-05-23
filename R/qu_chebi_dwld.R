@@ -1,7 +1,7 @@
 # script to query data from chebi
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
