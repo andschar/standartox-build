@@ -13,17 +13,14 @@ source(file.path(src, 'da_epa_media.R'))
 source(file.path(src, 'da_epa_statistics.R'))
 
 # query -------------------------------------------------------------------
+online_db = TRUE
 if (online_db) {
   drv = dbDriver("PostgreSQL")
-  if (debug_mode) {
-    con = dbConnect(drv, user = 'epa_ecotox', dbname = 'etox20181213', host = 'localhost', port = 5432)
-  } else {
-    con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
-  }
+  con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
   
   res = dbGetQuery(con, "SELECT DISTINCT ON (test_cas) test_cas
-                   FROM ecotox.tests
-                   ORDER BY test_cas ASC")
+                         FROM ecotox.tests
+                         ORDER BY test_cas ASC")
   todo_cas = sort(res$test_cas) # all the CAS in the EPA ECOTOX database
   # todo_cas = todo_cas[1:10] # debug me!
   
