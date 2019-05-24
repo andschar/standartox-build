@@ -17,4 +17,5 @@ clean_workspace <- function(not_to_be_removed, envir = .GlobalEnv) {
     c("clean_workspace", not_to_be_removed)
   ),
   envir = envir)
+  gc()
 }
