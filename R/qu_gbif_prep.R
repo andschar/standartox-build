@@ -21,6 +21,7 @@ gbif_continent = gbif_data[ !is.na(continent) & continent != 'none',
                             taxon]
 gbif_conti_dc = dcast(gbif_continent, taxon ~ continent, value.var = 'continent',
                       fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
+setnames(gbif_conti_dc, tolower(names(gbif_conti_dc)))
 
 # habitat -----------------------------------------------------------------
 gbif_habitat = gbif_data[ !is.na(habitat) & habitat != 'none',

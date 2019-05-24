@@ -43,7 +43,9 @@ aw = aw[ !duplicated(cas) ]
 # final table -------------------------------------------------------------
 setcolorder(aw, 'cas')
 clean_names(aw)
-setnames(aw, 'inch', 'inchi') # TODO errer
+setnames(aw, 'inch', 'inchi') # TODO error
+setnames(aw, 'iupac_name', 'iupac_name_mult')
+setnames(aw, 'pref_iupac_name', 'iupac_name')
 
 # check -------------------------------------------------------------------
 chck_dupl(aw, 'cas')

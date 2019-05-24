@@ -16,17 +16,27 @@ reg[ , type := gsub(' Registry Number', '', type) ]
 reg2 = reg[ , paste0(unique(data)), by = .(chebiid, type) ]
 reg2 = dcast(reg2, chebiid ~ type, value.var = 'V1', fill = NA,
              fun.aggregate = function(x) coalesce2(x)) # take the first non-NA argument
+# iupac names
+iupac = rbindlist(lapply(comp, '[[', 'iupacnames'), fill = TRUE, idcol = 'chebiid')
+iupac = iupac[ , .SD, .SDcols = c('chebiid', 'data') ]
+setnames(iupac, 'data', 'iupac_name')
+iupac = unique(iupac, by = 'chebiid')
+# formulae
+form = rbindlist(lapply(comp, '[[', 'formulae'), fill = TRUE, idcol = 'chebiid')
+form2 = form[ , .(formula = data[1]), by = chebiid ]
 # chemical classes
 ont_par = rbindlist(lapply(comp, '[[', 'parents'), idcol = 'chebiid')
 ont_par = ont_par[ type %in% c('has role', 'is a') ]
 ont_par2 = dcast(ont_par, chebiid ~ chebiName, value.var = 'chebiName', fill = NA,
                  fun.aggregate = function(x) length(x) / length(x))
 # merge
-l = list(prop, reg2)
+l = list(prop, reg2, iupac, form2)
 chebi_fin = Reduce(function(...) merge(..., by = 'chebiid', all = TRUE), l)
 chebi_fin = chebi_fin[ !duplicated(CAS) & !is.na(CAS) ]
 # names
 clean_names(chebi_fin)
+setnames(chebi_fin, 'chebiasciiname', 'cname')
+setcolorder(chebi_fin, c('cas', 'chebiid', 'cname', 'iupac_name', 'formula'))
 
 # split tables ------------------------------------------------------------
 ## environmental table

@@ -57,7 +57,6 @@ mailx = function(recip = NULL, sub = NULL, body = NULL, attachment = NULL) {
                 body, sub, attachment, recip)
   
   system(cmd)
-  print(cmd)
   message('Sent mail to: ', recip)
 }
 

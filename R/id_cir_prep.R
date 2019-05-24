@@ -31,12 +31,15 @@ setcolorder(cir, c('cas', 'casnr', 'stdinchi', 'stdinchikey', 'smiles'))
 setorder(cir, 'cas')
 setnames(cir, c('stdinchi', 'stdinchikey'), c('inchi', 'inchikey'))
 ## names
-nam = l3$names
-nam[ , names := tolower(names) ]
+nam_all = l3$names
+nam_all = nam_all[ !is.na(names) ]
+nam_all[ , names := tolower(names) ]
 ## names clean
 nam_cl = l3$names_clean
-nam_cl = nam_cl[ , names_cl := tolower(names_clean) ]
-nam_cl[ , names_clean := NULL ]
+nam_cl = nam_cl[ , cname := tolower(names_clean) ][ , names_clean := NULL ]
+## names unique
+nam_uq = nam_cl[ , .(cname = cname[1]), by = 'cas' ]
+cir[nam_uq, cname := i.cname, on = 'cas' ]
 ## Pubchem SID
 pub_sid = l3$pubchem_sid
 ## Chemspider ID
@@ -52,7 +55,7 @@ write_tbl(cir, user = DBuser, host = DBhost, port = DBport, password = DBpasswor
           dbname = DBetox, schema = 'phch', tbl = 'cir',
           key = 'cas',
           comment = 'Results from the CIR (cas, inchi, smiles)')
-write_tbl(nam, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+write_tbl(nam_all, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'cir_names',
           comment = 'Results from the CIR (cas, names) - duplicates')
 write_tbl(nam_cl, user = DBuser, host = DBhost, port = DBport, password = DBpassword,

@@ -22,6 +22,7 @@ setcolorder(wo2, c('aphiaid', 'taxon', 'genus', 'family', 'order', 'class', 'phy
 cols = c('marin', 'brack', 'fresh', 'terre', 'extinct')
 wo2[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
 wo2 = unique(wo2, by = 'aphiaid') # for safety
+wo2 = wo2[ rank %in% c('Family', 'Genus', 'Species') ] # only fm, gn, sp
 # split
 wo2_l = split(wo2, wo2$rank)
 names(wo2_l) = c('fm', 'gn', 'sp')

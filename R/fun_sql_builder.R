@@ -37,7 +37,7 @@ q_join = function(dat, schema, main_tbl, col_join, fun, debug = TRUE) {
   #dat1 = dat[ -grep(main, table_name) ]
   # join table names
   tbl = unique(dat$table_name)
-  tbl = grep(main_tbl, tbl, invert = TRUE, value = TRUE)
+  tbl = grep(paste0('^', main_tbl, '$'), tbl, invert = TRUE, value = TRUE)
   # column names
   dat1 = split(dat, dat$column_name)
   col = lapply(dat1, `[[`, 'column_name')

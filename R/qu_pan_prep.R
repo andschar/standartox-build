@@ -9,6 +9,7 @@ pan_l = readRDS(file.path(cachedir, 'pan_l.rds'))
 # prepare -----------------------------------------------------------------
 pan_l = pan_l[ !is.na(pan_l) ]
 pan = rbindlist(pan_l, fill = TRUE, idcol = 'cas')
+setnames(pan, 'Chemical name', 'che_name')
 clean_names(pan)
 
 ######################### OLD ###############################################
