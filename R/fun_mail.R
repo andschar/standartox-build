@@ -54,7 +54,7 @@ mailx = function(recip = NULL, sub = NULL, body = NULL, attachment = NULL) {
   }
 
   cmd = sprintf('echo "%s" | mail -s "%s" %s %s',
-                body, sub, attachment, recipient)
+                body, sub, attachment, recip)
   
   system(cmd)
   print(cmd)
