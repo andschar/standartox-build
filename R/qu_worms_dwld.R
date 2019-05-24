@@ -49,7 +49,7 @@ for (i in seq_along(todo_wo_id)) {
 saveRDS(worms_aphiaid_l, file.path(cachedir, 'worms_aphiaid_l.rds'))
 
 # query -------------------------------------------------------------------
-todo_wo = na.omit(unlist(worms_aphiaid_l))
+todo_wo = unique(na.omit(unlist(worms_aphiaid_l)))
 
 worms_l = list()
 for (i in seq_along(todo_wo)) {

@@ -66,47 +66,13 @@ gbif_hab_wat_dc[ , marin := ifelse(tolower(habitat) %like% paste0(marin, collaps
                                      tolower(waterbody) %like% paste0(marin, collapse = '|'), 1L, NA) ]
 gbif_hab_wat_dc[ , terre := ifelse(tolower(habitat) %like% paste0(terre, collapse = '|'), 1L, NA) ]
 
-# missing data ------------------------------------------------------------
-# continent
-cols_conti = grep('taxon', names(gbif_conti_dc), value = TRUE, invert = TRUE)
-gbif_conti_dc[ , count := sum(.SD, na.rm = TRUE),
-               .SDcols = cols_conti,
-               by = 1:nrow(gbif_conti_dc) ]
-na_conti = gbif_conti_dc[count == 0]
-gbif_conti_dc[ , count := NULL ]
-setnames(gbif_conti_dc, tolower(names(gbif_conti_dc)))
-
-# habitat
-cols_habi = grep('(?i)fresh|brack|marin|terre', names(gbif_hab_wat_dc), value = TRUE)
-gbif_hab_wat_dc[ , count := sum(.SD, na.rm = TRUE),
-                 .SDcols = cols_habi,
-                 by = 1:nrow(gbif_hab_wat_dc) ]
-na_habi = gbif_hab_wat_dc[ count == 0]
-gbif_hab_wat_dc[ , `:=`
-                 (habitat = NULL,
-                   waterbody = NULL,
-                   count = NULL) ]
-
-# save missing data to .csv
-missing_l = list(gbif_na_conti = na_conti, gbif_na_habi = na_habi)
-for (i in 1:length(missing_l)) {
-  file = missing_l[[i]]
-  name = names(missing_l)[i]
-  
-  if (nrow(file) > 0) {
-    fwrite(file, file.path(missingdir, paste0(name, '.csv')))
-    message('Writing file with missing data:\n',
-            file.path(missingdir, paste0(name, '.csv')))
-  }
-}
-
 # types -------------------------------------------------------------------
 cols = c('africa', 'asia', 'europe', 'north_america', 'oceania', 'south_america')
 gbif_conti_dc[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
 cols = c('marin', 'brack', 'fresh', 'terre')
 gbif_hab_wat_dc[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
 
-# writing -----------------------------------------------------------------
+# write -------------------------------------------------------------------
 # continent
 write_tbl(gbif_conti_dc, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'taxa', tbl = 'gbif_continent',

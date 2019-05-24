@@ -21,11 +21,17 @@ setcolorder(wo2, c('aphiaid', 'taxon', 'genus', 'family', 'order', 'class', 'phy
 # types
 cols = c('marin', 'brack', 'fresh', 'terre', 'extinct')
 wo2[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
-
-# write -------------------------------------------------------------------
+wo2 = unique(wo2, by = 'aphiaid') # for safety
+# split
 wo2_l = split(wo2, wo2$rank)
 names(wo2_l) = c('fm', 'gn', 'sp')
 
+# check -------------------------------------------------------------------
+chck_dupl(wo2_l$fm, 'taxon')
+chck_dupl(wo2_l$gn, 'taxon')
+chck_dupl(wo2_l$sp, 'taxon')
+
+# write -------------------------------------------------------------------
 for (i in seq_along(wo2_l)) {
   dat = wo2_l[[i]]
   nam = names(wo2_l)[i]
