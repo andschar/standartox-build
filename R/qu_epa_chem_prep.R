@@ -65,7 +65,7 @@ ep_chem_fin = cla_che[ , lapply(.SD, as.integer),
 ep_chem_fin[cla_che, cname := i.cname, on = 'cas']
 # names
 clean_names(ep_chem_fin)
-setcolorder(ep_chem_fin, c('cas', 'cname'))
+setcolorder(ep_chem_fin, c('cas', 'cas_number', 'cname'))
 
 # check -------------------------------------------------------------------
 chck_dupl(ep_chem_fin, 'cas')

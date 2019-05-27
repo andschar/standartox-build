@@ -41,12 +41,17 @@ if (download_db) {
 if (build_db) {
   # build
   source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
+  # functions
+  source(file.path(src, 'bd_sql_functions.R'), max.deparse.length = mdl)
   # errata
   source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
   # meta files
   source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
   # lookup tables
   source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
+  # changes
+  # TODO rwoek EPA build process
+  source(file.path(src, 'bd_epa_changes.R'), max.deparse.length = mdl)
 }
 
 # identifiers -------------------------------------------------------------
@@ -84,10 +89,17 @@ if (build) {
 
 # merge tables ------------------------------------------------------------
 if (build) {
-  source(file.path(src, 'qu_merge.R'), max.deparse.length = mdl)
+  source(file.path(src, 'qu_run_final.R'), max.deparse.length = mdl)
 }
 
-# tables ------------------------------------------------------------------
+# Application -------------------------------------------------------------
+source(file.path(src, 'bd_application.R'))
+
+# NORMAN ------------------------------------------------------------------
+
+
+
+
 # TODO
 # EPA data scripts
 # source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
@@ -95,12 +107,18 @@ if (build) {
 # source(file.path(src, 'da_norman_run.R'), max.deparse.length = mdl)
 
 # file copies -------------------------------------------------------------
+# TODO what's this?
 # copy README.md to shiny repo
 # file.copy('README.md', file.path(shinydir, 'README.md'),
 #           overwrite = TRUE)
 # if (nodename == 'scharmueller') {
 #   source(file.path(src, 'no_share.R'))
 # }
+
+
+# QSAR and PPDB comparison data -------------------------------------------
+
+
 
 # backup ------------------------------------------------------------------
 if (general) {

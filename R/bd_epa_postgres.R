@@ -48,7 +48,8 @@ if (nrow(DBetox_chck1) == 1) {
 }
 
 if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
-  # (1) Create data basse ---------------------------------------------------
+
+  # CREATE DB ---------------------------------------------------------------
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv,
                   dbname = DBgeneric,
@@ -63,8 +64,7 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
-  
-  # (2) Tables --------------------------------------------------------------
+  # TABLES ------------------------------------------------------------------
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv,
                   dbname = DBetox,
@@ -216,8 +216,7 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
-  
-  # (3) Validation tables ---------------------------------------------------
+  # VALIDATION --------------------------------------------------------------
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv,
                   dbname = DBetox,
@@ -278,8 +277,7 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
-  # (5) DB Cleaning ---------------------------------------------------------
-  # Postgres
+  # CLEANING ----------------------------------------------------------------
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser,
                   dbname = DBetox,
@@ -287,19 +285,17 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
                   port = DBport,
                   password = DBpassword)
   
-  dbSendQuery(con, 'VACUUM ANALYZE')
+  
   
   dbDisconnect(con)
   dbUnloadDriver(drv)
   
-  msg = paste(DBetox, 'built into PostgresDB', sep = ' ')
-  log_msg(msg)
+  log_msg(paste(DBetox, 'built into PostgresDB', sep = ' '))
   
 } else {
   
   msg = 'ECOTOX already built into Postgres DB.'
   log_msg(msg)
-  
 }
 
 # cleaning ----------------------------------------------------------------
