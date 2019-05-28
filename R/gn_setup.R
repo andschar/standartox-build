@@ -74,6 +74,7 @@ cred = file.path(prj, 'cred')
 share = file.path(prj, 'share')
 normandir = file.path(prj, 'norman')
 sql = file.path(prj, 'sql')
+export = file.path(prj, 'export')
 # article
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')

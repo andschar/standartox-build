@@ -42,12 +42,12 @@ chck_http_response = function(l) {
 # function to check for special characters --------------------------------
 chck_spec_char = function(x) {
   col = names(x)
-  x = unname(unlist(x))
-  ln = grep('\\W|_', x)
+  x = na.omit(unname(unlist(x)))
+  ln = grep('[[:punct:]]', gsub('\\.', '', x), value = TRUE)
   if (length(ln) == 0) {
     log_chck(paste0('Chck: ', col, ': ok'))
   } else {
-    log_chck(paste0('Chck: ', col, ': Non-word character!'))
+    log_chck(paste0('Chck: ', col, ': Non-word character {', paste0(head(ln, 3), collapse = ','), '}!'))
     return(x[ln])
   }
 }
@@ -55,11 +55,12 @@ chck_spec_char = function(x) {
 # function to check if only numerics are present --------------------------
 chck_numeric = function(x) {
   col = names(x)
-  ln = grep("^-?[0-9.]+$", x)
+  x = na.omit(unname(unlist(x)))
+  ln = grep("^\\D", gsub('\\.', '', x), value = TRUE)
   if (length(ln) == 0) {
     log_chck(paste0('Chck: ', col, ': ok'))
   } else {
-    log_chck(paste0('Chck: ', col, ': Non-digit character!'))
+    log_chck(paste0('Chck: ', col, ': Non-digit character {', paste0(head(ln, 3), collapse = ','), '}!'))
     return(x[ln])
   }
 }

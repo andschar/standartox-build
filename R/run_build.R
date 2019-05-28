@@ -93,8 +93,13 @@ if (build) {
 }
 
 # Application -------------------------------------------------------------
-source(file.path(src, 'bd_application.R'))
+source(file.path(src, 'bd_application.R'), max.deparse.length = mdl)
 
+if (export) {
+# TODO source(file.path(src, 'exp_application.R'), max.deparse.length = mdl)
+
+# TODO source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
+}
 # NORMAN ------------------------------------------------------------------
 
 

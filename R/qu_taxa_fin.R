@@ -23,8 +23,8 @@ cols_tx[ !table_name %in% c('worms_fm', 'worms_gn') ]
 
 q = q_join(cols_tx, schema = 'taxa', main_tbl = 'epa', col_join = 'taxon',
            fun = 'GREATEST', debug = FALSE)
-q = paste0("CREATE TABLE taxa_fin.habi AS ( ", q, ")")
-dbSendQuery(con, "DROP TABLE IF EXISTS taxa.habi;")
+q = paste0("CREATE TABLE taxa_fin.habitat AS ( ", q, ")")
+dbSendQuery(con, "DROP TABLE IF EXISTS taxa.habitat;")
 dbSendQuery(con, q)
 
 # taxa region scripts -----------------------------------------------------

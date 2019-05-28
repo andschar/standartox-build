@@ -207,7 +207,7 @@ chck_dupl(units, 'conc1_unit')
 # write -------------------------------------------------------------------
 ## postgres
 write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'ecotox', tbl = 'concentration_unit_lookup',
+          dbname = DBetox, schema = 'ecotox', tbl = 'conc_lookup',
           key = 'conc1_unit',
           comment = 'Lookup table for concentration units')
 
