@@ -31,7 +31,9 @@ pkg_cran = c(
   'taxize',
   'countrycode',
   'foreach',
-  'doParallel'
+  'doParallel',
+  'fst'
+  # TODO check if all packages are still needed!
 )
 pkg_gith = c('ropensci/bib2df', 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
 
@@ -49,6 +51,8 @@ build_db = F # build data base?
 download = F # run download scripts?
 build = TRUE # run build scripts?
 general = TRUE # run general database scripts?
+export = FALSE # should data be exported?
+
 
 # old:
 online_db = FALSE # TODO deprecate when looking over da_epa1.... etc
@@ -121,6 +125,7 @@ source(file.path(src, 'fun_clean_names.R'))
 source(file.path(src, 'fun_sql_builder.R'))
 source(file.path(src, 'fun_mail.R'))
 source(file.path(src, 'fun_chck.R'))
+source(file.path(src, 'fun_export_db.R'))
 
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')

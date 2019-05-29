@@ -73,7 +73,7 @@ if (download) {
 
 if (build) {
   source(file.path(src, 'id_pc_cid_prep.R'), max.deparse.length = mld)
-  source(file.path(src, 'id_epa_tax_prep.R'), max.deparse.length = mdl)
+  source(file.path(src, 'id_cs_csid_prep.R'), max.deparse.length = mdl)
   source(file.path(src, 'id_epa_tax_prep.R'), max.deparse.length = mdl)
 }
 
@@ -93,12 +93,15 @@ if (build) {
 }
 
 # Application -------------------------------------------------------------
-source(file.path(src, 'bd_application.R'), max.deparse.length = mdl)
+if (build) {
+  source(file.path(src, 'bd_application.R'), max.deparse.length = mdl)
+  source(file.path(src, 'bd_norman.R'), max.deparse.length = mdl)
+}
 
+# Export ------------------------------------------------------------------
 if (export) {
-# TODO source(file.path(src, 'exp_application.R'), max.deparse.length = mdl)
-
-# TODO source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
+  source(file.path(src, 'exp_application.R'), max.deparse.length = mdl) #! also to shinydir!
+  source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
 }
 # NORMAN ------------------------------------------------------------------
 

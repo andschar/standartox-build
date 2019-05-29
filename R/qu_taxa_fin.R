@@ -19,7 +19,7 @@ setDT(taxa_cols)
 cols = c('marin', 'brack', 'fresh', 'terre')
 cols = gsub('(.+)', '^\\1$', cols)
 cols_tx = taxa_cols[ grep(paste0(cols, collapse = '|'), column_name) ]
-cols_tx[ !table_name %in% c('worms_fm', 'worms_gn') ]
+cols_tx = cols_tx[ !table_name %in% c('worms_fm', 'worms_gn') ]
 
 q = q_join(cols_tx, schema = 'taxa', main_tbl = 'epa', col_join = 'taxon',
            fun = 'GREATEST', debug = FALSE)
@@ -36,6 +36,13 @@ q = q_join(cols_hb, schema = 'taxa', main_tbl = 'epa', col_join = 'taxon',
            fun = 'GREATEST', debug = FALSE)
 q = paste0("CREATE TABLE taxa_fin.continent AS ( ", q, ")")
 dbSendQuery(con, "DROP TABLE IF EXISTS taxa_fin.continent;")
+dbSendQuery(con, q)
+
+# taxa scripts ------------------------------------------------------------
+q = "SELECT *
+     FROM taxa.epa"
+q = paste0("CREATE TABLE taxa_fin.taxa AS ( ", q, ")")
+dbSendQuery(con, "DROP TABLE IF EXISTS taxa_fin.taxa;")
 dbSendQuery(con, q)
 
 dbDisconnect(con)

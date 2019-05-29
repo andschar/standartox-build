@@ -7,14 +7,15 @@ source(file.path(src, 'gn_setup.R'))
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
 
-taxa = dbGetQuery(con, "SELECT DISTINCT ON (latin_name) *
-                        FROM ecotox.species")
-setDT(taxa)
+tax = dbGetQuery(con, "SELECT DISTINCT *
+                       FROM ecotox.species")
+setDT(tax)
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
-saveRDS(taxa, file.path(cachedir, 'source_epa_taxa.rds'))
+# save --------------------------------------------------------------------
+saveRDS(tax, file.path(cachedir, 'source_epa_taxa.rds'))
 
 # log ---------------------------------------------------------------------
 log_msg('EPA: taxonomic download script run')
