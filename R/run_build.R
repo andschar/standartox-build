@@ -40,7 +40,11 @@ if (download_db) {
 ## build
 if (build_db) {
   # build
-  source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
+  source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl) # TODO rethink structure
+  # DB roles
+  source(file.path(src, 'bd_postgres_roles.R'), max.deparse.length = mdl) # TODO  rethink structure
+  # Permissions
+  source(file.path(src, 'bd_postgres_permissions.R', max_deparse.length = mdl)) # TODO rethink structure
   # functions
   source(file.path(src, 'bd_sql_functions.R'), max.deparse.length = mdl)
   # errata
@@ -50,8 +54,9 @@ if (build_db) {
   # lookup tables
   source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
   # changes
-  # TODO rwoek EPA build process
+  # TODO rwork EPA build process
   source(file.path(src, 'bd_epa_changes.R'), max.deparse.length = mdl)
+
 }
 
 # identifiers -------------------------------------------------------------
