@@ -125,8 +125,7 @@ other = dcast(tax[ is.na(chck_na) ],
               fun.aggregate = length, fill = NA)
 other[ , V1 := NULL ]
 
-
-tax_fin = merge(tax, other, by = 'species_number')
+tax_fin = merge(tax, other, by = 'species_number', all.x = TRUE)
 
 # faults ------------------------------------------------------------------
 # Sarcomastigophora - can also be autotroph - here: Animalia
@@ -140,6 +139,8 @@ setcolorder(tax_fin, 'taxon')
 clean_names(tax_fin)
 
 tax_fin = unique(tax_fin, by = 'taxon')
+
+tax_fin = tax_fin[ , .SD, .SDcols =! cols ]
 
 # chck --------------------------------------------------------------------
 chck_dupl(tax_fin, 'taxon')

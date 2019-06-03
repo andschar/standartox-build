@@ -5,6 +5,7 @@ clean_names = function(dt) {
   x = tolower(x)
   x = gsub('\\s+', '_', x)
   x = gsub('\\\'', '', x) # e.g. for: henry's law
+  x = gsub('/', '', x)
   
   setnames(dt, x)
 }

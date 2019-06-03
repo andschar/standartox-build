@@ -4,16 +4,16 @@
 source(file.path(src, 'gn_setup.R'))
 # query
 source(file.path(src, 'da_epa_query.R'))
-# merge: addition
-epa_taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
-source(file.path(src, 'da_epa_doses.R'))
-source(file.path(src, 'da_epa_endpoints.R'))
-source(file.path(src, 'da_epa_exposure_type.R'))
-source(file.path(src, 'da_epa_media.R'))
-source(file.path(src, 'da_epa_statistics.R'))
+# # merge: addition
+# epa_taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
+# source(file.path(src, 'da_epa_doses.R'))
+# source(file.path(src, 'da_epa_endpoints.R'))
+# source(file.path(src, 'da_epa_exposure_type.R'))
+# source(file.path(src, 'da_epa_media.R'))
+# source(file.path(src, 'da_epa_statistics.R'))
 
 # query -------------------------------------------------------------------
-online_db = TRUE
+online_db = FALSE
 if (online_db) {
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)

@@ -64,3 +64,6 @@ chck_numeric = function(x) {
     return(x[ln])
   }
 }
+
+
+

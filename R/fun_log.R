@@ -17,3 +17,10 @@ log_chck = function(msg) {
   write(out, file.path(prj, 'chck.log'), append = TRUE)
   message(out)
 }
+
+log_summary = function(x) {
+  nam = names(x)[1]
+  fl = paste0(nam, '.csv')
+  message('Writing: ', fl)
+  fwrite(x, file.path(prj, 'summary', fl))
+}
