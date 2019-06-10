@@ -16,10 +16,10 @@ if (nodename == 'scharmueller-t460s') {
 } else if (nodename == 'uwigis') {
   prj = '/home/scharmueller/Projects/etox-base'
 } else {
-  stop('New system. Define prj and shinydir variables.')
+  stop('New system. Define prj variable.')
 }
 
-# (0) setup ---------------------------------------------------------------
+# setup -------------------------------------------------------------------
 source(file.path(prj, 'R/gn_setup.R'), max.deparse.length = mdl)
 
 # console log -------------------------------------------------------------

@@ -25,7 +25,7 @@ write_tbl = function(df = NULL, user = NULL, host = NULL, port = NULL, password 
   
   dbSendQuery(con, paste0("CREATE SCHEMA IF NOT EXISTS ", schema, ";"))
   # write to DB
-  dbSendQuery(con, paste0("DROP TABLE IF EXISTS  ", schema, ".", tbl, ";"))
+  dbSendQuery(con, paste0("DROP TABLE IF EXISTS  ", schema, ".", tbl, " CASCADE;"))
   dbWriteTable(con, df,
                name = c(schema, tbl), row.names = FALSE)
   # maintainance

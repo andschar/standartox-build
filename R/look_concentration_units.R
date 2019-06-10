@@ -145,7 +145,7 @@ units[, conc1_unit_clean := gsub('bq', 'Bq', conc1_unit_clean)]
 
 # classification ----------------------------------------------------------
 u1 = c(
-  fraction = 'ppm',
+  fraction = 'ppb',
   mass = 'g',
   percent = '%',
   volume = 'ml',

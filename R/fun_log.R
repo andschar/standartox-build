@@ -24,3 +24,9 @@ log_summary = function(x) {
   message('Writing: ', fl)
   fwrite(x, file.path(prj, 'summary', fl))
 }
+
+# Source log --------------------------------------------------------------
+# logs informtaion if script is sourced succesfully ( using source_chck() )
+log_source  = function(msg) {
+  write(msg, file.path(prj, 'source.log'), append = TRUE)
+}

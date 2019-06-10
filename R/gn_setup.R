@@ -27,6 +27,7 @@ pkg_cran = c(
   'ggplot2',
   'ggrepel',
   'cowplot',
+  'RColorBrewer',
   'rgbif',
   'taxize',
   'countrycode',
