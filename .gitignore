@@ -28,7 +28,7 @@ missing/*
 article/*
 # TODO remove comments in the end!
 # !article/R
-# !article/figures
+!article/figures
 # !article/article.Rmd
 # !article/data
 # !article/refs
