@@ -127,6 +127,7 @@ source(file.path(src, 'fun_sql_builder.R'))
 source(file.path(src, 'fun_mail.R'))
 source(file.path(src, 'fun_chck.R'))
 source(file.path(src, 'fun_export_db.R'))
+source(file.path(src, 'fun_geometric_mean.R'))
 
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')
