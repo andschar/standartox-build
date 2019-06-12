@@ -41,7 +41,6 @@ q = "
          results.endpoint,
          results.effect,
       -- statistical analyses
-         results.sample_size_mean,
          tests.experimental_design,
          results.significance_comments,
       -- test dose numbers
@@ -68,8 +67,7 @@ q = "
          tests.organism_habitat, -- ('soil')
          tests.subhabitat, -- ('P', 'R', 'L', 'E', 'D', 'F', 'G', 'M') -- Palustrine, Riverine, Lacustrine, Estuarine
       -- species parameters
-         species.latin_name, -- only latin_name. Other entries are merged: eu_epa_taxonomy.R
-         species.ecotox_group AS spec_ecotox_group,
+         species.species_number,
          tests.organism_init_wt_mean,
          tests.organism_init_wt_unit,
          tests.organism_characteristics,
@@ -78,10 +76,11 @@ q = "
          tests.organism_age_unit,
          tests.organism_lifestage,
          tests.organism_gender,
+         tests.other_effect_comments,
          response_site_codes.description AS resp_description,
          control_type_codes.description AS ctrl_description,
       -- references
-         tests.reference_number,
+         refs.reference_number,
          refs.author,
          refs.publication_year,
          refs.title,

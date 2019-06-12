@@ -6,7 +6,7 @@
 # TODO probably not needed
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 require(rvest)
 
 # query -------------------------------------------------------------------

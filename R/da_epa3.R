@@ -2,86 +2,50 @@
 # data export for Etox-Base
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
-source(file.path(src, 'da_epa_comp_classification.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 epa3 = readRDS(file.path(cachedir, 'epa2.rds'))
+look = fread(file.path(lookupdir, 'lookup_variables.csv'))
+look = look[ app_variable == 1L ]
 
-# merge -------------------------------------------------------------------
-epa3 = merge(epa3, cla_che, by = 'casnr', all.x = TRUE)
+# select columns ----------------------------------------------------------
+epa3 = epa3[ , .SD, .SDcols = look$epa3_variable ]
 
-# new variables -----------------------------------------------------------
-# habitat
-epa3[ media_type == 'FW', ep_isFre := 1L ]
-epa3[ media_type == 'SW', ep_isMar := 1L ]
-epa3[ organism_habitat == 'Soil', ep_isTer := 1L ]
-epa3[ subhabitat %in% c('P', 'R', 'L'), ep_isFre := 1L ]
-epa3[ subhabitat %in% c('E'), ep_isBra := 1L ]
-epa3[ subhabitat %in% c('D', 'F', 'G'), ep_isTer := 1L ]
-epa3[ subhabitat %in% c('M'), ep_isMar := 1L ]
+# select rows -------------------------------------------------------------
+## endpoints
+idx_ept_grp = which(epa3$endpoint_grp %in% c('NOEX', 'XX50', 'LOEX', 'XX10'))
 
-# subsetting --------------------------------------------------------------
-## (1) remove endpoints ----
-epa3 = epa3[ endpoint_grp %in% c('NOEX', 'XX50', 'LOEX', 'XX10') ]
+## NAs
+idx_na_dur = with(epa3, which(!is.na(obs_duration_mean_conv) & !is.na(obs_duration_unit_conv)))
+idx_na_conc = with(epa3, which(!is.na(conc1_mean_conv) & !is.na(conc1_unit_conv)))
+idx_na_eff = which(!is.na(epa3$effect))
+idx_na_ept = which(!is.na(epa3$endpoint))
 
-## (2) remove NA entries ----
-epa3 = epa3[ !is.na(obs_duration_mean_conv) &
-               !is.na(obs_duration_unit_conv) &
-               !is.na(conc1_mean_conv) &
-               !is.na(conc1_mean_conv) &
-               !is.na(effect) &
-               !is.na(endpoint) ]
+## subseting
+idx_fin = Reduce(intersect, list(idx_ept_grp, idx_na_dur, idx_na_conc, idx_na_eff, idx_na_ept))
+epa3 = epa3[ idx_fin ]
 
-
-# final columns -----------------------------------------------------------
-# TODO read final columns from lookup file
-
-look_var = fread(file.path(lookupdir, 'lookup_variables.csv'))
-
-cols_fin[ ! cols_fin %in% look_var$app_variable ]
-
-epa1[ , .N, exposure_type]
-
-# final columns -----------------------------------------------------------
-# TODO DEPRECATE THIS
-cols_fin = c('test_id', 'result_id', 'casnr', 'cas', 'chemical_name', 'ecotox_group',
-             'conc1_mean', 'conc1_unit', 'conc1_mean_conv', 'conc1_unit_conv', 'qualifier', 'unit_conv',
-             'obs_duration_mean', 'obs_duration_unit', 'obs_duration_mean_conv', 'obs_duration_unit_conv',
-             'conc1_type', 'endpoint', 'endpoint_grp', 'effect', 'exposure_type',
-             'ep_isFre', 'ep_isBra', 'ep_isMar', 'ep_isTer',
-             'ep_metal', 'ep_pesticide',
-             'taxon', 'tax_genus', 'tax_family', 'tax_order', 'tax_class', 'tax_superclass', 'tax_phylum',
-             'tax_subphylum_div', 'tax_phylum_division', 'tax_kingdom',
-             'tax_common_name', 'tax_convgroup', 'tax_invertebrate', 'tax_troph_lvl',
-             'source', 'reference_number', 'title', 'author', 'publication_year')
-
-epa3 = epa3[ , .SD, .SDcols = cols_fin ]
-
-# final names -------------------------------------------------------------
-che_old = c('chemical_name', 'ecotox_group')
-che_new = c('che_name', 'che_group')
-gen_old = c('conc1_mean', 'conc1_unit', 'conc1_mean_conv', 'conc1_unit_conv', 
-            'obs_duration_mean', 'obs_duration_unit', 'obs_duration_mean_conv', 'obs_duration_unit_conv')
-gen_new = c('value_orig', 'unit_orig', 'value_fin', 'unit_fin',
-            'dur_orig', 'dur_unit_orig', 'dur_fin', 'dur_unit_fin')
-tes_old = c('effect', 'endpoint', 'endpoint_grp', 'exposure_type', 'conc1_type')
-tes_new = c('tes_effect', 'tes_endpoint', 'tes_endpoint_grp', 'tes_exposure_type', 'tes_conc_type')
-ref_old = c('reference_number', 'title', 'author', 'publication_year')
-ref_new = c('ref_num', 'ref_title', 'ref_author', 'ref_publ_year')
-
-setnames(epa3,
-         old = c(che_old, gen_old, tes_old, ref_old),
-         new = c(che_new, gen_new, tes_new, ref_new))
+# column names ------------------------------------------------------------
+setnames(epa3, old = look$epa3_variable, new = look$app_variable_name)
 
 # writing -----------------------------------------------------------------
+## postgres
+time = Sys.time()
+write_tbl(epa3, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'ecotox_export', tbl = 'epa3',
+          comment = 'EPA ECOTOX application preparation export')
+Sys.time() - time
+## data (rds)
+time = Sys.time()
 saveRDS(epa3, file.path(cachedir, 'epa3.rds'))
+Sys.time() - time
 
 # log ---------------------------------------------------------------------
 msg = 'EPA3: reduce script run'
-log_msg(msg); rm(msg)
+log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(che_old, che_new, gen_old, gen_new, tes_old, tes_new, ref_old, ref_new)
+clean_workspace()
 
 

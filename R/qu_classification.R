@@ -2,11 +2,15 @@
 # also contains info on habitat: terrestrial, freshwater, brackish, marine
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-todo_taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))$taxon
-todo_taxa = trimws(gsub('sp.', '', todo_taxa)) # remove sp. as it shows no results
+taxa = readRDS(file.path(cachedir, 'epa_taxa.rds'))
+todo_taxa = taxa$taxon
+
+if (debug_mode) {
+  taxa = taxa[1:10] # debuging
+}
 
 # queries -----------------------------------------------------------------
 time_tot = Sys.time()
@@ -36,7 +40,7 @@ if (former) {
   message('Setting online = FALSE')
 }
 
-if (online) {
+if (download) {
 # ITIS - Integrated Taxonomic Inforamtion System --------------------------
   itis_todo = todo_taxa
   # itis_todo = itis_todo[1:5] # debug me!
@@ -291,16 +295,11 @@ tx_dt[ family_tax == 'Filiniidae', `:=` # unaccepted synonym
 # Saving 2 ----------------------------------------------------------------
 saveRDS(tx_dt, file.path(cachedir, 'tx_dt.rds'))
 
-# Cleaning ----------------------------------------------------------------
-oldw = getOption("warn")
-options(warn = -1)
+# log ---------------------------------------------------------------------
+msg = 'Taxonomic classification script run'
+log_msg(msg)
 
-rm(dt, family_check, tx_list, tx,
-   leftovers, result_itis, result_col, result_nbn, result_tol,
-   list = grep('todo', ls(), value = TRUE),
-   taxon, online, time_tot, i)
-
-options(warn = oldw)
-
+# cleaning ----------------------------------------------------------------
+clean_workspace()
 
 

@@ -1,7 +1,7 @@
 # script to query statistical parameters from EPA data set
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data base
 DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))

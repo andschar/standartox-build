@@ -1,105 +1,111 @@
-# script to prepare EPA ECOTOX data
-# cleaned data export for NORMAN
+# script to prepare and clean EPA ECOTOX data
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
-
-# data base
-DBetox = readRDS(file.path(cachedir, 'data_base_name_version.rds'))
-
-# merge: conversion
-source(file.path(src, 'da_epa_conversion_unit.R'))
-source(file.path(src, 'da_epa_conversion_duration.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 epa2 = readRDS(file.path(cachedir, 'epa1.rds'))
-# additional data (classified by P. O.)
-no_data = read_excel(file.path(norman, 'data', 'todo combionations.xlsx'))
-setDT(no_data)
-no_look = fread(file.path(norman, 'norman_lookup.csv'),
-                na.strings = 'NA')
 
-# cleaning ----------------------------------------------------------------
+## conversions
+source(file.path(src, 'da_epa_result_unit.R'))
+source(file.path(src, 'da_epa_test_duration.R'))
+
+## additions
+# chemical classification
+ch_info_fin = readRDS(file.path(cachedir, 'ch_info_fin.rds'))
+# taxonomic information
+tx_info_fin = readRDS(file.path(cachedir, 'tx_info_fin.rds'))
+
+# preparation -------------------------------------------------------------
+## special characters
 for (col in names(epa2)) {
   set(epa2, i = which(epa2[[col]] %in% c('NC', 'NR', '+ NR', '--', '')), j = col, value = NA)
 }
+## type conversion
+## concentration
+epa2[ grep('ca|x|~', conc1_mean), conc1_mean := NA ]
+epa2[ , conc1_mean := gsub(',', '', conc1_mean) ]
+# clean concentration column
+epa2[ , conc1_mean := trimws(gsub('^\\+|<|>|\\*|=', '', conc1_mean)) ] # remove '*' and '+' (TODO don't know '+')
 
-# merges: conversion ------------------------------------------------------
+# type conversion ---------------------------------------------------------
+## concentration
+epa2[ , conc1_mean := as.numeric(conc1_mean) ]
+## duration
+epa2[ , obs_duration_mean := as.numeric(obs_duration_mean) ]
 
-# merge unit conversion ---------------------------------------------------
-epa2 = merge(epa2, unit_fin, by.x = 'conc1_unit', by.y = 'unit_key', all.x = TRUE); rm(unit_fin)
-epa2[ unit_conv == 'yes', conc1_mean_conv := conc1_mean %*na% unit_multi ]
-epa2[ unit_conv == 'yes', conc1_unit_conv := unit_conv_to ]
-
+# conversions -------------------------------------------------------------
+## units
+# remove unuseable units
+epa2 = merge(epa2, unit_fin, by = 'conc1_unit', all.x = TRUE)
+epa2[ unit_noscience %in% 1L, rm := 'unit' ] # remove nonsense units
+epa2[ ! unit_convert == 1L, rm := 'unit' ] # keep conversion units only
+epa2[ unit_convert == 1L, conc1_mean_conv := conc1_mean %*na% unit_multi ]
+epa2[ unit_convert == 1L, conc1_unit_conv := unit_conv_to ]
 # cleaning
-cols_rm = c('unit_multi', 'unit_u1num', 'unit_u2num', 'unit_type', 'unit_conv_to')
-epa2[ , (cols_rm) := NULL ]; rm(cols_rm)
+cols_rm = grep('^unit_', names(epa2), value = TRUE)
+epa2[ , (cols_rm) := NULL ]
 
-# merge duration conversion -----------------------------------------------
-epa2 = merge(epa2, duration_fin, by.x = 'obs_duration_unit', by.y = 'dur_key',
-             all.x = TRUE); rm(duration_fin)
+## durations
+epa2 = merge(epa2, look_dur, by.x = 'obs_duration_unit', by.y = 'dur_unit',
+             all.x = TRUE)
+# exclude
+epa2[ dur_exclude == 'yes', rm := 'duration' ]
+# convert
 epa2[ dur_conv == 'yes', obs_duration_mean_conv := obs_duration_mean %*na% dur_multiplier ]
 epa2[ dur_conv == 'yes', obs_duration_unit_conv := dur_conv_to ]
-
 # cleaning
-cols_rm = c('dur_conv', 'dur_conv_to', 'dur_multiplier')
-epa2[ , (cols_rm) := NULL ]; rm(cols_rm)
+cols_rm = grep('dur_', names(epa2), value = TRUE)
+epa2[ , (cols_rm) := NULL ]
 
-# NORMAN variables --------------------------------------------------------
-# create ID out of tax_ecotox_grp, endpoint_grp, effect
-# no_data[ , no_test_id := paste0(tax_ecotox_grp, obs_duration_mean_con)]
+# additions ---------------------------------------------------------------
+## chmical info
+epa2 = merge(epa2, ch_info_fin, by = 'cas', all.x = TRUE)
+## taxa info
+epa2 = merge(epa2, tx_info_fin, by.x = 'latin_name', by.y = 'taxon', all.x = TRUE)
 
+# switches ----------------------------------------------------------------
+## classified to species level?
+epa2[ is.na(tax_genus), gen_lvl := 0L ]
+epa2[ is.na(tax_species), spc_lvl := 0L ]
 
-# TODO CONTINUE THIS, once the list by Peter is complete!
-# TODO see also no_ac_ch_standard_INTERMEDIATE.R
+# checks ------------------------------------------------------------------
+# check for NAs in most important groups
+cols = c('tax_ecotox_grp', 'obs_duration_mean_conv', 'endpoint_grp', 'effect')
+na_var = sapply(epa2[ , .SD, .SDcols = cols], function(x) length(which(is.na(x))))
 
+if (sum(na_var) != 0) {
+  print(na_var)
+  warning('NAs in tax_ecotox_grp') # log warning
+}
 
-# saving ------------------------------------------------------------------
+# remove ------------------------------------------------------------------
+## count
+meta_rm = epa2[ !is.na(rm), .N, rm]
+fwrite(meta_rm, file.path(meta, 'meta_rm.csv'))
+
+epa2 = epa2[ is.na(rm) ]
+
+# writing -----------------------------------------------------------------
+## postgres
+time = Sys.time()
+write_tbl(epa2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'ecotox_export', tbl = 'epa2',
+          comment = 'EPA ECOTOX cleaned export')
+Sys.time() - time
+## data (rds)
+time = Sys.time()
 saveRDS(epa2, file.path(cachedir, 'epa2.rds'))
-taxa = unique(epa2[ , .SD, .SDcols = c('taxon', 'tax_genus', 'tax_family') ])
-saveRDS(taxa, file.path(cachedir, 'epa2_taxa.rds'))
-chem = unique(epa2[ , .SD, .SDcols = c('casnr', 'cas', 'chemical_name')])
-saveRDS(chem, file.path(cachedir, 'epa2_chem.rds'))
-
-# NORMAN variables --------------------------------------------------------
-# check 
-chck_no_look = nrow( no_look[ status == 'ok' & ! key %in% names(epa2) ] )
-if (chck_no_look != 0) {
-  msg = 'Some NORMAN lookup variables can not be found in names(epa2)'
-  log_msg(msg)
-  stop(msg)
-}; rm(chck_no_look)
-
-# integer column names
-cols = no_look$key
-names(cols) = no_look$id1
-
-# NORMAN table
-epa2_norman = epa2[ , .SD, .SDcols = cols ]
-setnames(epa2_norman, names(cols))
-
-# epa ecotox_raw data for sharing
-time = Sys.time()
-fwrite(epa2_norman, file.path(share, 'epa2_raw.csv'))
 Sys.time() - time
-# epa ecotox raw data example (Triclosan) for sharing
-time = Sys.time()
-fwrite(epa2_norman[ `21` == '3380345' ],
-       file.path(share, 'epa2_raw_triclosan.csv'))
-Sys.time() - time
-# meta data
-epa2_norman_meta = ln_na(epa2_norman)
-setnames(epa2_norman_meta, 'variable', 'id')
-epa2_norman_meta[ , variable := cols[ match(epa2_norman_meta$id, names(cols)) ] ] # named v update
-setcolorder(epa2_norman_meta, c('id', 'variable'))
-fwrite(epa2_norman_meta,
-       file.path(share, 'epa2_raw_variables.csv'))
+## chemicals list
+n_cas = epa2[ , .N, .(cas, chemical_name)][order(cas)]
+fwrite(n_cas, file.path(cachedir, 'cas_name_table.csv'))
 
 # log ---------------------------------------------------------------------
 msg = 'EPA2: preparation script run'
-log_msg(msg); rm(msg)
+log_msg(msg)
 
 # cleaning ----------------------------------------------------------------
-rm(list = grep('chck', ls(), value = TRUE))
+clean_workspace()
 
 

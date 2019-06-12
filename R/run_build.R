@@ -11,52 +11,135 @@
 # shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE)[1] # locate shiny dir
 ## pre-defined
 nodename = Sys.info()[4]
-if (nodename == 'scharmueller') {
-  prj = '/home/andreas/Documents/Projects/etox-base'
-  shinydir = '/home/andreas/Documents/Projects/etox-base-shiny'
+if (nodename == 'scharmueller-t460s') {
+  prj = '/home/scharmueller/Projects/etox-base'
 } else if (nodename == 'uwigis') {
   prj = '/home/scharmueller/Projects/etox-base'
-  shinydir = '/home/scharmueller/Projects/etox-base-shiny'
 } else {
-  stop('New system. Define prj and shinydir variables.')
+  stop('New system. Define prj variable.')
 }
 
-# (0) setup ---------------------------------------------------------------
-source(file.path(prj, 'R/setup.R'), max.deparse.length = mdl)
+# setup -------------------------------------------------------------------
+source(file.path(prj, 'R/gn_setup.R'), max.deparse.length = mdl)
 
-# (0a) console log ---------------------------------------------------------
+# console log -------------------------------------------------------------
 if (sink_console) {
   con = file(file.path(prj, 'console.log'))
   sink(con, append = TRUE)
   sink(con, append = TRUE, type = 'message')
 }
 
-# (1) build data base -----------------------------------------------------
-# download
-source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
-# build
-source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
+# build EPA ECOTOX data base ----------------------------------------------
+## download
+if (download_db) {
+  ## EPA ECOTOX data base
+  # download
+  source(file.path(src, 'bd_epa_download.R'), max.deparse.length = mdl)
+}
 
-# (2) prepare data --------------------------------------------------------
-# run EPA preparation files
-source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
+## build
+if (build_db) {
+  # build
+  source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl) # TODO rethink structure
+  # DB roles
+  source(file.path(src, 'bd_postgres_roles.R'), max.deparse.length = mdl) # TODO  rethink structure
+  # Permissions
+  source(file.path(src, 'bd_postgres_permissions.R', max_deparse.length = mdl)) # TODO rethink structure
+  # functions
+  source(file.path(src, 'bd_sql_functions.R'), max.deparse.length = mdl)
+  # errata
+  source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
+  # meta files
+  source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
+  # lookup tables
+  source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
+  # changes
+  # TODO rwork EPA build process
+  source(file.path(src, 'bd_epa_changes.R'), max.deparse.length = mdl)
 
-# (3) queries + data preparation ------------------------------------------
-source(file.path(src, 'qu_run.R'), max.deparse.length = mdl)
+}
 
-# (4) results -------------------------------------------------------------
-source(file.path(src, 're_run.R'), max.deparse.length = mdl)
+# identifiers -------------------------------------------------------------
+## 1st identifiers
+if (download) {
+  source(file.path(src, 'id_cir_dwld.R'), max.deparse.length = mdl) # CIR
+}
 
-# (5) writing -------------------------------------------------------------
-source(file.path(src, 'wr_run.R'), max.deparse.length = mdl)
+if (build) {
+  source(file.path(src, 'id_cir_prep.R'), max.deparse.length = mdl)
+}
+
+## 2nd identifiers 
+if (download) {
+  source(file.path(src, 'id_pc_cid_dwld.R'), max.deparse.length = mld) # PubChem
+  source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mld) # Chemspider
+  source(file.path(src, 'id_epa_tax_dwld.R'), max.deparse.length = mdl) # EPA: extracts identifiers
+}
+
+if (build) {
+  source(file.path(src, 'id_pc_cid_prep.R'), max.deparse.length = mld)
+  source(file.path(src, 'id_cs_csid_prep.R'), max.deparse.length = mdl)
+  source(file.path(src, 'id_epa_tax_prep.R'), max.deparse.length = mdl)
+}
+
+# queries + results -------------------------------------------------------
+## chemical and biota parameters
+if (download) {
+  source(file.path(src, 'qu_run_dwld.R'), max.deparse.length = mdl)  
+}
+
+if (build) {
+  source(file.path(src, 'qu_run_prep.R'), max.deparse.length = mdl)
+}
+
+# merge tables ------------------------------------------------------------
+if (build) {
+  source(file.path(src, 'qu_run_final.R'), max.deparse.length = mdl)
+}
+
+# Application -------------------------------------------------------------
+if (build) {
+  source(file.path(src, 'bd_application.R'), max.deparse.length = mdl)
+  source(file.path(src, 'bd_norman.R'), max.deparse.length = mdl)
+}
+
+# Export ------------------------------------------------------------------
+if (export) {
+  source(file.path(src, 'exp_application.R'), max.deparse.length = mdl) #! also to shinydir!
+  source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
+}
+# NORMAN ------------------------------------------------------------------
+
+
+
+
+# TODO
+# EPA data scripts
+# source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
+# NORMAN export scripts
+# source(file.path(src, 'da_norman_run.R'), max.deparse.length = mdl)
 
 # file copies -------------------------------------------------------------
+# TODO what's this?
 # copy README.md to shiny repo
-file.copy('README.md', file.path(shinydir, 'README.md'),
-          overwrite = TRUE)
-if (nodename == 'scharmueller') {
-  source(file.path(src, 'no_share.R'))
+# file.copy('README.md', file.path(shinydir, 'README.md'),
+#           overwrite = TRUE)
+# if (nodename == 'scharmueller') {
+#   source(file.path(src, 'no_share.R'))
+# }
+
+
+# QSAR and PPDB comparison data -------------------------------------------
+
+
+
+# backup ------------------------------------------------------------------
+if (general) {
+  source(file.path(src, 'gn_backup.R'))
 }
+
+# end ---------------------------------------------------------------------
+source(file.path(src, 'gn_end.R'))
 
 # # (0b) console log 2 --------------------------------------------------------
 if (sink_console) {

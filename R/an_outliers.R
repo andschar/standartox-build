@@ -1,7 +1,7 @@
 # script to detect outliers
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 tests_ou = readRDS(file.path(cachedir, 'tests_fl.rds'))

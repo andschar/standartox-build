@@ -1,7 +1,7 @@
 # this is a script to share files with the norman owncloud
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'setup.R'))
+source(file.path(src, 'gn_setup.R'))
 
 # copy --------------------------------------------------------------------
 todo_no = list.files(share)
