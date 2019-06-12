@@ -124,11 +124,11 @@
 	%% writing
 	\node (writedb) [main, below of = finalres, yshift=-3cm, align = center] {Write to\\Data Base}
 	    child { node [children] { \textbf{wr\_dbase.R} }};
-	\node (writeapp) [main, right of = writedb, xshift=3cm] {Write to app}
+	\node (writeapp) [main, right of = writedb, xshift=3cm, align = center] {Write to\\application}
 	    child { node [children] { \textbf{wr\_app.R}  }};
-	\node (writemeta) [main, right of = writeapp, xshift=3cm] {Write Meta data}
+	\node (writemeta) [main, right of = writeapp, xshift=3cm, align = center] {Write\\Meta data}
 	    child { node [children] { \textbf{wr\_meta.R} }};
-	\node (writestats) [main, right of = writemeta, xshift=3cm] {Write statistics}
+	\node (writestats) [main, right of = writemeta, xshift=3cm, align = center] {Write\\statistics}
 	    child { node [children] { \textbf{wr\_stats.R} }};
 	
 	\begin{pgfonlayer}{bg3}
