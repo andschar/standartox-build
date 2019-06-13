@@ -28,6 +28,7 @@ pkg_cran = c(
   'ggrepel',
   'cowplot',
   'RColorBrewer',
+  'treemap',
   'rgbif',
   'taxize',
   'countrycode',
@@ -54,7 +55,6 @@ build = TRUE # run build scripts?
 general = TRUE # run general database scripts?
 export = FALSE # should data be exported?
 
-
 # old:
 online_db = FALSE # TODO deprecate when looking over da_epa1.... etc
 # TODO rework scp_feather = FALSE # scp feather object # TODO remove this in the end
@@ -80,6 +80,7 @@ share = file.path(prj, 'share')
 normandir = file.path(prj, 'norman')
 sql = file.path(prj, 'sql')
 export = file.path(prj, 'export')
+summdir = file.path(prj, 'summary')
 # article
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')
@@ -95,6 +96,7 @@ if (debug_mode) {
 }
 
 # path to phantomjs
+nodename = Sys.info()[4]
 if (nodename == 'scharmueller-t460s') {
   phantompath = '/usr/local/bin/phantomjs'
 } else if (nodename == 'uwigis') {
@@ -128,6 +130,8 @@ source(file.path(src, 'fun_mail.R'))
 source(file.path(src, 'fun_chck.R'))
 source(file.path(src, 'fun_export_db.R'))
 source(file.path(src, 'fun_geometric_mean.R'))
+source(file.path(src, 'fun_summary_db.R'))
+source(file.path(src, 'fun_treemap.R'))
 
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')
