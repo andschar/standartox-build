@@ -44,8 +44,6 @@ setcolorder(chebi_fin, c('cas', 'chebiid', 'cname', 'iupac_name', 'formula'))
 envi = c('biocide', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'environmental.contaminent', 'agrochemical')
 cols = grep(paste0(envi, collapse = '|'), names(ont_par2), value = TRUE)
 chebi_envi = ont_par2[ , .SD, .SDcols = c('chebiid', cols) ]
-chebi_envi[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
-chebi_envi = chebi_envi[ , unique(.SD, by = 'cas') ] # take the first in case of duplicates
 
 #! necessary 'cause it can be that a chemical is an azole fungicide but not classifed as a fungicide
 fung = grep('fungicide', names(chebi_envi), value = TRUE)
@@ -63,9 +61,23 @@ if (length(inse) > 0) {
   chebi_envi[ , insecticide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = inse ]  
   chebi_envi[ insecticide == 1, pesticide := 1 ]
 }
+chebi_envi1 = chebi_envi[ , .SD, .SDcols = c('chebiid', 'fungicide', 'herbicide', 'insecticide') ]
+
+chebi_envi_m = melt(chebi_envi[ , .SD, .SDcols =! c('fungicide', 'herbicide', 'insecticide')],
+                    id.vars = 'chebiid')
+chebi_envi_m[ , variable2 := trimws(gsub(' (fungicide|herbicide|insecticide|pesticide)', '', variable)) ]
+chebi_envi2 = dcast(chebi_envi_m, chebiid ~ variable2,
+                    fun.aggregate = function(x) min(x, na.rm = TRUE))
+for (i in names(chebi_envi2)) {
+  chebi_envi2[ get(i) == Inf, (i) := NA ]
+}
+chebi_envi3 = merge(chebi_envi1, chebi_envi2, by = 'chebiid')
+chebi_envi3[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
+chebi_envi3 = chebi_envi3[ , unique(.SD, by = 'cas') ] # take the first in case of duplicates
 
 # names
-clean_names(chebi_envi)
+setcolorder(chebi_envi3, c('chebiid', 'cas'))
+clean_names(chebi_envi3)
 
 ## drugs
 drug = c('drug')
@@ -76,11 +88,12 @@ chebi_drug[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
 chebi_drug = chebi_drug[ , unique(.SD, by = 'cas') ] # take the first in case of duplicates
 
 # names
+setcolorder(chebi_drug, c('chebiid', 'cas'))
 clean_names(chebi_drug)
 
 # check -------------------------------------------------------------------
 chck_dupl(chebi_fin, 'cas')
-chck_dupl(chebi_envi, 'cas')
+chck_dupl(chebi_envi3, 'cas')
 chck_dupl(chebi_drug, 'cas')
 
 # write -------------------------------------------------------------------
@@ -90,7 +103,7 @@ write_tbl(chebi_fin, user = DBuser, host = DBhost, port = DBport, password = DBp
           key = 'cas',
           comment = 'Results from ChEBI (general)')
 # environmental table
-write_tbl(chebi_envi, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+write_tbl(chebi_envi3, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'phch', tbl = 'chebi_envi',
           # key = 'cas',
           comment = 'Results from ChEBI (enrionmental chemicals)')

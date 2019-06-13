@@ -17,10 +17,11 @@ phch_cols = dbGetQuery(con, "SELECT table_schema, table_name, column_name
 setDT(phch_cols)
 
 # chemical classes --------------------------------------------------------
-cols = c('agrochemical', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'metal', 'drug')
-# TODO elaborate on chemical groups!
-cols = gsub('(.+)', '^\\1$', cols)
-class_cols = phch_cols[ grep(paste0(cols, collapse = '|'), column_name) ]
+# cols_exact = c('agrochemical', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'metal', 'drug')
+cols_exact = phch_cols[ table_name == 'chebi_envi', column_name ]
+cols_exact = cols_exact[ ! cols_exact %in% c('cas', 'chebiid') ]
+cols_exact = gsub('(.+)', '^\\1$', cols_exact)
+class_cols = phch_cols[ grep(paste0(cols_exact, collapse = '|'), column_name) ]
 
 # query
 q = q_join(class_cols, schema = 'phch', main_tbl = 'epa', col_join = 'cas',
@@ -29,6 +30,7 @@ q = paste0("CREATE TABLE phch_fin.chem_class AS ( ", q, ")")
 
 dbSendQuery(con, "DROP TABLE IF EXISTS phch_fin.chem_class;")
 dbSendQuery(con, q)
+dbSendQuery(con, "ALTER TABLE phch_fin.chem_class ADD PRIMARY KEY (cas);")
 
 # chemical names ----------------------------------------------------------
 q = "
@@ -51,6 +53,7 @@ q = "
 q = paste0("CREATE TABLE phch_fin.chem_names AS ( ", q, ")")
 dbSendQuery(con, "DROP TABLE IF EXISTS phch_fin.chem_names;")
 dbSendQuery(con, q)
+dbSendQuery(con, "ALTER TABLE phch_fin.chem_names ADD PRIMARY KEY (cas);")
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
