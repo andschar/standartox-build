@@ -1,5 +1,15 @@
 # setup script for etox-base
 
+# projects ----------------------------------------------------------------
+nodename = Sys.info()[4]
+if (nodename == 'scharmueller-t460s') {
+  prj = '/home/scharmueller/Projects/etox-base'
+} else if (nodename == 'uwigis') {
+  prj = '/home/scharmueller/Projects/etox-base'
+} else {
+  stop('New system. Define prj variable.')
+}
+
 # packages ----------------------------------------------------------------
 if (!require('pacman')) {
   install.packages('pacman')
@@ -34,7 +44,9 @@ pkg_cran = c(
   'countrycode',
   'foreach',
   'doParallel',
-  'fst'
+  'fst',
+  'DT',
+  'treemap'
   # TODO check if all packages are still needed!
 )
 pkg_gith = c('ropensci/bib2df', 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
@@ -64,6 +76,7 @@ sink_console = TRUE # sink console to file
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
+option = file.path(prj, 'options')
 missingdir = file.path(prj, 'missing')
 meta = file.path(prj, 'meta')
 fundir = file.path(prj, 'functions')
@@ -81,9 +94,11 @@ normandir = file.path(prj, 'norman')
 sql = file.path(prj, 'sql')
 export = file.path(prj, 'export')
 summdir = file.path(prj, 'summary')
-# article
+# article subfolder
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')
+## talk subfolder
+datadir_tk = file.path(prj, 'talk', 'data')
 
 # data base to write to
 if (debug_mode) {
@@ -131,6 +146,7 @@ source(file.path(src, 'fun_chck.R'))
 source(file.path(src, 'fun_export_db.R'))
 source(file.path(src, 'fun_geometric_mean.R'))
 source(file.path(src, 'fun_summary_db.R'))
+source(file.path(src, 'fun_all_col_db.R'))
 source(file.path(src, 'fun_treemap.R'))
 
 # database ----------------------------------------------------------------
@@ -146,6 +162,10 @@ rm(fl)
 ## create pgpass file locally in $HOME (for command line data base acces (e.g. pg_dumb))
 pgpass = paste(DBhost, DBport, DBetox, DBuser, DBpassword, sep = ':')
 write(pgpass, '~/.pgpass')
+
+# plot theme --------------------------------------------------------------
+source(file.path(option, 'ggplot_theme_etox_base.R'))
+theme_set(theme_minimal_etox_base_sans)
 
 # cite packages -----------------------------------------------------------
 pkg = c('pacman', pkg_cran)
