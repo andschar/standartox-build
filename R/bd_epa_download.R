@@ -53,8 +53,7 @@ saveRDS(etoxdir, file.path(cachedir, 'etox_data_path.rds'))
 
 # check -------------------------------------------------------------------
 if (length(releases) == 0) {
-  msg = 'Newest etox file (DBetox) file can not be found.'
-  log_msg(msg); rm(msg)
+  log_msg('Newest etox file (DBetox) file can not be found.')
 }
 
 # cleaning ----------------------------------------------------------------

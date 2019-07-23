@@ -1,0 +1,93 @@
+---
+date: "`r format(Sys.Date(), '%d.%m.%Y')`"
+output:
+  html_vignette
+  #html_document
+editor_options: 
+  chunk_output_type: console
+params:
+  title: "My Title!"
+  schema: "information_schema"
+  table: "tables"
+  output_dir: NULL # https://community.rstudio.com/t/is-it-possible-to-save-the-html-output-in-a-directory-which-is-not-the-one-where-the-rmd-file-resides/3588/6
+  cols: NULL
+title: "`r params$title`"
+---
+
+```{r params, echo=FALSE, include=FALSE}
+schema = params$schema
+table = params$table
+cols = params$cols
+dir = file.path(params$output_dir, paste0(schema, '_', table))
+# debuging
+# schema = 'standartox'
+# table = 'refs'
+# cols = NULL
+```
+
+```{r setup, echo=FALSE, include=FALSE}
+prj = '/home/scharmueller/Projects/etox-base'
+source(file.path(prj, 'R', 'gn_setup.R'))
+```
+
+Summary output from data base table __`r paste0(schema, '.', table)`__
+
+```{r echo=FALSE, message=FALSE}
+# schema = 'norman'
+# table = 'data2'
+# cols = c('nor88test', 'nor88')
+
+## table
+tab = summary_db_all(schema = schema, table = table)
+
+## column
+l = summary_db_cols(schema = schema, table = table, cols = cols)
+```
+
+```{r function, echo=FALSE}
+## plot function
+gg_summary = function(l, col, limit) {
+  
+  dat = l[[col]]
+  dat[ , var20 := substr(get(col), 1, 20) ]
+  
+  gg = ggplot(dat[ 1:limit ], aes(x = reorder(var20, -n), y = n)) +
+    geom_bar(stat = 'identity') +
+    geom_text(aes(label = n), position=position_dodge(width=0.9), vjust=-0.25) +
+    scale_y_continuous(expand = expand_scale(mult = c(0, 0.05))) +
+    labs(title = col, x = NULL) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  return(gg)
+}
+```
+
+## Table
+```{r table, echo=FALSE, warning=FALSE}
+knitr::kable(tab)
+```
+
+## Plots
+```{r plots, echo=FALSE, fig.height=7, fig.width=15, dpi=72, warning=FALSE}
+# options , dpi=36
+mapply(gg_summary,
+       col = names(l),
+       MoreArgs = list(l = l,
+                       limit = 50),
+       SIMPLIFY = FALSE)
+```
+
+```{r write, echo=FALSE, message=FALSE}
+unlink(dir, recursive = TRUE)
+mkdirs(dir)
+for (i in seq_along(l)) {
+  dat = l[[i]]
+  nam = names(l)[i]
+  fl = file.path(dir, paste0(nam, '.csv'))
+  
+  message('Writing: ', fl)
+  fwrite(dat, fl)
+}
+```
+
+

@@ -12,13 +12,13 @@ drv = dbDriver("PostgreSQL")
 con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
 
 dbSendQuery(con, q1)
-dbSendQuery(con, q2) # TODO takes long!
+dbSendQuery(con, q2)
 
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # log ---------------------------------------------------------------------
-log_msg("ECOTOX added functions")
+log_msg("ECOTOX changes")
 
 # clean -------------------------------------------------------------------
 clean_workspace()

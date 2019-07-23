@@ -23,6 +23,11 @@ cols = c('marin', 'brack', 'fresh', 'terre', 'extinct')
 wo2[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
 wo2 = unique(wo2, by = 'aphiaid') # for safety
 wo2 = wo2[ rank %in% c('Family', 'Genus', 'Species') ] # only fm, gn, sp
+# 0 to NA
+wo2[ marin == 0L, marin := NA_integer_ ]
+wo2[ brack == 0L, brack := NA_integer_ ]
+wo2[ fresh == 0L, fresh := NA_integer_ ]
+wo2[ terre == 0L, terre := NA_integer_ ]
 # split
 wo2_l = split(wo2, wo2$rank)
 names(wo2_l) = c('fm', 'gn', 'sp')

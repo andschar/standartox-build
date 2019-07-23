@@ -14,7 +14,7 @@ con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBpor
 dbSendQuery(con, paste0("GRANT CONNECT ON DATABASE ", DBetox, " TO ", role, ";"))
 dbSendQuery(con, paste0("ALTER DEFAULT PRIVILEGES IN SCHEMA public
                           GRANT SELECT ON TABLES TO ", role, ";"))
-dbSendQuery(con, "GRANT USAGE ON SCHEMA application TO ecotox_read;")
+dbSendQuery(con, "GRANT USAGE ON SCHEMA standartox TO ecotox_read;")
 
 dbDisconnect(con)
 dbUnloadDriver(drv)

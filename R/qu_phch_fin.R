@@ -17,8 +17,9 @@ phch_cols = dbGetQuery(con, "SELECT table_schema, table_name, column_name
 setDT(phch_cols)
 
 # chemical classes --------------------------------------------------------
-# cols_exact = c('agrochemical', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'metal', 'drug')
-cols_exact = phch_cols[ table_name == 'chebi_envi', column_name ]
+cols = c('agrochemical', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'metal', 'drug')
+cols_exact = phch_cols[ table_name == 'chebi_envi' |
+                          column_name %in% cols, column_name ]
 cols_exact = cols_exact[ ! cols_exact %in% c('cas', 'chebiid') ]
 cols_exact = gsub('(.+)', '^\\1$', cols_exact)
 class_cols = phch_cols[ grep(paste0(cols_exact, collapse = '|'), column_name) ]
@@ -27,6 +28,8 @@ class_cols = phch_cols[ grep(paste0(cols_exact, collapse = '|'), column_name) ]
 q = q_join(class_cols, schema = 'phch', main_tbl = 'epa', col_join = 'cas',
            fun = 'GREATEST', debug = FALSE)
 q = paste0("CREATE TABLE phch_fin.chem_class AS ( ", q, ")")
+# TODO intermediate solution - change!
+q = gsub('SELECT epa.cas', 'SELECT epa.cas_number, epa.cas', q, fixed = TRUE)
 
 dbSendQuery(con, "DROP TABLE IF EXISTS phch_fin.chem_class;")
 dbSendQuery(con, q)
@@ -35,6 +38,7 @@ dbSendQuery(con, "ALTER TABLE phch_fin.chem_class ADD PRIMARY KEY (cas);")
 # chemical names ----------------------------------------------------------
 q = "
   SELECT
+    ep.cas_number,
     ep.cas,
     COALESCE(ci.cname, ch.cname, pp.cname, aw.cname, ep.cname) cname,
     COALESCE(ch.iupac_name, pc.iupac_name, aw.iupac_name) iupacname,

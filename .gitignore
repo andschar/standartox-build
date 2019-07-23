@@ -36,13 +36,15 @@ article/*
 # !article/tikz/organigram.tex
 # lookup
 # lookup/*
-# share
-share/*
 # misc
 misc/*
+# notes
 notes/*
+# summary
+summary/*
 # credentials
 cred/credentials.R
+# deprecated
 # ag
 ag/*
 # log

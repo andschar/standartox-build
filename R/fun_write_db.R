@@ -20,8 +20,14 @@ write_tbl = function(df = NULL, user = NULL, host = NULL, port = NULL, password 
   }
   
   ## data base
-  drv = dbDriver('PostgreSQL')
-  con = dbConnect(drv, dbname = dbname, user = user, host = host, port = port, password = password)
+  con = DBI::dbConnect(RPostgreSQL::PostgreSQL(), # RPostgres::Postgres(),
+                       dbname = dbname,
+                       host = host,
+                       port = port,
+                       user = user,
+                       password = password)
+                       # bigint = 'integer') # to not return integer64 (only for RPostgres::)
+  on.exit(DBI::dbDisconnect(con))
   
   dbSendQuery(con, paste0("CREATE SCHEMA IF NOT EXISTS ", schema, ";"))
   # write to DB
@@ -47,11 +53,7 @@ write_tbl = function(df = NULL, user = NULL, host = NULL, port = NULL, password 
     dbSendQuery(con, paste0("ALTER TABLE ", schema, ".", tbl,
                             " ADD PRIMARY KEY (", key, ");"))
   }
-  
-  
-  dbDisconnect(con)
-  dbUnloadDriver(drv)
-  
+
   message(Sys.time(), ' Table created in: ', path)
 }
 

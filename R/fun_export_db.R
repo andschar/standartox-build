@@ -1,6 +1,6 @@
 # function to export postgres tables
 
-export_tbl = function(schema, table, dir = NULL, type = c('csv', 'rds', 'fst'), debug_mode = NULL,
+export_tbl = function(schema, table, dir = NULL, file_name = NULL, type = c('csv', 'rds', 'fst', 'feather'), debug_mode = FALSE,
                       user = NULL, host = NULL, port = NULL, password = NULL, dbname = NULL) {
   # file
   if (is.null(dir)) {
@@ -8,22 +8,26 @@ export_tbl = function(schema, table, dir = NULL, type = c('csv', 'rds', 'fst'), 
   }
   # query
   q = paste0("SELECT * FROM ", schema, ".", table)
-  if (!is.null(debug_mode)) {
-    paste0(q, ' LIMIT 100')
+  if (debug_mode) {
+    q = paste0(q, ' LIMIT 100')
   }
   # export
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
   
-  message('Exporting table: ', schema, '.', table, ' to ', dir)
+  message('Exporting table: ', schema, '.', table, ' (.', type, ') to ', dir)
   dat = dbGetQuery(con, q)
   setDT(dat)
   
   dbDisconnect(con)
   dbUnloadDriver(drv)
   # save
-  fl = file.path(dir, table)
-  type = match.arg(type, c('csv', 'rds', 'fst'))
+  if (is.null(file_name)) {
+    fl = file.path(dir, table)
+  } else {
+    fl = file.path(dir, file_name)
+  }
+  type = match.arg(type, c('csv', 'rds', 'fst', 'feather'))
   if (type == 'csv') {
     fwrite(dat, paste0(fl, '.csv'))
   }
@@ -32,6 +36,9 @@ export_tbl = function(schema, table, dir = NULL, type = c('csv', 'rds', 'fst'), 
   }
   if (type == 'fst') {
     write_fst(dat, paste0(fl, '.fst'))
+  }
+  if (type == 'feather') {
+    write_feather(dat, paste0(fl, '.feather'))
   }
 }
 

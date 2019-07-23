@@ -1,19 +1,5 @@
 # functions to build sql queries
 
-
-# chemical names ----------------------------------------------------------
-# function(dat, ) {
-#   
-#   dat$column_name_full = with(dat, paste0(table_name, '.', column_name))
-#   
-#   select = 
-#   
-#   
-#   
-# }
-
-
-
 # chemical class flags ----------------------------------------------------
 # find the greatest (0,1) value of multiple columns in muktiple tables joined together by one key column
 

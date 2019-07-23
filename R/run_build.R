@@ -54,9 +54,7 @@ if (build_db) {
   # lookup tables
   source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
   # changes
-  # TODO rwork EPA build process
   source(file.path(src, 'bd_epa_changes.R'), max.deparse.length = mdl)
-
 }
 
 # identifiers -------------------------------------------------------------
@@ -99,34 +97,21 @@ if (build) {
 
 # Application -------------------------------------------------------------
 if (build) {
-  source(file.path(src, 'bd_application.R'), max.deparse.length = mdl)
+  source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'bd_norman.R'), max.deparse.length = mdl)
 }
 
 # Export ------------------------------------------------------------------
 if (export) {
-  source(file.path(src, 'exp_application.R'), max.deparse.length = mdl) #! also to shinydir!
+  source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
+  source(file.path(src, 'exp_standartox_shiny_stats.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
 }
+
+# copy to shiny dir -------------------------------------------------------
+source(file.path(src, 'cpy_shiny.R'), max.deparse.length = mdl)
+
 # NORMAN ------------------------------------------------------------------
-
-
-
-
-# TODO
-# EPA data scripts
-# source(file.path(src, 'da_epa_run.R'), max.deparse.length = mdl)
-# NORMAN export scripts
-# source(file.path(src, 'da_norman_run.R'), max.deparse.length = mdl)
-
-# file copies -------------------------------------------------------------
-# TODO what's this?
-# copy README.md to shiny repo
-# file.copy('README.md', file.path(shinydir, 'README.md'),
-#           overwrite = TRUE)
-# if (nodename == 'scharmueller') {
-#   source(file.path(src, 'no_share.R'))
-# }
 
 
 # QSAR and PPDB comparison data -------------------------------------------

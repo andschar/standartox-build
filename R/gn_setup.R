@@ -30,6 +30,7 @@ pkg_cran = c(
   'purrr',
   'data.table',
   'RPostgreSQL',
+  'DBI',
   'vegan',
   'plyr',
   'outliers',
@@ -77,28 +78,31 @@ sink_console = TRUE # sink console to file
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
 option = file.path(prj, 'options')
-missingdir = file.path(prj, 'missing')
 meta = file.path(prj, 'meta')
-fundir = file.path(prj, 'functions')
 plotdir = file.path(prj, 'plots')
 src = file.path(prj, 'R')
+srcrmd = file.path(prj, 'Rmd')
 data = file.path(prj, 'data')
 data_ecotox = file.path(data, 'ecotox')
 data_chebi = file.path(data, 'chebi')
 lookupdir = file.path(prj, 'lookup')
-shinydir = paste0(prj, '-shiny')
-shinydata = file.path(shinydir, 'data')
 cred = file.path(prj, 'cred')
-share = file.path(prj, 'share')
-normandir = file.path(prj, 'norman')
 sql = file.path(prj, 'sql')
 export = file.path(prj, 'export')
 summdir = file.path(prj, 'summary')
-# article subfolder
+## article subfolder
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')
 ## talk subfolder
 datadir_tk = file.path(prj, 'talk', 'data')
+## shiny application
+shinydir = paste0(prj, '-shiny')
+shinydata = file.path(shinydir, 'data')
+## standartox R-package
+standartoxdir = gsub(basename(prj), 'standartox', prj, fixed = TRUE)
+## NORMAN
+normandir = file.path(prj, 'norman')
+cloud = file.path('/home/scharmueller/Nextcloud/norman')
 
 # data base to write to
 if (debug_mode) {
@@ -125,9 +129,11 @@ mdl = 1e6 # max deparse length for writing to sink console
 
 # source ------------------------------------------------------------------
 source(file.path(cred, 'credentials.R')) # data base credentials
-source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
+source(file.path(src, 'fun_casconv.R')) # convert between CAS and CASNR
 source(file.path(src, 'fun_clean_workspace.R'))
+source(file.path(src, 'fun_file_cpy.R'))
 source(file.path(src, 'fun_write_db.R'))
+source(file.path(src, 'fun_read_db.R'))
 source(file.path(src, 'fun_product_na.R'))
 source(file.path(src, 'fun_extr_vec.R'))
 source(file.path(src, 'fun_log.R'))
@@ -136,7 +142,6 @@ source(file.path(src, 'fun_worms_query.R'))
 source(file.path(src, 'fun_ln_na.R'))
 source(file.path(src, 'fun_paste2.R'))
 source(file.path(src, 'fun_norman.R'))
-source(file.path(src, 'fun_shiny_variables_stat.R'))
 source(file.path(src, 'fun_udunits2_vectorize.R'))
 source(file.path(src, 'fun_coalesce.R'))
 source(file.path(src, 'fun_clean_names.R'))
@@ -146,8 +151,8 @@ source(file.path(src, 'fun_chck.R'))
 source(file.path(src, 'fun_export_db.R'))
 source(file.path(src, 'fun_geometric_mean.R'))
 source(file.path(src, 'fun_summary_db.R'))
-source(file.path(src, 'fun_all_col_db.R'))
 source(file.path(src, 'fun_treemap.R'))
+source(file.path(src, 'fun_firstup.R'))
 
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')
