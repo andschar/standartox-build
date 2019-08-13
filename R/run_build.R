@@ -103,20 +103,13 @@ if (build) {
 
 # Export ------------------------------------------------------------------
 if (export) {
+  # Standartox
   source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_standartox_shiny_stats.R'), max.deparse.length = mdl)
+  source(file.path(src, 'cpy_shiny.R'), max.deparse.length = mdl)
+  # NORMAN
   source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
 }
-
-# copy to shiny dir -------------------------------------------------------
-source(file.path(src, 'cpy_shiny.R'), max.deparse.length = mdl)
-
-# NORMAN ------------------------------------------------------------------
-
-
-# QSAR and PPDB comparison data -------------------------------------------
-
-
 
 # backup ------------------------------------------------------------------
 if (general) {
