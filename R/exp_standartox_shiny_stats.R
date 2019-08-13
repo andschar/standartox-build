@@ -5,7 +5,7 @@ source(file.path(src, 'gn_setup.R'))
 v = gsub('etox', '', DBetox)
 
 # data --------------------------------------------------------------------
-header = names(read_fst(file.path(export, v, paste0('standartox', v, '.fst')), to = 1))
+header = names(read_fst(file.path(exportdir, v, paste0('standartox', v, '.fst')), to = 1))
 
 # query -------------------------------------------------------------------
 # cols
@@ -49,8 +49,8 @@ stat_l = split(stat, stat$variable)
 stat_l$obs_duration_mean2 = stat_l$obs_duration_mean2[ , range(na.omit(as.numeric(value))) ]
 
 # write -------------------------------------------------------------------
-saveRDS(stat_l, file.path(export, v, paste0('standartox', v, '_shiny_stats.rds')))
-save(stat_l, file = file.path(export, v, paste0('standartox', v, '_shiny_stats.rda'))) # for standartox::
+saveRDS(stat_l, file.path(exportdir, v, paste0('standartox', v, '_shiny_stats.rds')))
+save(stat_l, file = file.path(exportdir, v, paste0('standartox', v, '_shiny_stats.rda'))) # for standartox::
 
 # log ---------------------------------------------------------------------
 log_msg('Export: application summary stats exported')

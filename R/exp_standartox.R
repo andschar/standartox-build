@@ -11,7 +11,7 @@ meta = read_tbl(user = DBuser, host = DBhost, port = DBport, password = DBpasswo
                 query = q)
 v = meta$etox_version
 ## output directory
-dir = file.path(export, v)
+dir = file.path(exportdir, v)
 unlink(dir)
 mkdirs(dir) # TODO put this into export_tbl()
 

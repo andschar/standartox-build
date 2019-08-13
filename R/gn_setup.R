@@ -61,19 +61,14 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-download_db = F # should database query be run
-build_db = F # build data base?
-download = F # run download scripts?
-build = TRUE # run build scripts?
-general = TRUE # run general database scripts?
-export = FALSE # should data be exported?
-
-# old:
-online_db = FALSE # TODO deprecate when looking over da_epa1.... etc
-# TODO rework scp_feather = FALSE # scp feather object # TODO remove this in the end
-## debuging
+download_db = T # should database query be run
+build_db = T # build data base?
+download = T # run download scripts?
+build = T # run build scripts?
+general = T # run general database scripts?
+export = F # should data be exported?
 debug_mode = F # should only 10 input rows for each quering script be run
-sink_console = TRUE # sink console to file
+sink_console = T # sink console to file
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
@@ -88,7 +83,7 @@ data_chebi = file.path(data, 'chebi')
 lookupdir = file.path(prj, 'lookup')
 cred = file.path(prj, 'cred')
 sql = file.path(prj, 'sql')
-export = file.path(prj, 'export')
+exportdir = file.path(prj, 'export')
 summdir = file.path(prj, 'summary')
 ## article subfolder
 article = file.path(prj, 'article')
