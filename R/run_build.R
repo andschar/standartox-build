@@ -70,13 +70,13 @@ if (build) {
 ## 2nd identifiers 
 if (download) {
   source(file.path(src, 'id_pc_cid_dwld.R'), max.deparse.length = mld) # PubChem
-  source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mld) # Chemspider
+  # TODO source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mld) # Chemspider
   source(file.path(src, 'id_epa_tax_dwld.R'), max.deparse.length = mdl) # EPA: extracts identifiers
 }
 
 if (build) {
   source(file.path(src, 'id_pc_cid_prep.R'), max.deparse.length = mld)
-  source(file.path(src, 'id_cs_csid_prep.R'), max.deparse.length = mdl)
+  # TODO source(file.path(src, 'id_cs_csid_prep.R'), max.deparse.length = mdl)
   source(file.path(src, 'id_epa_tax_prep.R'), max.deparse.length = mdl)
 }
 
