@@ -22,15 +22,18 @@ if (!require('pacman'))
 pkg_cran = c(
   'data.table',
   'feather',
+  'fst',
   'shiny',
   'shinyjs',
-  'shinyWidgets',
+  'shinyWidgets', # pretty stuff
+  'shinysky', # autocomplete text input
   'shinydashboard',
   'shinydashboardPlus',
   'knitr',
   'DT',
   'plotly',
-  'ssdtools'
+  'ssdtools',
+  'reactlog'
 )
 
 pacman::p_load(char = pkg_cran)
@@ -64,6 +67,10 @@ source(file.path(fundir, 'fun_geometric_mean.R'))
 source(file.path(fundir, 'fun_casconv.R'))
 # plot themes
 source(file.path(src, 'gg_theme.R'))
+
+# variables ---------------------------------------------------------------
+epa_versions = list.files(datadir, pattern = '[0-9]', recursive = FALSE)
+epa_versions = gsub('-', '', gsub('([0-9]{4})([0-9]{2})([0-9]{2})', '\\1-\\2-\\3', epa_versions))
 
 # cite packages -----------------------------------------------------------
 for (i in pkg_cran) {

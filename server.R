@@ -1,15 +1,32 @@
 # script for a shiny app selecting EC50 values
 
 # setup -------------------------------------------------------------------
-src = file.path(getwd(), 'R')
-source(file.path(src, 'setup.R'))
+source('R/setup.R')
 
-# data --------------------------------------------------------------------
-source(file.path(src, 'data.R'))
+server = function(input, output, session) {
+  # data --------------------------------------------------------------------
+  dat = reactive({
+    fl = file.path('data', input$epa_version, paste0('standartox', input$epa_version, '.fst'))
+    data.table(read_fst(fl))
+  })
+  stat_l = reactive({
+    fl = file.path('data', input$epa_version, paste0('standartox', inpu$epa_version, '_shiny_stats', '.rds'))
+    data.table(readRDS(fl))
+  })
+  observe({
+    current_version = input$epa_version
 
-# server ------------------------------------------------------------------
-server = function(input, output) {
-  # (1) preparation ---------------------------------------------------------
+    updatePrettyCheckbox(
+      session = session,
+      inputId = 'chemical_class',
+      label = 'test',
+      Values = stat_l()$chemical_class$value,
+      selected = stat_l()$chemical_class$value[1]
+    )
+    # CONTINUE HERE!!! https://shiny.rstudio.com/reference/shiny/0.14/updateCheckboxGroupInput.html
+  })
+  
+  
   # read csv + action button ------------------------------------------------
   # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
   rv = reactiveValues(data = NULL,
@@ -21,7 +38,7 @@ server = function(input, output) {
     data = read.csv(input$file_cas$datapath,
                     header = FALSE,
                     stringsAsFactors = FALSE) # $datapath not very intuitive
-    data = data[, 1]
+    data = data[ ,1]
     rv$data = data
   })
   observeEvent(input$reset, {
@@ -33,16 +50,18 @@ server = function(input, output) {
   # data + reactivity function ----------------------------------------------
   data_fil = reactive({
     fun_filter(
-      dt = dat,
+      dt = dat(),
+      conc1_type = input$conc1_type,
+      chemical_class = input$chemical_class,
       tax = trimws(unlist(strsplit(input$tax,","))), # handle multiple inputs
-      # tax = input$tax,
       habitat = input$habitat,
-      continent = input$continent,
-      conc_type = input$conc_type,
+      region = input$region,
+      duration = c(input$dur1, input$dur2),
+      publ_year = c(input$yr1, input$yr2),
+      acch = input$acch,
+      exposure = input$exposure,
       effect = input$effect,
       endpoint = input$endpoint,
-      chem_class = input$chem_class,
-      duration = c(input$dur1, input$dur2),
       chck_solub = input$chck_solub,
       cas = rv$data
     )
@@ -51,16 +70,18 @@ server = function(input, output) {
   data_agg = reactive({
     fun_aggregate(
       dt = fun_filter(
-        dt = dat,
-        tax = input$tax,
+        dt = dat(),
+        conc1_type = input$conc1_type,
+        chemical_class = input$chemical_class,
+        tax = trimws(unlist(strsplit(input$tax,","))), # handle multiple inputs
         habitat = input$habitat,
-        continent = input$continent,
-        conc_type = input$conc_type,
+        region = input$region,
+        duration = c(input$dur1, input$dur2),
+        publ_year = c(input$yr1, input$yr2),
+        acch = input$acch,
+        exposure = input$exposure,
         effect = input$effect,
         endpoint = input$endpoint,
-        chem_class = input$chem_class,
-        duration = c(input$dur1, input$dur2),
-        year = c(input$yr1, input$yr2),
         chck_solub = input$chck_solub,
         cas = rv$data
       ),
@@ -72,7 +93,7 @@ server = function(input, output) {
   })
   
   # (2) output --------------------------------------------------------------
-  output$dat = DT::renderDataTable({
+  output$tab = DT::renderDataTable({
     data_agg()
   },
   options = list(columnDefs = list(list(
@@ -94,15 +115,15 @@ server = function(input, output) {
   # n_pl = length(pl$x$data)
   # write_feather(n_pl, file.path(cachedir, 'n_pl'))
   
-  output$plotly_sensitivity = renderPlotly({
-    filagg_pl(
-      data_agg(),
-      plot_type = 'dynamic',
-      xaxis = input$xaxis,
-      yaxis = input$yaxis,
-      cutoff = input$cutoff
-    )
-  })
+  # output$plotly_sensitivity = renderPlotly({
+  #   filagg_pl(
+  #     data_agg(),
+  #     plot_type = 'dynamic',
+  #     xaxis = input$xaxis,
+  #     yaxis = input$yaxis,
+  #     cutoff = input$cutoff
+  #   )
+  # })
   output$npl = renderText('3')
   # download ----------------------------------------------------------------
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table

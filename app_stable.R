@@ -1,14 +1,10 @@
-# UI of the etox-base app
+# Standartox app reactive
+# this app allows only uses the newest version of the EPA ECOTOX
 
 # setup -------------------------------------------------------------------
 source('R/setup.R')
-epa_version = max(epa_versions)
-stat_l = readRDS(file.path(datadir, epa_version, paste0('standartox', epa_version, '_shiny_stats', '.rds')))
-# 
-# list.files('data', pattern = '[0-9]+')
-
-
-# variables ---------------------------------------------------------------
+source('R/data.R')
+# variables
 sidewidth = 350
 
 # header ------------------------------------------------------------------
@@ -30,20 +26,6 @@ header = dashboardHeaderPlus(
 # sidebar -----------------------------------------------------------------
 sidebar = dashboardSidebar(
   width = sidewidth,
-  sidebarMenu(
-    'Data set',
-    id = 'data_set',
-    menuItem(
-      'TODO! Data set',
-      tableName = 'data_set',
-      selectInput(
-        inputId = 'epa_version',
-        label = 'Pick an EPA ECOTOX version',
-        choices = epa_versions,
-        selected = max(epa_versions)
-      )
-    )
-  ),
   sidebarMenu(
     'Filters',
     id = 'sidebar_filter',
@@ -81,31 +63,12 @@ sidebar = dashboardSidebar(
     menuItem(
       'Taxon',
       tabName = 'taxon',
-    #  #### UNDER CONSTRUCTION ----
-      selectInput(
-        inputId = 'tax',
-        label = 'Choose a taxon',
-        choices = c(
-          'Daphniidae',
-          'Chironomidae',
-          'Insecta',
-          'Crustacea',
-          'Annelida',
-          'Platyhelminthes',
-          'Mollusca',
-          'Makro_Inv',
-          'Fish',
-          'Algae',
-          'Bacillariophyceae',
-          'Plants'
-        )
-      ),
-      # textInput(
-      #   inputId = 'tax',
-      #   label = 'Put in a taxon',
-      #   placeholder = 'Separate by comma'
-      # ),
-    ### END CONSTRUCTION
+      selectizeInput(inputId = 'tax',
+                     label = 'Taxa',
+                     choices = taxa_all_list,
+                     selected = NULL,
+                     multiple = TRUE,
+                     options = list(create = FALSE)),
       prettyCheckboxGroup(
         inputId = 'habitat',
         label = 'Organism hatbitat',
@@ -298,7 +261,243 @@ body = dashboardBody(#setShadow(class = "dropdown-menu"),
   )
 )
 
+rightsidebar = rightSidebar()
+
+
+body = dashboardBody(#setShadow(class = "dropdown-menu"),
+  #tags$head(includeCSS('style.css')),
+  fluidRow(
+    box(
+      title = 'Standartox',
+      status = 'success',
+      width = 12,
+      collapsible = TRUE,
+      withMathJax(includeMarkdown('README.md'))
+    )
+    # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
+  ),
+  fluidRow(
+    box(
+      title = 'Aggregated values',
+      status = 'primary',
+      dataTableOutput(outputId = 'tab'),
+      width = 9,
+      offset = 0
+    ),
+    box(
+      title = 'Inputs',
+      status = 'primary',
+      width = 3,
+      prettyCheckboxGroup(
+        inputId = 'comp',
+        label = 'Compound columns',
+        choiceValues = c('cname', 'comp_type'),
+        choiceNames = c('Compound name', 'Compound type'),
+        selected = c('cas', 'cname')
+      ),
+      prettyCheckboxGroup(
+        inputId = 'infocols',
+        label = 'Information columns',
+        choiceValues = c('info', 'taxa', 'vls', 'n'),
+        choiceNames = c('info', 'taxa', 'values', 'n'),
+        selected = 'taxa'
+      )
+    )
+  ),
+  fluidRow(
+    # box(
+    #   title = 'Plotly Sensitivity',
+    #   status = 'primary',
+    #   width = 9,
+    #   plotlyOutput(outputId = 'plotly_sensitivity')
+    # ),
+    #,
+    #height = sprintf('%spx', n_pl * 400))),
+    box(
+      title = 'Inputs',
+      status = 'primary',
+      width = 3,
+      numericInput(
+        inputId = 'cutoff',
+        label = 'Number of compounds',
+        value = 25,
+        width = '120px'
+      ),
+      prettyRadioButtons(
+        inputId = 'yaxis',
+        label = 'y-axis',
+        choiceValues = c('casnr', 'cname'),
+        choiceNames = c('CAS', 'Compound name'),
+        selected = 'casnr',
+        inline = FALSE
+      ),
+      prettyRadioButtons(
+        inputId = 'xaxis',
+        label = 'x-axis',
+        choiceValues = c('limout', 'log'),
+        choiceNames = c('Limit to range', 'Log x-axis'),
+        selected = 'limout',
+        inline = FALSE
+      )
+    )
+  )
+)
+
 # page --------------------------------------------------------------------
 ui = dashboardPagePlus(header, sidebar, body,
                        title = 'Etox Base',
                        skin = 'purple')
+
+
+# server ------------------------------------------------------------------
+server = function(input, output, session) {
+  
+  # renderUI ----------------------------------------------------------------
+  # handle multiple inputs
+  taxa_input = reactive({
+    input_tax = input$tax
+    if (!is.null(input_tax)) {
+      input_tax = na.omit(trimws(unlist(strsplit(input_tax, ","))))
+      input_tax = input_tax[ input_tax != '' ]
+    }
+    
+    return(input_tax)
+  })
+  # read csv + action button ------------------------------------------------
+  # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
+  rv = reactiveValues(data = NULL,
+                      reset = FALSE)
+  observe({
+    req(input$file_cas)
+    req(!rv$reset)
+    
+    data = read.csv(input$file_cas$datapath,
+                    header = FALSE,
+                    stringsAsFactors = FALSE) # $datapath not very intuitive
+    data = data[ ,1]
+    rv$data = data
+  })
+  observeEvent(input$reset, {
+    rv$data = NULL
+    rv$clear = TRUE
+    reset('file_cas')
+  }, priority = 1000) # priority?
+  
+  # filter ------------------------------------------------------------------
+  data_fil = reactive({
+    fun_filter(
+      dt = dat,
+      conc1_type = input$conc1_type,
+      chemical_class = input$chemical_class,
+      tax = taxa_input(),
+      habitat = input$habitat,
+      region = input$region,
+      duration = c(input$dur1, input$dur2),
+      publ_year = c(input$yr1, input$yr2),
+      acch = input$acch,
+      exposure = input$exposure,
+      effect = input$effect,
+      endpoint = input$endpoint,
+      chck_solub = input$chck_solub,
+      cas = rv$data
+    )
+  })
+  
+  # aggregate ---------------------------------------------------------------
+  data_agg = reactive({
+    fun_aggregate(
+      dt = fun_filter(
+        dt = dat,
+        conc1_type = input$conc1_type,
+        chemical_class = input$chemical_class,
+        tax = taxa_input(),
+        habitat = input$habitat,
+        region = input$region,
+        duration = c(input$dur1, input$dur2),
+        publ_year = c(input$yr1, input$yr2),
+        acch = input$acch,
+        exposure = input$exposure,
+        effect = input$effect,
+        endpoint = input$endpoint,
+        chck_solub = input$chck_solub,
+        cas = rv$data
+      ),
+      agg = input$agg,
+      info = input$infocols,
+      comp = input$comp,
+      chck_outlier = input$chck_outlier
+    )
+  })
+  
+  # table -------------------------------------------------------------------
+  output$tab = DT::renderDataTable({
+    data_agg()
+  },
+  options = list(columnDefs = list(list(
+    # targets = 0:4,
+    render = JS(
+      "function(data, type, row, meta) {",
+      "return type === 'display' && data.length > 6 ?",
+      "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
+      "}"
+    )
+  ))),
+  #dom = 't',
+  rownames = FALSE,
+  callback = JS('table.page(3).draw(false);'))
+  
+  
+  # plot --------------------------------------------------------------------
+  #pl =
+  # n_pl = length(pl$x$data)
+  # write_feather(n_pl, file.path(cachedir, 'n_pl'))
+  
+  # output$plotly_sensitivity = renderPlotly({
+  #   filagg_pl(
+  #     data_agg(),
+  #     plot_type = 'dynamic',
+  #     xaxis = input$xaxis,
+  #     yaxis = input$yaxis,
+  #     cutoff = input$cutoff
+  #   )
+  # })
+  output$npl = renderText('3')
+  # download ----------------------------------------------------------------
+  # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
+  output$download_fil = downloadHandler(
+    filename = function() {
+      paste(input$tax,
+            #input$habitat, input$continent,
+            paste0(input$dur1, input$dur2),
+            'data_fil.csv',
+            sep = '_')
+    },
+    content = function(fname) {
+      write.csv(data_fil(), fname, row.names = FALSE)
+    }
+  )
+  
+  output$download_agg = downloadHandler(
+    filename = function() {
+      paste(input$tax,
+            #input$habitat, input$continent,
+            paste0(input$dur1, input$dur2),
+            'data_agg.csv',
+            sep = '_')
+    },
+    content = function(fname) {
+      write.csv(data_agg(), fname, row.names = FALSE)
+    }
+  )
+  
+  # version -----------------------------------------------------------------
+  output$version = renderText(version_string)
+  
+}
+
+# app ---------------------------------------------------------------------
+shinyApp(ui = ui, server = server)
+
+
+
+

@@ -1,120 +1,77 @@
 # function to filter data according to user's inputs
 
-# function ----------------------------------------------------------------
-fun_filter = function(dt, 
-                      tax = NULL,
-                      habitat = NULL,
-                      continent = NULL,
-                      conc_type = NULL,
-                      effect = NULL,
-                      endpoint = NULL,
-                      chem_class = NULL,
-                      duration = NULL,
-                      year = NULL,
-                      chck_solub = FALSE,
-                      cas = NULL) {
+fun_filter = function(dt,
+                      cas_ = NULL,
+                      conc1_type_ = NULL,
+                      chemical_class_ = NULL,
+                      taxa_ = NULL,
+                      habitat_ = NULL,
+                      region_ = NULL,
+                      duration_ = NULL,
+                      publ_year_ = NULL, # TODO
+                      acch_ = NULL, # TODO
+                      exposure_ = NULL, # TODO
+                      effect_ = NULL,
+                      endpoint_ = NULL,
+                      chck_solub_ = FALSE # TODO
+                      ) {
   
   # debug me!
   # source('R/setup.R')
-  # tests_fin = readRDS(file.path(datadir, 'tests_fin.rds'))
-  # dt = tests_fin; cas = NULL; habitat = 'hab_fresh'; continent = 'reg_europe'; tax = c('Daphniidae', 'Algae'); duration = c(24,48); year = c(1900,2019); effect = NULL; endpoint = 'XX50'; chem_class = c('cgr_herbicide'); conc_type = 'A'; comp = 'comp_name'; agg = c('min', 'max'); info = 'taxa'; chck_solub = FALSE; chck_outl = FALSE
-  
-  # CAS ---------------------------------------------------------------------
-  if (!is.null(cas)) {
-    casnr_todo = casconv(cas, direction = 'tocasnr')
-    dt = dt[ casnr %in% casnr_todo ]
-  }
+  # dt = read_fst('/home/scharmueller/Projects/etox-base-shiny/data/20190314/standartox20190314.fst')
+  # conc1_type = NULL; chemical_class = 'ccl_herbicide'; tax = NULL; habitat = 'hab_freshwater'; region = 'reg_europe'; duration_ = c(24,48); publ_year = NULL; acch = NULL; exposure = NULL; effect = NULL; endpoint = NULL; chck_solub = NULL; cas = dt$casnr[1:10];
   
   # checks -----------------------------------------------------------------
   if (!is.data.frame(dt)) {
     stop('Input object is not a data.frame!')
   }
-  setDT(dt)
+  data.table::setDT(dt)
+  
+  # CAS ---------------------------------------------------------------------
+  if (!is.null(cas_)) {
+    casnr_todo = casconv(cas_, direction = 'tocasnr')
+    dt = dt[ casnr %in% casnr_todo ]
+  }
   
   # filters -----------------------------------------------------------------
-  # counter
-  # DEPRECATE?
-  dt_counter = list()
-  dt_counter[[1]] = data.table(Variable = 'all',
-                               N = nrow(dt))
-  
-  ## concentration type ----
-  if (is.null(conc_type)) {
-    dt = dt
+  if (!is.null(conc1_type_)) {
+    dt = dt[ conc1_type %in% conc1_type_ ]
+  }
+  if (!is.null(effect_)) {
+    dt = dt[ effect %in% effect_ ]
+  }
+  if (!is.null(endpoint_)) {
+    dt = dt[ endpoint %in% endpoint_ ]
+  }
+  if (!is.null(chemical_class_)) {
+    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = chemical_class_ ]]
+  }
+  if (!is.null(habitat_)) {
+    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = habitat_ ]]
+  }
+  if (!is.null(region_)) {
+    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = region_ ]]
+  }
+  if (!is.null(taxa_)) {
+    col_tax = grep('tax_', names(dt), ignore.case = TRUE, value = TRUE)
+    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', paste0(taxa_, collapse = '|')))), .SDcols = col_tax ]]
+  }
+  if (is.null(duration_)) {
+    dur = range(dt$obs_duration_mean2)
+  } else if (length(duration_) == 1) {
+    dur = rep(duration_, 2)
   } else {
-    dt = dt[ tes_conc_type %in% conc_type ]
-    dt_counter[[2]] = data.table('Concentration type', nrow(dt))
+    dur = duration_
   }
-  
-  ## effect group ----
-  if (is.null(effect)) {
-    dt = dt
+  dt = dt[ obs_duration_mean2 %between% dur ]
+  if (is.null(publ_year_)) {
+    yr = range(dt$publication_year)
+  } else if (length(publ_year_) == 1) {
+    yr = rep(publ_year_, 2)
   } else {
-    dt = dt[ tes_effect %in% effect ]
+    yr = publ_year_
   }
-  
-  ## endpoint ----
-  if (is.null(endpoint)) {
-    dt = dt
-  } else {
-    dt = dt[ tes_endpoint_grp %in% endpoint ]
-  }
-  
-  ## solubility check ----
-  if (chck_solub) {
-    dt = dt[ chck_solub_wat == TRUE ]
-  }
-  
-  ## chemical class ----
-  if (is.null(chem_class)) {
-    dt = dt
-  } else {
-    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = chem_class ]]
-  }
-  
-  ## habitat ----
-  if (is.null(habitat)) {
-    dt = dt
-    hab = 'n' # none
-  } else {
-    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = habitat ]]
-  }
-  
-  ## continent ----
-  if (is.null(continent)) {
-    dt = dt
-  } else {
-    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = continent ]]
-  }
-  
-  ## taxon ----
-  cols = grep('tax_', names(dt), ignore.case = TRUE, value = TRUE)
-  dt = dt[dt[ , Reduce(`|`, lapply(.SD, `%like%`, paste0('(?i)', paste0(tax, collapse = '|')))), .SDcols = cols ]]
-  
-  ## duration ----
-  if (is.null(duration)) {
-    dur = range(dt$obs_duration_mean_conv)
-  } else if (length(duration) == 1) {
-    dur = rep(duration, 2)
-  } else {
-    dur = duration
-  }
-  dt = dt[ obs_duration_mean_conv %between% dur ]
-  
-  ## year ----
-  if (is.null(year)) {
-    yr = range(dt$ref_publ_year)
-  } else if (length(year) == 1) {
-    yr = rep(year, 2)
-  } else {
-    yr = year
-  }
-  dt = dt[ ref_publ_year %between% yr ]
-  
-  # write dt all for plot function
-  #write_feather(dt, file.path(cache, 'dt.feather')) #! infinite recursion - problem with feather package
-  saveRDS(dt, file.path(cache, 'dt.rds'),
-          compress = FALSE)
+  dt = dt[ publication_year %between% yr ]
   
   return(dt)
 }
