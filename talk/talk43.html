@@ -44,14 +44,17 @@ class: title-slide
   - Pesticides
   - Personal care products
   - ...
+
+### Effect?
 ]
 
 .pull-right[
 
 Bernhardt et al. 2017
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/bernhardt_et_al_chem.png" width="260px"&gt;
+&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/bernhardt_et_al_chem.png" width="300px"&gt;
 
 ]
+
 
 ???
 light-red: diversity of US pharmaceuticals&lt;br&gt;
@@ -59,11 +62,12 @@ red: application of pesticides (globally and in the US)
 
 ---
 background-image: url(/home/scharmueller/Projects/etox-base/talk/data/stream.jpg)
-background-size: 375px
+background-size: 400px
 background-position: 90% 50%
 
 # Assessing the risk of chemicals
 
+.pull-left[
 - Regulatory thresholds
 
 - SPEAR
@@ -74,9 +78,9 @@ background-position: 90% 50%
 
   - `\(TU = \log10(\frac{concentration}{EC_{50}})\)`
 
---
-&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;br&gt;
 ### Toxicity Data?
+]
   
 ???
 Presenter notes can be put here!
@@ -120,7 +124,7 @@ Presenter notes can be put here!
 ---
 # US EPA ECOTOX ➡️ Standartox
 
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/organigram2.png" width="850px" style="position:absolute; left:10px; top:130px;"&gt;
+&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/organigram2.png" width="950px" style="position:absolute; left:10px; top:130px;"&gt;
 
 
 ---
@@ -157,8 +161,6 @@ Presenter notes can be put here!
 .pull-right[
 - Web tool / data base
 
-  - Prepares ecotoxicological test data + additional data
-  
   - Cleaning &amp; Harmonisation (e.g. units)
   
   - __Filters__ test results
@@ -322,8 +324,8 @@ Presenter notes can be put here!
 
 - standartox::
   - Application Programming Interface (API)
-  - scriptable
-  - __reproducible__
+  - Scriptable
+  - __Reproducible__
 
 
 ```r
@@ -333,9 +335,7 @@ standartox(cas = '52-68-6',
            endpoint = 'EC50',
            effect = 'MOR',
            duration = c(48, 96),
-           taxon = 'Oncorhynchus',
-           filtered = TRUE,
-           aggregated = TRUE)
+           taxon = 'Oncorhynchus mykiss')
 ```
 
 ---
@@ -355,7 +355,7 @@ __Ecotoxicology and Ecology need to embrace the computer age and data sources mu
 - ...demand big, scalable solutions
 
 
-&lt;img src="http://3.bp.blogspot.com/-Wpp0vCJQDHo/U_ZMorXEynI/AAAAAAAAA7Y/Y-f-3brn99k/s1600/GBIF_logo_short_form.gif" width="120px" style="position:absolute; bottom:20px; left:70px;"&gt;
+&lt;img src="http://3.bp.blogspot.com/-Wpp0vCJQDHo/U_ZMorXEynI/AAAAAAAAA7Y/Y-f-3brn99k/s1600/GBIF_logo_short_form.gif" width="100px" style="position:absolute; bottom:20px; left:70px;"&gt;
 
 &lt;img src="/home/scharmueller/Projects/etox-base/talk/data/logos/worms.png" width="250px" style="position:absolute; bottom:30px; left:260px;"&gt;
 

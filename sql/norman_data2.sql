@@ -31,66 +31,14 @@ SELECT
 ----------------------------------------------
 /* Categorisation */
   media_type_lookup.description_norman AS "nor16",
-  /*
-  CASE
-    WHEN tests.media_type ~* 'FW'
-      THEN 'freshwater'
-    WHEN tests.media_type ~* 'SW'
-      THEN 'saltwater'
-    WHEN tests.media_type ~* 'AQU|HYP'
-      THEN 'aqueous hydroponic'
-    WHEN tests.media_type ~* 'NAT|ART|UKS|MIN'
-      THEN 'soil'
-    WHEN tests.media_type ~* 'CUL'
-      THEN 'culture'
-    WHEN tests.media_type ~* 'FLT'
-      THEN 'filter paper'
-    WHEN tests.media_type ~* 'AGR'
-      THEN 'agar'
-    WHEN tests.media_type ~* 'LIT'
-      THEN 'litter'
-    WHEN tests.media_type ~* 'FAB'
-      THEN 'fabric'
-    WHEN tests.media_type ~* 'MAN'
-      THEN 'manure'
-    WHEN tests.media_type ~* 'MIX'
-      THEN 'media mixture'
-    WHEN tests.media_type ~* 'POP'
-      THEN 'plaster of paris'
-    WHEN tests.media_type ~* 'HUM'
-      THEN 'humus'
-    WHEN tests.media_type ~* 'SED'
-      THEN 'sediment'
-    WHEN tests.media_type ~* 'SLG'
-      THEN 'sludge'
-    WHEN tests.media_type ~* 'NONE'
-      THEN 'no substrate'
-    WHEN tests.media_type ~* 'NR|NC|--|UKN'
-      THEN 'not reported'
-    ELSE NULL
-  END AS "nor16" --! could also be done in a lookup table
-  */
   COALESCE(test_location_lookup.description_norman, 'not reported') AS "nor17", --Test type", 
   ac_cr.acute_chronic AS "nor18",
 
 ----------------------------------------------
 /* Test substance */
-  'TODO'::text AS "nor19",
+  norman_id_cas.normanid AS "nor19", -- Sustat ID
   coalesce(chemicals.chemical_name, 'not reported') AS "nor20",
-  tests.test_cas AS "nor21",
-/* TODO NORMAN SID
-  COALESCE(norman_sid_lookup.norman_id::text, 'not found') AS "nor19", --NORMAN Substance ID",
-  CASE
-    WHEN norman_sid_lookup.norman_id IS NOT NULL
-    THEN norman_sid_lookup.norman_name
-    ELSE chemicals.chemical_name
-    END AS "nor20", --NORMAN Substance name", ", 
-  CASE
-    WHEN norman_sid_lookup.norman_id IS NOT NULL
-    THEN norman_sid_lookup.norman_cas::text
-    ELSE chemicals.cas_number::text
-    END AS "nor21", --NORMAN CAS Number",
-END */
+  norman_id_cas.casnr_fixed2 AS "nor21",
   'n.a.'::text AS "nor22", --NORMAN EC Number",
   coalesce(coalesce(nullif(tests.test_purity_mean_op, ''), '=') || ' ' || clean(tests.test_purity_mean), 'not reported') AS "nor24", --Purity qualifier"
   'n.a.'::text AS "nor25", --Supplier of test item",
@@ -654,7 +602,7 @@ END */
 ----------------------------------------------
 /* Evaluation */
   CASE
-    WHEN results.endpoint LIKE '%*'
+    WHEN results.endpoint LIKE '%*' -- recoded to e.g. LC50 from TLM -- Edi probably assumed this to correspond to a biological response
       THEN 'no' 
     ELSE 'yes'
   END AS "nor130", --Each effect concentration explicitly related to a biological response",
@@ -680,11 +628,17 @@ END */
     ELSE lower(control_type_codes.description) 
   END AS "nor142",  -- control type
   lower(response_site_codes.description) AS "nor143", --Response site 
+  'n.a.'::text AS "nor144",
   -- inchikey
   -- desalted inchikey
   regexp_replace(current_database(), 'etox', 'epa_') || '_' || 'exp1' || '_clean' AS "nor147", -- Ecotox data set ID
   'n.a.'::text AS "nor148", -- Export row number
-  'n.a.'::text AS "nor149", -- Standard Test
+  ac_cr.standard_test AS "nor149", -- Standard Test
+  CASE
+    WHEN results.organism_final_wt_mean IN ('NR', 'NC', '', ' ', '--')
+      THEN 'not reported'
+    ELSE results.organism_final_wt_mean || ' ' || results.organism_final_wt_unit
+  END AS "nor150",
   to_date(tests.published_date, 'MM/DD/YYYY') AS "nor600"
 
 ---------------------------------------------------------------------------------------------------------------------
@@ -843,15 +797,15 @@ FROM
 ----------------------------------------------
   -- lookup tables
   LEFT JOIN ecotox.media_type_lookup ON tests.media_type = media_type_lookup.code
-  LEFT JOIN ecotox.lookup_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
+  LEFT JOIN lookup.lookup_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
   LEFT JOIN ecotox.test_location_lookup ON tests.test_location = test_location_lookup.code
   LEFT JOIN ecotox.ecotox_group_lookup ON species.ecotox_group = ecotox_group_lookup.ecotox_group
   LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
   LEFT JOIN ecotox.effect_lookup ON results.effect = effect_lookup.code
   LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
   LEFT JOIN ecotox.endpoint_lookup ON endpoint_lookup.code = results.endpoint
-  -- LEFT JOIN ecotox.norman_sid_lookup ON norman_sid_lookup.norman_casnr = tests.test_cas -- Peter provides this information soon!!
   LEFT JOIN ecotox.chemical_analysis_lookup ON chemical_analysis_lookup.code = results.chem_analysis_method
+  LEFT JOIN lookup.norman_id_cas ON tests.test_cas = norman_id_cas.casnr
   
 ----------------------------------------------
   -- 
@@ -892,6 +846,9 @@ WHERE
   AND clean(results.endpoint) IS NOT NULL
   AND clean(results.effect) IS NOT NULL
   AND duration_unit_lookup.remove != 'yes'
+  AND media_type_lookup.description_norman IN ('freshwater', 'saltwater')
+  -- AND norman_id_cas.normanid IS NOT NULL
+  AND norman_id_cas.casnr_fixed2 IS NOT NULL
 /*
 
 effect_lookup.description_norman NOT LIKE 'remove' 

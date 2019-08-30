@@ -19,14 +19,26 @@ mkdirs(dir) # TODO put this into export_tbl()
 ## data
 # as .fst object
 export_tbl(schema = 'standartox', table = 'data2', type = 'fst', debug = FALSE,
+           compress = FALSE,
            user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
            dir = dir, file_name = paste0('standartox', v))
+# as .fst object (compressed)
+export_tbl(schema = 'standartox', table = 'data2', type = 'fst', debug = FALSE,
+           compress = TRUE,
+           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+           dir = dir, file_name = paste0('standartox_comp', v))
 # as .feather object
 export_tbl(schema = 'standartox', table = 'data2', type = 'feather', debug = FALSE,
            user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
            dir = dir, file_name = paste0('standartox', v))
 # as .rds object
 export_tbl(schema = 'standartox', table = 'data2', type = 'rds', debug = FALSE,
+           compress = TRUE,
+           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+           dir = dir, file_name = paste0('standartox', v))
+# as .rda object
+export_tbl(schema = 'standartox', table = 'data2', type = 'rda', debug = FALSE,
+           compress = TRUE,
            user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
            dir = dir, file_name = paste0('standartox', v))
 # as .csv object

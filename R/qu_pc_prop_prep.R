@@ -7,6 +7,7 @@ source(file.path(src, 'gn_setup.R'))
 # Pubchem
 pc_prop_l = readRDS(file.path(cachedir, 'pc_prop_l.rds'))
 # CIR
+
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
 

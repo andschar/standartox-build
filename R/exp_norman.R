@@ -5,21 +5,24 @@ source(file.path(src, 'gn_setup.R'))
 
 # save --------------------------------------------------------------------
 ## raw data
+# TODO uncomment section
 # export_tbl(schema = 'norman', table = 'data1', type = 'csv',
 #            user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
 #            dir = file.path(normandir, 'export'))
 export_tbl(schema = 'norman', table = 'data1_newest', type = 'csv',
            user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
            dir = file.path(normandir, 'export'))
+# TODO uncomment section
 # export_tbl(schema = 'norman', table = 'data2', type = 'csv',
 #            user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
 #            dir = file.path(normandir, 'export'))
 export_tbl(schema = 'norman', table = 'data2_newest', type = 'csv',
            user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
            dir = file.path(normandir, 'export'))
-export_tbl(schema = 'norman', table = 'data2_removed', type = 'csv',
-           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-           dir = file.path(normandir, 'export'))
+# TODO uncomment section
+# export_tbl(schema = 'norman', table = 'data2_removed', type = 'csv',
+#            user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+#            dir = file.path(normandir, 'export'))
 export_tbl(schema = 'norman', table = 'variables', type = 'csv',
            user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
            dir = file.path(normandir, 'export'))

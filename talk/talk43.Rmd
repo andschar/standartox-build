@@ -56,14 +56,17 @@ class: title-slide
   - Pesticides
   - Personal care products
   - ...
+
+### Effect?
 ]
 
 .pull-right[
 
 Bernhardt et al. 2017
-<img src="/home/scharmueller/Projects/etox-base/talk/data/bernhardt_et_al_chem.png" width="260px">
+<img src="/home/scharmueller/Projects/etox-base/talk/data/bernhardt_et_al_chem.png" width="300px">
 
 ]
+
 
 ???
 light-red: diversity of US pharmaceuticals<br>
@@ -71,11 +74,12 @@ red: application of pesticides (globally and in the US)
 
 ---
 background-image: url(/home/scharmueller/Projects/etox-base/talk/data/stream.jpg)
-background-size: 375px
+background-size: 400px
 background-position: 90% 50%
 
 # Assessing the risk of chemicals
 
+.pull-left[
 - Regulatory thresholds
 
 - SPEAR
@@ -86,9 +90,9 @@ background-position: 90% 50%
 
   - $TU = \log10(\frac{concentration}{EC_{50}})$
 
---
-<br><br><br><br>
+<br>
 ### Toxicity Data?
+]
   
 ???
 Presenter notes can be put here!
@@ -132,7 +136,7 @@ Presenter notes can be put here!
 ---
 # US EPA ECOTOX ➡️ Standartox
 
-<img src="/home/scharmueller/Projects/etox-base/talk/data/organigram2.png" width="850px" style="position:absolute; left:10px; top:130px;">
+<img src="/home/scharmueller/Projects/etox-base/talk/data/organigram2.png" width="950px" style="position:absolute; left:10px; top:130px;">
 
 
 ---
@@ -169,8 +173,6 @@ Presenter notes can be put here!
 .pull-right[
 - Web tool / data base
 
-  - Prepares ecotoxicological test data + additional data
-  
   - Cleaning & Harmonisation (e.g. units)
   
   - __Filters__ test results
@@ -305,7 +307,7 @@ gg_trichlorofon
 ---
 # Example: All chemicals
 
-```{r fig.width=10, fig.height=7, echo=FALSE, warning=FALSE, message=FALSE}
+```{r fig.width=11, fig.height=7, echo=FALSE, warning=FALSE, message=FALSE}
 gg_comparison = readRDS(file.path(datadir_tk, 'gg_oncor_mykiss_standartox_output.rds'))
 gg_comparison
 ```
@@ -313,7 +315,7 @@ gg_comparison
 ---
 # Comparison: PPDB
 
-```{r fig.width=10, fig.height=7, echo=FALSE, warning=FALSE, message=FALSE}
+```{r fig.width=11, fig.height=7, echo=FALSE, warning=FALSE, message=FALSE}
 gg_comparison = readRDS(file.path(datadir_tk, 'gg_oncor_mykiss_standartox_ppdb_comparison.rds'))
 gg_comparison
 ```
@@ -352,8 +354,8 @@ gg_comparison
 
 - standartox::
   - Application Programming Interface (API)
-  - scriptable
-  - __reproducible__
+  - Scriptable
+  - __Reproducible__
 
 ```{r eval=FALSE}
 require(standartox)
@@ -362,9 +364,7 @@ standartox(cas = '52-68-6',
            endpoint = 'EC50',
            effect = 'MOR',
            duration = c(48, 96),
-           taxon = 'Oncorhynchus',
-           filtered = TRUE,
-           aggregated = TRUE)
+           taxon = 'Oncorhynchus mykiss')
 ```
 
 ---
@@ -384,7 +384,7 @@ __Ecotoxicology and Ecology need to embrace the computer age and data sources mu
 - ...demand big, scalable solutions
 
 
-<img src="http://3.bp.blogspot.com/-Wpp0vCJQDHo/U_ZMorXEynI/AAAAAAAAA7Y/Y-f-3brn99k/s1600/GBIF_logo_short_form.gif" width="120px" style="position:absolute; bottom:20px; left:70px;">
+<img src="http://3.bp.blogspot.com/-Wpp0vCJQDHo/U_ZMorXEynI/AAAAAAAAA7Y/Y-f-3brn99k/s1600/GBIF_logo_short_form.gif" width="100px" style="position:absolute; bottom:20px; left:70px;">
 
 <img src="/home/scharmueller/Projects/etox-base/talk/data/logos/worms.png" width="250px" style="position:absolute; bottom:30px; left:260px;">
 

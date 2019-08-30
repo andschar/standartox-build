@@ -42,9 +42,9 @@ if (build_db) {
   # build
   source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl) # TODO rethink structure
   # DB roles
-  source(file.path(src, 'bd_postgres_roles.R'), max.deparse.length = mdl) # TODO  rethink structure
+  # TODO source(file.path(src, 'bd_postgres_roles.R'), max.deparse.length = mdl) # TODO  rethink structure
   # Permissions
-  source(file.path(src, 'bd_postgres_permissions.R', max_deparse.length = mdl)) # TODO rethink structure
+  # TODO source(file.path(src, 'bd_postgres_permissions.R', max_deparse.length = mdl)) # TODO rethink structure
   # functions
   source(file.path(src, 'bd_sql_functions.R'), max.deparse.length = mdl)
   # errata
@@ -113,11 +113,11 @@ if (export) {
 
 # backup ------------------------------------------------------------------
 if (general) {
-  source(file.path(src, 'gn_backup.R'))
+  source(file.path(src, 'gn_backup.R'), max.deparse.length = mdl)
 }
 
 # end ---------------------------------------------------------------------
-source(file.path(src, 'gn_end.R'))
+source(file.path(src, 'gn_end.R'), max.deparse.length = mdl)
 
 # # (0b) console log 2 --------------------------------------------------------
 if (sink_console) {
