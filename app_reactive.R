@@ -2,8 +2,7 @@
 # this app allows to choose between versions of the EPA ECOTOX
 
 # setup -------------------------------------------------------------------
-source('R/setup.R')
-# variables
+source('setup.R')
 sidewidth = 350
 
 # header ------------------------------------------------------------------
@@ -119,9 +118,8 @@ sidebar = dashboardSidebar(
     menuItem(
       'Checks',
       tabName = 'checks',
-      prettyCheckbox(inputId = 'chck_solub', label = 'Water solubility check'),
       prettyCheckbox(
-        inputId = 'chck_outlier',
+        inputId = 'rm_outl',
         label = 'Remove outliers',
         value = TRUE
       )
@@ -151,15 +149,23 @@ rightsidebar = rightSidebar()
 # body --------------------------------------------------------------------
 body = dashboardBody(#setShadow(class = "dropdown-menu"),
   #tags$head(includeCSS('style.css')),
+  br(),
+  br(),
+  br(),
   fluidRow(
     box(
-      title = 'Standartox',
       status = 'success',
-      width = 12,
+      width = 9,
       collapsible = TRUE,
-      withMathJax(includeMarkdown('README.md'))
-    )
-    # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
+      withMathJax(includeMarkdown('README.md')) # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
+    )#,
+    # box(
+    #   title = 'Information',
+    #   status = 'success',
+    #   width = 3,
+    #   collapsible = TRUE,
+    #   uiOutput('meta')
+    # )
   ),
   fluidRow(
     box(
@@ -190,12 +196,12 @@ body = dashboardBody(#setShadow(class = "dropdown-menu"),
     )
   ),
   fluidRow(
-    # box(
-    #   title = 'Plotly Sensitivity',
-    #   status = 'primary',
-    #   width = 9,
-    #   plotlyOutput(outputId = 'plotly_sensitivity')
-    # ),
+    box(
+      title = 'Plotly Sensitivity',
+      status = 'primary',
+      width = 9,
+      plotlyOutput(outputId = 'plotly')
+    ),
     #,
     #height = sprintf('%spx', n_pl * 400))),
     box(
@@ -458,7 +464,6 @@ server = function(input, output, session) {
       exposure = input$exposure,
       effect = input$effect,
       endpoint = input$endpoint,
-      chck_solub = input$chck_solub,
       cas = rv$data
     )
   })
@@ -479,13 +484,12 @@ server = function(input, output, session) {
         exposure = input$exposure,
         effect = input$effect,
         endpoint = input$endpoint,
-        chck_solub = input$chck_solub,
         cas = rv$data
       ),
       agg = input$agg,
       info = input$infocols,
       comp = input$comp,
-      chck_outlier = input$chck_outlier
+      rm_outl = input$rm_outl
     )
   })
 
@@ -508,20 +512,15 @@ server = function(input, output, session) {
 
 
   # plot --------------------------------------------------------------------
-  #pl =
-  # n_pl = length(pl$x$data)
-  # write_feather(n_pl, file.path(cachedir, 'n_pl'))
-
-  # output$plotly_sensitivity = renderPlotly({
-  #   filagg_pl(
-  #     data_agg(),
-  #     plot_type = 'dynamic',
-  #     xaxis = input$xaxis,
-  #     yaxis = input$yaxis,
-  #     cutoff = input$cutoff
-  #   )
-  # })
-  output$npl = renderText('3')
+  output$plotly = renderPlotly({
+    plotly_fin(
+      agg = data_agg(),
+      fil = data_fil(),
+      xaxis = input$xaxis,
+      yaxis = input$yaxis,
+      cutoff = input$cutoff
+    )
+  })
   # download ----------------------------------------------------------------
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
   output$download_fil = downloadHandler(

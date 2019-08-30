@@ -41,7 +41,9 @@ pacman::p_load(char = pkg_cran)
 # p_update() #! do this manually, as unexpected consequences might occur
 
 # options -----------------------------------------------------------------
-options(stringsAsFactors = FALSE)
+options(stringsAsFactors = FALSE,
+        shiny.reactlog = TRUE,
+        shiny.trace = TRUE)
 
 # variables ---------------------------------------------------------------
 # /etox-base-shiny
@@ -56,8 +58,8 @@ article = file.path(prj_data, 'article')
 # functions
 source(file.path(fundir, 'fun_filter.R'))
 source(file.path(fundir, 'fun_aggregation.R'))
-source(file.path(fundir, 'fun_ssd.R'))
-source(file.path(fundir, 'fun_filagg_plot_ly.R'))
+# TODO source(file.path(fundir, 'fun_ssd.R'))
+source(file.path(fundir, 'fun_plotly.R'))
 source(file.path(fundir, 'fun_outliers.R'))
 source(file.path(fundir, 'fun_geometric_mean.R'))
 
@@ -68,9 +70,10 @@ source(file.path(fundir, 'fun_casconv.R'))
 # plot themes
 source(file.path(src, 'gg_theme.R'))
 
-# variables ---------------------------------------------------------------
-epa_versions = list.files(datadir, pattern = '[0-9]', recursive = FALSE)
-epa_versions = gsub('-', '', gsub('([0-9]{4})([0-9]{2})([0-9]{2})', '\\1-\\2-\\3', epa_versions))
+# versions ----------------------------------------------------------------
+epa_versions = list.dirs(datadir, full.names = FALSE)
+epa_versions = epa_versions[ epa_versions != '' ]
+epa_versions_newest = max(epa_versions)
 
 # cite packages -----------------------------------------------------------
 for (i in pkg_cran) {
