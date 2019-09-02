@@ -35,7 +35,7 @@ Summary output from data base table __`r paste0(schema, '.', table)`__
 ```{r echo=FALSE, message=FALSE}
 # schema = 'norman'
 # table = 'data2_newest'
-# cols = c('nor88test', 'nor88')
+# cols = c('nor85', 'nor88')
 
 ## table
 tab = summary_db_all(schema = schema, table = table)
@@ -93,6 +93,7 @@ mapply(gg_summary,
 ```
 
 ```{r write, echo=FALSE, message=FALSE}
+# write summary to multiple csv
 unlink(dir, recursive = TRUE)
 mkdirs(dir)
 for (i in seq_along(l)) {
@@ -103,6 +104,14 @@ for (i in seq_along(l)) {
   message('Writing: ', fl)
   fwrite(dat, fl)
 }
+```
+
+```{r write-single-file, message=FALSE}
+# write summary to single file
+dat = cbind_fill(dflist = l, limit = NULL)
+names(dat)[ seq(1, length(names(dat)), 2) + 1 ] = paste0(names(dat)[ seq(1, length(names(dat)), 2) ], '_n')
+
+fwrite(dat, file.path(params$output_dir, paste0(params$table, '_summary.csv')))
 ```
 
 
