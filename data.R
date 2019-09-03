@@ -8,7 +8,7 @@ Sys.time() - time
 # list all taxa for auto completion
 taxa_all_list = sort(unique(unlist(dat[ , .SD, .SDcols = grep('tax_', names(dat)) ])))
 # meta data
-stat_l = read_fst(file.path(datadir, epa_versions_newest, paste0('standartox', epa_versions_newest, '_shiny_stats.fst')))
+stat_l = readRDS(file.path(datadir, epa_versions_newest, paste0('standartox', epa_versions_newest, '_shiny_stats.rds')))
 
 # time = Sys.time()
 # dat = read_feather(file.path(export, 'standartox.feather'))
@@ -23,4 +23,3 @@ stat_l = read_fst(file.path(datadir, epa_versions_newest, paste0('standartox', e
 # Sys.time() - time
 # 
 
-t = read_fst('/home/scharmueller/Projects/etox-base-shiny/data/20190314/standartox20190314_shiny_stats.fst')
