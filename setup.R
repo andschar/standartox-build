@@ -32,7 +32,9 @@ pkg_cran = c(
   'DT',
   'plotly',
   'ssdtools',
-  'reactlog'
+  'reactlog',
+  # API
+  'plumber'
 )
 
 pacman::p_load(char = pkg_cran)
