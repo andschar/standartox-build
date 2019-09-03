@@ -1,9 +1,13 @@
 # Standartox app reactive
-# this app allows to choose between versions of the EPA ECOTOX
+# this app allows only uses the newest version of the EPA ECOTOX
 
 # setup -------------------------------------------------------------------
 source('setup.R')
+# variables
 sidewidth = 350
+
+# data --------------------------------------------------------------------
+source('data.R')
 
 # header ------------------------------------------------------------------
 header = dashboardHeaderPlus(
@@ -25,20 +29,11 @@ header = dashboardHeaderPlus(
 sidebar = dashboardSidebar(
   width = sidewidth,
   sidebarMenu(
-    'Version',
-    id = 'sidebar_version',
-    menuItem(
-      'EPA ECOTOX Version',
-      tabName = 'data_set',
-      uiOutput(outputId = 'data_set')
-    )
-  ),
-  sidebarMenu(
     'Filters',
     id = 'sidebar_filter',
     menuItem(
-      'Compound',
-      tabName = 'compound',
+      'Chemical',
+      tabName = 'chemical',
       splitLayout(
         fileInput(
           inputId = 'file_cas',
@@ -52,15 +47,44 @@ sidebar = dashboardSidebar(
           style = 'margin-top:37px'
         )
       ),
-      uiOutput(outputId = 'rend_conc1_type'),
-      uiOutput(outputId = 'rend_chemical_class')
+      prettyCheckboxGroup(
+        inputId = 'conc1_type',
+        label = 'Concentration type',
+        choiceValues = stat_l$conc1_type$value,
+        choiceNames = stat_l$conc1_type$name_perc,
+        selected = grep('active.ingredien', stat_l$conc1_type$value, ignore.case = TRUE, value = TRUE)[1]
+      ),
+      prettyCheckboxGroup(
+        inputId = 'chemical_class',
+        label = 'Chemical class',
+        choiceValues = stat_l$chemical_class$value,
+        choiceNames = stat_l$chemical_class$name_perc,
+        selected = NULL
+      )
     ),
     menuItem(
       'Taxon',
       tabName = 'taxon',
-      uiOutput(outputId = 'rend_taxa'),
-      uiOutput(outputId = 'rend_habitat'),
-      uiOutput(outputId = 'rend_region')
+      selectizeInput(inputId = 'tax',
+                     label = 'Taxa',
+                     choices = taxa_all_list,
+                     selected = NULL,
+                     multiple = TRUE,
+                     options = list(create = FALSE)),
+      prettyCheckboxGroup(
+        inputId = 'habitat',
+        label = 'Organism hatbitat',
+        choiceValues = stat_l$habitat$value,
+        choiceNames = stat_l$habitat$name_perc,
+        selected = grep('fresh', stat_l$habitat$value, ignore.case = TRUE, value = TRUE)[1]
+      ),
+      prettyCheckboxGroup(
+        inputId = 'region',
+        label = 'Continent',
+        choiceValues = stat_l$region$value,
+        choiceNames = stat_l$region$name_perc,
+        selected = grep('europe', stat_l$region$value, ignore.case = TRUE, value = TRUE)[1]
+      )
     ),
     menuItem(
       'Test',
@@ -77,42 +101,56 @@ sidebar = dashboardSidebar(
           value = 48
         )
       ),
-      splitLayout(
-        numericInput(
-          inputId = 'yr1',
-          label = 'Publication year from',
-          value = 1900
-        ),
-        numericInput(
-          inputId = 'yr2',
-          label = 'to',
-          value = substr(Sys.Date(),1,4)
-        )
-      ),
+      # TODO
+      # splitLayout(
+      #   numericInput(
+      #     inputId = 'yr1',
+      #     label = 'Publication year from',
+      #     value = 1900
+      #   ),
+      #   numericInput(
+      #     inputId = 'yr2',
+      #     label = 'to',
+      #     value = substr(Sys.Date(),1,4)
+      #   )
+      # ),
+      # splitLayout(
+      #   prettyCheckboxGroup(
+      #     inputId = 'acch',
+      #     label = 'TODO! Acute / Chronic',
+      #     # TODO take choices programatically!
+      #     choiceValues = c('acute', 'chronic', 'nc'),
+      #     choiceNames = c('acute', 'chronic', 'not classified')
+      #   ),
+      #   prettyCheckboxGroup(
+      #     inputId = 'exposure', # exposure_type
+      #     label = 'TODO! Exposure',
+      #     choiceValues = c('diet', 'static'),
+      #     choiceNames = c('diet', 'static')
+      #   )
+      # ),
+      # prettyRadioButtons(
+      #   inputId = 'test_location',
+      #   label = 'Test location',
+      #   choiceValues = stat_l$test_location$value,
+      #   choiceNames = stat_l$test_location$value
+      # ),
+      ### END TODO
       splitLayout(
         prettyCheckboxGroup(
-          inputId = 'acch',
-          label = 'TODO! Acute / Chronic',
-          # TODO take choices programatically!
-          choiceValues = c('acute', 'chronic', 'nc'),
-          choiceNames = c('acute', 'chronic', 'not classified')
+          inputId = 'effect',
+          label = 'Effect group',
+          choiceValues = stat_l$effect$value,
+          choiceNames = stat_l$effect$name_perc,
+          selected = c('MOR', 'POP', 'GRO', 'ITX')
         ),
-        prettyCheckboxGroup(
-          inputId = 'exposure', # exposure_type
-          label = 'TODO! Exposure',
-          choiceValues = c('diet', 'static'),
-          choiceNames = c('diet', 'static')
+        prettyRadioButtons(
+          inputId = 'endpoint',
+          label = 'Endpoint',
+          choiceValues = stat_l$endpoint$value,
+          choiceNames = stat_l$endpoint$name_perc,
+          selected = c('XX50')
         )
-      ),
-      prettyRadioButtons(
-        inputId = 'test_location',
-        label = 'Test location',
-        choiceValues = stat_l$test_location$value,
-        choiceNames = stat_l$test_location$value
-      ),
-      splitLayout(
-        uiOutput(outputId = 'rend_effect'),
-        uiOutput(outputId = 'rend_endpoint')
       )
     ),
     menuItem(
@@ -130,7 +168,7 @@ sidebar = dashboardSidebar(
     id = 'sidebar_agg',
     icon = icon('list-alt'),
     menuItem(
-      'Aggregation',
+      'Method',
       tabName = 'aggregation',
       prettyCheckboxGroup(
         inputId = 'agg',
@@ -142,7 +180,6 @@ sidebar = dashboardSidebar(
     )
   )
 )
-
 
 rightsidebar = rightSidebar()
 
@@ -180,11 +217,11 @@ body = dashboardBody(#setShadow(class = "dropdown-menu"),
       status = 'primary',
       width = 3,
       prettyCheckboxGroup(
-        inputId = 'comp',
-        label = 'Compound columns',
-        choiceValues = c('cname', 'comp_type'),
-        choiceNames = c('Compound name', 'Compound type'),
-        selected = c('cas', 'cname')
+        inputId = 'chemical',
+        label = 'Chemical columns',
+        choiceValues = c('casnr', 'cname'),
+        choiceNames = c('CAS', 'Chemical name'),
+        selected = c('casnr', 'cname')
       ),
       prettyCheckboxGroup(
         inputId = 'infocols',
@@ -210,7 +247,7 @@ body = dashboardBody(#setShadow(class = "dropdown-menu"),
       width = 3,
       numericInput(
         inputId = 'cutoff',
-        label = 'Number of compounds',
+        label = 'Number of chemicals',
         value = 25,
         width = '120px'
       ),
@@ -218,89 +255,7 @@ body = dashboardBody(#setShadow(class = "dropdown-menu"),
         inputId = 'yaxis',
         label = 'y-axis',
         choiceValues = c('casnr', 'cname'),
-        choiceNames = c('CAS', 'Compound name'),
-        selected = 'casnr',
-        inline = FALSE
-      ),
-      prettyRadioButtons(
-        inputId = 'xaxis',
-        label = 'x-axis',
-        choiceValues = c('limout', 'log'),
-        choiceNames = c('Limit to range', 'Log x-axis'),
-        selected = 'limout',
-        inline = FALSE
-      )
-    )
-  )
-)
-
-rightsidebar = rightSidebar()
-
-
-body = dashboardBody(#setShadow(class = "dropdown-menu"),
-  #tags$head(includeCSS('style.css')),
-  fluidRow(
-    box(
-      title = 'Standartox',
-      status = 'success',
-      width = 12,
-      collapsible = TRUE,
-      withMathJax(includeMarkdown('README.md'))
-    )
-    # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
-  ),
-  fluidRow(
-    box(
-      title = 'Aggregated values',
-      status = 'primary',
-      dataTableOutput(outputId = 'tab'),
-      width = 9,
-      offset = 0
-    ),
-    box(
-      title = 'Inputs',
-      status = 'primary',
-      width = 3,
-      prettyCheckboxGroup(
-        inputId = 'comp',
-        label = 'Compound columns',
-        choiceValues = c('cname', 'comp_type'),
-        choiceNames = c('Compound name', 'Compound type'),
-        selected = c('cas', 'cname')
-      ),
-      prettyCheckboxGroup(
-        inputId = 'infocols',
-        label = 'Information columns',
-        choiceValues = c('info', 'taxa', 'vls', 'n'),
-        choiceNames = c('info', 'taxa', 'values', 'n'),
-        selected = 'taxa'
-      )
-    )
-  ),
-  fluidRow(
-    # box(
-    #   title = 'Plotly Sensitivity',
-    #   status = 'primary',
-    #   width = 9,
-    #   plotlyOutput(outputId = 'plotly_sensitivity')
-    # ),
-    #,
-    #height = sprintf('%spx', n_pl * 400))),
-    box(
-      title = 'Inputs',
-      status = 'primary',
-      width = 3,
-      numericInput(
-        inputId = 'cutoff',
-        label = 'Number of compounds',
-        value = 25,
-        width = '120px'
-      ),
-      prettyRadioButtons(
-        inputId = 'yaxis',
-        label = 'y-axis',
-        choiceValues = c('casnr', 'cname'),
-        choiceNames = c('CAS', 'Compound name'),
+        choiceNames = c('CAS', 'chemical name'),
         selected = 'casnr',
         inline = FALSE
       ),
@@ -324,93 +279,8 @@ ui = dashboardPagePlus(header, sidebar, body,
 
 # server ------------------------------------------------------------------
 server = function(input, output, session) {
-
-  # data --------------------------------------------------------------------
-  ## data
-  dat = reactive({
-    v = input$version
-    # v = 20190314 # debuging
-    fl = file.path('data', v, paste0('standartox', v, '.fst'))
-    dat = data.table(read_fst(fl))
-    
-    return(dat)
-  })
-  # all taxa list
-  taxa_all_list = reactive({
-    sort(unique(unlist(dat()[ , .SD, .SDcols = grep('tax_', names(dat())) ])))
-  })
-  ## meta data
-  stat_l = reactive({
-    v = input$version
-    # v = 20190314 # debuging
-    fl = file.path('data', v, paste0('standartox', v, '_shiny_stats', '.rds'))
-    stat_l = readRDS(fl)
-    
-    return(stat_l)
-  })
+  
   # renderUI ----------------------------------------------------------------
-  ## version
-  output$data_set = renderUI({
-    selectInput(inputId = 'version',
-                label = 'Version',
-                choices = epa_versions,
-                selected = max(epa_versions))
-  })
-  ## render filters
-  output$rend_conc1_type = renderUI({
-    prettyCheckboxGroup(
-      inputId = 'conc1_type',
-      label = 'Concentration type',
-      choiceValues = stat_l()$conc1_type$value,
-      choiceNames = stat_l()$conc1_type$name_perc,
-      selected = stat_l()$conc1_type$value[1]
-    )
-  })
-  output$rend_chemical_class = renderUI({
-    prettyCheckboxGroup(
-      inputId = 'chemical_class',
-      label = 'Chemical class',
-      choiceValues = stat_l()$chemical_class$value,
-      choiceNames = stat_l()$chemical_class$name_perc,
-      selected = stat_l()$chemical_class$value[1]
-    )
-  })
-  output$rend_habitat = renderUI({
-    prettyCheckboxGroup(
-      inputId = 'habitat',
-      label = 'Organism hatbitat',
-      choiceValues = stat_l()$habitat$value,
-      choiceNames = stat_l()$habitat$name_perc,
-      selected = stat_l()$habitat$value[1]
-    )
-  })
-  output$rend_region = renderUI({
-    prettyCheckboxGroup(
-      inputId = 'region',
-      label = 'Continent',
-      choiceValues = stat_l()$region$value,
-      choiceNames = stat_l()$region$name_perc,
-      selected = stat_l()$region$value[1]
-    )
-  })
-  output$rend_effect = renderUI({
-    prettyCheckboxGroup(
-      inputId = 'effect',
-      label = 'Effect group',
-      choiceValues = stat_l()$effect$value,
-      choiceNames = stat_l()$effect$name_perc,
-      selected = c('MOR', 'POP', 'GRO', 'ITX')
-    )
-  })
-  output$rend_endpoint = renderUI({
-    prettyRadioButtons(
-      inputId = 'endpoint',
-      label = 'Endpoint',
-      choiceValues = stat_l()$endpoint$value,
-      choiceNames = stat_l()$endpoint$name_perc,
-      selected = c('XX50')
-    )
-  })
   # handle multiple inputs
   taxa_input = reactive({
     input_tax = input$tax
@@ -421,14 +291,6 @@ server = function(input, output, session) {
     
     return(input_tax)
   })
-  output$rend_taxa = renderUI({
-    selectizeInput(inputId = 'tax',
-                   label = 'Taxa',
-                   choices = taxa_all_list(),
-                   selected = NULL,
-                   multiple = TRUE,
-                   options = list(create = FALSE))
-  })
   # read csv + action button ------------------------------------------------
   # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
   rv = reactiveValues(data = NULL,
@@ -436,7 +298,7 @@ server = function(input, output, session) {
   observe({
     req(input$file_cas)
     req(!rv$reset)
-
+    
     data = read.csv(input$file_cas$datapath,
                     header = FALSE,
                     stringsAsFactors = FALSE) # $datapath not very intuitive
@@ -452,7 +314,7 @@ server = function(input, output, session) {
   # filter ------------------------------------------------------------------
   data_fil = reactive({
     fun_filter(
-      dt = dat(),
+      dt = dat,
       conc1_type = input$conc1_type,
       chemical_class = input$chemical_class,
       tax = taxa_input(),
@@ -467,12 +329,11 @@ server = function(input, output, session) {
       cas = rv$data
     )
   })
-
   # aggregate ---------------------------------------------------------------
   data_agg = reactive({
     fun_aggregate(
       dt = fun_filter(
-        dt = dat(),
+        dt = dat,
         conc1_type = input$conc1_type,
         chemical_class = input$chemical_class,
         tax = taxa_input(),
@@ -488,11 +349,15 @@ server = function(input, output, session) {
       ),
       agg = input$agg,
       info = input$infocols,
-      comp = input$comp,
+      comp = input$chemical,
       rm_outl = input$rm_outl
     )
   })
-
+  # debuging
+  # output$debug = eventReactive({
+  #   saveRDS(data_fil(), '/tmp/data_fil')
+  #   saveRDS(data_agg(), '/tmp/data_agg')
+  # })
   # table -------------------------------------------------------------------
   output$tab = DT::renderDataTable({
     data_agg()
@@ -509,8 +374,8 @@ server = function(input, output, session) {
   #dom = 't',
   rownames = FALSE,
   callback = JS('table.page(3).draw(false);'))
-
-
+  
+  
   # plot --------------------------------------------------------------------
   output$plotly = renderPlotly({
     plotly_fin(
@@ -535,7 +400,7 @@ server = function(input, output, session) {
       write.csv(data_fil(), fname, row.names = FALSE)
     }
   )
-
+  
   output$download_agg = downloadHandler(
     filename = function() {
       paste(input$tax,
@@ -548,7 +413,15 @@ server = function(input, output, session) {
       write.csv(data_agg(), fname, row.names = FALSE)
     }
   )
-
+  # markdown ----------------------------------------------------------------
+  # output$readme = renderUI({
+  #   HTML(markdown::markdownToHTML(knit('README.Rmd', quiet = TRUE)))
+  # })
+  output$meta = renderUI({
+    HTML(markdown::markdownToHTML(knit('meta.Rmd', quiet = TRUE)))
+  })
+  
+  
   # version -----------------------------------------------------------------
   output$version = renderText(version_string)
   
