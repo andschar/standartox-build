@@ -26,7 +26,6 @@ pkg_cran = c(
   'shiny',
   'shinyjs',
   'shinyWidgets', # pretty stuff
-  'shinysky', # autocomplete text input
   'shinydashboard',
   'shinydashboardPlus',
   'knitr',
