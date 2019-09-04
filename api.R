@@ -33,7 +33,7 @@ function(req) {
   # version_epa1 <<- req$args$version_epa # debuging
   # version_epa = req$args$version_epa
   # version_epa <<- version_epa # debuging
-  v = req_debug$args$version_epa
+  v = req$args$version_epa
   
   if (is.null(v)) {
     req$args$version_epa2 = max(dirs)
@@ -123,7 +123,7 @@ function(version_epa = NULL,
   duration = abs(na.omit(as.integer(as.numeric(duration))))
   
   # data
-  v = req_debug$args$version_epa
+  v = req$args$version_epa
   if (is.null(v)) {
     v2 = max(dirs)
   } else {
