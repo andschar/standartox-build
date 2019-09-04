@@ -118,12 +118,14 @@ function(version_epa = NULL,
          # acch = NULL,
          # exposure = NULL,
          ) {
+  # browser() # debuging
   
   # conversions
   duration = abs(na.omit(as.integer(as.numeric(duration))))
   
   # data
-  v = req$args$version_epa
+  dirs = list.dirs('data', recursive = FALSE, full.names = FALSE)
+  v = version_epa
   if (is.null(v)) {
     v2 = max(dirs)
   } else {
