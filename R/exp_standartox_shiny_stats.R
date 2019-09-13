@@ -14,23 +14,27 @@ cols = c('effect', 'endpoint', 'conc1_type', 'test_location', 'obs_duration_mean
          grep('reg_', header, value = TRUE),
          grep('ccl_', header, value = TRUE))
 # loop
+con = DBI::dbConnect(RPostgreSQL::PostgreSQL(),
+                     dbname = DBetox,
+                     host = DBhost,
+                     port = DBport,
+                     user = DBuser,
+                     password = DBpassword)
+
 l = list()
 for (i in seq_along(cols)) {
   
   col = cols[i]
   message('Fetching: ', col)
-  con = DBI::dbConnect(RPostgreSQL::PostgreSQL(),
-                       dbname = DBetox,
-                       host = DBhost,
-                       port = DBport,
-                       user = DBuser,
-                       password = DBpassword)
+  
   dat = summary_db_perc(con, 'standartox', 'data2', col)
   setDT(dat)
   
   l[[i]] = dat
   names(l)[i] = col
 }
+
+DBI::dbDisconnect(con)
 
 # preparation -------------------------------------------------------------
 stat = rbindlist(l, idcol = TRUE)
@@ -49,8 +53,10 @@ stat_l = split(stat, stat$variable)
 stat_l$obs_duration_mean2 = stat_l$obs_duration_mean2[ , range(na.omit(as.numeric(value))) ]
 
 # write -------------------------------------------------------------------
-saveRDS(stat_l, file.path(exportdir, v, paste0('standartox', v, '_shiny_stats.rds')))
-save(stat_l, file = file.path(exportdir, v, paste0('standartox', v, '_shiny_stats.rda'))) # for standartox::
+# TODO can't be read from R 3.4 (changed with 3.5)
+saveRDS(stat_l, file.path(exportdir, v, paste0('standartox', v, '_shiny_stats.rds')),
+        version = 2) # TODO change the server R version
+# TODO if API doesn t work save(stat_l, file = file.path(exportdir, v, paste0('standartox', v, '_shiny_stats.rda'))) # for standartox::
 
 # log ---------------------------------------------------------------------
 log_msg('Export: application summary stats exported')

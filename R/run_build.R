@@ -116,6 +116,10 @@ if (general) {
   source(file.path(src, 'gn_backup.R'), max.deparse.length = mdl)
 }
 
+# sync --------------------------------------------------------------------
+# TODO
+# create rsync between server and my local machine
+
 # end ---------------------------------------------------------------------
 source(file.path(src, 'gn_end.R'), max.deparse.length = mdl)
 

@@ -44,7 +44,7 @@ chebi_fin = chebi_fin[ !duplicated(cas) & !is.na(cas) ]
 # envi = c('biocide', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'environmental.contaminent', 'agrochemical')
 # cols = grep(paste0(envi, collapse = '|'), names(ont_par2), value = TRUE)
 # chebi_envi = ont_par2[ , .SD, .SDcols = c('chebiid', cols) ]
-chebi_envi = ont_par2
+chebi_envi = ont_par
 
 #! necessary 'cause it can be that a chemical is an azole fungicide but not classifed as a fungicide
 fung = grep('fungicide', names(chebi_envi), value = TRUE)
@@ -90,8 +90,8 @@ clean_names(chebi_envi)
 
 ## drugs
 drug = c('drug')
-cols = grep(paste0(drug, collapse = '|'), names(ont_par2), value = TRUE)
-chebi_drug = ont_par2[ , .SD, .SDcols = c('chebiid', cols) ]
+cols = grep(paste0(drug, collapse = '|'), names(ont_par), value = TRUE)
+chebi_drug = ont_par[ , .SD, .SDcols = c('chebiid', cols) ]
 chebi_drug[ , drug := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = cols ]
 chebi_drug[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
 chebi_drug = chebi_drug[ , unique(.SD, by = 'cas') ] # take the first in case of duplicates

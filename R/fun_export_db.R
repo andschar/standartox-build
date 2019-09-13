@@ -1,6 +1,6 @@
 # function to export postgres tables
 
-export_tbl = function(schema, table, dir = NULL, file_name = NULL, type = c('csv', 'rds', 'rda', 'fst', 'feather'),
+export_tbl = function(schema, table, dir = NULL, file_name = NULL, type = c('csv', 'xlsx', 'rds', 'rda', 'fst', 'feather'),
                       compress = FALSE, debug_mode = FALSE,
                       user = NULL, host = NULL, port = NULL, password = NULL, dbname = NULL) {
   # file
@@ -16,7 +16,6 @@ export_tbl = function(schema, table, dir = NULL, file_name = NULL, type = c('csv
   drv = dbDriver("PostgreSQL")
   con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
   
-  message('Exporting table: ', schema, '.', table, ' (.', type, ') to ', dir)
   dat = dbGetQuery(con, q)
   setDT(dat)
   
@@ -28,20 +27,29 @@ export_tbl = function(schema, table, dir = NULL, file_name = NULL, type = c('csv
   } else {
     fl = file.path(dir, file_name)
   }
-  type = match.arg(type)
-  if (type == 'csv') {
+  type = match.arg(type, several.ok = TRUE)
+  if (any(type %in% 'csv')) {
+    message('Exporting table: ', schema, '.', table, ' (.csv) to ', dir)
     fwrite(dat, paste0(fl, '.csv'))
   }
-  if (type == 'rds') {
+  if (any(type %in% 'xlsx')) {
+    message('Exporting table: ', schema, '.', table, ' (.xlsx) to ', dir)
+    write.xlsx(dat, paste0(fl, '.xlsx'))
+  }
+  if (any(type %in% 'rds')) {
+    message('Exporting table: ', schema, '.', table, ' (.rds) to ', dir)
     saveRDS(dat, paste0(fl, '.rds'), compress = compress)
   }
-  if (type == 'rda') {
+  if (any(type %in% 'rda')) {
+    message('Exporting table: ', schema, '.', table, ' (.rda) to ', dir)
     save(dat, file = paste0(fl, '.rda'))
   }
-  if (type == 'fst') {
+  if (any(type %in% 'fst')) {
+    message('Exporting table: ', schema, '.', table, ' (.fst) to ', dir)
     write_fst(dat, paste0(fl, '.fst'), compress = compress)
   }
-  if (type == 'feather') {
+  if (any(type %in% 'feather')) {
+    message('Exporting table: ', schema, '.', table, ' (.feather) to ', dir)
     write_feather(dat, paste0(fl, '.feather'))
   }
 }

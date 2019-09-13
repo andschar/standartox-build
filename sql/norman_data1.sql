@@ -14,7 +14,7 @@ SELECT
   results.result_id AS "nor3", --Data source ID", 
   refs.reference_number AS "nor4", --Data source reference ID",
   'public available'::text AS "nor5", --Data protection",
-  'ftp://newftp.epa.gov/ecotox/'::text AS "nor6", --Data source link",
+  'https://cfpub.epa.gov/ecotox'::text AS "nor6", --Data source link",
   'Andreas Scharmueller'::text AS "nor7", --Editor",
   to_char( now(), 'YYYY-MM-DD' ) AS "nor8", --Date",
 
@@ -25,8 +25,7 @@ SELECT
   refs.title AS "nor11", --"Title", 
   refs.author AS "nor12", --Author(s)", 
   refs.publication_year AS "nor13", --Year", 
-  refs.source AS "nor14", --Bibliographic source", 
-  'n.a.'::text AS "nor15", --Testing laboratory",
+  refs.source AS "nor14", --Bibliographic source",
 
 ----------------------------------------------
 /* Categorisation */
@@ -63,7 +62,6 @@ TODO END
  /* Biotest */
   'n.a.'::text AS "nor30", --Standard qualifier",
   tests.test_method AS "nor31", --Standard used", 
-  'n.a.'::text AS "nor32", --Deviations from standard",
   tests.additional_comments || ' ' || results.additional_comments AS "nor33", --Principles of method if other than guideline",
   CASE
     WHEN  tests.test_method = 'GLP' 
@@ -99,7 +97,6 @@ TODO END
   'n.a.'::text AS "nor60", --Acclimation",
   /* Dosing system */
   dd.do AS "nor61", --Nominal concentrations",
-  'n.a.'::text AS "nor62", --Measured (initial) concentrations",
   results.chem_analysis_method AS "nor63", --Measured or nominal concentrations used?",
   'n.a.'::text AS "nor64", --Limit test", 
   'n.a.'::text AS "nor65", --Range finding study",
@@ -173,33 +170,34 @@ TODO END
   results.conc1_type AS "nor125", --Concentration based on", 
   tests.other_effect_comments AS "nor126", --Other effects", 
   results.additional_comments || '; ' || tests.test_characteristics AS "nor127", --Results comment",
-  'n.a.'::text AS "nor128", --Test result plausible and consistent with other findings",
   drm.drm_text AS "nor129", --Dose-response reported in figure/text/table",
   /* Evaluation */
-  CASE 
-    WHEN results.endpoint LIKE '%*'
-      THEN 'no' 
-    ELSE 'yes'
-  END AS "nor130", --Each effect concentration explicitly related to a biological response",
   'n.a.'::text AS "nor131", --Availability of raw data",
   tests.additional_comments || ' ' ||  results.additional_comments AS "nor133", --General comment",
-  'n.a.'::text AS "nor134", --Existing reliabilty score",
-  'n.a.'::text AS "nor135", --Reliability score system used",
-  'n.a.'::text AS "nor136", --Existing rational reliability",
+  '5'::text AS "nor134", --Existing reliabilty score",
+  'CRED'::text AS "nor135", --Reliability score system used",
+  'not yet evaluated'::text AS "nor136", --Existing rational reliability",
   'n.a.'::text AS "nor137", --Regulatory purpose"
   'n.a.'::text AS "nor138",  -- Final cell density
   'n.a.'::text AS "nor139",  -- Purpose Flag
-  'n.a.'::text AS "nor140",  -- study period
+  'NORMAN'::text AS "nor140",  -- Affiliation issuing the reliability score
   'n.a.'::text AS "nor141",  -- Any deformed or abnormal cells observed
   lower(control_type_codes.description) AS "nor142", -- control type
   lower(response_site_codes.description) AS "nor143", --Response site 
-  -- inchikey
-  -- desalted inchikey
+  'n.a.'::text AS "nor144",
   regexp_replace(current_database(), 'etox', 'epa_') || '_' || 'exp1' || '_raw' AS "nor147", -- Ecotox data set ID
-  row_number() OVER () AS "nor148", -- Export row number
-  to_date(published_date, 'MM/DD/YYYY') AS "nor600"
-
-
+  ac_cr.standard_test AS "nor148", -- Standard Test
+  CASE
+    WHEN results.organism_final_wt_mean IN ('NR', 'NC', '', ' ', '--')
+      THEN 'n.r.'
+    ELSE results.organism_final_wt_mean || ' ' || results.organism_final_wt_unit
+  END AS "nor149", -- Final body weight control
+  CASE
+    WHEN ac_cr.standard_test = 'yes'
+      THEN 'yes'
+    ELSE 'no'
+  END AS "nor150",
+  to_date(tests.published_date, 'MM/DD/YYYY') AS "nor600"
 
 ---------------------------------------------------------------------------------------------------------------------
 /* Select tables */
@@ -240,9 +238,9 @@ FROM
         WHEN string_agg(control_type, ' ') LIKE '%V%'
           THEN 'yes' 
         WHEN string_agg(control_type, ' ') LIKE '%NR%'
-          THEN 'not reported'
+          THEN 'n.r.'
         WHEN string_agg(control_type, ' ') LIKE '%NC%'
-          THEN 'not reported'
+          THEN 'n.r.'
         ELSE 'no'
       END AS vc
     FROM ecotox.doses 
@@ -361,28 +359,26 @@ FROM
 
 ----------------------------------------------
   -- lookup tables
+  LEFT JOIN ecotox.media_type_lookup ON tests.media_type = media_type_lookup.code
+  LEFT JOIN lookup.lookup_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
+  LEFT JOIN ecotox.test_location_lookup ON tests.test_location = test_location_lookup.code
+  LEFT JOIN ecotox.ecotox_group_lookup ON species.ecotox_group = ecotox_group_lookup.ecotox_group
+  LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
+  LEFT JOIN ecotox.effect_lookup ON results.effect = effect_lookup.code
+  LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
+  LEFT JOIN ecotox.endpoint_lookup ON endpoint_lookup.code = results.endpoint
+  LEFT JOIN ecotox.chemical_analysis_lookup ON chemical_analysis_lookup.code = results.chem_analysis_method
+  LEFT JOIN lookup.norman_id_cas ON tests.test_cas = norman_id_cas.casnr
+  
+----------------------------------------------
+  -- 
+  -- LEFT JOIN taxa.taxa_info ON taxa_info.species_number = species.species_number
+  -- TODO
 
-/*
-  LEFT JOIN ecotox.media_type_lookup ON tests.media_type = media_type_lookup.code -- ok
-  LEFT JOIN ecotox.test_location_lookup ON tests.test_location = test_location_lookup.code -- ok
-  LEFT JOIN ecotox.ecotox_group_lookup ON species.ecotox_group = ecotox_group_lookup.ecotox_group --ok
-  LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit -- todo
-  LEFT JOIN ecotox.effect_codes_lookup ON results.effect = effect_codes_lookup.code -- ok
-  LEFT JOIN ecotox.duration_unit_lookup ON -- todo
-    results.obs_duration_mean = duration_unit_lookup.duration 
-    AND results.obs_duration_unit = duration_unit_lookup.unit
-  LEFT JOIN ecotox.acute_chronic_lookup ON -- todo list from peter
-    acute_chronic_lookup.norman_ecotox_group = ecotox_group_lookup.norman_ecotox_group
-    AND acute_chronic_lookup.endpoint = results.endpoint
-    AND acute_chronic_lookup.duration = results.obs_duration_mean
-    AND acute_chronic_lookup.unit = results.obs_duration_unit
-  LEFT JOIN ecotox.endpoint_lookup ON endpoint_lookup.code = results.endpoint -- ok
-  LEFT JOIN ecotox.norman_sid_lookup ON norman_sid_lookup.norman_casnr = tests.test_cas -- todo - ??
-  LEFT JOIN ecotox.chemical_analysis_lookup ON chemical_analysis_lookup.code = results.chem_analysis_method -- ok
-  */
-  ----------------------------------------------
+----------------------------------------------
   -- codes
   LEFT JOIN ecotox.test_type_codes ON tests.test_type = test_type_codes.code
+  LEFT JOIN ecotox.media_type_codes ON tests.media_type = media_type_codes.code
   LEFT JOIN ecotox.chemical_formulation_codes ON tests.test_formulation = chemical_formulation_codes.code
   LEFT JOIN ecotox.field_study_type_codes ON tests.study_type = field_study_type_codes.code
   LEFT JOIN ecotox.test_method_codes ON tests.test_method = test_method_codes.code
@@ -399,31 +395,16 @@ FROM
   LEFT JOIN ecotox.trend_codes ON results.trend = trend_codes.code
   LEFT JOIN ecotox.statistical_significance_codes ON results.significance_code = statistical_significance_codes.code
   LEFT JOIN ecotox.concentration_type_codes ON results.conc1_type = concentration_type_codes.code
-
+  LEFT JOIN ecotox.substrate_codes ON tests.substrate = substrate_codes.code
 
 ----------------------------------------------
 /* FILTERS */
--- WHERE 
-  -- example for testing
-  -- test_cas = '3380345';--  AND -- Triclosan
-  -- tests.test_id = '1254845' AND tests.organism_habitat = 'Water'
-  -- only aquatic tests
-  -- tests.organism_habitat = 'Water
 
-  -- effect_codes_lookup.description_norman NOT LIKE 'remove' 
-  -- AND endpoint_lookup.code_norman NOT LIKE 'remove' 
-  -- AND media_type_lookup.description_norman NOT LIKE 'remove'
-  -- AND duration_unit_lookup.unit_cl NOT LIKE 'remove'
-  -- TODO AND concentration_unit_lookup.convert = 'yes' todo in table2
-    -- = skip uM currently
-  -- TODO table 2 AND  concentration_unit_lookup.unit_conv IN ('ug/L', 'ug/kg')
-  -- AND COALESCE(test_location_lookup.description_norman, 'not reported') NOT LIKE 'not reported'
-  -- TODO AND norman_sid_lookup.norman_id IS NOT NULL
-  -- AND tests.exposure_duration_mean NOT LIKE '0'
-  -- AND results.obs_duration_mean NOT IN ('NR', 'NC', '', ' ', '--')
-  -- count number  of words in latin names; remove those with only one name
-  -- AND array_length(regexp_split_to_array(trim(species.latin_name), E'\\W+'), 1) > 1
-
-
--- ORDER BY
---   tests.test_id 
+WHERE 
+  ac_cr.norman_use = 'yes'
+  AND results.conc1_mean != '' AND results.conc1_mean NOT IN ('NR', '+ NR') AND results.conc1_mean !~* 'ca|x' AND results.conc1_max NOT LIKE '%er%'
+  AND clean(results.endpoint) IS NOT NULL
+  AND clean(results.effect) IS NOT NULL
+  AND duration_unit_lookup.remove != 'yes'
+  AND media_type_lookup.description_norman IN ('freshwater', 'saltwater')
+  AND norman_id_cas.normanid IS NOT NULL

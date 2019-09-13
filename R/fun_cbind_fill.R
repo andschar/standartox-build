@@ -7,7 +7,7 @@ cbind_fill <- function(..., dflist = NULL, limit = NULL){
   n <- max(sapply(nm, nrow)) 
   out <- do.call(cbind, lapply(nm, function (x) 
     rbind(x, matrix(, n-nrow(x), ncol(x)))))
-  out <- data.frame(out)
+  out <- data.table(out)
   
   if (!is.null(limit)) {
     out <- out[1:limit, ]

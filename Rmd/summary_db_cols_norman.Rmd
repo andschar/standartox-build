@@ -20,9 +20,10 @@ table = params$table
 cols = params$cols
 dir = file.path(params$output_dir, paste0(schema, '_', table))
 # debuging
+# dir = '/tmp'
 # schema = 'norman'
-# table = 'data1'
-# cols = c('nor3', 'nor4')
+# table = 'data2_newest'
+# cols = c('nor1', 'nor3', 'nor4', 'nor5', 'nor6')
 ```
 
 ```{r setup, echo=FALSE, include=FALSE}
@@ -33,10 +34,6 @@ source(file.path(prj, 'R', 'gn_setup.R'))
 Summary output from data base table __`r paste0(schema, '.', table)`__
 
 ```{r echo=FALSE, message=FALSE}
-# schema = 'norman'
-# table = 'data2_newest'
-# cols = c('nor85', 'nor88')
-
 ## table
 tab = summary_db_all(schema = schema, table = table)
 ## cols
@@ -61,7 +58,7 @@ setcolorder(tab, c('column', 'header', 'type'))
 ## plot function
 gg_summary = function(l, col, limit, var) {
   
-  dat = l[[col]]
+  dat = copy(l[[col]])
   dat[ , var20 := substr(get(col), 1, 20) ]
   header = var[ match(names(dat)[1], var$id), norman_header ]
   
@@ -102,14 +99,14 @@ for (i in seq_along(l)) {
   fl = file.path(dir, paste0(nam, '.csv'))
   
   message('Writing: ', fl)
-  fwrite(dat, fl)
+  fwrite(dat, fl, sep = ';')
 }
 ```
 
 ```{r write-single-file, message=FALSE}
 # write summary to single file
-dat = cbind_fill(dflist = l, limit = NULL)
-names(dat)[ seq(1, length(names(dat)), 2) + 1 ] = paste0(names(dat)[ seq(1, length(names(dat)), 2) ], '_n')
+dat = cbind_fill(dflist = l, limit = 5000)
+# names(dat)[ seq(1, length(names(dat)), 2) + 1 ] = paste0(names(dat)[ seq(1, length(names(dat)), 2) ], '_n')
 
 fwrite(dat, file.path(params$output_dir, paste0(params$table, '_summary.csv')))
 ```
