@@ -11,9 +11,8 @@ pc_prop_l = readRDS(file.path(cachedir, 'pc_prop_l.rds'))
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
 
-q = "SELECT * 
-     FROM phch.cir ci
-     LEFT JOIN phch.pubchem pc ON ci.inchikey = pc.inchikey"
+q = "SELECT inchikey, cas
+     FROM phch.cir"
 
 cir = dbGetQuery(con, q)
 setDT(cir)
