@@ -16,7 +16,7 @@ q_join = function(dat, schema, main_tbl, col_join, fun, debug = TRUE) {
     stop('No function defined.')
   
   # column name (table.column)
-  dat$column_name_full = with(dat, paste0(table_name, '.', column_name))
+  dat$column_name_full = with(dat, paste0(table_name, '.', '\"', column_name, '\"'))
   
   # main and join tables
   #dat0 = dat[ grep(main, table_name) ]
@@ -38,7 +38,7 @@ q_join = function(dat, schema, main_tbl, col_join, fun, debug = TRUE) {
         paste0(fun, '('),
         lapply(col_full, paste0, collapse = ', '),
         ') AS ',
-        lapply(col, function(x) paste0(unique(x), collapse = ', '))), 
+        '\"', lapply(col, function(x) paste0(unique(x), collapse = ', ')), '\"'), 
       collapse = ', '
     )
   )
