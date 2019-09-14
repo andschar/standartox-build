@@ -35,13 +35,13 @@ SELECT
 	  ELSE 'not reported'
 	END AS conc1_type, 
 	CASE
-	  WHEN duration_lookup.conv = 'yes'
-	  	THEN clean(results.obs_duration_mean)::numeric * duration_lookup.multiplier
+	  WHEN duration_unit_lookup.conv = 'yes'
+	  	THEN clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier
 	  ELSE clean(results.obs_duration_mean)::numeric
 	END AS obs_duration_mean2,
 	CASE
-	  WHEN duration_lookup.conv = 'yes'
-	  	THEN duration_lookup.conv_to
+	  WHEN duration_unit_lookup.conv = 'yes'
+	  	THEN duration_unit_lookup.unit_conv
   	  ELSE results.obs_duration_unit
   	END AS obs_duration_unit2,
 	-- test properties
@@ -89,7 +89,7 @@ FROM
 LEFT JOIN ecotox.results ON tests.test_id = results.test_id
 	LEFT JOIN ecotox.response_site_codes ON results.response_site = response_site_codes.code
 	LEFT JOIN ecotox.measurement_codes ON results.measurement = measurement_codes.code
-LEFT JOIN ecotox.duration_lookup ON results.obs_duration_unit = duration_lookup.obs_duration_unit
+LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
 LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
 LEFT JOIN ecotox.exposure_type_codes ON tests.exposure_type = exposure_type_codes.code
 
