@@ -30,12 +30,10 @@ wo2[ fresh == 0L, fresh := NA_integer_ ]
 wo2[ terre == 0L, terre := NA_integer_ ]
 # split
 wo2_l = split(wo2, wo2$rank)
-names(wo2_l) = c('fm', 'gn', 'sp')
+names(wo2_l) = tolower(names(wo2_l))
 
 # check -------------------------------------------------------------------
-chck_dupl(wo2_l$fm, 'taxon')
-chck_dupl(wo2_l$gn, 'taxon')
-chck_dupl(wo2_l$sp, 'taxon')
+lapply(wo2_l, chck_dupl, col = 'taxon')
 
 # write -------------------------------------------------------------------
 for (i in seq_along(wo2_l)) {
