@@ -146,7 +146,6 @@ TODO END
   media_characteristics.media_org_matter_unit AS "nor103", --Total Organic Carbon Unit", 
   media_characteristics.dissolved_oxygen_mean || '( ' || media_characteristics.dissolved_oxygen_min || ' - ' || media_characteristics.dissolved_oxygen_max || ')'  AS "nor104", --Dissolved oxygen", 
   media_characteristics.dissolved_oxygen_unit AS "nor105", --Dissolved oxygen Unit",
-  tests.substrate || ';' || tests.substrate_description AS "nor106", --Use of sand or sediment, and its characteristics",
   'n.a.'::text AS "nor107", --Material  of test vessel",
   'n.a.'::text AS "nor108", --Volume of aquarium/container",
   'n.a.'::text AS "nor109", --Open or closed system",
@@ -186,7 +185,11 @@ TODO END
   lower(response_site_codes.description) AS "nor143", --Response site 
   'n.a.'::text AS "nor144",
   regexp_replace(current_database(), 'etox', 'epa_') || '_' || 'exp1' || '_raw' AS "nor147", -- Ecotox data set ID
-  ac_cr.standard_test AS "nor148", -- Standard Test
+  CASE
+    WHEN ac_cr.standard_test IS NULL
+      THEN 'no'
+    ELSE ac_cr.standard_test 
+  END AS "nor148", -- Standard Test
   CASE
     WHEN results.organism_final_wt_mean IN ('NR', 'NC', '', ' ', '--')
       THEN 'n.r.'

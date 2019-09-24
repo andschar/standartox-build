@@ -241,14 +241,14 @@ summary_db_perc = function(con, schema, table, col = NULL) {
                 ORDER by n desc
               ),
               t2 AS (
-                SELECT count(*) n_tot
+                SELECT count(*) n_total
                 FROM ", paste0(schema, '.', table), "
               )
               SELECT ", col, ",
               n,
-              n_tot--,
+              n_total--,
               -- round(n::decimal / n_tot::decimal * 100, 0) perc,
-              --", col, " || ' - ' || round(n::decimal / n_tot::decimal * 100, 0)::text || '%' perc_str
+              --", col, " || ' - ' || round(n::decimal / n_total::decimal * 100, 0)::text || '%' perc_str
               FROM t1, t2")
   
   out = DBI::dbGetQuery(con, q)

@@ -83,7 +83,16 @@ SELECT
     ELSE coalesce(clean(lower(measurement_codes.description)), 'n.r.')
   END AS "nor36", --Effect measurement 
   coalesce(clean(results.endpoint), 'nor reported') AS "nor37", --Endpoint
-  clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier || ' ' || duration_unit_lookup.unit_conv AS "nor38",
+  CASE
+    WHEN duration_unit_lookup.unit_conv = 'h'
+      THEN
+        CASE
+          WHEN clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier >= 168
+          THEN clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier  / 24 || ' ' || 'd'
+          ELSE clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier || ' ' || duration_unit_lookup.unit_conv
+        END
+    ELSE clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier || ' ' || duration_unit_lookup.unit_conv
+  END AS "nor38",
   CASE -- TODO maybe change in future
     WHEN tests.study_duration_mean IN ('NR', 'NC', '', ' ', '--')
       THEN 'n.r.'
@@ -263,6 +272,8 @@ SELECT
       CASE 
         WHEN media_characteristics.media_temperature_unit  IN ('NR', 'NC', '--') OR media_characteristics.media_temperature_unit IS NULL
           THEN ''
+        WHEN media_characteristics.media_temperature_unit = 'C'
+          THEN '°C'
         ELSE media_characteristics.media_temperature_unit
       END 
   END  AS "nor86", --Temperature"
@@ -479,18 +490,6 @@ SELECT
         ELSE media_characteristics.dissolved_oxygen_unit
       END 
   END AS "nor104", --Dissolved oxygen", 
-  CASE 
-    WHEN tests.substrate IN ('NR','NC', '', ' ', '--')
-      THEN 'n.r.'
-    WHEN tests.substrate IS NULL
-      THEN 'n.r.'
-    ELSE lower(substrate_codes.description) || '; ' || 
-      CASE
-        WHEN lower(tests.substrate_description) IN ('nr', 'nc', '', ' ', '--')
-          THEN ''
-        ELSE lower(tests.substrate_description)
-    END 
-  END AS "nor106", --Use of sand or sediment, and its characteristics",
   'n.a.'::text AS "nor107", --Material  of test vessel",
   'n.a.'::text AS "nor108", --Volume of aquarium/container",
   'n.a.'::text AS "nor109", --Open or closed system",
@@ -528,9 +527,20 @@ SELECT
     WHEN results.significance_level_mean IN  ('NR', 'NC', '', ' ',  '--')
       THEN 'n.r.'
     ELSE COALESCE(results.significance_level_mean, 'n.r.') 
-  END AS "nor120", --Significance level", 
+  END AS "nor120", --Significance level",
 ----------------------------------------------
 /* Biological effect */
+  results.conc1_mean_op AS "nor121", --Effect concentration qualifier", 
+  CASE
+    WHEN concentration_unit_lookup.conv = 'yes'
+      THEN clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier
+    ELSE clean(results.conc1_mean)::numeric
+  END AS "nor122", -- Effect concentration
+  CASE
+    WHEN concentration_unit_lookup.conv = 'yes'
+      THEN concentration_unit_lookup.unit_conv
+    ELSE results.conc1_unit
+  END AS "nor123",
   CASE
     WHEN results.conc1_min IN ('NR', 'NC', '', ' ', '--') OR results.conc1_min IS NULL
       THEN 'n.r.'
@@ -569,16 +579,6 @@ SELECT
       END
   END AS "nor124",
   /*
-  CASE
-    WHEN concentration_unit_lookup.conv = 'yes'
-      THEN clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier
-    ELSE results.conc1_mean
-  END AS "nor122", -- Effect concentration
-  CASE
-    WHEN concentration_unit_lookup.conv = 'yes'
-      THEN concentration_unit_lookup.unit_conv
-    ELSE results.conc1_unit
-  END AS "nor123",
   CASE
     WHEN concentration_unit_lookup.conv = 'yes'
       THEN clean(results.conc1_min) * concentration_unit_lookup.multiplier || '-' || clean(results.conc1_max) * concentration_unit_lookup.multiplier
@@ -631,7 +631,11 @@ SELECT
   -- inchikey
   -- desalted inchikey
   regexp_replace(current_database(), 'etox', 'epa_') || '_' || 'exp1' || '_clean' AS "nor147", -- Ecotox data set ID
-  ac_cr.standard_test AS "nor148", -- Standard Test
+  CASE
+    WHEN ac_cr.standard_test IS NULL
+      THEN 'no'
+    ELSE ac_cr.standard_test 
+  END AS "nor148", -- Standard Test
   CASE
     WHEN results.organism_final_wt_mean IN ('NR', 'NC', '', ' ', '--')
       THEN 'n.r.'

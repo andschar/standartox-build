@@ -32,6 +32,7 @@ ont_par = dcast(ont_par, chebiid ~ chebiName, value.var = 'chebiName', fill = NA
 # merge
 l = list(prop, reg, iupac, formula)
 chebi_fin = Reduce(function(...) merge(..., by = 'chebiid', all = TRUE), l)
+chebi_fin[ , mass := as.numeric(mass) ]
 # names
 clean_names(chebi_fin)
 setnames(chebi_fin, 'chebiasciiname', 'cname')
@@ -41,10 +42,9 @@ chebi_fin = chebi_fin[ !duplicated(cas) & !is.na(cas) ]
 # split tables ------------------------------------------------------------
 ## environmental table
 # TODO more categories?
-# envi = c('biocide', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'environmental.contaminent', 'agrochemical')
-# cols = grep(paste0(envi, collapse = '|'), names(ont_par2), value = TRUE)
-# chebi_envi = ont_par2[ , .SD, .SDcols = c('chebiid', cols) ]
-chebi_envi = ont_par
+envi = c('biocide', 'fungicide', 'herbicide', 'insecticide', 'pesticide', 'environmental.contaminent', 'agrochemical')
+cols = grep(paste0(envi, collapse = '|'), names(ont_par), value = TRUE)
+chebi_envi = ont_par[ , .SD, .SDcols = c('chebiid', cols) ]
 
 #! necessary 'cause it can be that a chemical is an azole fungicide but not classifed as a fungicide
 fung = grep('fungicide', names(chebi_envi), value = TRUE)

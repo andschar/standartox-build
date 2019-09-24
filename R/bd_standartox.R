@@ -32,7 +32,7 @@ dbUnloadDriver(drv)
 # summary -----------------------------------------------------------------
 rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
-                  output_file = 'summary_standartox_tests',
+                  output_file = 'tests',
                   params = list(
                     title = 'Standartox raw data summary',
                     schema = 'standartox',
@@ -41,7 +41,7 @@ rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   ))
 rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
-                  output_file = 'summary_standartox_taxa',
+                  output_file = 'taxa',
                   params = list(
                     title = 'Standartox raw data summary',
                     schema = 'standartox',
@@ -50,7 +50,7 @@ rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   ))
 rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
-                  output_file = 'summary_standartox_chemicals',
+                  output_file = 'chemicals',
                   params = list(
                     title = 'Standartox raw data summary',
                     schema = 'standartox',
@@ -59,7 +59,7 @@ rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   ))
 rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
-                  output_file = 'summary_standartox_refs',
+                  output_file = 'refs',
                   params = list(
                     title = 'Standartox raw data summary',
                     schema = 'standartox',
@@ -68,7 +68,7 @@ rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   ))
 rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
-                  output_file = 'summary_standartox_data2',
+                  output_file = 'data2',
                   params = list(
                     title = 'Standartox raw data summary',
                     schema = 'standartox',

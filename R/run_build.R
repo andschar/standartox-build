@@ -20,6 +20,7 @@ if (nodename == 'scharmueller-t460s') {
 }
 
 # setup -------------------------------------------------------------------
+saveRDS(Sys.time(), 'start_time')
 source(file.path(prj, 'R/gn_setup.R'), max.deparse.length = mdl)
 
 # console log -------------------------------------------------------------
@@ -96,19 +97,21 @@ if (build) {
 }
 
 # Application -------------------------------------------------------------
-if (build) {
+if (build_standartox) {
   source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
-  source(file.path(src, 'bd_norman.R'), max.deparse.length = mdl)
+  # export
+  source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
+  source(file.path(src, 'exp_standartox_catalog.R'), max.deparse.length = mdl)
+  source(file.path(src, 'cpy_standartox.R'), max.deparse.length = mdl)
+  
 }
 
-# Export ------------------------------------------------------------------
-if (export) {
-  # Standartox
-  source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
-  source(file.path(src, 'exp_standartox_shiny_stats.R'), max.deparse.length = mdl)
-  source(file.path(src, 'cpy_shiny.R'), max.deparse.length = mdl)
-  # NORMAN
+# NORMAN ------------------------------------------------------------------
+if (build_norman) {
+  source(file.path(src, 'bd_norman.R'), max.deparse.length = mdl)
+  # export
   source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
+  source(file.path(src, 'cpy_norman.R'), max.deparse.length = mdl)
 }
 
 # backup ------------------------------------------------------------------

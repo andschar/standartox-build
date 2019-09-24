@@ -65,10 +65,13 @@ download_db = T # should database query be run
 build_db = T # build data base?
 download = T # run download scripts?
 build = T # run build scripts?
+build_standartox = T
+build_norman = T
 general = F # run general database scripts?
 export = F # should data be exported?
-debug_mode = T # should only 10 input rows for each quering script be run
+debug_mode = F # should only 10 input rows for each quering script be run
 sink_console = T # sink console to file
+
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
