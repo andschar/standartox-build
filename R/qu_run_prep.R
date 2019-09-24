@@ -13,7 +13,8 @@ scripts_chem = c('qu_aw_prep.R',
                  'qu_pp_prep.R',
                  'qu_epa_chem_prep.R',
                  'qu_eurostat_prep.R',
-                 'qu_wiki_prep.R')
+                 'qu_wiki_prep.R',
+                 'qu_wiki_prep_INTERMEDIATE.R')
 
 mapply(source,
        file = file.path(src, scripts_chem),

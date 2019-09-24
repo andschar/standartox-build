@@ -63,15 +63,13 @@ pacman::p_load_gh(char = pkg_gith)
 # switches ----------------------------------------------------------------
 download_db = T # should database query be run
 build_db = T # build data base?
-download = T # run download scripts?
+download = T # run download scripts (takes days)? 
 build = T # run build scripts?
 build_standartox = T
 build_norman = T
-general = F # run general database scripts?
 export = F # should data be exported?
 debug_mode = F # should only 10 input rows for each quering script be run
 sink_console = T # sink console to file
-
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
