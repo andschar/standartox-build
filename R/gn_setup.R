@@ -1,11 +1,11 @@
-# setup script for etox-base
+# setup script for standartox-build
 
 # projects ----------------------------------------------------------------
 nodename = Sys.info()[4]
 if (nodename == 'scharmueller-t460s') {
-  prj = '/home/scharmueller/Projects/etox-base'
+  prj = '/home/scharmueller/Projects/standartox-build'
 } else if (nodename == 'uwigis') {
-  prj = '/home/scharmueller/Projects/etox-base'
+  prj = '/home/scharmueller/Projects/standartox-build'
 } else {
   stop('New system. Define prj variable.')
 }
@@ -175,7 +175,7 @@ pkg = c('pacman', pkg_cran)
 for (i in pkg) {
   capture.output(
     utils:::print.bibentry(citation(i), style = "Bibtex"),
-    file = file.path(article, 'refs', 'references-etox-base-rpackages.bib'),
+    file = file.path(article, 'refs', 'references-standartox-build.bib'),
     append = TRUE
   )
 }

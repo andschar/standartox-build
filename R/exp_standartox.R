@@ -15,7 +15,7 @@ dir = file.path(exportdir, v)
 unlink(dir)
 mkdirs(dir) # TODO put this into export_tbl()
 
-# export to etox-base repo ------------------------------------------------
+# export ------------------------------------------------------------------
 ## data
 # as .fst object
 export_tbl(schema = 'standartox', table = 'data2', type = 'fst', debug = FALSE,

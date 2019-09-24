@@ -2,7 +2,7 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
-source('/home/scharmueller/Projects/etox-base/R/PUBCHEM_HTTP_PROBLEM.R')
+source(file.path(src, 'PUBCHEM_HTTP_PROBLEM.R'))
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")

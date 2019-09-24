@@ -27,7 +27,7 @@ dir = file.path(params$output_dir, paste0(schema, '_', table))
 ```
 
 ```{r setup, echo=FALSE, include=FALSE}
-prj = '/home/scharmueller/Projects/etox-base'
+prj = '/home/scharmueller/Projects/standartox-build'
 source(file.path(prj, 'R', 'gn_setup.R'))
 ```
 

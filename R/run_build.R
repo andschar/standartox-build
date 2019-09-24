@@ -5,23 +5,9 @@
 # crontab:
 # 00 22 * * * /home/scharmueller/Projects/run_build.sh
 
-# projects directory -------------------------------------------------------
-## find folder name on system - slow, but generic!
-# prj = system("find / -name etox-base 2>/dev/null", intern = TRUE)[1] # locate prj dir
-# shinydir = system("find / -name etox-base-shiny 2>/dev/null", intern = TRUE)[1] # locate shiny dir
-## pre-defined
-nodename = Sys.info()[4]
-if (nodename == 'scharmueller-t460s') {
-  prj = '/home/scharmueller/Projects/etox-base'
-} else if (nodename == 'uwigis') {
-  prj = '/home/scharmueller/Projects/etox-base'
-} else {
-  stop('New system. Define prj variable.')
-}
-
 # setup -------------------------------------------------------------------
 saveRDS(Sys.time(), 'start_time')
-source(file.path(prj, 'R/gn_setup.R'), max.deparse.length = mdl)
+source('R/gn_setup.R', max.deparse.length = mdl)
 
 # console log -------------------------------------------------------------
 if (sink_console) {
