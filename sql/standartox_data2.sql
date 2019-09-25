@@ -115,6 +115,9 @@ SELECT
 	chem_names.iupacname,
 	chem_names.inchikey,
 	chem_names.inchi,
+	chem_prop.molecularweight::double precision,
+	chem_prop.p_log::double precision,
+	chem_prop.solubility_water::double precision,
 	chem_class.fungicide AS ccl_fungicide,
 	chem_class.herbicide AS ccl_herbicide,
 	chem_class.insecticide AS ccl_insecticide,
@@ -122,7 +125,8 @@ SELECT
 	chem_class.drug AS ccl_drug
 FROM ecotox.chemicals
 LEFT JOIN phch_fin.chem_names ON chemicals.cas_number = chem_names.cas_number
-LEFT JOIN phch_fin.chem_class ON chemicals.cas_number = chem_class.cas_number;
+LEFT JOIN phch_fin.chem_class ON chemicals.cas_number = chem_class.cas_number
+LEFT JOIN phch_fin.chem_prop ON chemicals.cas_number = chem_prop.cas_number;
 
 ALTER TABLE standartox.chemicals ADD PRIMARY KEY (casnr);
 
