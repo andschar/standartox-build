@@ -76,7 +76,7 @@ SELECT
       THEN 'yes' 
     ELSE 'n.a.'::text
   END AS "nor34", --Performed under GLP",
-  coalesce(effect_lookup.description_norman, 'n.r.') AS "nor35", --Effect
+  coalesce(effect_codes.description, 'n.r.') AS "nor35", --Effect
   CASE
     WHEN lower(measurement_codes.description) IN ('biomass', 'chlorophyll a concentration', 'abundance')
       THEN 'yield' 
@@ -699,7 +699,7 @@ FROM
     FROM 
     (SELECT 
       tests.test_id,
-      effect_lookup.description_norman AS effect,
+      effect_codes.description AS effect,
       string_agg(
         CASE 
         WHEN concentration_unit_lookup.conv = 'yes' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
@@ -719,12 +719,12 @@ FROM
       LEFT JOIN ecotox.doses on tests.test_id = doses.test_id
       LEFT JOIN ecotox.dose_responses ON tests.test_id = dose_responses.test_id
       LEFT JOIN ecotox.dose_response_details ON dose_responses.dose_resp_id = dose_response_details.dose_resp_id AND doses.dose_id = dose_response_details.dose_id
-      LEFT JOIN ecotox.effect_lookup ON dose_responses.effect_code = effect_lookup.code 
+      LEFT JOIN ecotox.effect_codes ON dose_responses.effect_code = effect_codes.code 
       LEFT JOIN ecotox.concentration_unit_lookup ON doses.dose_conc_unit = concentration_unit_lookup.conc1_unit 
       WHERE 
         -- with response
         dose_response_details.response_mean_cl IS NOT NULL
-        GROUP BY tests.test_id, effect_lookup.description_norman
+        GROUP BY tests.test_id, effect_codes.description
         ) AS tmp
     GROUP BY tmp.test_id
     ) AS drm on tests.test_id = drm.test_id
@@ -808,7 +808,7 @@ FROM
   LEFT JOIN ecotox.test_location_lookup ON tests.test_location = test_location_lookup.code
   LEFT JOIN ecotox.ecotox_group_lookup ON species.ecotox_group = ecotox_group_lookup.ecotox_group
   LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
-  LEFT JOIN ecotox.effect_lookup ON results.effect = effect_lookup.code
+  LEFT JOIN ecotox.effect_codes ON results.effect = effect_codes.code
   LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
   LEFT JOIN ecotox.endpoint_lookup ON endpoint_lookup.code = results.endpoint
   LEFT JOIN ecotox.chemical_analysis_lookup ON chemical_analysis_lookup.code = results.chem_analysis_method

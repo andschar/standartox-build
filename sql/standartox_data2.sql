@@ -54,7 +54,7 @@ SELECT
 	  ELSE 'not reported'
 	END AS test_type,
 	------- END
-	clean(results.effect) AS effect,
+	effect_codes.description AS effect, -- clean(results.effect)
 	CASE
 	  WHEN clean(results.endpoint) IN ('NOEL', 'NOEC')
 	  	THEN 'NOEX'
@@ -92,6 +92,7 @@ LEFT JOIN ecotox.results ON tests.test_id = results.test_id
 LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
 LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
 LEFT JOIN ecotox.exposure_type_codes ON tests.exposure_type = exposure_type_codes.code
+LEFT JOIN ecotox.effect_codes ON results.effect = effect_codes.code
 
 WHERE
 	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT LIKE '%ca%';
