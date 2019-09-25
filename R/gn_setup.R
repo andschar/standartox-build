@@ -63,7 +63,7 @@ pacman::p_load_gh(char = pkg_gith)
 # switches ----------------------------------------------------------------
 download_db = T # should database query be run
 build_db = T # build data base?
-download = T # run download scripts (takes days)? 
+download = F # run download scripts (takes days)? 
 build = T # run build scripts?
 build_standartox = T
 build_norman = T

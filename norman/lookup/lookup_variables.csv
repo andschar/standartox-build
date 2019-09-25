@@ -1,0 +1,154 @@
+parameter_group,id,norman_header
+Source,nor1,Biotest ID
+Source,nor2,Data Source
+Source,nor3,Data Source ID
+Source,nor4,Data Source reference ID
+Source,nor5,Data protection
+Source,nor6,Data source link
+Source,nor7,Editor
+Source,nor8,Date
+Reference,nor9,Reference type
+Reference,nor10,NORMAN Reference ID
+Reference,nor11,Title
+Reference,nor12,Author(s)
+Reference,nor13,Year
+Reference,nor14,Bibliographic source
+Categorisation,nor16,Compartment
+Categorisation,nor17,Test type
+Categorisation,nor18,Acute / Chronic
+Test substance,nor19,Sustat ID
+Test substance,nor20,EPA substance name
+Test substance,nor402,Common chemical name
+Test substance,nor21,CAS Number
+Test substance,nor401,CAS Number
+Test substance,nor22,NORMAN EC number
+Test substance,nor23,Purity qualifier
+Test substance,nor24,Purity [%] of test substance
+Test substance,nor25,Suplier of test item
+Test substance,nor26,Vehicle substance
+Test substance,nor27,Concentrations of vehicle or impurities
+Test substance,nor28,Radio labeled substance
+Test substance,nor29,Preparation of stock solution
+Biotest,nor30,Standard Qualifier
+Biotest,nor31,Standard used
+Biotest,nor33,Principles of method if other than guideline
+Biotest,nor34,GLP Certificate
+Biotest,nor35,Effect
+Biotest,nor36,Effect measurement
+Biotest,nor37,Endpoint
+Biotest,nor38,Test Duration
+Biotest,nor39,Test Duration Unit
+Biotest,nor40,Total Test Duration
+Biotest,nor41,Recovery
+Test organism,nor42,Scientific name
+Test organism,nor43,Common name
+Test organism,nor44,Taxonomic group
+Test organism,nor45,Body length control
+Test organism,nor46,Body length unit
+Test organism,nor47,Body weight control
+Test organism,nor48,Body weight unit
+Test organism,nor49,Biomass loading rate / Initial cell density
+Test organism,nor50,Reproductive condition of the control
+Test organism,nor51,Mortality in the control
+Test organism,nor52,Lipid %
+Test organism,nor53,Age
+Test organism,nor54,Age unit
+Test organism,nor55,Life stage
+Test organism,nor56,Gender
+Test organism,nor57,Strain / Clone
+Test organism,nor58,"Source (laboratory, culture collection)"
+Test organism,nor59,Culture handling
+Test organism,nor60,Acclimation
+Dosing system,nor61,Nominal concentrations
+Dosing system,nor63,Measured or nominal Concentration
+Dosing system,nor64,Limit test
+Dosing system,nor65,Range finding study
+Dosing system,nor66,Analytical Matrix
+Dosing system,nor67,Analytical schedule
+Dosing system,nor68,Analytical method
+Dosing system,nor69,Analytical recovery
+Dosing system,nor70,Limit of quantification
+Dosing system,nor71,Exposure regime
+Dosing system,nor72,Exposure duration
+Dosing system,nor73,Exposure duration unit
+Dosing system,nor74,Application frequency
+Dosing system,nor75,Application frequency unit
+Dosing system,nor76,Exposure route
+Controls and study design,nor77,Positive control used?
+Controls and study design,nor78,Positive control substance
+Controls and study design,nor79,Effect in positive control
+Controls and study design,nor80,Vehicle control used?
+Controls and study design,nor81,Effects in vehicle control
+Test conditions,nor82,Intervals of water quality measurement
+Test conditions,nor83,Intervals of water quality measurements Unit
+Test conditions,nor84,pH
+Test conditions,nor85,pH adjustment
+Test conditions,nor86,Temperature
+Test conditions,nor286,Temperature
+Test conditions,nor87,Temperature Unit
+Test conditions,nor287,Conductivity
+Test conditions,nor88,Conductivity
+Test conditions,nor89,Conductivity Unit
+Test conditions,nor90,Light intensity
+Test conditions,nor91,Light intensity unit
+Test conditions,nor92,Light quality (source and homogeneity)
+Test conditions,nor93,Photo period
+Test conditions,nor94,Hardness
+Test conditions,nor294,Hardness
+Test conditions,nor95,Hardness Unit
+Test conditions,nor96,Chlorine
+Test conditions,nor296,Chlorine
+Test conditions,nor97,Chlorine Unit
+Test conditions,nor98,Alkalinity
+Test conditions,nor298,Alkalinity
+Test conditions,nor99,Alkalinity Unit
+Test conditions,nor100,Salinity
+Test conditions,nor300,Salinity
+Test conditions,nor101,Salinity Unit
+Test conditions,nor302,Total Organic Carbon
+Test conditions,nor102,Total Organic Carbon
+Test conditions,nor103,Total Organic Carbon Unit
+Test conditions,nor104,Dissolved Oxygen
+Test conditions,nor304,Dissolved Oxygen
+Test conditions,nor105,Dissolved Oxygen Unit
+Test conditions,nor107,Material  of test vessel
+Test conditions,nor108,Volume of aquarium/container
+Test conditions,nor109,Open or closed system
+Test conditions,nor110,Aeration
+Test conditions,nor111,Description of test medium
+Test conditions,nor112,Culture medium same as test medium?
+Test conditions,nor113,Feeding protocols
+Test conditions,nor114,Type and amount of food
+Statistical design,nor115,Number of organisms per replicate
+Statistical design,nor116,Number of replicates per concentration
+Statistical design,nor117,Statistical method used
+Statistical design,nor118,Trend
+Statistical design,nor119,Significance of result
+Statistical design,nor120,Significance level
+Biological effect,nor121,Effect concentration qualifier
+Biological effect,nor122,Effect concentration
+Biological effect,nor123,Effect concentration unit
+Biological effect,nor124,Estimate of variability for LC and EC data
+Biological effect,nor125,Concentration based on
+Biological effect,nor126,Other effects
+Biological effect,nor127,Result comment
+Biological effect,nor129,Dose-response reported in figure/text/table
+Evaluation,nor131,Availability of raw data
+Evaluation,nor133,General Comment
+Evaluation,nor134,Existing Reliability Score
+Evaluation,nor135,Reliability score system used
+Evaluation,nor136,Rationale reliability  Score
+Evaluation,nor137,Regulatory purpose
+Evaluation,nor138,Final cell density of control group
+Evaluation,nor139,Purpose flag
+Evaluation,nor140,Affiliation issuing the reliability score
+Evaluation,nor141,Deformed or abnormal cells / organism
+Evaluation,nor142,Negative control used?
+Evaluation,nor143,Response site
+Evaluation,nor144,Final body length
+Evaluation,nor145,Lipid method
+Evaluation,nor147,Ecotox DS ID
+Evaluation,nor148,Standard Test
+Evaluation,nor149,Final body weight
+,nor150,Use of study
+,nor600,Date
