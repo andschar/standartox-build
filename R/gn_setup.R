@@ -92,7 +92,7 @@ datadir_ar = file.path(article, 'data')
 ## talk subfolder
 datadir_tk = file.path(prj, 'talk', 'data')
 ## shiny application
-shinydir = paste0(prj, '-shiny')
+shinydir = gsub('-build', '-app', prj)
 shinydata = file.path(shinydir, 'data')
 ## standartox R-package
 standartoxdir = gsub(basename(prj), 'standartox', prj, fixed = TRUE)
