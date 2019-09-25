@@ -7,7 +7,7 @@
 
 # setup -------------------------------------------------------------------
 saveRDS(Sys.time(), 'start_time')
-source('R/gn_setup.R', max.deparse.length = mdl)
+source('~/Projects/standartox-build/R/gn_setup.R', max.deparse.length = mdl)
 
 # console log -------------------------------------------------------------
 if (sink_console) {

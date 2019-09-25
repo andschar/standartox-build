@@ -6,7 +6,7 @@
 # 00 22 * * * /home/scharmueller/Projects/run_build.sh
 
 # setup -------------------------------------------------------------------
-source('R/gn_setup.R', max.deparse.length = mdl)
+source('~/Projects/standartox-build/R/gn_setup.R', max.deparse.length = mdl)
 
 # console log -------------------------------------------------------------
 if (sink_console) {

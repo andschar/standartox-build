@@ -1,4 +1,0 @@
-# cron job to add: crontab -e
-
-33 11 * * sat /home/scharmueller/Projects/etox-base-shiny/R/run_build.R
-# min h dom mon dow command
