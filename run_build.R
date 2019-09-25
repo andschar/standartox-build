@@ -94,6 +94,7 @@ if (build_standartox) {
 
 # NORMAN ------------------------------------------------------------------
 if (build_norman) {
+  source(file.path(src, 'look_norman_acute_chronic_standard.R'), max.deparse.length = mdl)
   source(file.path(src, 'bd_norman.R'), max.deparse.length = mdl)
   # export
   source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
