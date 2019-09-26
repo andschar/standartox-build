@@ -48,17 +48,17 @@ sidebar = dashboardSidebar(
         )
       ),
       prettyCheckboxGroup(
-        inputId = 'conc1_type',
+        inputId = 'concentration_type',
         label = 'Concentration type',
-        choiceValues = stat_l$conc1_type$value,
-        choiceNames = stat_l$conc1_type$name_perc,
-        selected = grep('active.ingredien', stat_l$conc1_type$value, ignore.case = TRUE, value = TRUE)[1]
+        choiceValues = catalog_l$concentration_type$variable,
+        choiceNames = catalog_l$concentration_type$name_perc,
+        selected = grep('active.ingredien', catalog_l$concentration_type$variable, ignore.case = TRUE, value = TRUE)[1]
       ),
       prettyCheckboxGroup(
         inputId = 'chemical_class',
         label = 'Chemical class',
-        choiceValues = stat_l$chemical_class$value,
-        choiceNames = stat_l$chemical_class$name_perc,
+        choiceValues = catalog_l$chemical_class$variable,
+        choiceNames = catalog_l$chemical_class$name_perc,
         selected = NULL
       )
     ),
@@ -67,23 +67,23 @@ sidebar = dashboardSidebar(
       tabName = 'taxon',
       selectizeInput(inputId = 'tax',
                      label = 'Taxa',
-                     choices = taxa_all_list,
+                     choices = catalog_l$taxa$variable,
                      selected = NULL,
                      multiple = TRUE,
                      options = list(create = FALSE)),
       prettyCheckboxGroup(
         inputId = 'habitat',
         label = 'Organism hatbitat',
-        choiceValues = stat_l$habitat$value,
-        choiceNames = stat_l$habitat$name_perc,
-        selected = grep('fresh', stat_l$habitat$value, ignore.case = TRUE, value = TRUE)[1]
+        choiceValues = catalog_l$habitat$variable,
+        choiceNames = catalog_l$habitat$name_perc,
+        selected = grep('fresh', catalog_l$habitat$variable, ignore.case = TRUE, value = TRUE)[1]
       ),
       prettyCheckboxGroup(
         inputId = 'region',
-        label = 'Continent',
-        choiceValues = stat_l$region$value,
-        choiceNames = stat_l$region$name_perc,
-        selected = grep('europe', stat_l$region$value, ignore.case = TRUE, value = TRUE)[1]
+        label = 'Region',
+        choiceValues = catalog_l$region$variable,
+        choiceNames = catalog_l$region$name_perc,
+        selected = grep('europe', catalog_l$region$variable, ignore.case = TRUE, value = TRUE)[1]
       )
     ),
     menuItem(
@@ -132,34 +132,25 @@ sidebar = dashboardSidebar(
       # prettyRadioButtons(
       #   inputId = 'test_location',
       #   label = 'Test location',
-      #   choiceValues = stat_l$test_location$value,
-      #   choiceNames = stat_l$test_location$value
+      #   choiceValues = catalog_l$test_location$variable,
+      #   choiceNames = catalog_l$test_location$variable
       # ),
       ### END TODO
       splitLayout(
         prettyCheckboxGroup(
           inputId = 'effect',
           label = 'Effect group',
-          choiceValues = stat_l$effect$value,
-          choiceNames = stat_l$effect$name_perc,
+          choiceValues = catalog_l$effect$variable,
+          choiceNames = catalog_l$effect$name_perc,
           selected = c('MOR', 'POP', 'GRO', 'ITX')
         ),
         prettyRadioButtons(
           inputId = 'endpoint',
           label = 'Endpoint',
-          choiceValues = stat_l$endpoint$value,
-          choiceNames = stat_l$endpoint$name_perc,
+          choiceValues = catalog_l$endpoint$variable,
+          choiceNames = catalog_l$endpoint$name_perc,
           selected = c('XX50')
         )
-      )
-    ),
-    menuItem(
-      'Checks',
-      tabName = 'checks',
-      prettyCheckbox(
-        inputId = 'rm_outl',
-        label = 'Remove outliers',
-        value = TRUE
       )
     )
   ),
@@ -173,9 +164,9 @@ sidebar = dashboardSidebar(
       prettyCheckboxGroup(
         inputId = 'agg',
         label = 'Aggregate',
-        choiceValues = c('min', 'max', 'md', 'gm', 'mn', 'sd'),
-        choiceNames = c('Minimum', 'Maximum', 'Median', 'Geometric Mean', 'Arithmetic Mean', 'Standard Deviation'),
-        selected = 'gm'
+        choiceValues = c('min', 'med', 'gmn', 'max'),
+        choiceNames = c('Minimum', 'Median', 'Geometric Mean', 'Maximum'),
+        selected = 'gmn'
       )
     )
   )
@@ -184,8 +175,7 @@ sidebar = dashboardSidebar(
 rightsidebar = rightSidebar()
 
 # body --------------------------------------------------------------------
-body = dashboardBody(#setShadow(class = "dropdown-menu"),
-  #tags$head(includeCSS('style.css')),
+body = dashboardBody(
   br(),
   br(),
   br(),
@@ -195,14 +185,14 @@ body = dashboardBody(#setShadow(class = "dropdown-menu"),
       width = 9,
       collapsible = TRUE,
       withMathJax(includeMarkdown('README.md')) # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
-    )#,
-    # box(
-    #   title = 'Information',
-    #   status = 'success',
-    #   width = 3,
-    #   collapsible = TRUE,
-    #   uiOutput('meta')
-    # )
+    ),
+    box(
+      title = 'Information',
+      status = 'success',
+      width = 3,
+      collapsible = TRUE,
+      textOutput(outputId = 'meta')
+    )
   ),
   fluidRow(
     box(
@@ -226,8 +216,8 @@ body = dashboardBody(#setShadow(class = "dropdown-menu"),
       prettyCheckboxGroup(
         inputId = 'infocols',
         label = 'Information columns',
-        choiceValues = c('info', 'taxa', 'vls', 'n'),
-        choiceNames = c('info', 'taxa', 'values', 'n'),
+        choiceValues = c('taxa', 'n'),
+        choiceNames = c('taxa', 'n'),
         selected = 'taxa'
       )
     )
@@ -275,8 +265,6 @@ body = dashboardBody(#setShadow(class = "dropdown-menu"),
 ui = dashboardPagePlus(header, sidebar, body,
                        title = 'Etox Base',
                        skin = 'purple')
-
-
 # server ------------------------------------------------------------------
 server = function(input, output, session) {
   
@@ -298,7 +286,6 @@ server = function(input, output, session) {
   observe({
     req(input$file_cas)
     req(!rv$reset)
-    
     data = read.csv(input$file_cas$datapath,
                     header = FALSE,
                     stringsAsFactors = FALSE) # $datapath not very intuitive
@@ -310,20 +297,19 @@ server = function(input, output, session) {
     rv$clear = TRUE
     reset('file_cas')
   }, priority = 1000) # priority?
-  
   # filter ------------------------------------------------------------------
   data_fil = reactive({
     fun_filter(
       dt = dat,
-      conc1_type = input$conc1_type,
+      concentration_type = input$concentration_type,
       chemical_class = input$chemical_class,
-      tax = taxa_input(),
+      taxa = taxa_input(),
       habitat = input$habitat,
       region = input$region,
       duration = c(input$dur1, input$dur2),
-      publ_year = c(input$yr1, input$yr2),
-      acch = input$acch,
-      exposure = input$exposure,
+      publ_year = c(input$yr1, input$yr2), # NOTE currently not incorporated 
+      # acch = input$acch, # NOTE currently not incorporated 
+      # exposure = input$exposure,
       effect = input$effect,
       endpoint = input$endpoint,
       cas = rv$data
@@ -334,30 +320,24 @@ server = function(input, output, session) {
     fun_aggregate(
       dt = fun_filter(
         dt = dat,
-        conc1_type = input$conc1_type,
+        concentration_type = input$concentration_type,
         chemical_class = input$chemical_class,
         tax = taxa_input(),
         habitat = input$habitat,
         region = input$region,
         duration = c(input$dur1, input$dur2),
         publ_year = c(input$yr1, input$yr2),
-        acch = input$acch,
-        exposure = input$exposure,
+        # acch = input$acch,
+        # exposure = input$exposure,
         effect = input$effect,
         endpoint = input$endpoint,
         cas = rv$data
       ),
       agg = input$agg,
-      info = input$infocols,
       comp = input$chemical,
-      rm_outl = input$rm_outl
+      info = input$infocols
     )
   })
-  # debuging
-  # output$debug = eventReactive({
-  #   saveRDS(data_fil(), '/tmp/data_fil')
-  #   saveRDS(data_agg(), '/tmp/data_agg')
-  # })
   # table -------------------------------------------------------------------
   output$tab = DT::renderDataTable({
     data_agg()
@@ -371,11 +351,8 @@ server = function(input, output, session) {
       "}"
     )
   ))),
-  #dom = 't',
   rownames = FALSE,
   callback = JS('table.page(3).draw(false);'))
-  
-  
   # plot --------------------------------------------------------------------
   output$plotly = renderPlotly({
     plotly_fin(
@@ -391,7 +368,8 @@ server = function(input, output, session) {
   output$download_fil = downloadHandler(
     filename = function() {
       paste(input$tax,
-            #input$habitat, input$continent,
+            input$habitat,
+            input$continent,
             paste0(input$dur1, input$dur2),
             'data_fil.csv',
             sep = '_')
@@ -404,7 +382,8 @@ server = function(input, output, session) {
   output$download_agg = downloadHandler(
     filename = function() {
       paste(input$tax,
-            #input$habitat, input$continent,
+            input$habitat,
+            input$continent,
             paste0(input$dur1, input$dur2),
             'data_agg.csv',
             sep = '_')
@@ -417,14 +396,7 @@ server = function(input, output, session) {
   # output$readme = renderUI({
   #   HTML(markdown::markdownToHTML(knit('README.Rmd', quiet = TRUE)))
   # })
-  output$meta = renderUI({
-    HTML(markdown::markdownToHTML(knit('meta.Rmd', quiet = TRUE)))
-  })
-  
-  
-  # version -----------------------------------------------------------------
-  output$version = renderText(version_string)
-  
+  output$meta = renderText(meta)
 }
 
 # app ---------------------------------------------------------------------

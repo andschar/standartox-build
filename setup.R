@@ -3,11 +3,9 @@
 # project folder ----------------------------------------------------------
 nodename = Sys.info()[4]
 if (nodename == 'scharmueller-t460s') {
-  prj = '/home/scharmueller/Projects/etox-base-shiny'
-  prj_data = '/home/scharmueller/Projects/etox-base'
+  prj = '/home/scharmueller/Projects/standartox-app'
 } else if (nodename == 'uwigis') {
-  prj = '/home/scharmueller/Projects/etox-base-shiny'
-  prj_data = '/home/scharmueller/Projects/etox-base'
+  prj = '/home/scharmueller/Projects/standartox-app'
 } else {
   stop('New system. Define prj and shinydir variables.')
 }
@@ -39,7 +37,7 @@ pkg_cran = c(
 
 pacman::p_load(char = pkg_cran)
 
-# p_update() #! do this manually, as unexpected consequences might occur
+# p_update() # TODO do this manually, as unexpected consequences might occur
 
 # options -----------------------------------------------------------------
 options(stringsAsFactors = FALSE,
@@ -47,28 +45,21 @@ options(stringsAsFactors = FALSE,
         shiny.trace = TRUE)
 
 # variables ---------------------------------------------------------------
-# /etox-base-shiny
 src = file.path(prj, 'R')
-fundir = file.path(src,'functions')
 datadir = file.path(prj, 'data')
-cache = file.path(prj, 'cache')
-# /etox-base
-article = file.path(prj_data, 'article')
+# folder for article references
+article = file.path(gsub('-app', '-build', prj), 'article')
 
 # source ------------------------------------------------------------------
 # functions
-source(file.path(fundir, 'fun_filter.R'))
-source(file.path(fundir, 'fun_aggregation.R'))
-# TODO source(file.path(fundir, 'fun_ssd.R'))
-source(file.path(fundir, 'fun_plotly.R'))
-source(file.path(fundir, 'fun_outliers.R'))
-source(file.path(fundir, 'fun_geometric_mean.R'))
-
-# source(file.path(fundir, 'fun_ec50filter_aggregation_plots.R'))
-# source(file.path(fundir, 'fun_ec50filter_meta_plots.R'))
-# source(file.path(fundir, 'fun_output_stats.R'))
-source(file.path(fundir, 'fun_casconv.R'))
-# plot themes
+source(file.path(src, 'fun_filter.R'))
+source(file.path(src, 'fun_aggregate.R'))
+# TODO source(file.path(src, 'fun_ssd.R'))
+source(file.path(src, 'fun_plotly.R'))
+source(file.path(src, 'fun_outliers.R'))
+source(file.path(src, 'fun_geometric_mean.R'))
+source(file.path(src, 'fun_casconv.R'))
+# plot theme
 source(file.path(src, 'gg_theme.R'))
 
 # versions ----------------------------------------------------------------
@@ -80,7 +71,7 @@ epa_versions_newest = max(epa_versions)
 for (i in pkg_cran) {
   capture.output(
     utils:::print.bibentry(citation(i), style = "Bibtex"),
-    file = file.path(article, 'refs', 'references-etox-base-rshinypackages.bib'),
+    file = file.path(article, 'refs', 'references-standartox-app.bib'),
     append = TRUE)
 }
 
