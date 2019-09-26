@@ -4,7 +4,6 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-nor_lookup = fread(file.path(normandir, 'lookup', 'lookup_variables.csv'))
 fl = file.path(sql, 'norman_data1.sql')
 q1 = readChar(fl, file.info(fl)$size)
 fl = file.path(sql, 'norman_data2.sql')
@@ -19,12 +18,6 @@ q2_newest = readChar(fl, file.info(fl)$size)
 # query -------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
-
-dbSendQuery(con, "DROP SCHEMA IF EXISTS norman CASCADE;")
-dbSendQuery(con, "CREATE SCHEMA norman;")
-
-dbWriteTable(con, nor_lookup, name = c('norman', 'variables'),
-             overwrite = TRUE, row.names = FALSE)
 
 dbSendQuery(con, q1) # cleaned data
 dbSendQuery(con, q2) # converted data
