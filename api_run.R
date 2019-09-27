@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
-
-source('setup.R')
+prj = '/home/scharmueller/Projects/standartox-app/'
+source(file.path(prj, 'setup.R'))
 
 nodename = Sys.info()[4]
 if(nodename == 'uwigis') {
