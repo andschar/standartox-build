@@ -12,6 +12,6 @@ Standartox is a data base tool standartizing the retrieval and aggregation of ec
 The project lives in these three repositories:
   
 - [standartox-build](https://github.com/andschar/standartox-build) - Compiles the tool
-- [standartox-app](https://github.com/andschar/standartox-build) - Serves the website and API
+- [standartox-app](https://github.com/andschar/standartox-app) - Serves the website and API
 - [standartox](https://github.com/andschar/standartox) - R-package
 

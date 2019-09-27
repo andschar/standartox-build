@@ -16,7 +16,7 @@ function(req) {
                       path_info = req$PATH_INFO,
                       http_user_agent = paste0(req$HTTP_USER_AGENT, "@", req$REMOTE_ADDR))
   fwrite(log_df, 'request.log', append = TRUE)
-  cat(unlist(log_df))
+  cat(paste0(unlist(log_df), collapse = '\n'))
   
   plumber::forward()
 }
@@ -145,59 +145,15 @@ function(req) {
   plumber::forward()
 }
 
-# endpoint: data: json ----------------------------------------------------
-# define parameters with type and description
-# name endpoint
-# return output as html/text
-# specify 200 (okay) return
-#* @param:character cas
-#* @param:character concentration_type:character Concentration type (e.g. 'A', 'F')
-#* @param:character chemical_class Chemical class (e.g. 'herbicide')
-#* @param:character taxa taxonomic name (e.g. Algae)
-#* @param:character habitat Organism habitat (e.g. freshwater)
-#* @param:character region Organism geographical region (e.g. europe)
-#* @param:int duration Test duration (e.g. ????)
-#* @param:character effect
-#* @param:character endpoint
-#* @post /filter/json
-#* @json
-function(cas = NULL,
-         concentration_type = NULL,
-         chemical_class = NULL,
-         taxa = NULL,
-         habitat = NULL,
-         region = NULL,
-         duration = NULL,
-         effect = NULL,
-         endpoint = NULL
-         # publ_year = publ_year, # NOTE possible addition
-         # acch = acch, # NOTE possible addition
-         # exposure = exposure, # NOTE possible addition
-         ) {
-  # browser()
-  # data
-  dat = fst::read_fst(file.path('data',
-                                v,
-                                paste0('standartox', v, '.fst')))
-  setDT(dat)
-  # function
-  out = fun_filter(dt = dat,
-                   cas_ = cas,
-                   concentration_type_ = concentration_type,
-                   chemical_class_ = chemical_class,
-                   taxa_ = taxa,
-                   habitat_ = habitat,
-                   region_ = region,
-                   duration_ = duration,
-                   effect_ = effect,
-                   endpoint_ = endpoint)
-  
-  # setnames(out, gsub('hab_|ccl_|reg_', '', names(out)))
-  
-  # jsonlite::write_json(jsonlite::toJSON(out), '/tmp/out.json')
-  # saveRDS(out, '/tmp/out.rds')
-  out_test <<- out
-  return(out)
+# endpoint: st_aggregate --------------------------------------------------
+
+#* @get /aggregate
+#* @serializer contentType list(type="application/octet-stream")
+function() {
+
+  tmp = file.path(tempdir(), 'stx_aggregate')
+  saveRDS(fun_aggregate, tmp)
+  readBin(tmp, "raw", n = file.info(tmp)$size)
 }
 
 # endpoint: data: rds -----------------------------------------------------
@@ -228,8 +184,8 @@ function(cas = NULL,
   # data
   dat = fst::read_fst(file.path('data',
                                 v,
-                                paste0('standartox', v, '.fst')))
-  setDT(dat)
+                                paste0('standartox', v, '.fst')),
+                      as.data.table = TRUE)
   # function
   out = fun_filter(dt = dat,
                    cas_ = cas,
@@ -242,9 +198,16 @@ function(cas = NULL,
                    effect_ = effect,
                    endpoint_ = endpoint)
   # return
-  tmp = tempfile()
-  fst::write_fst(out, tmp)
-  readBin(tmp, "raw", n = file.info(tmp)$size)
+  time = Sys.time()
+  tmp = file.path(tempdir(), 'data')
+  fst::write_fst(out, tmp, compress = 100)
+  write_speed = Sys.time() - time
+  logger_write_speed = data.frame(date = Sys.time(),
+                                  time = write_speed)
+  fwrite(logger_write_speed, 'write_speed.log', append = TRUE)
+  cat('\n', tmp)
+  
+  readBin(tmp, "raw", n = file.size(tmp))
 }
 
 # debug: results ----------------------------------------------------------
