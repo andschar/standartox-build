@@ -21,15 +21,6 @@ function(req) {
   plumber::forward()
 }
 
-# filter: debuging --------------------------------------------------------
-# save req objects to /tmp for debugging
-#* @filter debugger
-function(req) {
-  req_envir <<- req
-  
-  plumber::forward()
-}
-
 # filter vers --------------------------------------------------------------
 #* version path
 #* @filter vers
@@ -208,16 +199,6 @@ function(cas = NULL,
   cat('\n', tmp)
   
   readBin(tmp, "raw", n = file.size(tmp))
-}
-
-# debug: results ----------------------------------------------------------
-#* 
-#* @filter result
-function(res) {
-  
-  res_envir <<- res
-  
-  plumber::forward()
 }
 
 # endpoint: catalog -----------------------------------------------------

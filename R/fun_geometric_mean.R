@@ -1,7 +1,7 @@
 # function to calculate the geometric mean
 # https://stackoverflow.com/questions/2602583/geometric-mean-is-there-a-built-in
 
-gm_mean = function(x, na.rm=TRUE, zero.propagate = FALSE){
+gm_mean = function(x, na.rm = TRUE, zero.propagate = FALSE){
   if(any(x < 0, na.rm = TRUE)){
     return(NaN)
   }
@@ -15,4 +15,4 @@ gm_mean = function(x, na.rm=TRUE, zero.propagate = FALSE){
   }
 }
 
-gm_mean = function(x) { exp(mean(log(x))) }
+# gm_mean = function(x) { exp(mean(log(x))) }
