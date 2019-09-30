@@ -177,7 +177,7 @@ function(cas = NULL,
                                 paste0('standartox', v, '.fst')),
                       as.data.table = TRUE)
   # function
-  out = fun_filter(dt = dat,
+  out = stx_filter(dt = dat,
                    cas_ = cas,
                    concentration_type_ = concentration_type,
                    chemical_class_ = chemical_class,
