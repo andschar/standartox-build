@@ -1,6 +1,6 @@
 # function to filter data according to user's inputs
 
-fun_filter = function(dt,
+stx_filter = function(dt,
                       cas_ = NULL,
                       concentration_type_ = NULL,
                       chemical_class_ = NULL,

@@ -1,6 +1,6 @@
-# function to aggregate input from fun_filter()
+# function to aggregate input from stx_filter()
 
-fun_aggregate = function(dt = NULL, 
+stx_aggregate = function(dt = NULL, 
                          comp = c('cname', 'casnr'),
                          vl = 'concentration',
                          agg = c('min', 'gmn', 'med', 'max'),
@@ -9,7 +9,7 @@ fun_aggregate = function(dt = NULL,
   out = dt[ ,
             j = .(min = min(get(vl), na.rm = TRUE),
                   med = median(get(vl), na.rm = TRUE),
-                  gmn = exp(mean(log((get(vl))))),
+                  gmn = gm_mean(get(vl), na.rm = TRUE),
                   max = max(get(vl), na.rm = TRUE),
                   n = .N,
                   taxa = paste0(unique(tax_taxon), collapse = '-')),

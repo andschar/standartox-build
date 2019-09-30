@@ -52,8 +52,8 @@ article = file.path(gsub('-app', '-build', prj), 'article')
 
 # source ------------------------------------------------------------------
 # functions
-source(file.path(src, 'fun_filter.R'))
-source(file.path(src, 'fun_aggregate.R'))
+source(file.path(src, 'stx_filter.R'))
+source(file.path(src, 'stx_aggregate.R'))
 # TODO source(file.path(src, 'fun_ssd.R'))
 source(file.path(src, 'fun_plotly.R'))
 source(file.path(src, 'fun_outliers.R'))

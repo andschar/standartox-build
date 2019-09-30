@@ -299,7 +299,7 @@ server = function(input, output, session) {
   }, priority = 1000) # priority?
   # filter ------------------------------------------------------------------
   data_fil = reactive({
-    fun_filter(
+    stx_filter(
       dt = dat,
       concentration_type = input$concentration_type,
       chemical_class = input$chemical_class,
@@ -317,8 +317,8 @@ server = function(input, output, session) {
   })
   # aggregate ---------------------------------------------------------------
   data_agg = reactive({
-    fun_aggregate(
-      dt = fun_filter(
+    stx_aggregate(
+      dt = stx_filter(
         dt = dat,
         concentration_type = input$concentration_type,
         chemical_class = input$chemical_class,

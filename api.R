@@ -136,14 +136,24 @@ function(req) {
   plumber::forward()
 }
 
-# endpoint: st_aggregate --------------------------------------------------
+# endpoint: gm_mean -------------------------------------------------------
+#* @get /gmmean
+#* @serializer contentType list(type="application/octet-stream")
+function() {
+  
+  tmp = file.path(tempdir(), 'gm_mean')
+  saveRDS(gm_mean, tmp)
+  readBin(tmp, "raw", n = file.info(tmp)$size)
+}
 
+
+# endpoint: st_aggregate --------------------------------------------------
 #* @get /aggregate
 #* @serializer contentType list(type="application/octet-stream")
 function() {
 
   tmp = file.path(tempdir(), 'stx_aggregate')
-  saveRDS(fun_aggregate, tmp)
+  saveRDS(stx_aggregate, tmp)
   readBin(tmp, "raw", n = file.info(tmp)$size)
 }
 

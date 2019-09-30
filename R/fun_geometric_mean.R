@@ -11,7 +11,7 @@ gm_mean = function(x, na.rm = TRUE, zero.propagate = FALSE){
     }
     exp(mean(log(x), na.rm = na.rm))
   } else {
-    exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
+    exp(sum(log(x[x > 0]), na.rm = na.rm) / length(x))
   }
 }
 
