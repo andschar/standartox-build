@@ -54,10 +54,8 @@ article = file.path(gsub('-app', '-build', prj), 'article')
 # functions
 source(file.path(src, 'stx_filter.R'))
 source(file.path(src, 'stx_aggregate.R'))
-# TODO source(file.path(src, 'fun_ssd.R'))
 source(file.path(src, 'fun_plotly.R'))
 source(file.path(src, 'fun_outliers.R'))
-source(file.path(src, 'fun_geometric_mean.R'))
 source(file.path(src, 'fun_casconv.R'))
 # plot theme
 source(file.path(src, 'gg_theme.R'))
