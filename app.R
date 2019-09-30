@@ -59,7 +59,7 @@ sidebar = dashboardSidebar(
         label = 'Chemical class',
         choiceValues = catalog_l$chemical_class$variable,
         choiceNames = catalog_l$chemical_class$name_perc,
-        selected = NULL
+        selected = grep('insecticide', catalog_l$chemical_class$variable, ignore.case = TRUE, value = TRUE)[1]
       )
     ),
     menuItem(
@@ -68,7 +68,7 @@ sidebar = dashboardSidebar(
       selectizeInput(inputId = 'tax',
                      label = 'Taxa',
                      choices = catalog_l$taxa$variable,
-                     selected = NULL,
+                     selected = 'Daphnia magna',
                      multiple = TRUE,
                      options = list(create = FALSE)),
       prettyCheckboxGroup(
@@ -218,7 +218,7 @@ body = dashboardBody(
         label = 'Information columns',
         choiceValues = c('taxa', 'n'),
         choiceNames = c('taxa', 'n'),
-        selected = 'taxa'
+        selected = 'n'
       )
     )
   ),
@@ -263,7 +263,7 @@ body = dashboardBody(
 
 # page --------------------------------------------------------------------
 ui = dashboardPagePlus(header, sidebar, body,
-                       title = 'Etox Base',
+                       title = 'Standartox',
                        skin = 'purple')
 # server ------------------------------------------------------------------
 server = function(input, output, session) {

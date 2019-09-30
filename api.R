@@ -237,17 +237,9 @@ function(vers = NULL) {
 #* @param:int vers
 #* @json
 function(vers = NULL) {
-  etox_version = read.csv(file.path('data',
-                                    v,
-                                    paste0('standartox', v, '_meta.csv')))$etox_version
-  out = data.table(variable = c('accessed', 'etox_version'),
-                   value = c(Sys.time(), etox_version))
+  out = data.table(variable = c('accessed', 'standartox_version'),
+                   value = c(as.character(Sys.time()), as.character(v)))
   
   return(out) 
 }
-
-
-
-
-
 

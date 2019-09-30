@@ -7,8 +7,11 @@
 *.Rproj
 
 # data
-# too big
-/data/*.feather
+/data/*
+
+# log
+*.log
 
 # notes
 deploy_shiny_app.txt
+
