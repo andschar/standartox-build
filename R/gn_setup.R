@@ -66,51 +66,49 @@ build_db = T # build data base?
 download = F # run download scripts (takes days)? 
 build = T # run build scripts?
 build_standartox = T
-build_norman = T
-export = F # should data be exported?
+build_norman = F
+export = T # should data be exported?
 debug_mode = F # should only 10 input rows for each quering script be run
 sink_console = T # sink console to file
+general = T
+
+# data base ---------------------------------------------------------------
+DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
+vers = gsub('etox', '', DBetox)
+if(inherits(DBetox, 'try-error')) {
+  DBetox = 'DBetox not yet defined'
+}
 
 # variables ---------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
-option = file.path(prj, 'options')
-meta = file.path(prj, 'meta')
-plotdir = file.path(prj, 'plots')
 src = file.path(prj, 'R')
-srcrmd = file.path(prj, 'Rmd')
+srcrmd = file.path(prj, 'Rmd') # TODO remove once replaced with dbreport::
 data = file.path(prj, 'data')
 data_ecotox = file.path(data, 'ecotox')
-data_chebi = file.path(data, 'chebi')
 lookupdir = file.path(prj, 'lookup')
 cred = file.path(prj, 'cred')
 sql = file.path(prj, 'sql')
-exportdir = file.path(prj, 'export')
-summdir = file.path(prj, 'summary')
+exportdir = file.path(prj, 'export', vers)
+summdir = file.path(prj, 'summary', vers)
 ## article subfolder
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')
 ## talk subfolder
 datadir_tk = file.path(prj, 'talk', 'data')
 ## shiny application
-shinydir = gsub('-build', '-app', prj)
-shinydata = file.path(shinydir, 'data')
+appdata = file.path(gsub('-build', '-app', prj), 'data', vers)
 ## standartox R-package
-standartoxdir = gsub(basename(prj), 'standartox', prj, fixed = TRUE)
 ## NORMAN
 normandir = file.path(prj, 'norman')
 cloud = file.path('/home/scharmueller/Nextcloud/norman')
 
-# data base to write to
+# debug mode --------------------------------------------------------------
 if (debug_mode) {
   DBetox = 'testdb'
-} else {
-  DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
-  if(inherits(DBetox, 'try-error')) {
-    DBetox = 'DBetox not yet defined'
-  }
 }
 
 # path to phantomjs
+# TODO check if still needed
 nodename = Sys.info()[4]
 if (nodename == 'scharmueller-t460s') {
   phantompath = '/usr/local/bin/phantomjs'
@@ -166,7 +164,7 @@ pgpass = paste(DBhost, DBport, DBetox, DBuser, DBpassword, sep = ':')
 write(pgpass, '~/.pgpass')
 
 # plot theme --------------------------------------------------------------
-source(file.path(option, 'ggplot_theme_etox_base.R'))
+source(file.path(src, 'ggplot_theme_etox_base.R'))
 theme_set(theme_minimal_etox_base_sans)
 
 # cite packages -----------------------------------------------------------

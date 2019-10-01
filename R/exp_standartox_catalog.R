@@ -33,8 +33,6 @@ for (i in seq_along(cols)) {
   names(l)[i] = col
 }
 DBI::dbDisconnect(con)
-# version
-vers = list.dirs(shinydata, full.names = FALSE, recursive = FALSE)
 
 # preparation -------------------------------------------------------------
 # NOTE looks as it could be automated, however for quality checkin done by hand
@@ -81,8 +79,7 @@ setnames(endpoint, c('variable', 'n', 'n_total'))
 endpoint[ , perc := round(n / n_total * 100) ]
 
 # list --------------------------------------------------------------------
-catalog_l = list(vers = vers,
-                 casnr = casnr,
+catalog_l = list(casnr = casnr,
                  concentration_type = concentration_type,
                  chemical_class = chemical_class,
                  taxa = taxa,

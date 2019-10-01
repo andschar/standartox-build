@@ -3,7 +3,7 @@
 
 file_cpy = function(files = NULL, to = NULL, overwrite_dir = TRUE, ...) {
   # remove folder
-  unlink(to)
+  unlink(to, recursive = TRUE)
   mkdirs(to)
   # paths
   from = files

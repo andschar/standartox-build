@@ -22,10 +22,6 @@ dbSendQuery(con, "CREATE SCHEMA standartox;")
 dbSendQuery(con, q2) # converted data
 dbSendQuery(con, q2_fin) # combined data
 
-# dbSendQuery(con, "GRANT USAGE ON SCHEMA standartox TO jupke;") # TODO only temporarily! remove!
-# dbSendQuery(con, "GRANT SELECT ON TABLE standartox.data TO jupke;")
-# dbSendQuery(con, "GRANT SELECT ON TABLE standartox.data2 TO jupke;")
-
 dbDisconnect(con)
 dbUnloadDriver(drv)
 

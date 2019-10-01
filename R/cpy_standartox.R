@@ -2,12 +2,11 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
-dir = gsub('etox', '', DBetox)
 
 # copy --------------------------------------------------------------------
-files = list.files(file.path(exportdir, dir),
+files = list.files(file.path(exportdir, vers),
                    full.names = TRUE)
-to = file.path(shinydata, dir)
+to = file.path(appdata, dir)
 
 file_cpy(files, to)
 

@@ -109,9 +109,9 @@ CREATE TABLE standartox.chemicals AS
 SELECT
 	chemicals.cas_number AS casnr,
 	casconv(chemicals.cas_number, 'cas') AS cas,
-	chemicals.chemical_name AS chemical_name_epa,
+	lower(chemicals.chemical_name) AS chemical_name_epa,
 	chemicals.ecotox_group,
-	chem_names.cname,
+	lower(chem_names.cname) AS cname,
 	chem_names.iupacname,
 	chem_names.inchikey,
 	chem_names.inchi,
