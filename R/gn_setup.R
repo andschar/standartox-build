@@ -84,20 +84,22 @@ cred = file.path(prj, 'cred')
 sql = file.path(prj, 'sql')
 ## data base
 DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
-vers = gsub('etox', '', DBetox)
 if(inherits(DBetox, 'try-error')) {
   DBetox = 'DBetox not yet defined'
 }
+vers = gsub('etox', '', DBetox)
 ## export/summary
 exportdir = file.path(prj, 'export', vers)
+mkdirs(exportdir)
 summdir = file.path(prj, 'summary', vers)
+mkdirs(summdir)
 ## article subfolder
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')
 ## talk subfolder
 datadir_tk = file.path(prj, 'talk', 'data')
 ## shiny application
-appdata = file.path(gsub('-build', '-app', prj), 'data', vers)
+appdata = file.path(gsub('-build', '-app', prj), 'data')
 ## standartox R-package
 ## NORMAN
 normandir = file.path(prj, 'norman')
