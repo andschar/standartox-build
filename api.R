@@ -25,23 +25,18 @@ function(req) {
 #* version path
 #* @filter vers
 function(req, res) {
-  dirs = list.dirs('data', recursive = FALSE, full.names = FALSE)
-  if (is.null(req$args$vers)) {
-    v <<- as.integer(max(dirs))
+  dirs <<- list.dirs('data', recursive = FALSE, full.names = FALSE)
+  v_req = req$args$vers
+  if (is.null(v_req)) {
+    v <<- max(as.integer(dirs), na.rm = TRUE)
   } else {
-    v <<- as.integer(gsub('\\W', '', req$args$vers)) # sanitizing  
+    v <<- as.integer(gsub('\\W', '', v_req)) # sanitizing
+    if (! v %in% dirs) {
+      res$status = 400
+      return(list(error = 'Provided version number not in data.'))
+    }
   }
-  if (is.na(v) || !is.integer(v)) {
-    msg <<- 'Provided version argument is not allowed.'
-    res$status = 400 # Bad request
-    return(list(error = msg))
-  }
-  if (! v %in% dirs) {
-    msg <<- 'Provided version number not in data.'
-    res$status = 400 # Bad request
-    return(list(error = msg))
-  }
-  
+
   plumber::forward()
 }
 
@@ -52,6 +47,7 @@ function(req) {
   catal <<- readRDS(file.path('data',
                               v,
                               paste0('standartox', v, '_catalog.rds')))
+  catal$vers <<- dirs
   
   plumber::forward()
 }
@@ -136,6 +132,14 @@ function(req) {
   plumber::forward()
 }
 
+# endpoint: catalog -----------------------------------------------------
+#* @post /catalog
+#* @json
+function() {
+  
+  return(catal)
+}
+
 # endpoint: st_aggregate --------------------------------------------------
 #* @get /aggregate
 #* @serializer contentType list(type="application/octet-stream")
@@ -200,23 +204,10 @@ function(cas = NULL,
   readBin(tmp, "raw", n = file.size(tmp))
 }
 
-# endpoint: catalog -----------------------------------------------------
-#* @post /catalog
-#* @param:int vers
-#* @json
-function(vers = NULL) {
-  out = readRDS(file.path('data',
-                          v,
-                          paste0('standartox', v, '_catalog.rds')))
-  
-  return(out)
-}
-
 # endpoint: meta ----------------------------------------------------------
 #* @post /meta
-#* @param:int vers
 #* @json
-function(vers = NULL) {
+function() {
   out = data.table(variable = c('accessed', 'standartox_version'),
                    value = c(as.character(Sys.time()), as.character(v)))
   

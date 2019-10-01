@@ -25,7 +25,7 @@ catalog_l = readRDS(file.path(datadir,
 catalog_l = lapply(catalog_l,
                    function(x) {
                      if (is.data.table(x)) {
-                       x[ , name_perc := paste0(variable, '(', perc, '%)') ]
+                       x[ , name_perc := paste0(variable, ' (', perc, '%)') ]
                      } else {
                        x
                      }
