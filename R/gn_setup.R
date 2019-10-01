@@ -72,14 +72,8 @@ debug_mode = F # should only 10 input rows for each quering script be run
 sink_console = T # sink console to file
 general = T
 
-# data base ---------------------------------------------------------------
-DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
-vers = gsub('etox', '', DBetox)
-if(inherits(DBetox, 'try-error')) {
-  DBetox = 'DBetox not yet defined'
-}
-
-# variables ---------------------------------------------------------------
+# variables ----------------------------------------------------------------
+## general
 cachedir = file.path(prj, 'cache')
 src = file.path(prj, 'R')
 srcrmd = file.path(prj, 'Rmd') # TODO remove once replaced with dbreport::
@@ -88,6 +82,13 @@ data_ecotox = file.path(data, 'ecotox')
 lookupdir = file.path(prj, 'lookup')
 cred = file.path(prj, 'cred')
 sql = file.path(prj, 'sql')
+## data base
+DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
+vers = gsub('etox', '', DBetox)
+if(inherits(DBetox, 'try-error')) {
+  DBetox = 'DBetox not yet defined'
+}
+## export/summary
 exportdir = file.path(prj, 'export', vers)
 summdir = file.path(prj, 'summary', vers)
 ## article subfolder
