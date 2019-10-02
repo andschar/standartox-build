@@ -22,8 +22,8 @@ stx_filter = function(dt,
   data.table::setDT(dt)
   # CAS ---------------------------------------------------------------------
   if (!is.null(cas_)) {
-    casnr_todo = gsub('-', '', cas_)
-    dt = dt[ casnr %in% casnr_todo ]
+    cas_todo = gsub('-', '', cas_)
+    dt = dt[ cas %in% cas_todo ]
   }
   # filters -----------------------------------------------------------------
   if (!is.null(concentration_type_)) {

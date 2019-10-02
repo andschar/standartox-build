@@ -5,32 +5,32 @@ plotly_prep = function(agg,
                        cutoff = 25) {
   ## prepartaion
   setDT(agg)
-  agg[ , casnr := as.character(casnr) ]
+  agg[ , cas := as.character(cas) ]
   setDT(fil)
-  fil[ , casnr := as.character(casnr) ]
+  fil[ , cas := as.character(cas) ]
   ## aggregated data
   cols = grep('gm|md|mn|min|max',
               names(agg),
               ignore.case = TRUE,
               value = TRUE)
-  agg_m = melt(agg, id.vars = 'casnr', measure.vars = cols)
+  agg_m = melt(agg, id.vars = 'cas', measure.vars = cols)
   agg_m[fil, `:=` (
     cname = i.cname
     # TODO outl = i.outl,
     # TODO ref_num = i.ref_num
-  ), on = 'casnr']
+  ), on = 'cas']
   # split (in case of multiple variables)
   l_agg = split(agg_m, agg_m$variable)
   # order + cutoff
   l_agg = lapply(l_agg, setorder, value)
   l_agg = lapply(l_agg, head, cutoff)
   ## filtered data
-  col_fil = c('casnr', 'cname', 'concentration')
+  col_fil = c('cas', 'cname', 'concentration')
   fil2 = fil[ , .SD, .SDcols = col_fil ]
-  fil2 = fil2[ casnr %in% agg$casnr ]
+  fil2 = fil2[ cas %in% agg$cas ]
   fil2[ ,
         outl := rm_outliers(concentration, lim = 1.5, na.rm = TRUE),
-        by = casnr ]
+        by = cas ]
   fil2[ , outl := ifelse(is.na(outl), TRUE, FALSE)]
   
   ## return
@@ -42,10 +42,10 @@ plotly_prep = function(agg,
   
 plotly_plot = function(agg,
                        fil,
-                       yaxis = 'casnr',
+                       yaxis = 'cas',
                        xaxis = 'limout') {
   ## preparation
-  fil2 = fil[ casnr %in% agg$casnr ]
+  fil2 = fil[ cas %in% agg$cas ]
   ## axis
   yform = list(
     categoryorder = "array",
@@ -98,7 +98,7 @@ plotly_plot = function(agg,
 
 plotly_fin = function(agg,
                       fil,
-                      yaxis = 'casnr',
+                      yaxis = 'cas',
                       xaxis = 'limout',
                       cutoff = 25) {
   ## prepare data
@@ -121,11 +121,11 @@ plotly_fin = function(agg,
 # debuging ----------------------------------------------------------------
 # fil = fread('/home/scharmueller/Downloads/_2448_data_fil.csv')
 # agg = fread('/home/scharmueller/Downloads/_2448_data_agg.csv')
-# yaxis = 'casnr'
+# yaxis = 'cas'
 # 
 # plotly_fin(agg = agg,
 #            fil = fil,
-#            yaxis = 'casnr',
+#            yaxis = 'cas',
 #            xaxis = 'limout',
 #            cutoff = 40)
 

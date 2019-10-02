@@ -209,9 +209,9 @@ body = dashboardBody(
       prettyCheckboxGroup(
         inputId = 'chemical',
         label = 'Chemical columns',
-        choiceValues = c('casnr', 'cname'),
+        choiceValues = c('cas', 'cname'),
         choiceNames = c('CAS', 'Chemical name'),
-        selected = c('casnr', 'cname')
+        selected = c('cas', 'cname')
       ),
       prettyCheckboxGroup(
         inputId = 'infocols',
@@ -244,9 +244,9 @@ body = dashboardBody(
       prettyRadioButtons(
         inputId = 'yaxis',
         label = 'y-axis',
-        choiceValues = c('casnr', 'cname'),
+        choiceValues = c('cas', 'cname'),
         choiceNames = c('CAS', 'chemical name'),
-        selected = 'casnr',
+        selected = 'cas',
         inline = FALSE
       ),
       prettyRadioButtons(

@@ -1,7 +1,7 @@
 # function to aggregate input from stx_filter()
 
 stx_aggregate = function(dt = NULL, 
-                         comp = c('cname', 'casnr'),
+                         comp = c('cname', 'cas'),
                          vl = 'concentration',
                          agg = c('min', 'gmn', 'med', 'max'),
                          info = c('taxa', 'n')) {
@@ -28,7 +28,7 @@ stx_aggregate = function(dt = NULL,
                   max = max(get(vl), na.rm = TRUE),
                   n = .N,
                   taxa = paste0(unique(tax_taxon), collapse = '-')),
-            by = .(casnr, cname) ]
+            by = .(cas, cname) ]
   sdcols = unique(c(comp, agg, info))
   out = out[ , .SD, .SDcols = sdcols ]
   

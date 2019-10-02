@@ -58,7 +58,7 @@ function(req) {
 function(req, res) {
   if (!is.null(req$args$cas)) {
     req$args$cas = as.integer(gsub('-|\\W', '', req$args$cas))
-    if (!all(req$args$cas %in% catal$casnr$variable)) {
+    if (!all(req$args$cas %in% catal$cas$variable)) {
       res$status = 400
       return(list(error = 'Provided CAS not in data.'))
     }
