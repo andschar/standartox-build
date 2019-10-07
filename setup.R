@@ -57,6 +57,7 @@ source(file.path(src, 'stx_aggregate.R'))
 source(file.path(src, 'fun_plotly.R'))
 source(file.path(src, 'fun_outliers.R'))
 source(file.path(src, 'fun_casconv.R'))
+source(file.path(src, 'fun_in_catalog.R'))
 # plot theme
 source(file.path(src, 'gg_theme.R'))
 

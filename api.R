@@ -7,6 +7,17 @@ source('setup.R', local = FALSE)
 #* @apiTitle Standartox API
 #* @apiDescription Retieve filtered data
 
+
+# debugger ----------------------------------------------------------------
+#* @filter debugger
+function(req) {
+  
+  req_envir <<- req
+  
+  plumber::forward()
+}
+
+
 # filter: logger ----------------------------------------------------------
 #* Log system time, request method and HTTP user agent of the incoming request
 #* @filter logger
@@ -61,60 +72,74 @@ function(req) {
 function(req, res) {
   if (!is.null(req$args$cas)) {
     req$args$cas = as.integer(gsub('-|\\W', '', req$args$cas))
-    if (!all(req$args$cas %in% catal$cas$variable)) {
+    chck_catal = in_catalog(req$args$cas, catal$cas$variable)
+    if (!is.null(chck_catal)) {
+      msg = paste0('CAS not in Standartox data base:\n', paste0(chck_catal, collapse = '\n')) 
       res$status = 400
-      return(list(error = 'Provided CAS not in data.'))
+      return(list(error = msg))
     }
   }
   if (!is.null(req$args$concentration_type)) {
-    if (!all(req$args$concentration_type %in% catal$concentration_type$variable)) {
+    chck_catal = in_catalog(req$args$concentration_type, catal$concentration_type$variable)
+    if (!is.null(chck_catal)) {
+      msg = paste0('Concentration type not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
       res$status = 400
-      return(list(error = 'Provided concentration type not in data.'))
+      return(list(error = msg))
     }
   }
   if (!is.null(req$args$chemical_class)) {
-    if (!all(req$args$chemical_class %in% catal$chemical_class$variable)) {
+    chck_catal = in_catalog(req$args$chemical_class, catal$chemical_class$variable)
+    if (!is.null(chck_catal)) {
+      msg = paste0('Chemical class not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
       res$status = 400
-      return(list(error = 'Provided chemical class not in data.'))
+      return(list(error = msg))
     }
   }
   if (!is.null(req$args$taxa))  {
-    if (!all(req$args$taxa %in% catal$taxa$variable)) {
+    chck_catal = in_catalog(req$args$taxa, catal$taxa$variable)
+    if (!is.null(chck_catal)) {
+      msg = paste0('Taxa not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
       res$status = 400
-      return(list(error = 'Chemical class not in data.'))
+      return(list(error = msg))
     }
   }
   if (!is.null(req$args$habitat)) {
-    if (!all(req$args$habitat %in% catal$habitat$variable)) {
+    chck_catal = in_catalog(req$args$habitat, catal$habitat$variable)
+    if (!is.null(chck_catal)) {
+      msg = paste0('Habitat value not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
       res$status = 400
-      return(list(error = 'Provided habitat value not in data.'))
-      # TODO how to handle <ccl_>?
+      return(list(error = msg))
     }
   }
   if (!is.null(req$args$region)) {
-    if (!all(req$args$region %in% catal$region$variable)) {
+    chck_catal = in_catalog(req$args$region, catal$region$variable)
+    if (!is.null(chck_catal)) {
+      msg = paste0('Region value not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
       res$status = 400
-      return(list(error = 'Provided region value not in data.'))
-      # TODO how to handle <hab_>?
+      return(list(error = msg))
     }
   }
   if (!is.null(req$args$duration)) {
     req$args$duration = as.integer(gsub('\\W', '', req$args$duration)) # numeric sanitizing
-    if (! req$args$duration %between% catal$duration) {
+    if (!all(req$args$duration %between% catal$duration)) {
       res$status = 400
-      return(list(error = 'Provided duration value not in data.'))
+      return(list(error = 'Duration period not in Standartox data base.'))
     }
   }
   if (!is.null(req$args$effect)) {
-    if (!all(req$args$effect %in% catal$effect$variable)) {
+    chck_catal = in_catalog(req$args$effect, catal$effect$variable)
+    if (!is.null(chck_catal)) {
+      msg = paste0('Effect value not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
       res$status = 400
-      return(list(error = 'Provided effect value not in data.'))
+      return(list(error = msg))
     }
   }
   if (!is.null(req$args$endpoint)) {
-    if (!all(req$args$endpoint %in% catal$endpoint$variable)) {
+    chck_catal = in_catalog(req$args$endpoint, catal$endpoint$variable)
+    if (!is.null(chck_catal)) {
+      msg = paste0('Endpoint value not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
       res$status = 400
-      return(list(error = 'Provided endpoint value not in data.'))
+      return(list(error = msg))
     }
   }
 
