@@ -18,6 +18,9 @@ function(req) {
   fwrite(log_df, 'request.log', append = TRUE)
   cat(paste0(unlist(log_df), collapse = '\n'))
   
+  body_log = paste0(gsub('-|/|:|,|\\s+', '-', paste0(unlist(log_df[1, ]), collapse = '')), '_body.json')
+  jsonlite::write_json(req$postBody, file.path('log', body_log))
+  
   plumber::forward()
 }
 
