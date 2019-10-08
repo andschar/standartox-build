@@ -164,8 +164,8 @@ sidebar = dashboardSidebar(
       prettyCheckboxGroup(
         inputId = 'agg',
         label = 'Aggregate',
-        choiceValues = c('min', 'med', 'gmn', 'max'),
-        choiceNames = c('Minimum', 'Median', 'Geometric Mean', 'Maximum'),
+        choiceValues = c('min', 'gmn', 'max'),
+        choiceNames = c('Minimum', 'Geometric Mean', 'Maximum'),
         selected = 'gmn'
       )
     )

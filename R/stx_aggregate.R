@@ -3,7 +3,7 @@
 stx_aggregate = function(dt = NULL, 
                          comp = c('cname', 'cas'),
                          vl = 'concentration',
-                         agg = c('min', 'gmn', 'med', 'max'),
+                         agg = c('min', 'gmn', 'max'),
                          info = c('taxa', 'n')) {
   # function to calculate the geometric mean
   # https://stackoverflow.com/questions/2602583/geometric-mean-is-there-a-built-in
@@ -23,7 +23,6 @@ stx_aggregate = function(dt = NULL,
   agg = match.arg(agg, several.ok = TRUE)
   out = dt[ ,
             j = .(min = min(get(vl), na.rm = TRUE),
-                  med = median(get(vl), na.rm = TRUE),
                   gmn = gm_mean(get(vl), na.rm = TRUE),
                   max = max(get(vl), na.rm = TRUE),
                   n = .N,
