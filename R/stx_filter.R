@@ -56,6 +56,8 @@ stx_filter = function(dt,
     dur = duration_
   }
   dt = dt[ duration %between% dur ]
+  # order -------------------------------------------------------------------
+  setcolorder(dt, c('cname', 'cas'))
 
   return(dt)
 }

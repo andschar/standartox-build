@@ -190,7 +190,9 @@ function() {
 #* @param:character endpoint
 #* @post /filter/rds
 #* @serializer contentType list(type="application/octet-stream")
-function(cas = NULL,
+function(req,
+         res,
+         cas = NULL,
          concentration_type = NULL,
          chemical_class = NULL,
          taxa = NULL,
@@ -220,16 +222,25 @@ function(cas = NULL,
                    effect_ = effect,
                    endpoint_ = endpoint)
   # return
-  time = Sys.time()
-  tmp = file.path(tempdir(), 'data')
-  fst::write_fst(out, tmp, compress = 100)
-  write_speed = Sys.time() - time
-  logger_write_speed = data.frame(date = Sys.time(),
-                                  time = write_speed)
-  fwrite(logger_write_speed, 'write_speed.log', append = TRUE)
-  cat('\n', tmp)
-  
-  readBin(tmp, "raw", n = file.size(tmp))
+  if (nrow(out) == 0) {
+    # TODO raise issue for fst to allow nrow(out) == 0 to be saved to disk
+    # rbindlist(list(out, list(cas = 'No data')), fill = TRUE)
+    msg = 'No data for the chosen parameter combination in the Standartox data base.'
+    res$status = 400
+    
+    jsonlite::toJSON(msg)
+  } else {
+    time = Sys.time()
+    tmp = file.path(tempdir(), 'data')
+    fst::write_fst(out, tmp, compress = 100)
+    write_speed = Sys.time() - time
+    logger_write_speed = data.frame(date = Sys.time(),
+                                    time = write_speed)
+    fwrite(logger_write_speed, 'write_speed.log', append = TRUE)
+    cat('\n', tmp)
+    
+    readBin(tmp, "raw", n = file.size(tmp))
+  }
 }
 
 # endpoint: meta ----------------------------------------------------------
