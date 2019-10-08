@@ -56,14 +56,6 @@ stx_filter = function(dt,
     dur = duration_
   }
   dt = dt[ duration %between% dur ]
-  if (is.null(publ_year_)) {
-    yr = range(dt$publication_year)
-  } else if (length(publ_year_) == 1) {
-    yr = rep(publ_year_, 2)
-  } else {
-    yr = publ_year_
-  }
-  dt = dt[ publication_year %between% yr ]
-  
+
   return(dt)
 }
