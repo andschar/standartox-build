@@ -8,15 +8,31 @@ SELECT
 	tests.test_id,
 	results.result_id,
 	tests.test_cas AS casnr,
+	results.conc1_mean AS conc1_mean,
+	results.conc1_unit AS conc1_unit,
 	CASE
 	  WHEN concentration_unit_lookup.conv = 'yes'
-	    THEN clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier
+	  THEN 
+	  	CASE
+		  WHEN concentration_unit_lookup.unit_conv = 'mol/l'
+		  THEN molconv(clean(results.conc1_mean)::numeric, chem_prop.molecularweight::numeric) * 1e6::numeric -- g/l to ug/l
+	  	  WHEN concentration_unit_lookup.unit_conv = 'mol/g'
+		  THEN molconv(clean(results.conc1_mean)::numeric, chem_prop.molecularweight::numeric) * 1e6::numeric -- g/g to mg/kg
+	      ELSE clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier
+		END	  	
 	  ELSE clean(results.conc1_mean)::numeric
   	END AS conc1_mean2,
 	coalesce(substring(results.conc1_mean, '<|>'), '=') AS conc1_qualifier,
 	CASE
 	  WHEN concentration_unit_lookup.conv = 'yes'
-	  	THEN concentration_unit_lookup.unit_conv
+	  	THEN 
+	  	CASE
+		  WHEN concentration_unit_lookup.unit_conv = 'mol/l' -- see conversion above
+		  THEN 'ug/l'
+		  WHEN concentration_unit_lookup.unit_conv = 'mol/g' -- see conversion above
+		  THEN 'mg/kg'
+		  ELSE concentration_unit_lookup.unit_conv
+		END
 	  ELSE results.conc1_unit
 	END AS conc1_unit2,
 	CASE
@@ -93,6 +109,7 @@ LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_un
 LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
 LEFT JOIN ecotox.exposure_type_codes ON tests.exposure_type = exposure_type_codes.code
 LEFT JOIN ecotox.effect_codes ON results.effect = effect_codes.code
+LEFT JOIN phch_fin.chem_prop ON tests.test_cas = chem_prop.cas_number -- for molecularweight
 
 WHERE
 	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT LIKE '%ca%';

@@ -2,13 +2,10 @@
 # data provided by Peter v. d. Ohe
 
 # setup -------------------------------------------------------------------
-source(file.path(src, 'gn_setup.R'))
+source('R/gn_setup.R')
 
 # lookup ------------------------------------------------------------------
 dat = fread(file.path(normandir, 'lookup', 'lookup_use_acute_chronic_standard.csv'), na.strings = '')
-# TODO get new classification from Peter
-# TODO check for duplicates with 20190314
-# TODO apply for new 20190912
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
@@ -32,13 +29,14 @@ dbUnloadDriver(drv)
 
 # merge -------------------------------------------------------------------
 fin = merge(ids, dat, by = 'id', all.x = TRUE)
+fin = fin[ ,.SD, .SDcols = c('result_id', 'nor_use', 'nor_acute_chronic', 'nor_standard_test') ]
 
 # chck --------------------------------------------------------------------
-chck_dupl(ids, 'result_id')
+chck_dupl(fin, 'result_id')
 
 # write -------------------------------------------------------------------
-write_tbl(dat, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'lookup', tbl = 'lookup_acute_chronic_standard',
+write_tbl(fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'lookup', tbl = 'lookup_norman_use_acute_chronic_standard',
           key = 'result_id',
           comment = 'NORMAN use, acute-chronic and standard-test lookup table')
 

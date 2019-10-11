@@ -6,7 +6,7 @@ source(file.path(src, 'gn_setup.R'))
 # copy --------------------------------------------------------------------
 files = list.files(file.path(exportdir, vers),
                    full.names = TRUE)
-to = file.path(appdata, dir)
+to = file.path(appdata, vers)
 
 file_cpy(files, to)
 

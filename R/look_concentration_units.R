@@ -29,7 +29,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 ## lookup
-look_unit = fread(file.path(lookupdir, 'lookup_result_unit.csv'), na.strings = '')
+look_unit = fread(file.path(lookupdir, 'lookup_concentration_unit.csv'), na.strings = '')
 look_str = paste0(look_unit$unit, collapse = '|')
 
 # checks ------------------------------------------------------------------
@@ -212,7 +212,7 @@ chck_dupl(units, 'conc1_unit')
 
 # write -------------------------------------------------------------------
 ## csv
-fwrite(units, file.path(summdir, 'concentration_unit_lookup.csv'))
+fwrite(units, file.path(summdir, 'concentration_unit_lookup_summary.csv'))
 
 ## postgres
 write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,

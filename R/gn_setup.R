@@ -73,7 +73,6 @@ sink_console = T # sink console to file
 general = T
 
 # variables ----------------------------------------------------------------
-## general
 cachedir = file.path(prj, 'cache')
 src = file.path(prj, 'R')
 srcrmd = file.path(prj, 'Rmd') # TODO remove once replaced with dbreport::

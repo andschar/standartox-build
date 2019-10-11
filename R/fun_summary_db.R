@@ -119,7 +119,7 @@ summary_db_all = function(schema, table) {
                  tab3 AS (
               	  SELECT count(*) n_notrep
                   FROM ", paste0(schema, '.', table), "
-              	  WHERE ", col, "::text = 'not reported'
+              	  WHERE ", col, "::text = 'n.r.'
               	 ),
                  tab4 AS (
                          SELECT COUNT(*) n_distinct

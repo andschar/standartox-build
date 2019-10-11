@@ -30,6 +30,19 @@ class: title-slide
 &lt;br&gt;
 &lt;img src="https://www.uni-koblenz-landau.de/de/landau/fb7/umweltwissenschaften/logos/land-ecol-neu.jpg" width="100"&gt;
 &lt;img src="https://www.uni-koblenz-landau.de/de/uni/organisation/verwaltung/abteilungen/abt-1/dokumente-ab1/uni-logo-farbig.jpg" width="200"&gt;
+&lt;img src="https://www.uni-koblenz-landau.de/de/uni/organisation/verwaltung/abteilungen/abt-1/dokumente-ab1/uni-logo-farbig.jpg" width="200"&gt;
+&lt;img src="https://de.wikipedia.org/wiki/Universit%C3%A4t_Stra%C3%9Fburg#/media/Datei:Universit%C3%A9_de_Strasbourg.svg" width="100"&gt;
+
+---
+
+# Introduction
+
+
+
+
+
+
+
 
 ---
 # Chemicals in the environment
@@ -51,7 +64,7 @@ class: title-slide
 .pull-right[
 
 Bernhardt et al. 2017
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/bernhardt_et_al_chem.png" width="300px"&gt;
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/bernhardt_et_al_chem.png" width="300px"&gt;
 
 ]
 
@@ -61,7 +74,7 @@ light-red: diversity of US pharmaceuticals&lt;br&gt;
 red: application of pesticides (globally and in the US)
 
 ---
-background-image: url(/home/scharmueller/Projects/etox-base/talk/data/stream.jpg)
+background-image: url(/home/scharmueller/Projects/standartox-build/talk/data/stream.jpg)
 background-size: 400px
 background-position: 90% 50%
 
@@ -92,7 +105,7 @@ Presenter notes can be put here!
 &lt;br/&gt;
 
 --
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/epa_ecotox_screenshot.png" width="800px"&gt;
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/epa_ecotox_screenshot.png" width="800px"&gt;
 
 ---
 # US EPA ECOTOX data base
@@ -103,7 +116,7 @@ Presenter notes can be put here!
 
 .pull-left[
 
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/epa_ecotox_screenshot.png" width="500px"&gt;
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/epa_ecotox_screenshot.png" width="500px"&gt;
 
 ]
 
@@ -124,7 +137,7 @@ Presenter notes can be put here!
 ---
 # US EPA ECOTOX ➡️ Standartox
 
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/organigram2.png" width="950px" style="position:absolute; left:10px; top:130px;"&gt;
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/organigram2.png" width="950px" style="position:absolute; left:10px; top:130px;"&gt;
 
 
 ---
@@ -134,7 +147,7 @@ Presenter notes can be put here!
 &lt;br/&gt;
 
 --
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/standartox_screenshot.png" width="800px"&gt;
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/standartox_screenshot.png" width="800px"&gt;
 
 ---
 # Standartox
@@ -143,7 +156,7 @@ Presenter notes can be put here!
 &lt;br/&gt;
 
 .pull-left[
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/standartox_screenshot.png" width="500px"&gt;
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/standartox_screenshot.png" width="500px"&gt;
 ### Aim: Prepare ecotoxicological test data in a __reproducible__ and __standardized__ way
 ]
 
@@ -154,7 +167,7 @@ Presenter notes can be put here!
 &lt;br/&gt;
 
 .pull-left[
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/standartox_screenshot.png" width="500px"&gt;
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/standartox_screenshot.png" width="500px"&gt;
 ### Aim: Prepare ecotoxicological test data in a __reproducible__ and __standardized__ way
 ]
 
@@ -331,11 +344,11 @@ Presenter notes can be put here!
 ```r
 require(standartox)
 
-standartox(cas = '52-68-6',
-           endpoint = 'EC50',
-           effect = 'MOR',
-           duration = c(48, 96),
-           taxon = 'Oncorhynchus mykiss')
+stx_query(cas = '52-68-6',
+          endpoint = 'EC50',
+          effect = 'MOR',
+          duration = c(48, 96),
+          taxon = 'Oncorhynchus mykiss')
 ```
 
 ---
@@ -357,11 +370,11 @@ __Ecotoxicology and Ecology need to embrace the computer age and data sources mu
 
 &lt;img src="http://3.bp.blogspot.com/-Wpp0vCJQDHo/U_ZMorXEynI/AAAAAAAAA7Y/Y-f-3brn99k/s1600/GBIF_logo_short_form.gif" width="100px" style="position:absolute; bottom:20px; left:70px;"&gt;
 
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/logos/worms.png" width="250px" style="position:absolute; bottom:30px; left:260px;"&gt;
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/logos/worms.png" width="250px" style="position:absolute; bottom:30px; left:260px;"&gt;
 
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/logos/chebi.png" width="250px" style="position:absolute; bottom:140px; right:110px;"&gt;
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/logos/chebi.png" width="250px" style="position:absolute; bottom:140px; right:110px;"&gt;
 
-&lt;img src="/home/scharmueller/Projects/etox-base/talk/data/logos/pubchem.png" width="250px" style="position:absolute; bottom:25px; right:90px;"&gt; 
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/logos/pubchem.png" width="250px" style="position:absolute; bottom:25px; right:90px;"&gt; 
 
 ---
 layout: false

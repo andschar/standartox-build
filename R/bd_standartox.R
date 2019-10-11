@@ -10,6 +10,7 @@ fl = file.path(sql, 'standartox_data2.sql')
 q2 = readChar(fl, file.info(fl)$size)
 fl = file.path(sql, 'standartox_data2_fin.sql')
 q2_fin = readChar(fl, file.info(fl)$size)
+explanation = fread(file.path(lookupdir, 'lookup_explanation.csv'), na.strings = '')
 
 # query -------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
@@ -21,6 +22,7 @@ dbSendQuery(con, "CREATE SCHEMA standartox;")
 # dbSendQuery(con, q1) # cleaned data
 dbSendQuery(con, q2) # converted data
 dbSendQuery(con, q2_fin) # combined data
+dbWriteTable(con, value = explanation, name = c('standartox', 'data2_explanation'), row.names = FALSE)
 
 dbDisconnect(con)
 dbUnloadDriver(drv)

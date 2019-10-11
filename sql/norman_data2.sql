@@ -1,6 +1,6 @@
 -- full cleaned and converted export
 
-DROP MATERIALIZED VIEW IF EXISTS norman.data2;
+DROP MATERIALIZED VIEW IF EXISTS norman.data2 CASCADE;
 
 CREATE MATERIALIZED VIEW norman.data2 AS
 
@@ -35,7 +35,7 @@ SELECT
       THEN 'experimental'
     ELSE COALESCE(test_location_lookup.description_norman, 'n.r.')
   END AS "nor17", --Test type", 
-  ac_cr.acute_chronic AS "nor18",
+  ac_cr.nor_acute_chronic AS "nor18",
 
 ----------------------------------------------
 /* Test substance */
@@ -89,9 +89,9 @@ SELECT
         CASE
           WHEN clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier >= 168
           THEN clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier  / 24 || ' ' || 'd'
-          ELSE clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier || ' ' || duration_unit_lookup.unit_conv
+          ELSE coalesce(clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier || ' ' || duration_unit_lookup.unit_conv, 'n.r.')
         END
-    ELSE clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier || ' ' || duration_unit_lookup.unit_conv
+    ELSE coalesce(clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier || ' ' || duration_unit_lookup.unit_conv, 'n.r.')
   END AS "nor38",
   CASE -- TODO maybe change in future
     WHEN tests.study_duration_mean IN ('NR', 'NC', '', ' ', '--')
@@ -135,7 +135,11 @@ SELECT
       THEN 'n.r.'
     ELSE tests.organism_age_mean || ' ' || tests.organism_age_unit
   END AS "nor53", --Age",  
-  lower(lifestage_codes.description) AS "nor55", --Life stage", 
+  CASE
+    WHEN lifestage_codes.code = 'NR'
+    THEN 'n.r.'
+    ELSE lower(lifestage_codes.description)
+  END AS "nor55", --Life stage", 
   CASE
     WHEN tests.organism_gender IN ('NR', 'NC', '', ' ', '--')
       THEN 'n.r.'
@@ -151,9 +155,9 @@ SELECT
     ELSE lower(tests.organism_characteristics)
   END AS "nor57", --Strain, clone",
   CASE
-    WHEN organism_source_codes.description IN ('NR', 'NC', '', ' ', '--', 'not coded')
+    WHEN organism_source_codes.code IN ('NR', 'NC', '', ' ', '--', 'not coded')
       THEN 'n.r.'
-    WHEN organism_source_codes.description IS NULL
+    WHEN organism_source_codes.code IS NULL
       THEN 'n.r.'
     ELSE lower(organism_source_codes.description) --Source (laboratory, culture collection)
   END AS "nor58",
@@ -180,9 +184,9 @@ SELECT
   'n.a.'::text AS "nor69", --Analytical recovery",
   'n.a.'::text AS "nor70", --Limit of quantification",
   CASE 
-    WHEN exposure_type_codes.description IS NULL
+    WHEN exposure_type_codes.code IN ('NR', 'NC', '', ' ', '--')
       THEN 'n.r.'
-    WHEN exposure_type_codes.description IN ('', ' ', '--')
+    WHEN exposure_type_codes.code IS NULL
       THEN 'n.r.'
     ELSE lower(exposure_type_codes.description)  
   END AS "nor71", --Exposure regime",
@@ -530,7 +534,7 @@ SELECT
   END AS "nor120", --Significance level",
 ----------------------------------------------
 /* Biological effect */
-  results.conc1_mean_op AS "nor121", --Effect concentration qualifier", 
+  coalesce(nullif(results.conc1_mean_op, ''), '=') AS "nor121", --Effect concentration qualifier", 
   CASE
     WHEN concentration_unit_lookup.conv = 'yes'
       THEN clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier
@@ -626,15 +630,21 @@ SELECT
       THEN 'n.r.'
     ELSE lower(control_type_codes.description) 
   END AS "nor142",  -- control type
-  lower(response_site_codes.description) AS "nor143", --Response site 
+  CASE
+    WHEN response_site_codes.code IN ('NR', 'NC', '', ' ', '--')
+      THEN 'n.r.'
+    WHEN response_site_codes.code IS NULL
+      THEN 'n.r.'
+    ELSE lower(response_site_codes.description)
+  END AS "nor143", --Response site 
   'n.a.'::text AS "nor144",
   -- inchikey
   -- desalted inchikey
   regexp_replace(current_database(), 'etox', 'epa_') || '_' || 'exp1' || '_clean' AS "nor147", -- Ecotox data set ID
   CASE
-    WHEN ac_cr.standard_test IS NULL
+    WHEN ac_cr.nor_standard_test IS NULL
       THEN 'no'
-    ELSE ac_cr.standard_test 
+    ELSE ac_cr.nor_standard_test 
   END AS "nor148", -- Standard Test
   CASE
     WHEN results.organism_final_wt_mean IN ('NR', 'NC', '', ' ', '--')
@@ -642,7 +652,7 @@ SELECT
     ELSE results.organism_final_wt_mean || ' ' || results.organism_final_wt_unit
   END AS "nor149", -- Final body weight control
   CASE
-    WHEN ac_cr.standard_test = 'yes'
+    WHEN ac_cr.nor_standard_test = 'yes'
       THEN 'yes'
     ELSE 'no'
   END AS "nor150",
@@ -804,9 +814,9 @@ FROM
 ----------------------------------------------
   -- lookup tables
   LEFT JOIN ecotox.media_type_lookup ON tests.media_type = media_type_lookup.code
-  LEFT JOIN lookup.lookup_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
+  LEFT JOIN lookup.lookup_norman_use_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
   LEFT JOIN ecotox.test_location_lookup ON tests.test_location = test_location_lookup.code
-  LEFT JOIN ecotox.ecotox_group_lookup ON species.ecotox_group = ecotox_group_lookup.ecotox_group
+  LEFT JOIN ecotox.ecotox_group_lookup ON species.species_number = ecotox_group_lookup.species_number
   LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
   LEFT JOIN ecotox.effect_codes ON results.effect = effect_codes.code
   LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
@@ -845,13 +855,14 @@ FROM
 /* FILTERS */
 
 WHERE 
-  ac_cr.norman_use = 'yes'
+  ac_cr.nor_use = 'yes'
   AND results.conc1_mean != '' AND results.conc1_mean NOT IN ('NR', '+ NR') AND results.conc1_mean !~* 'ca|x' AND results.conc1_max NOT LIKE '%er%'
   AND clean(results.endpoint) IS NOT NULL
   AND clean(results.effect) IS NOT NULL
   AND duration_unit_lookup.remove != 'yes'
   AND media_type_lookup.description_norman IN ('freshwater', 'saltwater')
   AND norman_id_cas.normanid IS NOT NULL
+  AND ecotox_group_lookup.ecotox_group_conv NOT IN ('Plants', 'Birds')
 /*
 
 effect_lookup.description_norman NOT LIKE 'remove' 

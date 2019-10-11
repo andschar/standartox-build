@@ -186,9 +186,9 @@ TODO END
   'n.a.'::text AS "nor144",
   regexp_replace(current_database(), 'etox', 'epa_') || '_' || 'exp1' || '_raw' AS "nor147", -- Ecotox data set ID
   CASE
-    WHEN ac_cr.standard_test IS NULL
+    WHEN ac_cr.nor_standard_test IS NULL
       THEN 'no'
-    ELSE ac_cr.standard_test 
+    ELSE ac_cr.nor_standard_test 
   END AS "nor148", -- Standard Test
   CASE
     WHEN results.organism_final_wt_mean IN ('NR', 'NC', '', ' ', '--')
@@ -196,7 +196,7 @@ TODO END
     ELSE results.organism_final_wt_mean || ' ' || results.organism_final_wt_unit
   END AS "nor149", -- Final body weight control
   CASE
-    WHEN ac_cr.standard_test = 'yes'
+    WHEN ac_cr.nor_standard_test = 'yes'
       THEN 'yes'
     ELSE 'no'
   END AS "nor150",
@@ -363,9 +363,9 @@ FROM
 ----------------------------------------------
   -- lookup tables
   LEFT JOIN ecotox.media_type_lookup ON tests.media_type = media_type_lookup.code
-  LEFT JOIN lookup.lookup_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
+  LEFT JOIN lookup.lookup_norman_use_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
   LEFT JOIN ecotox.test_location_lookup ON tests.test_location = test_location_lookup.code
-  LEFT JOIN ecotox.ecotox_group_lookup ON species.ecotox_group = ecotox_group_lookup.ecotox_group
+  LEFT JOIN ecotox.ecotox_group_lookup ON species.species_number = ecotox_group_lookup.species_number
   LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
   LEFT JOIN ecotox.effect_lookup ON results.effect = effect_lookup.code
   LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
@@ -404,7 +404,7 @@ FROM
 /* FILTERS */
 
 WHERE 
-  ac_cr.norman_use = 'yes'
+  ac_cr.nor_use = 'yes'
   AND results.conc1_mean != '' AND results.conc1_mean NOT IN ('NR', '+ NR') AND results.conc1_mean !~* 'ca|x' AND results.conc1_max NOT LIKE '%er%'
   AND clean(results.endpoint) IS NOT NULL
   AND clean(results.effect) IS NOT NULL

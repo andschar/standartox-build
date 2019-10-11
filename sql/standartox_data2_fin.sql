@@ -7,12 +7,12 @@ DROP MATERIALIZED VIEW IF EXISTS standartox.data2;
 CREATE MATERIALIZED VIEW standartox.data2 AS
 
 SELECT
-  chemicals.casnr::text,
+  chemicals.casnr::text AS cas,
   chemicals.cname::text,
   CASE
     WHEN tests.conc1_unit2 = 'mol/l'
-      THEN moll2ppb(tests.conc1_mean2::double precision, molecularweight::double precision)
-    ELSE tests.conc1_mean2::double precision
+      THEN moll2ppb(tests.conc1_mean2::numeric, molecularweight::numeric)
+    ELSE tests.conc1_mean2::numeric
   END AS concentration,
   CASE
     WHEN tests.conc1_unit2 = 'ug/l'
@@ -54,9 +54,9 @@ SELECT
   taxa.reg_asia::integer,
   taxa.reg_europe::integer,
   taxa.reg_oceania::integer,
-  refs.title::text,
-  refs.author::text,
-  refs.publication_year::integer
+  refs.title::text AS publ_title,
+  refs.author::text AS publ_author,
+  refs.publication_year::integer AS publ_year
 
 FROM standartox.tests
 LEFT JOIN standartox.chemicals USING(casnr)

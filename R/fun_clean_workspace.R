@@ -12,6 +12,7 @@ clean_workspace <- function(not_to_be_removed, envir = .GlobalEnv) {
                         'build',
                         'debug_mode',
                         'sink_console',
+                        'general',
                         'log_msg')
   
   rm(list = setdiff(

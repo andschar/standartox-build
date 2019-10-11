@@ -12,7 +12,7 @@ if (nodename == 'scharmueller-t460s') {
   msg = 'Copy: NORMAN export copied to cloud.'
 } else {
   # TODO install Nextcloud on server for automatic cloud update
-  msg = 'Copy: NORMAN - copy by hand to cloud (TODO) !!!'
+  msg = 'Copy: NORMAN - copy by hand to cloud (TODO)!'
 }
   
 # log ---------------------------------------------------------------------

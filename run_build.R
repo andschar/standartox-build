@@ -85,19 +85,20 @@ if (build) {
 # Application -------------------------------------------------------------
 if (build_standartox) {
   source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
-  # export
   source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_standartox_catalog.R'), max.deparse.length = mdl)
   source(file.path(src, 'cpy_standartox.R'), max.deparse.length = mdl)
-  
 }
 
 # NORMAN ------------------------------------------------------------------
 if (build_norman) {
+  # TODO rework lookup
   source(file.path(src, 'look_lookup_schema.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman_ecotox_group.R'), max.deparse.length = mdl)
   source(file.path(src, 'look_norman_acute_chronic_standard.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman_id_cas.R'), max.deparse.length = mdl)
   source(file.path(src, 'bd_norman.R'), max.deparse.length = mdl)
-  # export
   source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
   source(file.path(src, 'cpy_norman.R'), max.deparse.length = mdl)
 }
@@ -107,14 +108,10 @@ if (general) {
   source(file.path(src, 'gn_backup.R'), max.deparse.length = mdl)
 }
 
-# sync --------------------------------------------------------------------
-# TODO
-# create rsync between server and my local machine
-
 # end ---------------------------------------------------------------------
 source(file.path(src, 'gn_end.R'), max.deparse.length = mdl)
 
-# # (0b) console log 2 --------------------------------------------------------
+# console log 2 -----------------------------------------------------------
 if (sink_console) {
   # Restore output to console
   sink()

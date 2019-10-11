@@ -9,7 +9,7 @@ header = names(read_fst(file.path(exportdir, v, paste0('standartox', v, '.fst'))
 
 # query -------------------------------------------------------------------
 # cols
-cols = c('casnr', 'concentration_type', grep('ccl_', header, value = TRUE),
+cols = c('cas', 'concentration_type', grep('ccl_', header, value = TRUE),
          grep('tax_', header, value = TRUE), grep('hab_', header, value = TRUE), grep('reg_', header, value = TRUE),
          'duration', 'effect', 'endpoint')
 # loop
@@ -37,9 +37,9 @@ DBI::dbDisconnect(con)
 # preparation -------------------------------------------------------------
 # NOTE looks as it could be automated, however for quality checkin done by hand
 # cas
-casnr = l$casnr
-setnames(casnr, c('variable', 'n', 'n_total'))
-casnr[ , perc := round(n / n_total * 100) ]
+cas = l$cas
+setnames(cas, c('variable', 'n', 'n_total'))
+cas[ , perc := round(n / n_total * 100) ]
 # concentration type
 concentration_type = l$concentration_type
 setnames(concentration_type, c('variable', 'n', 'n_total'))
@@ -79,7 +79,7 @@ setnames(endpoint, c('variable', 'n', 'n_total'))
 endpoint[ , perc := round(n / n_total * 100) ]
 
 # list --------------------------------------------------------------------
-catalog_l = list(casnr = casnr,
+catalog_l = list(cas = cas,
                  concentration_type = concentration_type,
                  chemical_class = chemical_class,
                  taxa = taxa,
