@@ -174,8 +174,13 @@ pkg = c('pacman', pkg_cran)
 
 for (i in pkg) {
   capture.output(
-    utils:::print.bibentry(citation(i), style = "Bibtex"),
+    print(citation(i), style = "Bibtex"),
     file = file.path(article, 'refs', 'references-standartox-build.bib'),
+    append = TRUE
+  )
+  capture.output(
+    print(citation(i), style = 'latex'),
+    file = file.path(article, 'supplement', 'r-package-list.tex'),
     append = TRUE
   )
 }

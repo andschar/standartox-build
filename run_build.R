@@ -115,7 +115,7 @@ source(file.path(src, 'gn_end.R'), max.deparse.length = mdl)
 if (sink_console) {
   # Restore output to console
   sink()
-  sink(type="message")
+  sink(type = "message")
 }
 
 

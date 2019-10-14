@@ -1,7 +1,7 @@
 # function to read tables from a PostgreSQL data base
 
-read_tbl = function(user = NULL, host = NULL, port = NULL, password = NULL,
-                    dbname = NULL, query = NULL) {
+read_query = function(user = NULL, host = NULL, port = NULL, password = NULL,
+                      dbname = NULL, query = NULL) {
   
   if (is.null(query)) {
     stop('No query supplied.')

@@ -41,8 +41,8 @@ l = summary_db_cols(schema = schema, table = table, cols = cols)
 ## names lookup table
 q = "SELECT *
      FROM norman.variables"
-var = read_tbl(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-               query = q)
+var = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                 query = q)
 ```
 
 ```{r preparation, echo=FALSE, message=FALSE}

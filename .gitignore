@@ -24,18 +24,6 @@ presentation/*
 # !presentation/talk_internal.html
 # missing directory
 missing/*
-# article
-article/*
-# TODO remove comments in the end!
-# !article/R
-!article/figures
-# !article/article.Rmd
-# !article/data
-# !article/refs
-# !article/article.tex
-# !article/tikz/organigram.tex
-# lookup
-# lookup/*
 # misc
 misc/*
 # notes
