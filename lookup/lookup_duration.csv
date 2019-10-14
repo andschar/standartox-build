@@ -1,24 +1,24 @@
-unit,word,si,multiplier,conv,conv_to,remove,group
-s,second,yes,0.000277777777778,yes,h,no,duration
-mi,minute,yes,0.016666666666667,yes,h,no,duration
+unit,word,si,multiplier,conv,unit_conv,remove,group
+s,second,yes,0.00027778,yes,h,no,duration
+mi,minute,yes,0.0166667,yes,h,no,duration
 h,hour,yes,1,yes,h,no,duration
 d,day,yes,24,yes,h,no,duration
 wk,week,yes,168,yes,h,no,duration
-mo,month,yes,5040,yes,h,no,duration
-yr,year,yes,8766,yes,h,no,duration
-BLM,bloom stage,no,,no,,yes,duration
-LSI,larval stage index,no,,no,,yes,duration
-ZGS,zadoks growth stage,no,,no,,yes,duration
-abs,until abscission,no,,no,,yes,duration
-alv,alevin,no,,no,,yes,duration
-ant,until anthesis,no,,no,,yes,duration
-brd,brood or litter,no,,no,,yes,duration
-brs,breeding season,no,,no,,yes,duration
-bt,to boot stage,no,,no,,yes,duration
-cd,colony diameter,no,,no,,yes,duration
-clv,cleavage,no,,no,,yes,duration
-crs,crab stage,no,,no,,yes,duration
-cs,cell stage,no,,no,,yes,duration
+mo,month,yes,730.001,yes,h,no,duration
+yr,year,yes,8760,yes,h,no,duration
+BLM,bloom stage,no,1,no,BLM,yes,duration
+LSI,larval stage index,no,1,no,LSI,yes,duration
+ZGS,zadoks growth stage,no,1,no,ZGS,yes,duration
+abs,until abscission,no,1,no,abs,yes,duration
+alv,alevin,no,1,no,alv,yes,duration
+ant,until anthesis,no,1,no,ant,yes,duration
+brd,brood or litter,no,1,no,brd,yes,duration
+brs,breeding season,no,1,no,brs,yes,duration
+bt,to boot stage,no,1,no,bt,yes,duration
+cd,colony diameter,no,1,no,cd,yes,duration
+clv,cleavage,no,1,no,clv,yes,duration
+crs,crab stage,no,1,no,crs,yes,duration
+cs,cell stage,no,1,no,cs,yes,duration
 dapu,days after pupation,yes,24,yes,h,no,duration
 dbh,days before hatch,yes,24,yes,h,no,duration
 dd,degree days,yes,24,yes,h,no,duration
@@ -38,30 +38,30 @@ dpp,days post planting/sowing,yes,24,yes,h,no,duration
 dps,days post spawn,yes,24,yes,h,no,duration
 dpu,days post swim-up,yes,24,yes,h,no,duration
 dpys,days post yolk sac absorption,yes,24,yes,h,no,duration
-ea,to earing or heading,no,,no,,yes,duration
-ej,egg to juvenile,no,,no,,yes,duration
-el,nth egg laid,no,,no,,yes,duration
-em,to emergence,no,,no,,yes,duration
-ep,egg to pupation,no,,no,,yes,duration
-epa,egg to pre-adult,no,,no,,yes,duration
-eslk,to early silk stage,no,,no,,yes,duration
-ey,time to eyed stage fish,no,,no,,yes,duration
-f5,50% flowering,no,,no,,yes,duration
-fb,full bloom stage,no,,no,,yes,duration
-fi,flower initiation,no,,no,,yes,duration
-fl,flower stage,no,,no,,yes,duration
-flg,fleding,no,,no,,yes,duration
-fr,to fruit stage,no,,no,,yes,duration
-frt,to fertilization,no,,no,,yes,duration
-fry,fry,no,,no,,yes,duration
-fs,flowering stage,no,,no,,yes,duration
-gds,gallien and durocher stage,no,,no,,yes,duration
-ge,generation,no,,no,,yes,duration
-ges,gestiation,no,,no,,yes,duration
-gm,to germination,no,,no,,yes,duration
-go,gosner stage,no,,no,,yes,duration
-gs,growing season,no,,no,,yes,duration
-gts,gastrula stage,no,,no,,yes,duration
+ea,to earing or heading,no,1,no,ea,yes,duration
+ej,egg to juvenile,no,1,no,ej,yes,duration
+el,nth egg laid,no,1,no,el,yes,duration
+em,to emergence,no,1,no,em,yes,duration
+ep,egg to pupation,no,1,no,ep,yes,duration
+epa,egg to pre-adult,no,1,no,epa,yes,duration
+eslk,to early silk stage,no,1,no,eslk,yes,duration
+ey,time to eyed stage fish,no,1,no,ey,yes,duration
+f5,50% flowering,no,1,no,f5,yes,duration
+fb,full bloom stage,no,1,no,fb,yes,duration
+fi,flower initiation,no,1,no,fi,yes,duration
+fl,flower stage,no,1,no,fl,yes,duration
+flg,fleding,no,1,no,flg,yes,duration
+fr,to fruit stage,no,1,no,fr,yes,duration
+frt,to fertilization,no,1,no,frt,yes,duration
+fry,fry,no,1,no,fry,yes,duration
+fs,flowering stage,no,1,no,fs,yes,duration
+gds,gallien and durocher stage,no,1,no,gds,yes,duration
+ge,generation,no,1,no,ge,yes,duration
+ges,gestiation,no,1,no,ges,yes,duration
+gm,to germination,no,1,no,gm,yes,duration
+go,gosner stage,no,1,no,go,yes,duration
+gs,growing season,no,1,no,gs,yes,duration
+gts,gastrula stage,no,1,no,gts,yes,duration
 dh,degree hours,no,1,yes,h,no,duration
 hbf,hours pre-fertilization,no,1,yes,h,no,duration
 hpe,hours post emergence,no,1,yes,h,no,duration
@@ -70,57 +70,57 @@ hpf,hour post fertilization,no,1,yes,h,no,duration
 hph,hours post hatch,no,1,yes,h,no,duration
 hpp,hours post planting,no,1,yes,h,no,duration
 ht,until hatch,no,1,yes,h,no,duration
-hv,harvest,no,,no,,yes,duration
-i2,intermolt to second molt,no,,no,,yes,duration
-ins,instar,no,,no,,yes,duration
-inst,instantaneous,no,,no,,yes,duration
-it,intermolt to molt,no,,no,,yes,duration
-lf,lifetime,no,,no,,yes,duration
-lfd,leaf drop,no,,no,,yes,duration
-lgp,to lag phase,no,,no,,yes,duration
-log,to log phase,no,,no,,yes,duration
-ls,leaf stage,no,,no,,yes,duration
-lva,larva to adult,no,,no,,yes,duration
-lvp,larva to pupa,no,,no,,yes,duration
-lvsa,,no,,no,,yes,duration
-ma,to maturity,no,,no,,yes,duration
-mmph,until metamorphosis,no,,no,,yes,duration
-mopf,months post-fertilization,yes,5040,yes,h,no,duration
-moph,months post-hatch,yes,5040,yes,h,no,duration
+hv,harvest,no,1,no,hv,yes,duration
+i2,intermolt to second molt,no,1,no,i2,yes,duration
+ins,instar,no,1,no,ins,yes,duration
+inst,instantaneous,no,1,no,inst,yes,duration
+it,intermolt to molt,no,1,no,it,yes,duration
+lf,lifetime,no,1,no,lf,yes,duration
+lfd,leaf drop,no,1,no,lfd,yes,duration
+lgp,to lag phase,no,1,no,lgp,yes,duration
+log,to log phase,no,1,no,log,yes,duration
+ls,leaf stage,no,1,no,ls,yes,duration
+lva,larva to adult,no,1,no,lva,yes,duration
+lvp,larva to pupa,no,1,no,lvp,yes,duration
+lvsa,,no,1,no,lvsa,yes,duration
+ma,to maturity,no,1,no,ma,yes,duration
+mmph,until metamorphosis,no,1,no,mmph,yes,duration
+mopf,months post-fertilization,yes,1,yes,h,no,duration
+moph,months post-hatch,yes,1,yes,h,no,duration
 mopm,months post-metamorphosis,yes,1,yes,h,no,duration
-mpf,minutes post-gertilization,yes,60,yes,h,no,duration
-mph,minutes post hatch,yes,60,yes,h,no,duration
-nf,Nieuwkoop-faber-stage,no,,no,,yes,duration
-pa,pupa to adult,no,,no,,yes,duration
-pan,panicling stage,no,,no,,yes,duration
-pgm,post germination,no,,no,,yes,duration
-pm,post molt,no,,no,,yes,duration
-pro,propagation stage,no,,no,,yes,duration
-so,shooting stage,no,,no,,yes,duration
-sst,substage,no,,no,,yes,duration
-stg,stage,no,,no,,yes,duration
-su,summer,no,,no,,yes,duration
-swm,Swim-up,no,,no,,yes,duration
-tls,tiller stage,no,,no,,yes,duration
-ubi,until birth,no,,no,,yes,duration
-vg,vegetative stage,no,,no,,yes,duration
-wkpm,weeks post metamorphosis,yes,168,yes,h,no,duration
-wpe,weeks post emergence,yes,168,yes,h,no,duration
-wph,weeks post hatch,yes,168,yes,h,no,duration
-wphv,weels pre harvest,yes,168,yes,h,no,duration
-wpp,weels post planting,yes,168,yes,h,no,duration
-zm,Zoeae-megalop,no,,no,,yes,duration
-cfs,to comercial flower stage,no,,no,,yes,duration
-eb,early bloom stage,no,,no,,yes,duration
-lhv15-20,leaf harvest 15-20cm,no,,no,,yes,duration
-lhv20-25,leaf harvest 20-25cm,no,,no,,yes,duration
-ls6,6 leaf stage,no,,no,,yes,duration
-MULT,multiple durations,no,,no,,yes,duration
-myp,mysis to post-larvare,no,,no,,yes,duration
-pr,Priming – harvest of ripened tobacco leaves,no,,no,,yes,duration
-rhv3,"root harvest, 3 grams",no,,no,,yes,duration
-wbh,weeks pre-hatch,yes,168,yes,h,no,duration
-zmy,zoeae to mysis,no,,no,,yes,duration
-b0.25,0.25 bloom stage,no,,no,,yes,duration
---,no data,no,,no,,yes,nodata
-NR,no data,no,,no,,yes,nodata
+mpf,minutes post-gertilization,yes,1,yes,h,no,duration
+mph,minutes post hatch,yes,1,yes,h,no,duration
+nf,Nieuwkoop-faber-stage,no,1,no,nf,yes,duration
+pa,pupa to adult,no,1,no,pa,yes,duration
+pan,panicling stage,no,1,no,pan,yes,duration
+pgm,post germination,no,1,no,pgm,yes,duration
+pm,post molt,no,1,no,pm,yes,duration
+pro,propagation stage,no,1,no,pro,yes,duration
+so,shooting stage,no,1,no,so,yes,duration
+sst,substage,no,1,no,sst,yes,duration
+stg,stage,no,1,no,stg,yes,duration
+su,summer,no,1,no,su,yes,duration
+swm,Swim-up,no,1,no,swm,yes,duration
+tls,tiller stage,no,1,no,tls,yes,duration
+ubi,until birth,no,1,no,ubi,yes,duration
+vg,vegetative stage,no,1,no,vg,yes,duration
+wkpm,weeks post metamorphosis,yes,1,yes,h,no,duration
+wpe,weeks post emergence,yes,1,yes,h,no,duration
+wph,weeks post hatch,yes,1,yes,h,no,duration
+wphv,weels pre harvest,yes,1,yes,h,no,duration
+wpp,weels post planting,yes,1,yes,h,no,duration
+zm,Zoeae-megalop,no,1,no,zm,yes,duration
+cfs,to comercial flower stage,no,1,no,cfs,yes,duration
+eb,early bloom stage,no,1,no,eb,yes,duration
+lhv15-20,leaf harvest 15-20cm,no,1,no,lhv15-20,yes,duration
+lhv20-25,leaf harvest 20-25cm,no,1,no,lhv20-25,yes,duration
+ls6,6 leaf stage,no,1,no,ls6,yes,duration
+MULT,multiple durations,no,1,no,MULT,yes,duration
+myp,mysis to post-larvare,no,1,no,myp,yes,duration
+pr,Priming – harvest of ripened tobacco leaves,no,1,no,pr,yes,duration
+rhv3,"root harvest, 3 grams",no,1,no,rhv3,yes,duration
+wbh,weeks pre-hatch,yes,1,yes,h,no,duration
+zmy,zoeae to mysis,no,1,no,zmy,yes,duration
+b0.25,0.25 bloom stage,no,1,no,b0.25,yes,duration
+--,no data,no,1,no,--,yes,nodata
+NR,no data,no,1,no,NR,yes,nodata

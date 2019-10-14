@@ -39,17 +39,15 @@ unit = merge(unit_test, unit_study, by.x = 'obs_duration_unit', by.y = 'study_du
 look_dur = fread(file.path(lookupdir, 'lookup_duration.csv'), na.strings = '')
 units = merge(unit, look_dur, by.x = 'obs_duration_unit', by.y = 'unit',
               all = TRUE)
-setnames(units, 'obs_duration_unit', 'unit')
-units = units[ !is.na(unit) ]
+units = units[ !is.na(obs_duration_unit) ]
 
 # check -------------------------------------------------------------------
-chck_dupl(units, 'unit')
+chck_dupl(units, 'obs_duration_unit')
 
 # write -------------------------------------------------------------------
-## postgres
 write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'ecotox', tbl = 'duration_lookup',
-          key = 'unit',
+          dbname = DBetox, schema = 'ecotox', tbl = 'duration_unit_lookup',
+          key = 'obs_duration_unit',
           comment = 'Lookup table for duration units')
 
 # log ---------------------------------------------------------------------

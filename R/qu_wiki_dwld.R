@@ -23,7 +23,7 @@ dbUnloadDriver(drv)
 
 # debuging
 if (debug_mode) {
-  chem = chem[1:10]
+  chem = chem[1:50]
 }
 
 todo = as.character(chem$cas)

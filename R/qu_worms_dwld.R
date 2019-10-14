@@ -29,7 +29,7 @@ dbUnloadDriver(drv)
 
 # debuging
 if (debug_mode) {
-  taxa = taxa[1:10]
+  taxa = taxa[1:40] #! here 40 to be quite sure to get some reuslts
 }
 
 # aphia id ----------------------------------------------------------------

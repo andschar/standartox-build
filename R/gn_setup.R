@@ -1,4 +1,14 @@
-# setup script for etox-base
+# setup script for standartox-build
+
+# projects ----------------------------------------------------------------
+nodename = Sys.info()[4]
+if (nodename == 'scharmueller-t460s') {
+  prj = '/home/scharmueller/Projects/standartox-build'
+} else if (nodename == 'uwigis') {
+  prj = '/home/scharmueller/Projects/standartox-build'
+} else {
+  stop('New system. Define prj variable.')
+}
 
 # packages ----------------------------------------------------------------
 if (!require('pacman')) {
@@ -20,6 +30,7 @@ pkg_cran = c(
   'purrr',
   'data.table',
   'RPostgreSQL',
+  'DBI',
   'vegan',
   'plyr',
   'outliers',
@@ -28,12 +39,15 @@ pkg_cran = c(
   'ggrepel',
   'cowplot',
   'RColorBrewer',
+  'treemap',
   'rgbif',
   'taxize',
   'countrycode',
   'foreach',
   'doParallel',
-  'fst'
+  'fst',
+  'DT',
+  'treemap'
   # TODO check if all packages are still needed!
 )
 pkg_gith = c('ropensci/bib2df', 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
@@ -47,54 +61,57 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-download_db = F # should database query be run
-build_db = F # build data base?
-download = F # run download scripts?
-build = TRUE # run build scripts?
-general = TRUE # run general database scripts?
-export = FALSE # should data be exported?
-
-
-# old:
-online_db = FALSE # TODO deprecate when looking over da_epa1.... etc
-# TODO rework scp_feather = FALSE # scp feather object # TODO remove this in the end
-## debuging
+download_db = T # should database query be run
+build_db = T # build data base?
+download = F # run download scripts (takes days)? 
+build = T # run build scripts?
+build_standartox = T
+build_norman = F
+export = T # should data be exported?
 debug_mode = F # should only 10 input rows for each quering script be run
-sink_console = TRUE # sink console to file
+sink_console = T # sink console to file
+general = T
 
-# variables ---------------------------------------------------------------
+# variables ----------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
-missingdir = file.path(prj, 'missing')
-meta = file.path(prj, 'meta')
-fundir = file.path(prj, 'functions')
-plotdir = file.path(prj, 'plots')
 src = file.path(prj, 'R')
+srcrmd = file.path(prj, 'Rmd') # TODO remove once replaced with dbreport::
 data = file.path(prj, 'data')
 data_ecotox = file.path(data, 'ecotox')
-data_chebi = file.path(data, 'chebi')
 lookupdir = file.path(prj, 'lookup')
-shinydir = paste0(prj, '-shiny')
-shinydata = file.path(shinydir, 'data')
 cred = file.path(prj, 'cred')
-share = file.path(prj, 'share')
-normandir = file.path(prj, 'norman')
 sql = file.path(prj, 'sql')
-export = file.path(prj, 'export')
-# article
+## data base
+DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
+if(inherits(DBetox, 'try-error')) {
+  DBetox = 'DBetox not yet defined'
+}
+vers = gsub('etox', '', DBetox)
+## export/summary
+exportdir = file.path(prj, 'export', vers)
+mkdirs(exportdir)
+summdir = file.path(prj, 'summary', vers)
+mkdirs(summdir)
+## article subfolder
 article = file.path(prj, 'article')
 datadir_ar = file.path(article, 'data')
+## talk subfolder
+datadir_tk = file.path(prj, 'talk', 'data')
+## shiny application
+appdata = file.path(gsub('-build', '-app', prj), 'data')
+## standartox R-package
+## NORMAN
+normandir = file.path(prj, 'norman')
+cloud = file.path('/home/scharmueller/Nextcloud/norman')
 
-# data base to write to
+# debug mode --------------------------------------------------------------
 if (debug_mode) {
   DBetox = 'testdb'
-} else {
-  DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
-  if(inherits(DBetox, 'try-error')) {
-    DBetox = 'DBetox not yet defined'
-  }
 }
 
 # path to phantomjs
+# TODO check if still needed
+nodename = Sys.info()[4]
 if (nodename == 'scharmueller-t460s') {
   phantompath = '/usr/local/bin/phantomjs'
 } else if (nodename == 'uwigis') {
@@ -108,18 +125,20 @@ mdl = 1e6 # max deparse length for writing to sink console
 
 # source ------------------------------------------------------------------
 source(file.path(cred, 'credentials.R')) # data base credentials
-source(file.path(fundir, 'casconv.R')) # convert between CAS and CASNR
+source(file.path(src, 'fun_casconv.R')) # convert between CAS and CASNR
 source(file.path(src, 'fun_clean_workspace.R'))
+source(file.path(src, 'fun_file_cpy.R'))
 source(file.path(src, 'fun_write_db.R'))
+source(file.path(src, 'fun_read_db.R'))
 source(file.path(src, 'fun_product_na.R'))
 source(file.path(src, 'fun_extr_vec.R'))
+source(file.path(src, 'fun_cbind_fill.R'))
 source(file.path(src, 'fun_log.R'))
 source(file.path(src, 'fun_scrape_phantomjs.R'))
 source(file.path(src, 'fun_worms_query.R'))
 source(file.path(src, 'fun_ln_na.R'))
 source(file.path(src, 'fun_paste2.R'))
 source(file.path(src, 'fun_norman.R'))
-source(file.path(src, 'fun_shiny_variables_stat.R'))
 source(file.path(src, 'fun_udunits2_vectorize.R'))
 source(file.path(src, 'fun_coalesce.R'))
 source(file.path(src, 'fun_clean_names.R'))
@@ -128,6 +147,9 @@ source(file.path(src, 'fun_mail.R'))
 source(file.path(src, 'fun_chck.R'))
 source(file.path(src, 'fun_export_db.R'))
 source(file.path(src, 'fun_geometric_mean.R'))
+source(file.path(src, 'fun_summary_db.R'))
+source(file.path(src, 'fun_treemap.R'))
+source(file.path(src, 'fun_firstup.R'))
 
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')
@@ -143,13 +165,17 @@ rm(fl)
 pgpass = paste(DBhost, DBport, DBetox, DBuser, DBpassword, sep = ':')
 write(pgpass, '~/.pgpass')
 
+# plot theme --------------------------------------------------------------
+source(file.path(src, 'ggplot_theme_etox_base.R'))
+theme_set(theme_minimal_etox_base_sans)
+
 # cite packages -----------------------------------------------------------
 pkg = c('pacman', pkg_cran)
 
 for (i in pkg) {
   capture.output(
     utils:::print.bibentry(citation(i), style = "Bibtex"),
-    file = file.path(article, 'refs', 'references-etox-base-rpackages.bib'),
+    file = file.path(article, 'refs', 'references-standartox-build.bib'),
     append = TRUE
   )
 }

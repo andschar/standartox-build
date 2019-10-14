@@ -1,0 +1,38 @@
+variable,explanation,values,source
+cname,Common chemical name,Imidacloprid;Glyphosate;…,various
+cas,CAS Number,105827-78-9;1071-83-6,EPA
+concentration,concentration,,EPA (recalculated)
+concentration_unit,unit of concentration,,EPA (recalculated)
+concentration_type,concentration type,active ingredient;formulation;…,EPA
+duration,test duration (hours),,EPA
+test_type,test type,acute;chronic;not reported,EPA
+effect,effect group,Mortality;Growth;…,EPA
+endpoint,endpoint group,XX50;NOEX;LOEX,EPA
+test_location,test location,field;lab;not reported,EPA
+ccl_fungicide,is fungicide,0;1,various
+ccl_herbicide,is herbicide,0;1,various
+ccl_insecticide,is insecticide,0;1,various
+ccl_metal,is metal,0;1,various
+ccl_drug,is drug,0;1,various
+tax_taxon,test taxon (lowest unit of determination),,EPA
+tax_genus,test organism taxonomic genus,,EPA
+tax_family,test organism taxonomic family,,EPA
+tax_order,test organism taxonomic order,,EPA
+tax_class,test organism taxonomic class,,EPA
+tax_superclass,test organism taxonomic superclass,,EPA
+tax_subphylum_div,test organism taxonomic superphylum or division,,EPA
+tax_phylum_division,test organism taxonomic phylum or division,,EPA
+tax_kingdom,test organism kingdom,,various
+hab_marine,is marine,0;1,various
+hab_brackish,is brackish,0;1,various
+hab_freshwater,is freshwater,0;1,various
+hab_terrestrial,is terrestrial,0;1,various
+reg_africa,organism occurs in Africa,0;1,gbif
+reg_america_north,organism occurs in North America,0;1,gbif
+reg_america_south,organism occurs in South America,0;1,gbif
+reg_asia,organism occurs in Asia,0;1,gbif
+reg_europe,organism occurs in Europe,0;1,gbif
+reg_oceania,organism occurs in Oceania,0;1,gbif
+publ_title,publication title,,EPA
+publ_author,publication author,,EPA
+publ_year,publication year,,EPA

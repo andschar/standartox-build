@@ -2,10 +2,13 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
+dur = Sys.time() - readRDS('start_time')
 
 # data --------------------------------------------------------------------
 recip = 'scharmueller@uni-landau.de'
-msg = 'END: All scripts successfully run.'
+msg = paste('END: All scripts successfully run.',
+            dur,
+            sep = '\n')
 fl = list.files(prj, pattern = 'script.log')
 
 # mail --------------------------------------------------------------------

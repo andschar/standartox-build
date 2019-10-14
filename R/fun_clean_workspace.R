@@ -7,9 +7,12 @@ clean_workspace <- function(not_to_be_removed, envir = .GlobalEnv) {
                         'download_db',
                         'build_db',
                         'download',
+                        'build_standartox',
+                        'build_norman',
                         'build',
                         'debug_mode',
                         'sink_console',
+                        'general',
                         'log_msg')
   
   rm(list = setdiff(

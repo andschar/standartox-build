@@ -34,19 +34,21 @@ pp[, cname := tolower(cname)]
 pp[, `.` := NULL]
 # conversions
 pp[, solubility_water := solubility_water * 1000 ] # orignianly in mg/L
+sapply(pp, class)
 # names
 clean_names(pp)
 
 # encoding ----------------------------------------------------------------
-pp = pp[ , lapply(.SD, iconv, from = 'ASCII', to = 'UTF-8') ]
+cols = c('cas', 'cname', 'source_url')
+pp2 = pp[ , (cols) := lapply(.SD, iconv, from = 'ASCII', to = 'UTF-8'), .SDcols = cols  ]
 # https://stackoverflow.com/questions/23699271/force-character-vector-encoding-from-unknown-to-utf-8-in-r
 
 # check -------------------------------------------------------------------
-chck_dupl(pp, 'cas')
+chck_dupl(pp2, 'cas')
 
 # write -------------------------------------------------------------------
 write_tbl(
-  pp,
+  pp2,
   user = DBuser,
   host = DBhost,
   port = DBport,

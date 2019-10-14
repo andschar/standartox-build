@@ -13,7 +13,8 @@ scripts = c('qu_aw_dwld.R',
             'qu_pp_dwld.R',
             'qu_epa_chem_dwld.R',
             'qu_eurostat_dwld.R',
-            'qu_wiki_dwld.R')
+            'qu_wiki_dwld.R',
+            'qu_wiki_dwld_INTERMEDIATE.R')
 
 time = Sys.time()
 n_cores = length(scripts)

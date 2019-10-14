@@ -3,7 +3,7 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
-source('/home/scharmueller/Projects/etox-base/R/get_csid_INTERMEDIATE.R')
+source(file.path(src, 'get_csid_INTERMEDIATE.R'))
 
 # data --------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")

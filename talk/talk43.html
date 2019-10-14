@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Standartox</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Andreas Scharmüller Verena C. Schreiner Ralf B. Schäfer" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+class: title-slide
+
+# [Standartox](http://standartox.uni-landau.de)
+## A tool for assessing the risk of chemicals
+
+### Andreas Scharmüller&lt;br&gt;
+### Verena C. Schreiner&lt;br&gt;
+### Ralf B. Schäfer
+&lt;br&gt;&lt;br&gt;
+### Quantitative Landscape Ecology&lt;br/&gt;
+### iES Landau, Institute for Environmental Sciences&lt;br&gt;
+### University Koblenz-Landau
+&lt;br&gt;
+&lt;img src="https://www.uni-koblenz-landau.de/de/landau/fb7/umweltwissenschaften/logos/land-ecol-neu.jpg" width="100"&gt;
+&lt;img src="https://www.uni-koblenz-landau.de/de/uni/organisation/verwaltung/abteilungen/abt-1/dokumente-ab1/uni-logo-farbig.jpg" width="200"&gt;
+&lt;img src="https://www.uni-koblenz-landau.de/de/uni/organisation/verwaltung/abteilungen/abt-1/dokumente-ab1/uni-logo-farbig.jpg" width="200"&gt;
+&lt;img src="https://de.wikipedia.org/wiki/Universit%C3%A4t_Stra%C3%9Fburg#/media/Datei:Universit%C3%A9_de_Strasbourg.svg" width="100"&gt;
+
+---
+
+# Introduction
+
+
+
+
+
+
+
+
+---
+# Chemicals in the environment
+
+.pull-left[
+- Increase in world-wide production of chemicals
+
+- Increase in chemical diversity
+
+- Arrive in freshwater systems
+  - Pharmaceuticals
+  - Pesticides
+  - Personal care products
+  - ...
+
+### Effect?
+]
+
+.pull-right[
+
+Bernhardt et al. 2017
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/bernhardt_et_al_chem.png" width="300px"&gt;
+
+]
+
+
+???
+light-red: diversity of US pharmaceuticals&lt;br&gt;
+red: application of pesticides (globally and in the US)
+
+---
+background-image: url(/home/scharmueller/Projects/standartox-build/talk/data/stream.jpg)
+background-size: 400px
+background-position: 90% 50%
+
+# Assessing the risk of chemicals
+
+.pull-left[
+- Regulatory thresholds
+
+- SPEAR
+
+- Species Sensitivity Distributions
+
+- Toxic Units (TUs)
+
+  - `\(TU = \log10(\frac{concentration}{EC_{50}})\)`
+
+&lt;br&gt;
+### Toxicity Data?
+]
+  
+???
+Presenter notes can be put here!
+
+---
+# US EPA ECOTOX data base
+
+&lt;https://cfpub.epa.gov/ecotox/&gt;
+&lt;br/&gt;
+
+--
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/epa_ecotox_screenshot.png" width="800px"&gt;
+
+---
+# US EPA ECOTOX data base
+
+&lt;https://cfpub.epa.gov/ecotox/&gt;
+&lt;br/&gt;
+
+
+.pull-left[
+
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/epa_ecotox_screenshot.png" width="500px"&gt;
+
+]
+
+.pull-right[
+- Toxicity tests data base
+
+  - ~12,000 chemicals
+  
+  - ~12,000 taxa
+  
+  - ~1,000,000 results
+  
+  - Released quarterly
+  
+  - Open for download
+]
+
+---
+# US EPA ECOTOX ➡️ Standartox
+
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/organigram2.png" width="950px" style="position:absolute; left:10px; top:130px;"&gt;
+
+
+---
+# Standartox
+
+&lt;http://standartox.uni-landau.de/&gt;
+&lt;br/&gt;
+
+--
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/standartox_screenshot.png" width="800px"&gt;
+
+---
+# Standartox
+
+&lt;http://standartox.uni-landau.de/&gt;
+&lt;br/&gt;
+
+.pull-left[
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/standartox_screenshot.png" width="500px"&gt;
+### Aim: Prepare ecotoxicological test data in a __reproducible__ and __standardized__ way
+]
+
+---
+# Standartox
+
+&lt;http://standartox.uni-landau.de/&gt;
+&lt;br/&gt;
+
+.pull-left[
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/standartox_screenshot.png" width="500px"&gt;
+### Aim: Prepare ecotoxicological test data in a __reproducible__ and __standardized__ way
+]
+
+.pull-right[
+- Web tool / data base
+
+  - Cleaning &amp; Harmonisation (e.g. units)
+  
+  - __Filters__ test results
+  
+  - __Aggregates__ test results
+  
+  - Facilitates data retrieval
+  
+  - GUI &amp; R-package (in preparation)
+
+  - Manuscript (in preparation)
+]
+
+---
+# Filter
+
+.pull-left[
+- Test parameters
+
+  - Duration (e.g. 48h, 96h)
+  - Endpoint (e.g. EC50, NOEC)
+  - Effect groups (e.g. Mortality, Growth)
+]
+
+
+
+
+---
+# Filter
+
+.pull-left[
+- Test parameters
+  - Duration (e.g. 48h, 96h)
+  - Endpoint (e.g. EC50, NOEC)
+  - Effect groups (e.g. Mortality, Growth)
+  
+- Chemical parameters
+  - Chemicals
+  - Chemical classes (e.g. Herbicide, Fungicide)
+]
+
+.pull-right[
+![](talk43_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+]
+
+---
+# Filter
+
+.pull-left[
+- Test parameters
+  - Duration (e.g. 48h, 96h)
+  - Endpoint (e.g. EC50, NOEC)
+  - Effect groups (e.g. Mortality, Growth)
+  
+- Chemical parameters
+  - Chemicals
+  - Chemical classes (e.g. Herbicide, Fungicide)
+
+- Organism parameters
+  - Habitat
+]
+
+.pull-right[
+![](talk43_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+]
+
+---
+# Filter
+
+.pull-left[
+- Test parameters
+  - Duration (e.g. 48h, 96h)
+  - Endpoint (e.g. EC50, NOEC)
+  - Effect groups (e.g. Mortality, Growth)
+  
+- Chemical parameters
+  - Chemicals
+  - Chemical classes (e.g. Herbicide, Fungicide)
+
+- Organism parameters
+  - Habitat
+  - Occurrence
+]
+
+.pull-right[
+![](talk43_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+]
+
+---
+# Aggregate
+
+- __Geometric mean__
+- Median
+- Minimum
+- Maximum
+
+---
+# Example: Trichlorofon
+
+- Filters
+
+  - Chemical: 52-68-6 (Trichlorofon)  
+  - Taxon: _Oncorhynchus mykiss_
+  - Duration: 48 to 96h
+  - Endpoint: EC50
+
+- Aggregate
+
+  - Geometric mean
+
+---
+# Example: Trichlorofon
+
+![](talk43_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+--
+
+### Result: Single EC50 value for a specific test setting
+
+---
+# Example: All chemicals
+
+![](talk43_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+# Comparison: PPDB
+
+![](talk43_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+&lt;img src="https://sitem.herts.ac.uk/aeru/ppdb/en/new_logo_small.jpg" width="250px" style="position:absolute; top:140px; right:50px;"&gt;
+
+--
+92% of Standartox values diverge by less than a factor of 10 from PPDB values
+
+
+---
+# Conclusions
+
+.pull-left[
+
+➖
+
+- Poorly conducted studies included
+  - Average them out
+]
+
+.pull-right[
+
+➕
+
+- Cleaned &amp; easily-accessible ecotoxicological data base
+- Constantly updated
+- Version control
+- Standardized &amp; reproducible aggregations
+- Not restricted to specific chemical classes
+  - PPDB: pesticides
+]
+
+---
+# Outlook: R-package
+
+- standartox::
+  - Application Programming Interface (API)
+  - Scriptable
+  - __Reproducible__
+
+
+```r
+require(standartox)
+
+stx_query(cas = '52-68-6',
+          endpoint = 'EC50',
+          effect = 'MOR',
+          duration = c(48, 96),
+          taxon = 'Oncorhynchus mykiss')
+```
+
+---
+# Appeal
+
+__Ecotoxicology and Ecology need to embrace the computer age and data sources must become machine-readable!__
+
+- Open Source --&gt; Open Data
+
+- Application Programming Interface (API)
+
+- Big challenges...
+  - 12,000 chemicals
+  - 12,000 taxa 
+  - 1,000,000 test results
+
+- ...demand big, scalable solutions
+
+
+&lt;img src="http://3.bp.blogspot.com/-Wpp0vCJQDHo/U_ZMorXEynI/AAAAAAAAA7Y/Y-f-3brn99k/s1600/GBIF_logo_short_form.gif" width="100px" style="position:absolute; bottom:20px; left:70px;"&gt;
+
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/logos/worms.png" width="250px" style="position:absolute; bottom:30px; left:260px;"&gt;
+
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/logos/chebi.png" width="250px" style="position:absolute; bottom:140px; right:110px;"&gt;
+
+&lt;img src="/home/scharmueller/Projects/standartox-build/talk/data/logos/pubchem.png" width="250px" style="position:absolute; bottom:25px; right:90px;"&gt; 
+
+---
+layout: false
+# [Thank you for your attention!](https://www.researchgate.net/profile/Andreas_Scharmueller)
+
+## Standartox
+### A tool for assessing the risk of chemicals
+
+Andreas Scharmüller&lt;br&gt;
+Verena C. Schreiner&lt;br&gt;
+Ralf B. Schäfer
+
+Quantitative Landscape Ecology&lt;br/&gt;
+iES Landau, Institute for Environmental Sciences&lt;br&gt;
+University Koblenz-Landau
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/de/thumb/9/9f/Twitter_bird_logo_2012.svg/1259px-Twitter_bird_logo_2012.svg.png" width="20"&gt; @andschar &lt;br/&gt;
+&lt;img src="https://seeklogo.com/images/M/mail-icon-logo-28FE0635D0-seeklogo.com.png" width="20"&gt; scharmueller@uni-landau.de
+
+&lt;img src="https://www.uni-koblenz-landau.de/de/landau/fb7/umweltwissenschaften/logos/land-ecol-neu.jpg" width="100"&gt;
+&lt;img src="https://www.uni-koblenz-landau.de/de/uni/organisation/verwaltung/abteilungen/abt-1/dokumente-ab1/uni-logo-farbig.jpg" width="200"&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "4:3",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

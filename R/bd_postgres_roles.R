@@ -10,7 +10,7 @@ user = c('scharmueller', 'jupke')
 drv = dbDriver("PostgreSQL")
 con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
 
-dbSendQuery(con, sprintf("DROP ROLE IF EXISTS %s;", role))
+dbSendQuery(con, sprintf("DROP ROLE IF EXISTS %s CASCADE;", role))
 dbSendQuery(con, sprintf("CREATE ROLE %s;", role))
 
 dbSendQuery(con, paste0("GRANT ", role, " TO ", paste0(user, collapse = ', '), ";"))

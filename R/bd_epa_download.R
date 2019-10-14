@@ -48,14 +48,15 @@ etoxdir = etoxdir_lookup$path[1]
 # writing -----------------------------------------------------------------
 # ECOTOX version
 saveRDS(DBetox, file.path(cachedir, 'data_base_name_version.rds'))
-saveRDS(DBetox, file.path(shinydata, 'data_base_name_version.rds'))
 saveRDS(etoxdir, file.path(cachedir, 'etox_data_path.rds'))
 
 # check -------------------------------------------------------------------
 if (length(releases) == 0) {
-  msg = 'Newest etox file (DBetox) file can not be found.'
-  log_msg(msg); rm(msg)
+  log_msg('Newest etox file (DBetox) file can not be found.')
 }
+
+# log ---------------------------------------------------------------------
+log_msg('EPA download run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

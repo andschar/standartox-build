@@ -17,9 +17,9 @@ con = dbConnect(
 unit = dbGetQuery(
   con,
   "SELECT conc1_unit, count(conc1_unit) AS n
-  FROM ecotox.results
-  GROUP BY conc1_unit
-  ORDER BY n DESC"
+   FROM ecotox.results
+   GROUP BY conc1_unit
+   ORDER BY n DESC"
 )
 setDT(unit)
 unit[conc1_unit == '', conc1_unit := NA]
@@ -29,7 +29,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 ## lookup
-look_unit = fread(file.path(lookupdir, 'lookup_result_unit.csv'), na.strings = '')
+look_unit = fread(file.path(lookupdir, 'lookup_concentration_unit.csv'), na.strings = '')
 look_str = paste0(look_unit$unit, collapse = '|')
 
 # checks ------------------------------------------------------------------
@@ -201,13 +201,22 @@ units[ , conv := as.character(conv) ]
 units[ conv == 'TRUE', conv := 'yes' ]
 units[ conv == 'FALSE', conv := 'no' ]
 
+# mol ---------------------------------------------------------------------
+# TODO get molecular weight for every mol/l
+# TODO check mol
+# TODO load molecular weight from phch_fin.chem_prop
+
 # check -------------------------------------------------------------------
+# TODO build more checking for units
 chck_dupl(units, 'conc1_unit')
 
 # write -------------------------------------------------------------------
+## csv
+fwrite(units, file.path(summdir, 'concentration_unit_lookup_summary.csv'))
+
 ## postgres
 write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'ecotox', tbl = 'conc_lookup',
+          dbname = DBetox, schema = 'ecotox', tbl = 'concentration_unit_lookup',
           key = 'conc1_unit',
           comment = 'Lookup table for concentration units')
 

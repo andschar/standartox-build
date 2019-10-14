@@ -87,8 +87,12 @@ ppdb2 = ppdb2[ !is.na(cas) ]
 ## no duration
 ppdb2 = ppdb2[ !is.na(duration) ]
 
+# final table -------------------------------------------------------------
+ppdb2[ , casnr := as.integer(casconv(cas, 'tocasnr')) ]
+
 # chck --------------------------------------------------------------------
-# TODO
+chck_dupl(ppdb2, 'casnr')
+# TODO?
 
 # plot --------------------------------------------------------------------
 # TODO only for testing
@@ -107,7 +111,6 @@ ppdb2 = ppdb2[ !is.na(duration) ]
 # tmp ---------------------------------------------------------------------
 # TODO remove this
 fwrite(ppdb2, '/tmp/ppdb2.csv')
-
 
 # write -------------------------------------------------------------------
 write_tbl(ppdb2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,

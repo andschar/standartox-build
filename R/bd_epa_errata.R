@@ -41,6 +41,11 @@ dbSendQuery(con,
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
+# Error 2: ----------------------------------------------------------------
+# In ecotox.refs in the column publication_year there are two '19xx' entries
+# 13042	"A"		"Merck and Co.Inc."	"Fish Toxicity Data"	"U.S.EPA-OPP Registration Standard:"	"19xx"
+# 13043	"A"		"Nalco Chemical Co."	"Fish Toxicity Studies on NALCO D-2088"	"U.S.EPA-OPP Registration Standard:"	"19xx"
+
 
 
 
