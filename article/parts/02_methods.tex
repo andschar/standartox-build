@@ -14,29 +14,30 @@
 %%the methods and processing steps without referring to associated publications. 
 %%There is no limit to the length of the Methods section.
 
-Standartox consists of three software parts which are explained in detail here. Firstly a processing pipeline (Fig. \ref{fig:pipeline}) downloads quarterly released new versions of the EPA ECOTOX data base and performs several preparation steps in R \citep{r_core_team_r_2017}, to then store the outcome in a PostgreSQL <CITE> data base. This constitutes the basis upon which the web application and and application programming interface (API) together with a R package are accessing the data \citep{r_core_team_r_2017}. 
-
-\subsection{}
-
-
-
-The application itself is set of R functions that filter and aggregate the data according to a user's inputs \ref{fig:app}. Finally in the web application, a `filtered` and an `aggregated` data set as well as an interactive plot, for data exploration are returned. These two data sets can be downloaded. In the following these two parts are explained in detail, naming the respective R scripts in brackets.
+Standartox consists of three software parts which are explained in detail below. Firstly a data acquisition and preparation processing pipeline (Fig. \ref{fig:pipeline}) downloads quarterly released new versions of the EPA ECOTOX data base and performs several preparation steps in R \citep{r_core_team_r_2017}, to then store the outcome in a PostgreSQL <CITE> data base. This constitutes the basis upon which the web application and and application programming interface (API) together with a R package are accessing the data. 
 
 \subsection*{Data acquisition \& preparation}
 
+In order to build Standartox the EPA ECOTOX data is downloaded and subsequently built into a PostgreSQL data base. From there, the data is processed, including validity checks, removal of special characters, unit harmonizations and selection of relevant variables. Chemical abstract service (CAS) numbers, unique chemical identifiers together with taxon names are then used to query additional information from other data bases (Table \ref{tab:data-base}) on chemicals and organisms respectively. Standartox itself is finally built and exported as a binary object to be used by the web application and the API.
 
+\subsection*{Web application and application programming interface}
 
-The EPA ECOTOX data is downloaded and subsequently built into a PostgreSQL data base. Afterwards the data is imported into R for pre-processing, which includes validity checks, removal of special characters, unit harmonizations and selection of relevant variables. Chemical abstract service (CAS) numbers, unique chemical identifiers together with taxon names are then used to query other data bases for additional information on chemicals and organisms respectively. Chemical information is retrieved inter alia from the Compendium of Pesticide Common Names \citep{CITE_AW}, the Chemspider data base \citep{CITE-CHEMSPIDER}, from Eurostat <CITATION>, the Pubchem data base \citep{CITE_PUBCHEM}, and from the Physprop data base \citep{CITE_PHYSPROP}. These queries mostly rely on the webchem R-package \citep{szocs_webchem_2015-1}. For biota, habitat and occurrence information is queried from the World Register of Marine Species (WORMS) \citep{WORMS} and from the Global Biodiversity Information Facility (GBIF) \citep{CITE_RGBIF} using the rgbif R-package \citep{chamberlain_rgbif_2018}. The acquired information is then merged and information is combined. From there on the data set is analyzed and checked and finally compiled in one table. This table is then used as the input for the filter and aggregation functions \ref{fig:pipeline}. For a detailed overview of what information is collected see table \ref{tab:scripts-pipeline}.
+Once called, both the web application and the API load the binary Standartox file into memory and allow the user to interact with it. 
 
-\begin{figure}
-    \includestandalone[width=\textwidth, scale=0.1]{tikz/pipeline_organigram}
-    \caption{Processing Pipeline}
-    \label{fig:pipeline}
-\end{figure}
+\subsubsection*{Web application}
+The interactive web application was built in R, using the shiny web application framework \citep{chang_shiny_2018} which runs with the help of a shiny server \citep{HOW-TO-CITE-SHINY-SERVER} on www.standartox.uni-landau.de. The app itstel lies in the file ~/standartox-app/app.R.
 
+\subsubsection*{Application programming interface (API)}
+The API is built in R with the plumber-package \citep{}
 
-\subsection*{The application}
-The application is accessible through \app{} and was built in R, using the shiny web application framework \citep{chang_shiny_2018}. Users can define several input parameters \ref{tab:inputs} in the application's graphical user interface (GUI), handled in the ui.R script in order to adjust the aggregation according specific requirements. In doing so users execute R functions (fun\_filter.R, fun\_aggregation.R, fun\_filagg\_plot\_ly.R) loaded in the server.R script, which produce a 'filtered' and an 'aggregated' data set as well as an interactive overview plot. Only the 'aggregated' data set is presented in the GUI. However, both data sets can be downloaded via a download button.
+The application itself is set of R functions that filter and aggregate the data according to a user's inputs \ref{fig:app}. Finally in the web application, a `filtered` and an `aggregated` data set as well as an interactive plot, for data exploration are returned. These two data sets can be downloaded. In the following these two parts are explained in detail, naming the respective R scripts in brackets.
+
+\subsubsection*{R-package}
+
+httr,
+jsonlite,
+fst,
+data.table
 
 \subsubsection*{Aggregation}
 The \etoxbase{} application aggregates the test results according to chosen filters in a two step process. Firstly the filtered test results are aggregated by the CAS number, the chosen taxon and the selected test duration. Secondly, the returned data is then aggregated by the CAS number. The former can't be influenced by the user and calculates either the minimum or the median depending on the amount of results to aggregate (n <= 2: minimum, if n > 2: median). Thereof the second step calculates the minimum, the maximum, the median, the geometric mean, or the arithmetic mean as an aggregate. 
