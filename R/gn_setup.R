@@ -171,16 +171,20 @@ theme_set(theme_minimal_etox_base_sans)
 
 # cite packages -----------------------------------------------------------
 pkg = c('pacman', pkg_cran)
-
+fl_bib = file.path(article, 'refs', 'references-standartox-build.bib')
+fl_tex = file.path(article, 'supplement', 'r-package-list.tex')
+file.remove(fl_bib)
+file.remove(fl_tex)
 for (i in pkg) {
   capture.output(
     print(citation(i), style = "Bibtex"),
-    file = file.path(article, 'refs', 'references-standartox-build.bib'),
+    file = fl_bib,
     append = TRUE
   )
   capture.output(
     print(citation(i), style = 'latex'),
-    file = file.path(article, 'supplement', 'r-package-list.tex'),
+    cat('\\newline '), # HACK
+    file = fl_tex,
     append = TRUE
   )
 }
