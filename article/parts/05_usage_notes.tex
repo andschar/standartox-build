@@ -16,19 +16,24 @@
 %%will be used to determine who may access the data, and any limitations
 %%on data use.
 
-\subsubsection*{Standartox Filters}
-
-
 
 
 
 \subsection*{Web application}
 
-Users can define several input parameters \ref{tab:inputs} in the application's graphical user interface (GUI), handled in the ui.R script in order to adjust the aggregation according specific requirements. In doing so users execute R functions (fun\_filter.R, fun\_aggregation.R, fun\_filagg\_plot\_ly.R) loaded in the server.R script, which produce a 'filtered' and an 'aggregated' data set as well as an interactive overview plot. Only the 'aggregated' data set is presented in the GUI. However, both data sets can be downloaded via a download button.
+In Standartox web application (app) users can define several input parameters \ref{tab:inputs} through the app's graphical user interface (GUI) in order to filter the data specifically and perform the aggregation. The aggregated result is then shown as a table as well as an overview plot and can then be downloaded as a 'filtered' and an 'aggregated' data set \ref{fig:standartox_app}.
+
+\begin{figure}
+    \includegraphics[width=1\linewidth]{article/figures/screenshot_standartox_app.png}
+    \caption{Standartox web application}
+    \label{fig:standartox_app}
+\end{figure}
+
 
 \subsection*{R package}
 
-The R-package standartox
+The R-package standartox consists of the two functions stx\_catalog() and stx\_query(). The former allows the retrieval of a catalog of possible parameters that can be used as an input for the latter. stx\_query() fetches the toxicity values from the data base. It returns a R list object following the app containing a 'filtered' and 'aggregated' R data.frame object. Additionally ...................
+
 
 \input{article/scripts/standartox_example.tex}
 
@@ -105,8 +110,14 @@ Hallmann et al. \citet{hallmann_declines_2014} showed a decline of insectivorous
 Fungicides paper zitieren?
 
 
+The units are denoted as ppm or ppb which comprises ug/l and mg/l
+
+List the units which are kept. 
+
+Thereby 'food', soil, ai and other information are lost but these are coded in other variables anyway. And they don't belong in a unit variable. Characteristic for ecotoxicology
 
 
+units such as per day (mg/kg/day) are generally excluded.
 
 
 Standartox follows such a route in trying to synthesize information from a plethora of studies.

@@ -8,6 +8,15 @@
 
 \subsection{Comparison to other data bases}
 
+We sampled an entry for each of the 50 most occurring concentration units and compared the Standartox conversions to manually calculated conversions for these, to guarantee the correctness of unit conversions. The same was done for six samples of duration units (See \ref{tab:chck-unit}
+
+To guarantee correctness of unit conversions we sampled an entry for each of the 50 most frequent concentration units. and the six most frequent duration units, respectively.
+
+Out of the 1229 concentration units in the EPA ECOTOX data base, Standartox retains only those (n = X) whih are convertible to one of the following units: ug/l, ul/l, ppb, g/m2, mg/kg, \%, resulting in 873473 out of 952625 test results. Likewise, out of the 125 test duration units in the EPA ECOTOX, Standartox retains only those (n = X) which are accurately convertible to hours, leading to 905110 out of 952625 test results (see table \ref{tab:units-duration}). % TODO 
+
+The here described Standartox version uses the EPA ECOTOX data base released on the 12.09.2019.
+
+
 In order to asses the validity of the Standartox approach to aggregate test results we compared Standartox values with effect values for the same chemicals and the same test duration from the PPDB (n=3601) \ref{fig:standartox_ppdb_diff}. This showed that 91.3\% of the Standartox values diverge by less than a factor of 10 from the PPDB values. Considering only Standartox values for which at least five of ten tests were aggregated the value increases to 91.7\% and 93.4\% respectively. Admittedly a few Standartox values diverge by a large margin.
 
 \begin{figure}
