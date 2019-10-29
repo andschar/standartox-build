@@ -4,30 +4,12 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-drv = dbDriver("PostgreSQL")
-con = dbConnect(
-  drv,
-  user = DBuser,
-  dbname = DBetox,
-  host = DBhost,
-  port = DBport,
-  password = DBpassword
-)
-
-unit = dbGetQuery(
-  con,
-  "SELECT conc1_unit, count(conc1_unit) AS n
-   FROM ecotox.results
-   GROUP BY conc1_unit
-   ORDER BY n DESC"
-)
-setDT(unit)
-unit[conc1_unit == '', conc1_unit := NA]
-unit = unit[!is.na(conc1_unit)]
-
-dbDisconnect(con)
-dbUnloadDriver(drv)
-
+q = "SELECT conc1_unit, count(conc1_unit) AS n
+     FROM ecotox.results
+     GROUP BY conc1_unit
+     ORDER BY n DESC"
+unit = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                  query = q)
 ## lookup
 look_unit = fread(file.path(lookupdir, 'lookup_concentration_unit.csv'), na.strings = '')
 look_str = paste0(look_unit$unit, collapse = '|')
@@ -53,6 +35,7 @@ info = c(
   'wetbdwt',
   'soil',
   'ai\\s',
+  'AI\\s',
   acid_equivalent = 'ae',
   water_soluble_fraction = 'wsf',
   'media',
@@ -146,16 +129,16 @@ units[, conc1_unit_clean := gsub('bq', 'Bq', conc1_unit_clean)]
 # classification ----------------------------------------------------------
 u1 = c(
   fraction = 'ppb',
-  mass = 'g',
+  mass = 'ug',
   percent = '%',
   volume = 'ml',
   length = 'cm'
 )
 u2 = c(
-  `mass/mass` = 'g/g',
+  `mass/mass` = 'mg/kg',
   `mass/volume` = 'ug/l',
   `mass/area` = 'g/m2',
-  `volume/volume` = 'ml/l',
+  `volume/volume` = 'ul/l',
   `volume/area` = 'ml/m2',
   `volume/mass` = 'ml/g',
   `mass/length` = 'g/cm',
@@ -202,9 +185,7 @@ units[ conv == 'TRUE', conv := 'yes' ]
 units[ conv == 'FALSE', conv := 'no' ]
 
 # mol ---------------------------------------------------------------------
-# TODO get molecular weight for every mol/l
-# TODO check mol
-# TODO load molecular weight from phch_fin.chem_prop
+# NOTE mol conversion is done by sql/fun_molconv.sql since no molecular weights are included here
 
 # check -------------------------------------------------------------------
 # TODO build more checking for units

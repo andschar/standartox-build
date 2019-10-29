@@ -103,6 +103,9 @@ if (build_norman) {
   source(file.path(src, 'cpy_norman.R'), max.deparse.length = mdl)
 }
 
+# check scripts -----------------------------------------------------------
+source(file.path(src, 'chck_unit_conversions.R'))
+
 # backup ------------------------------------------------------------------
 if (general) {
   source(file.path(src, 'gn_backup.R'), max.deparse.length = mdl)
