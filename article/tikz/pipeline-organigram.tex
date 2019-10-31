@@ -1,0 +1,72 @@
+\documentclass[border = 1.5cm]{standalone}
+
+%%%% packages
+\usepackage{tikz}
+\usetikzlibrary{trees,
+                arrows,
+                shapes.geometric,
+                positioning,
+                calc,
+                backgrounds,
+                fit}
+%% document
+\begin{document}
+%% layers
+\pgfdeclarelayer{bg1}    % declare background layer
+\pgfdeclarelayer{bg2}
+\pgfdeclarelayer{bg3}
+\pgfsetlayers{bg3, bg2, bg1, main}  % set the order of the layers (main is the standard layer)
+%% styles
+\tikzset{
+	font = {\fontsize{13pt}{12}\sffamily},
+	children/.style = {anchor = west},
+	ecotox/.style = {rectangle, minimum width = 4cm, minimum height = 3cm, text centered, draw = black, fill = blue!10},
+	data/.style = {rectangle, minimum height = 3cm, minimum width = 7cm, rounded corners, draw = black},
+	app/.style = {circle, minimum height = 3cm, fill = red!40},
+	api/.style = {circle, minimum height = 3cm, fill = red!40},
+	rpackage/.style = {circle, minimum height = 3cm, fill = red!40},
+	ids/.style = {diamond, minimum width = 3cm, minimum height = 2cm, text centered, draw = black, fill = green!30},
+	db/.style = {rectangle, text centered, draw = black, rounded corners, minimum width = 3cm, minimum height = 1.25cm},
+	arrow1/.style = {->, > = stealth, draw = black, color = gray!80, line width = 2.5pt},
+	arrow2/.style = {->, > = latex, draw = black, line width=10pt},
+	background/.style = {rectangle, rounded corners, draw = black, fill=gray!0.01}
+}
+
+\begin{tikzpicture}
+%% nodes
+% pipeline
+\node (epa-ecotox) [ecotox, align = center] at (0cm,0cm) {EPA ECOTOX\\data base\\(cleaned)};
+\node (cas) [ids, below of = epa-ecotox, xshift = 6cm, yshift = 3cm] {CAS};
+\node (taxa) [ids, below of = cas, xshift = 0cm, yshift = -2.5cm] {Taxa};
+\node (db-chemical) [db, right of = cas, xshift = 4cm] {Chemical\\data bases};
+\node (db-habitat) [db, right of = taxa, xshift = 4cm, yshift = 1cm] {Habitat\\data bases};
+\node (db-region) [db, right of = taxa, xshift = 4cm, yshift = -1cm] {Region\\data bases};
+% standartox data
+\node (stx-data) [data, below of = bg1-pipeline, xshift = 5.5cm, yshift = -6cm] {Standatox\\data set};
+% user interfaces
+\node (stx-app) [app, below of = stx-data, yshift = -3.5cm, xshift = -2cm] {Web\\application};
+\node (stx-api) [api, below of = stx-data, yshift = -3.5cm, xshift = 2cm] {API};
+\node (stx-rpackage) [rpackage, below of = stx-api, yshift = -2cm, xshift = 2cm] {R-package};
+%% backgrounds
+\begin{pgfonlayer}{bg1}
+    \node (bg1-pipeline) [background, minimum height = 9cm, minimum width = 16cm, above of = epa-ecotox, xshift = 5.5cm, yshift = -1cm];
+    \node (bg1-user) [background, below of = bg1-pipeline, minimum height = 7cm, minimum width = 12cm, yshift = -12cm];
+\end{pgfonlayer}
+%% arrows
+% small
+\draw [arrow1] (epa-ecotox.east) -- (cas.west);
+\draw [arrow1] (epa-ecotox.east) -- (taxa.west);
+\draw [arrow1] (cas.east)-- (db-chemical.west);
+\draw [arrow1] (taxa.east) -- (db-habitat.west);
+\draw [arrow1] (taxa.east) -- (db-region.west);
+\begin{pgfonlayer}{bg1}
+    \draw [arrow2] (bg1-pipeline.south) -- (stx-data.north);
+    \draw [arrow2] (stx-data.south) -- (stx-app.north);
+    \draw [arrow2] (stx-data.south) -- (stx-api.north);
+\end{pgfonlayer}
+\draw [arrow1] (stx-api) -- (stx-rpackage);
+% large
+
+
+\end{tikzpicture}
+\end{document}

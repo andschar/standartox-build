@@ -14,15 +14,33 @@
 %%the methods and processing steps without referring to associated publications. 
 %%There is no limit to the length of the Methods section.
 
-Standartox consists of three parts of software explained in detail below. Firstly a data acquisition and preparation processing pipeline (Fig. \ref{fig:pipeline}) downloads quarterly released new versions of the EPA ECOTOX data base and performs several preparation steps in R \citep{rcoreteam_language_2017}, to then store the outcome in a PostgreSQL9.6.1 data base. This constitutes the basis upon which the web application and and application programming interface (API) together with a R package are accessing the data. 
+Standartox consists of three parts of software explained in detail below. Firstly a data acquisition and preparation processing pipeline downloads quarterly released new versions of the EPA ECOTOX data base and performs several preparation steps in R \citep{rcoreteam_language_2017}. The output is then stored in a PostgreSQL9.6.1 data base. This constitutes the basis upon which the web application and and application programming interface (API) together with a R package are accessing the data. 
 
-\subsection*{Data acquisition \& preparation}
+\subsection*{Data acquisition pipe line}
+\subsubsection*{Building the data base}
+In order to build Standartox the EPA ECOTOX data base is downloaded and subsequently built into a PostgreSQL data base. This is handled by the script run\_build.R. Therein, the EPA ECOTOX data base is downloaded (bd\_epa\_download.R), built into a PostgreSQL data base (bd\_epa\_postgres.R) and SQL function for further processing are added (bd\_sql\_functions.R) to it. Located errors are fixed and updated in the data base (bd\_epa\_errata.R). Subsequently lookup tables for filters and conversions are uploaded (bd\_epa\_lookup.R). Lastly, a meta data table is created in the data base, comprising the version number of the EPA ECOTOX data base (bd\_epa\_meta.R).
+\subsubsection*{Querying additional identifiers}
+In a next step Chemical Abstracts Service (CAS) identifiers are used to query identifier data bases, including the Chemical Identifier Resolver (CIR) service <CITATION> (id\_pc\_cid\_dwld.R) and the Pubchem data base <CITATION>. Chemical identifiers (CAS, InchI) and taxonomic names are then used to query chemical and taxonomic specific data bases (Table \ref{tab:data-base-additional}) to add information to Standartox. The data is aggregated and unique values are derived. PUT LOOKUPTABLES HERE. From here on the Standartox data set is compiled and exported. Additionally a catalog object listing possible categorical values and continous value ranges, respectively is created. To guarantee the accuracy of the data check scripts are run at the end. Single processing scripts are listed in figure \ref{fig:pipeline-tree}.
 
-In order to build Standartox the EPA ECOTOX data is downloaded and subsequently built into a PostgreSQL data base. From there, the data is processed, including validity checks, removal of special characters, unit harmonizations and selection of relevant variables. Chemical abstract service (CAS) numbers, unique chemical identifiers and taxa names are then used to query additional information from other data bases (Table \ref{tab:data-base}) on chemicals and organisms respectively. Standartox itself is finally built and exported as a compressed serialized object to be then used by the web application and the API.
+CONTINUE HERE!!!!!!!!!!
+
+
+which first downloads the data, builds it into a PostgresSQL data base SQL functions are then 
+
+From there, the data is processed including, removal of special characters, unit harmonizations and selection of relevant variables.
+
+Chemical abstract service (CAS) numbers, unique chemical identifiers and taxa names are then used to query additional information from other data bases (Table \ref{tab:data-base}) on chemicals and organisms respectively. The data for Standartox is finally compiled and exported as a compressed serialized object to then be used by the web application and the API.
+
+\subsubsection*{Data aggregation}
+Standartox uses the geometric mean to aggregate the ecotoxicological test results.
+
+
+\textbf{OLD: Standartox aggregates the test results according to chosen filters in a two step process. Firstly the filtered test results are aggregated by the CAS number, the chosen taxon and the selected test duration. Secondly, the returned data is then aggregated by the CAS number. The former can't be influenced by the user and calculates either the minimum or the median depending on the amount of results to aggregate (n <= 2: minimum, if n > 2: median). Thereof the second step calculates the minimum, the maximum, the median, the geometric mean, or the arithmetic mean as an aggregate.}
+
 
 \subsection*{Web application \& Application Programming Interface (API)}
 
-Once called, both the web application and the API load the compressed serialized Standartox file into memory and allow a client to interact with it. The client can then call the functions stx\_filter() and stx\_aggregate() to filter and aggregate the data according to specific parameters (Table \ref{tab:app-parameters}).
+The web application and the API load the compressed serialized Standartox data into memory and allow a client to interact with it. The client can then call the functions stx\_filter() and stx\_aggregate() to filter and aggregate the data according to specific parameters (Table \ref{tab:app-parameters}).
 
 \subsubsection*{Web application}
 The interactive web application was built in R, using the shiny web application framework \citep{chang_shiny_2018} which runs with the help of a shiny server \citep{HOW-TO-CITE-SHINY-SERVER} on www.standartox.uni-landau.de. The app itself lies in the file ~/standartox-app/app.R.
@@ -33,11 +51,16 @@ The application itself is set of R functions that filter and aggregate the data 
 \subsubsection*{Application programming interface (API)}
 The API is built by using the plumber-package \citep{trestletechnologyllc_plumber_2018} which allows for the creation of REST APIs from R. Four API-endpoints ('/catalog', '/filter/rds', 'aggregate' and 'meta') that can be queried from the client side were created. The \textit{catalog} API-endpoint returns a JavaScript Object Notation (JSON) file containing a catalog of possible filter parameters to choose from. The \textit{filter-rds} returns the filtered test results as a compressed serialized file \citep{klik_fst_2019}, to reduce size and allow for fast user queries. The \textit{aggregate} API-endpoint returns a R function to the client allowing the client the aggregation of the filtered data. Lastly, the \textit{meta} API-endpoint returns a JSON file with a timestamp of the request and the used Standartox version. The API is designed to be used with the R-package standartox and therefore uses serialization methods specific to R (rds() from the base-package and fst() from the fst-package). The code for the the API lies in the file ~/standartox-app/api.R.
 
+\begin{figure}
+    \includestandalone[scale=0.5]{article/tikz/pipeline-organigram}
+    %\input[scale = 0.5]{article/tikz/pipeline-organigram.tex}
+    \caption{Organigram of Standartox.}
+    \label{fig:stx-organigram}
+\end{figure}
+
+
 \subsubsection*{R-package}
 The R-package standartox contains two functions \textit{stx\_catalog()} and \textit{stx\_query()}. The former accesses the \textit{catalog} API-endpoint and returns a R-list of possible filter parameters that can be used in \textit{stx\_query()}. The latter returns a R list of three tables (R data.frames) containing a filtered data set, an aggregated data set and a table with the meta information retrieved from the \textit{meta} API-endpoint.
-
-\subsubsection*{Standartox Aggregation}
-Standartox aggregates the test results according to chosen filters in a two step process. Firstly the filtered test results are aggregated by the CAS number, the chosen taxon and the selected test duration. Secondly, the returned data is then aggregated by the CAS number. The former can't be influenced by the user and calculates either the minimum or the median depending on the amount of results to aggregate (n <= 2: minimum, if n > 2: median). Thereof the second step calculates the minimum, the maximum, the median, the geometric mean, or the arithmetic mean as an aggregate. 
 
 \subsection*{Code availability}
 %%For all studies using custom code in the generation or processing of datasets, 
