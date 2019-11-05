@@ -45,10 +45,13 @@
 \node (stx-data) [data, below of = bg1-pipeline, xshift = 5.5cm, yshift = -6cm] {Standatox\\data set};
 % user interfaces
 \node (stx-app) [app, below of = stx-data, yshift = -3.5cm, xshift = -2cm] {Web\\application};
+\begin{pgfonlayer}{bg1}
+    \node (stx-app-screenshot) [below of = stx-app, xshift = -2cm] {\includegraphics[width=.5\textwidth]{article/figures/screenshot_standartox_app.png}};
+\end{pgfonlayer}
 \node (stx-api) [api, below of = stx-data, yshift = -3.5cm, xshift = 2cm] {API};
 \node (stx-rpackage) [rpackage, below of = stx-api, yshift = -2cm, xshift = 2cm] {R-package};
 %% backgrounds
-\begin{pgfonlayer}{bg1}
+\begin{pgfonlayer}{bg2}
     \node (bg1-pipeline) [background, minimum height = 9cm, minimum width = 16cm, above of = epa-ecotox, xshift = 5.5cm, yshift = -1cm];
     \node (bg1-user) [background, below of = bg1-pipeline, minimum height = 7cm, minimum width = 12cm, yshift = -12cm];
 \end{pgfonlayer}
@@ -59,7 +62,7 @@
 \draw [arrow1] (cas.east)-- (db-chemical.west);
 \draw [arrow1] (taxa.east) -- (db-habitat.west);
 \draw [arrow1] (taxa.east) -- (db-region.west);
-\begin{pgfonlayer}{bg1}
+\begin{pgfonlayer}{bg2}
     \draw [arrow2] (bg1-pipeline.south) -- (stx-data.north);
     \draw [arrow2] (stx-data.south) -- (stx-app.north);
     \draw [arrow2] (stx-data.south) -- (stx-api.north);
