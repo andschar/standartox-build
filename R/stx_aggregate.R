@@ -26,7 +26,7 @@ stx_aggregate = function(dt = NULL,
                   gmn = gm_mean(get(vl), na.rm = TRUE),
                   max = max(get(vl), na.rm = TRUE),
                   n = .N,
-                  taxa = paste0(unique(tax_taxon), collapse = '-')),
+                  taxa = paste0(unique(na.omit(tax_taxon)), collapse = '-')),
             by = .(cas, cname) ]
   sdcols = unique(c(comp, agg, info))
   out = out[ , .SD, .SDcols = sdcols ]

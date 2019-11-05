@@ -32,6 +32,8 @@ pkg_cran = c(
   'ssdtools',
   'reactlog',
   # API
+  'stringi',
+  'jsonlite',
   'plumber'
 )
 
@@ -67,12 +69,14 @@ epa_versions = epa_versions[ epa_versions != '' ]
 epa_versions_newest = max(epa_versions)
 
 # cite packages -----------------------------------------------------------
+fl_bib = file.path(article, 'refs', 'references-standartox-app.bib')
+file.remove(fl_bib)
+
 for (i in pkg_cran) {
   capture.output(
-    utils:::print.bibentry(citation(i), style = "Bibtex"),
-    file = file.path(article, 'refs', 'references-standartox-app.bib'),
+    print(citation(i), style = "Bibtex"),
+    file = fl_bib,
     append = TRUE)
 }
-
 
 

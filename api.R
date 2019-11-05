@@ -188,7 +188,7 @@ function() {
 #* @param:int duration Test duration (e.g. ????)
 #* @param:character effect
 #* @param:character endpoint
-#* @post /filter/rds
+#* @post /filter
 #* @serializer contentType list(type="application/octet-stream")
 function(req,
          res,
@@ -223,7 +223,8 @@ function(req,
                    endpoint_ = endpoint)
   # return
   if (nrow(out) == 0) {
-    # TODO raise issue for fst to allow nrow(out) == 0 to be saved to disk
+    # TODO this should not be needed anymore once fst0.9.2 is released
+    # TODO remove then
     # rbindlist(list(out, list(cas = 'No data')), fill = TRUE)
     msg = 'No data for the chosen parameter combination in the Standartox data base.'
     res$status = 400
