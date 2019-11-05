@@ -36,12 +36,12 @@ if (build_db) {
   source(file.path(src, 'bd_sql_functions.R'), max.deparse.length = mdl)
   # errata
   source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
-  # meta files
-  source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
   # lookup tables
   source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
   # changes
-  source(file.path(src, 'bd_epa_changes.R'), max.deparse.length = mdl)
+  source(file.path(src, 'bd_epa_changes.R'), max.deparse.length = mdl) # TODO move to bd_epa_download.R
+  # meta files
+  source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
 }
 
 # identifiers -------------------------------------------------------------
@@ -81,6 +81,10 @@ if (build) {
 if (build) {
   source(file.path(src, 'qu_run_final.R'), max.deparse.length = mdl)
 }
+
+# Lookup ------------------------------------------------------------------
+# TODO put all lookup scripts here
+
 
 # Application -------------------------------------------------------------
 if (build_standartox) {

@@ -12,15 +12,15 @@ SELECT
 	results.conc1_unit AS conc1_unit,
 	CASE
 	  WHEN concentration_unit_lookup.conv = 'yes'
-	  THEN 
-	  	CASE
+	  THEN
+	    CASE
 		  WHEN concentration_unit_lookup.unit_conv = 'mol/l'
-		  THEN molconv(clean(results.conc1_mean)::numeric, chem_prop.molecularweight::numeric) * 1e6::numeric -- g/l to ug/l
-	  	  WHEN concentration_unit_lookup.unit_conv = 'mol/g'
-		  THEN molconv(clean(results.conc1_mean)::numeric, chem_prop.molecularweight::numeric) * 1e6::numeric -- g/g to mg/kg
+		  THEN molconv(clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier::numeric, chem_prop.molecularweight::numeric) * 1e6 -- mol/l to g/l to ug/l
+		  WHEN concentration_unit_lookup.unit_conv = 'mol/g'
+		  THEN molconv(clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier::numeric, chem_prop.molecularweight::numeric) * 1e6 -- mol/g to g/g to mg/kg
 	      ELSE clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier
-		END	  	
-	  ELSE clean(results.conc1_mean)::numeric
+		END
+      ELSE clean(results.conc1_mean)::numeric
   	END AS conc1_mean2,
 	coalesce(substring(results.conc1_mean, '<|>'), '=') AS conc1_qualifier,
 	CASE
@@ -49,7 +49,9 @@ SELECT
 	  WHEN conc1_type IN ('L')
 	    THEN 'labile'
 	  ELSE 'not reported'
-	END AS conc1_type, 
+	END AS conc1_type,
+ 	results.obs_duration_mean,
+	results.obs_duration_unit,
 	CASE
 	  WHEN duration_unit_lookup.conv = 'yes'
 	  	THEN clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier

@@ -9,18 +9,8 @@ CREATE MATERIALIZED VIEW standartox.data2 AS
 SELECT
   chemicals.casnr::text AS cas,
   chemicals.cname::text,
-  CASE
-    WHEN tests.conc1_unit2 = 'mol/l'
-      THEN moll2ppb(tests.conc1_mean2::numeric, molecularweight::numeric)
-    ELSE tests.conc1_mean2::numeric
-  END AS concentration,
-  CASE
-    WHEN tests.conc1_unit2 = 'ug/l'
-      THEN 'ppb'::text
-    WHEN tests.conc1_unit2 = 'mol/l'
-      THEN 'ppb'::text
-    ELSE tests.conc1_unit2::text
-  END AS concentration_unit,
+  tests.conc1_mean2::numeric AS concentration,
+  tests.conc1_unit2::text AS concentration_unit,
   tests.conc1_type::text AS concentration_type,
   tests.obs_duration_mean2::double precision AS duration,
   tests.obs_duration_unit2::text AS duration_unit,

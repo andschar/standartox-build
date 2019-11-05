@@ -82,6 +82,29 @@ pipeline$AddChild('chck_unit_conversions.R')
 pipeline$AddChild('gn_backup.R')
 pipeline$AddChild('gn_end.R')
 
+
+require(r2d3)
+fl = 'https://raw.githubusercontent.com/rstudio/r2d3/master/vignettes/gallery/dendogram/flare.csv'
+test = read.csv(fl)
+test
+
+ToDataFrameNetwork(pipeline)
+r2d3(data = read.csv(fl),
+     d3_version = 4,
+     script = "dendogram.js",
+     css = "dendogram.css",
+     viewer = 'browser')
+plot(pipeline)
+dend = as.dendrogram(pipeline)
+
+pipeline_df = as.data.frame(pipeline)
+
+r2d3(data = as.list(pipeline), d3_version = 4, script = 'dendogram.js')
+
+
+
+
+
 # plot --------------------------------------------------------------------
 # TODO make a nicer visualization
 

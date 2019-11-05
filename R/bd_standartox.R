@@ -11,8 +11,6 @@ q2 = readChar(fl, file.info(fl)$size)
 fl = file.path(sql, 'standartox_data2_fin.sql')
 q2_fin = readChar(fl, file.info(fl)$size)
 explanation = fread(file.path(lookupdir, 'lookup_explanation.csv'), na.strings = '')
-fl = file.path(sql, 'fun_molconv.sql') # TODO put somewhere better
-molconv = readChar(fl , file.info(fl)$size)
 
 # query -------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
@@ -21,7 +19,6 @@ con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBpor
 dbSendQuery(con, "DROP SCHEMA IF EXISTS standartox CASCADE;")
 dbSendQuery(con, "CREATE SCHEMA standartox;")
 
-dbSendQuery(con, molconv)
 # dbSendQuery(con, q1) # cleaned data
 dbSendQuery(con, q2) # converted data
 dbSendQuery(con, q2_fin) # combined data

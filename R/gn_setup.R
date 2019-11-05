@@ -28,6 +28,7 @@ pkg_cran = c(
   'readxl',
   'openxlsx',
   'purrr',
+  'data.tree',
   'data.table',
   'RPostgreSQL',
   'DBI',
@@ -46,8 +47,7 @@ pkg_cran = c(
   'foreach',
   'doParallel',
   'fst',
-  'DT',
-  'treemap'
+  'DT'
   # TODO check if all packages are still needed!
 )
 pkg_gith = c('ropensci/bib2df', 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
@@ -175,19 +175,20 @@ fl_bib = file.path(article, 'refs', 'references-standartox-build.bib')
 fl_tex = file.path(article, 'supplement', 'r-package-list.tex')
 file.remove(fl_bib)
 file.remove(fl_tex)
-for (i in pkg) {
-  capture.output(
-    print(citation(i), style = "Bibtex"),
-    file = fl_bib,
-    append = TRUE
-  )
-  capture.output(
-    print(citation(i), style = 'latex'),
-    cat('\\newline '), # HACK
-    file = fl_tex,
-    append = TRUE
-  )
-}
+# TODO turn on for final paper draft
+# for (i in pkg) {
+#   capture.output(
+#     print(citation(i), style = "Bibtex"),
+#     file = fl_bib,
+#     append = TRUE
+#   )
+#   capture.output(
+#     print(citation(i), style = 'latex'),
+#     cat('\\newline '), # HACK
+#     file = fl_tex,
+#     append = TRUE
+#   )
+# }
 
 
 

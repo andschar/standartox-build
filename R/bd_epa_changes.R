@@ -1,4 +1,5 @@
 # script to change EPA data
+# TODO put this at the end of bd_epa_postgres.R
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
