@@ -21,10 +21,10 @@
 	font = {\fontsize{13pt}{12}\sffamily},
 	children/.style = {anchor = west},
 	ecotox/.style = {rectangle, minimum width = 4cm, minimum height = 3cm, text centered, draw = black, fill = blue!10},
-	data/.style = {rectangle, minimum height = 3cm, minimum width = 7cm, rounded corners, draw = black},
-	app/.style = {circle, minimum height = 3cm, fill = red!40},
-	api/.style = {circle, minimum height = 3cm, fill = red!40},
-	rpackage/.style = {circle, minimum height = 3cm, fill = red!40},
+	data/.style = {rectangle, minimum width = 7cm, minimum height = 3cm, text centered, rounded corners, draw = black},
+	app/.style = {circle, minimum height = 3cm, text centered, fill = red!40},
+	api/.style = {circle, minimum height = 3cm, text centered, fill = red!40},
+	rpackage/.style = {circle, minimum height = 3cm, text centered, fill = red!40},
 	ids/.style = {diamond, minimum width = 3cm, minimum height = 2cm, text centered, draw = black, fill = green!30},
 	db/.style = {rectangle, text centered, draw = black, rounded corners, minimum width = 3cm, minimum height = 1.25cm},
 	arrow1/.style = {->, > = stealth, draw = black, color = gray!80, line width = 2.5pt},
@@ -38,22 +38,25 @@
 \node (epa-ecotox) [ecotox, align = center] at (0cm,0cm) {EPA ECOTOX\\data base\\(cleaned)};
 \node (cas) [ids, below of = epa-ecotox, xshift = 6cm, yshift = 3cm] {CAS};
 \node (taxa) [ids, below of = cas, xshift = 0cm, yshift = -2.5cm] {Taxa};
-\node (db-chemical) [db, right of = cas, xshift = 4cm] {Chemical\\data bases};
-\node (db-habitat) [db, right of = taxa, xshift = 4cm, yshift = 1cm] {Habitat\\data bases};
-\node (db-region) [db, right of = taxa, xshift = 4cm, yshift = -1cm] {Region\\data bases};
+\node (db-chemical) [db, right of = cas, xshift = 4cm, align = center] {Chemical\\data bases};
+\node (db-habitat) [db, right of = taxa, xshift = 4cm, yshift = 1cm, align = center] {Habitat\\data bases};
+\node (db-region) [db, right of = taxa, xshift = 4cm, yshift = -1cm, align = center] {Region\\data bases};
 % standartox data
-\node (stx-data) [data, below of = bg1-pipeline, xshift = 5.5cm, yshift = -6cm] {Standatox\\data set};
+\node (stx-data) [data, below of = bg1-pipeline, xshift = 5.5cm, yshift = -6cm, align = center] {Standatox\\data set};
 % user interfaces
-\node (stx-app) [app, below of = stx-data, yshift = -3.5cm, xshift = -2cm] {Web\\application};
+\node (stx-app) [app, below of = stx-data, yshift = -3.5cm, xshift = -2cm, align = center] {Web\\application};
 \begin{pgfonlayer}{bg1}
     \node (stx-app-screenshot) [below of = stx-app, xshift = -2cm] {\includegraphics[width=.5\textwidth]{article/figures/screenshot_standartox_app.png}};
 \end{pgfonlayer}
 \node (stx-api) [api, below of = stx-data, yshift = -3.5cm, xshift = 2cm] {API};
 \node (stx-rpackage) [rpackage, below of = stx-api, yshift = -2cm, xshift = 2cm] {R-package};
+\begin{pgfonlayer}{bg1}
+    \node (stx-rpackage-screenshot) [below of = stx-rpackage] {\includegraphics[width=.7\textwidth]{article/figures/screenshot_standartox_rpackage.png}};
+\end{pgfonlayer}
 %% backgrounds
 \begin{pgfonlayer}{bg2}
-    \node (bg1-pipeline) [background, minimum height = 9cm, minimum width = 16cm, above of = epa-ecotox, xshift = 5.5cm, yshift = -1cm];
-    \node (bg1-user) [background, below of = bg1-pipeline, minimum height = 7cm, minimum width = 12cm, yshift = -12cm];
+    \node (bg1-pipeline) [background, minimum height = 9cm, minimum width = 17cm, above of = epa-ecotox, xshift = 5.5cm, yshift = -1cm];
+    \node (bg1-user) [background, below of = bg1-pipeline, minimum height = 7cm, minimum width = 17cm, yshift = -12cm];
 \end{pgfonlayer}
 %% arrows
 % small
@@ -64,8 +67,8 @@
 \draw [arrow1] (taxa.east) -- (db-region.west);
 \begin{pgfonlayer}{bg2}
     \draw [arrow2] (bg1-pipeline.south) -- (stx-data.north);
-    \draw [arrow2] (stx-data.south) -- (stx-app.north);
-    \draw [arrow2] (stx-data.south) -- (stx-api.north);
+    \draw [arrow2] (stx-data.south) -- (stx-app.north east);
+    \draw [arrow2] (stx-data.south) -- (stx-api.north west);
 \end{pgfonlayer}
 \draw [arrow1] (stx-api) -- (stx-rpackage);
 % large
