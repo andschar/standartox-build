@@ -22,12 +22,10 @@ The EPA ECOTOX, which is released on a quarterly basis (current release: 12.09.2
 The web application and the API load the compressed serialized Standartox data into memory and allow a client to interact with it. The client can then call the functions stx\_filter() and stx\_aggregate() to filter and aggregate the data according to specific parameters (Table \ref{tab:app-parameters}).
 
 \subsubsection*{Web application (APP)}
-The interactive APP was built in R, using the shiny web application framework \citep{chang_shiny_2018} which runs with the help of a shiny server \citep{HOW-TO-CITE-SHINY-SERVER} on www.standartox.uni-landau.de. It is set of R functions that filter and aggregate the data according to a user's inputs \ref{fig:app}. 
-
-Finally in the web application, a `filtered` and an `aggregated` data set as well as an interactive plot, for data exploration are returned. These two data sets can be downloaded. In the following these two parts are explained in detail, naming the respective R scripts in brackets.
+The interactive APP was built in R, using the shiny web application framework \citep{chang_shiny_2018} which runs with the help of a shiny server \citep{HOW-TO-CITE-SHINY-SERVER} on www.standartox.uni-landau.de. It is set of R functions that allow a user to filter and aggregate the data. The data can then be downloaded.
 
 \subsubsection*{Application programming interface (API)}
-The API is built by using the plumber-package \citep{trestletechnologyllc_plumber_2018} which allows for the creation of REST APIs from R. Four API-endpoints ('/catalog', '/filter/rds', 'aggregate' and 'meta') that can be queried from the client side were created. The \textit{catalog} API-endpoint returns a JavaScript Object Notation (JSON) file containing a catalog of possible filter parameters to choose from. The \textit{filter-rds} returns the filtered test results as a compressed serialized file \citep{klik_fst_2019}, to reduce size and allow for fast user queries. The \textit{aggregate} API-endpoint returns a R function to the client allowing the client the aggregation of the filtered data. Lastly, the \textit{meta} API-endpoint returns a JSON file with a timestamp of the request and the used Standartox version. The API is designed to be used with the R-package standartox and therefore uses serialization methods specific to R (rds() from the base-package and fst() from the fst-package). The code for the the API lies in the file ~/standartox-app/api.R.
+The API is built by using the R package plumber \citep{trestletechnologyllc_plumber_2018} which allows for the creation of RESTful APIs from R. Four API-endpoints ('/catalog', '/filter/rds', 'aggregate' and 'meta') that can be queried from the client side were created. The \textit{catalog} API-endpoint returns a JavaScript Object Notation (JSON) file containing a catalog of possible filter parameters to choose from. The \textit{filter} returns the filtered Standartox table as a compressed serialized binary file \citep{klik_fst_2019}, to reduce size and allow for fast user queries. The \textit{aggregate} API-endpoint returns a R function to the client allowing the client the aggregation of the filtered data. Lastly, the \textit{meta} API-endpoint returns a JSON file with meta information, such as the timestamp of the request and the used Standartox version. The API is designed to be used with the R-package standartox and therefore uses serialization methods specific to R (rds() from the R package base and fst() from the package fst).
 
 \begin{figure}
     \includestandalone[scale=0.5]{article/tikz/pipeline-organigram}
@@ -38,7 +36,7 @@ The API is built by using the plumber-package \citep{trestletechnologyllc_plumbe
 
 
 \subsubsection*{R-package}
-The R-package standartox contains two functions \textit{stx\_catalog()} and \textit{stx\_query()}. The former accesses the \textit{catalog} API-endpoint and returns a R-list of possible filter parameters that can be used in \textit{stx\_query()}. The latter returns a R list of three tables (R data.frames) containing a filtered data set, an aggregated data set and a table with the meta information retrieved from the \textit{meta} API-endpoint.
+The R-package standartox contains two functions \textit{stx\_catalog()} and \textit{stx\_query()}. The former accesses the \textit{catalog} API-endpoint and returns a R-list of possible filter parameters that can be used in \textit{stx\_query()}. The latter returns a R list of three tables (R data.frames) containing the filtered data set, the aggregated data set and a table with the meta information retrieved from the \textit{meta} API-endpoint.
 
 \subsection*{Code availability}
 %%For all studies using custom code in the generation or processing of datasets, 
@@ -62,6 +60,9 @@ Contains the code for the R-package.
 
 \end{itemize}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OLD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
 \textbf{OLD: Standartox aggregates the test results according to chosen filters in a two step process. Firstly the filtered test results are aggregated by the CAS number, the chosen taxon and the selected test duration. Secondly, the returned data is then aggregated by the CAS number. The former can't be influenced by the user and calculates either the minimum or the median depending on the amount of results to aggregate (n <= 2: minimum, if n > 2: median). Thereof the second step calculates the minimum, the maximum, the median, the geometric mean, or the arithmetic mean as an aggregate.}
+\fi
 
 

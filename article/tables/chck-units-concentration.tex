@@ -1,5 +1,42 @@
-\begin{table}
-    \csvautotabular[respect all]{cache/chck-units-concentration.csv}
-    \caption{Meta variables table}
-    \label{table:meta-variables}
-\end{table}
+
+
+% \begin{table}
+%     \csvautotabular[respect all]{cache/chck-units-concentration.csv}
+%     \caption{Meta variables table}
+%     \label{table:meta-variables}
+% \end{table}
+
+
+\begin{filecontents*}{sample_data.csv}
+    Col1,Col2,Col3,ColPct
+    111,65,64,5\%
+    112,30,5,6\%
+    113,92,1,8.4\%
+    114,47,19,20\%
+    115,38,15,1\%
+\end{filecontents*}
+
+\documentclass{article}
+%%%%%%%%%%%%%%%%% CONTINUE HERE!!!!!!!!!!!!!!!!!!!!
+\usepackage{csvsimple,longtable,booktabs}
+\begin{document}
+
+    \csvreader[
+    longtable=lrrrr,
+    table head=
+    \toprule\bfseries Col1 &\bfseries Col2 & \bfseries Col3 & \bfseries ColPct\\ 
+    \midrule\endhead\bottomrule\endfoot,
+    late after line=\\,
+    before reading={\catcode`\#=12},after reading={\catcode`\#=6}
+    ]{sample_data.csv}{1=\ColOne, 2=\ColTwo, 3=\ColThree, 4=\Percentage}
+    {\ColOne & \ColTwo & \ColThree & \Percentage}
+
+    \csvreader[
+    
+    ]{}{}{}
+
+
+
+
+\end{document}
+
