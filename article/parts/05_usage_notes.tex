@@ -15,32 +15,30 @@
 %%including how authors can apply to access the data, and what criteria
 %%will be used to determine who may access the data, and any limitations
 %%on data use.
+Standartox can either be accessed through the APP or the API together with the R-package standartox. Both access pathways allow for the same filters and aggregation methods (Table \ref{tab:app-parameters} to be applied on the data. In the former the user can download the resulting data sets as a comma-separated values file whereas in the latter the user can directly load them in R. The user can choose among different parameters to filter and aggregate the test data accordingly \ref{tab:app-parameters}. The user can filter for compound-specific filters, including the CAS number, the concentration type (e.g. Active Ingredient, Formulation), the chemical class (e.g. Insecticides, Metals) and taxon-specific filters, including common taxonomic groups (e.g. Daphniidae, Algae), the habitat (e.g. freshwater) and the regional occurrence (e.g. Europe, Asia) of the organisms. Furthermore, the user can refine the results to specific test durations (in hours), effect groups (e.g. Mortaliy, Population, Growth) and endpoints (EC\textsubscript{50}, EC\textsubscript{10}, LOEC or NOEC).  As aggregates the user can choose the minimum, the maximum, the median, the geometric mean or the arithmetic mean. All the steps described in this section are selectable in the GUI and are executed at each click by the application. The drop down menu `Download data` allows to download a filtered data set as well as an aggregated data set.
 
-
-
-
-\subsection*{Web application}
-
-In Standartox web application (app) users can define several input parameters \ref{tab:inputs} through the app's graphical user interface (GUI) in order to filter the data specifically and perform the aggregation. The aggregated result is then shown as a table as well as an overview plot and can then be downloaded as a 'filtered' and an 'aggregated' data set \ref{fig:standartox_app}.
-
-\begin{figure}
-    \includegraphics[width=1\linewidth]{article/figures/screenshot_standartox_app.png}
-    \caption{Standartox web application}
-    \label{fig:standartox_app}
-\end{figure}
-
+Percentage values next to inputs show the proportion of the respective option (e.g. \textit{Active Ingredient - 43\%} indicates that 43\% of the data are Active Ingredients).
 
 \subsection*{R package}
+The R-package standartox consists of the two functions stx\_catalog() and stx\_query(). The former allows the retrieval of a catalog of possible parameters that can be used as an input for the latter. stx\_query() fetches the toxicity values from the data base and returns them as a R list object (compare Code \ref{listing:standartox-example}).
 
-The R-package standartox consists of the two functions stx\_catalog() and stx\_query(). The former allows the retrieval of a catalog of possible parameters that can be used as an input for the latter. stx\_query() fetches the toxicity values from the data base. It returns a R list object following the app containing a 'filtered' and 'aggregated' R data.frame object. Additionally ...................
+\begin{lstlisting}[
+    caption = {standartox R-package code} example,
+    label = {listing:standartox-example}]
+# install
+install.packages('remotes')
+remotes::install_github('andschar/standartox') # package not yet on CRAN
+# retrieve catalog    
+require(standartox)
+catal = stx_catalog()
+# retrieve data
+l = stx_query(cas = '1071-83-6',
+                endpoint = 'XX50',
+                taxa = 'Oncorhynchus',
+                duration = c(24, 120))
+\end{lstlisting}
 
-
-\input{article/scripts/standartox_example.tex}
-
-
-
-
-The \etoxbase{} is designed to support CRA of ecotoxicologists. With an increased amount of available ecotoxicological test data, it becomes fundamental to provide and distribute such information in reasonable formats, meaning accessible for humans as well as machines. Currently CRA often relies on test results of a few, well tested standard organism, such as \textit{Daphnia magna}, \textit{Pimephales promelas}, \textit{Selenastrum capricornutum}, although researchers have conducted experiments on a much greater variety of organisms (e.g. the 926,108 test results collected in the EPA ECOTOX data base). In order to locate ecotoxicological test data, researchers can rely on individual test results reported in publications <CITE>, on compiled and published data sets \citep{malaj_organic_2014} or on data bases such as the Pesticide Property Data Base (PPDB) \citep{lewis_international_2016}. Each data source has its limitations though: Collecting toxicity information from individual publications is laborious and using already compiled data from publications or data bases is often limited to a specific groups of chemicals, such as pesticides, biozides etc. The \etoxbase{}, making use of the EPA ECOTOX data base, the largest publicly available collection of ecotoxicological test results, aims to facilitate the data retrieval process by providing adequate aggregates (\ecfifty{}, NOEC, LOEC) of the tests results. These are then used for the calculation of SSDs, TUs or other risk indicators. SSDs try to extrapolate effects of chemicals towards organisms from species to a community level by fitting a statistical distribution to toxicity test results on organisms of different trophic levels in order to derive concentrations at which a specific fraction of organisms are effected (often at 5\% - HC\textsubscript{5} \citep{posthuma_species_2002}. Figure \ref{fig:ssd-isoproturon} shows an example of a SSD and the derived HC\textsubscript{5} value (red dassed line) created for the herbicide Isoproturon. TUs are another indicator of effects of chemicals on organisms. They are calculated by dividing a measured concentration (c) by an \ecfifty{} value (cf. Equation \ref{eq:tu}).
+Standartox is designed to support CRA. With an increased amount of available ecotoxicological test data, it becomes fundamental to provide and distribute such information in reasonable formats, meaning accessible for humans as well as machines. Currently CRA often relies on test results of a few, well tested standard organism, such as \textit{Daphnia magna}, \textit{Pimephales promelas}, \textit{Selenastrum capricornutum}, although researchers have conducted experiments on a much greater variety of organisms (e.g. the 926,108 test results collected in the EPA ECOTOX data base). In order to locate ecotoxicological test data, researchers can rely on individual test results reported in publications <CITE>, on compiled and published data sets \citep{malaj_organic_2014} or on data bases such as the Pesticide Property Data Base (PPDB) \citep{lewis_international_2016}. Each data source has its limitations though: Collecting toxicity information from individual publications is laborious and using already compiled data from publications or data bases is often limited to a specific groups of chemicals, such as pesticides, biozides etc. Standartox, making use of the EPA ECOTOX, the largest publicly available collection of ecotoxicological test results, aims to facilitate the data retrieval process by providing adequate aggregates (EC\textsubscript{50}, NOEC, LOEC) of the tests results. These are then used for the calculation of SSDs, TUs or other risk indicators. SSDs try to extrapolate effects of chemicals towards organisms from species to a community level by fitting a statistical distribution to toxicity test results on organisms of different trophic levels in order to derive concentrations at which a specific fraction of organisms are effected (often at 5\% - HC\textsubscript{5} \citep{posthuma_species_2002}. Figure \ref{fig:ssd-isoproturon} shows an example of a SSD and the derived HC\textsubscript{5} value (red dassed line) created for the herbicide Isoproturon. TUs are another indicator of effects of chemicals on organisms. They are calculated by dividing a measured concentration (c) by an EC\textsubscript{50} value (cf. Equation \ref{eq:tu}).
 
 \begin{equation}
     TU_i = \frac{c_i}{\ecfifty}
@@ -48,34 +46,24 @@ The \etoxbase{} is designed to support CRA of ecotoxicologists. With an increase
 \end{equation}
 
 \begin{figure}[h!]
-    \dentering
     \includegraphics[width=1\linewidth]{article/figures/ssd2_boot.png}
     \caption{SSD plot showing the susceptibility of organisms towards the herbicide Isoproturon. The red line represents the fit and the red dashed line marks the HC\textsubscript{5} value, which is a common measure in CRA. The legend denotes common organism groups used in ecotoxicology.}
     \label{fig:ssd-isoproturon}
 \end{figure}
 
-\subsection*{Filter and Aggregate}
-
-In the application's GUI, the user can choose among different parameters to filter and aggregate the test data accordingly \ref{tab:inputs}. Percentage values next to inputs show the proportion of the respective option (e.g. \textit{Active Ingredient - 43\%} indicates that 43\% of the data are Active Ingredients). The user can filter for compound-specific filters, including the CAS number, the concentration type (e.g. Active Ingredient, Formulation), the chemical class (e.g. Insecticides, Metals) and taxon-specific filters, including common taxonomic groups (e.g. Daphniidae, Algae), the organism habitat (e.g. freshwater) and the continent (e.g. Europe, Asia). Regarding the test parameters the user can choose test durations (in hours), Effect groups (e.g. Mortaliy, Population, Growth) and Endpoints (\ecfifty, EC\textsubscript{10}, LOEC or NOEC). Besides that, two cleaning steps can also be chosen. Firstly the application allows to exclude test results exhibiting concentrations that are higher than the actual water solubility of the respective chemical at \ang{20} C. Secondly the user can choose to exclude outliers (cf. Table \ref{tab:scripts-app}). The outliers are selected as values that exceed lower (0.25) and the upper (0.75) quartile by 1.5 times the inter-quartile range. As aggregates the user can choose the minimum, the maximum, the median, the geometric mean or the arithmetic mean. All the steps described in this section are selectable in the GUI and are executed at each click by the application. The drop down menu `Download data` allows to download a filtered data set as well as an aggregated data set.
 
 \subsection*{Limitations}
+Since the EPA ECOTOX data at hand merely represents a sample of the reality of the toxicity of chemicals on organisms, it has to be stated that the returned Standartox values are subject to change. New studies will be published and constantly incorporated into Standartox, improving the toxicity estimates. However, we expect values of well tested chemical-organism combinations to be relatively stable. A future analysis on the smallest number of tests needed to return trustworthy results, could shed more light on this aspect. Furthermore, toxicity test results are certainly influenced by individual tests parameters, such as pH, temperature or conductivity amongst others \citep{rosenkrantz_influence_2013, li_temperature_2011}. Such information is not included in the aggregation performed by Standartox, since the EPA ECOTOX only provides sparse records on those. Most frequently provided test parameters (and their percentage) are medium temperature (77\%), pH:56\%, hardness:27\%, dissolved oxygen:18\%, Alkalinity:15\% and salinity:9\%. Others are provided for less than 5\% of the tests. A test-mining approach, iterating through the individual test studies could potentially increase this number. However, we argue that using the geometric mean as an aggregate allows for an adequate estimation of the toxicity of a chemical towards an organism group. We prefer the geometric mean in comparison to the arithmetic mean, since it is considerably less influenced by outliers and is suitable for skewed data. Also, the geometric mean is preferable over the median, since the median completely ignores the influence of large or small values, making it unreliable for small data sets <CITATION GEOMETRIC MEAN>.
 
-Generally it has to be stated that the returned values are subject to change, as new tests will be constantly incorporated into the \etoxbase{}. However, we expect values of well tested chemical-organism combinations to be relatively stable. The returned values are certainly influenced by individual tests characteristics, such as pH, temperature or conductivity to just name a few, which influences the effect relationship between chemicals and organisms \citep{rosenkrantz_influence_2013,li_temperature_2011}. Unfortunately the EPA ECOTOX data base has only rare records on test parameters, which prevents incorporating such parameters in an aggregation <proportions of available data: Temperature:77\%, pH:56\%, hardness:27\%, dissolved oxygen:18\%, Alkalinity:15\%, salinity:9\%, others:<=5\%>. However, using the median or the geometric mean as an aggregate allows for an adequate estimation of the central tendency of the toxicity of a chemical towards an organism group. The geometric mean is recommended, as it is in comparison to the arithmetic mean considerably less influenced by outliers and is suitable for skewed data. Also, the geometric mean is preferable in contrast to the median, since the median completely ignores the influence of large or small values, making it unreliable for small data sets <CITATION GEOMETRIC MEAN>.
-
-Other initiatives, with different, though partly overlapping aims accumulating existing ecotoxicological test data are published online. The PPDB provides validated ecotoxicological test results for pesticides, narrowing chemicals to this group \citep{lewis_international_2016}. The Network of reference laboratories, research centres and related organisations for monitoring of emerging environmental substances (NORMAN) focuses on assembling river basin specific pollutants\citep{von_der_ohe_new_2011}. The EnviroTox data base \href{https://envirotoxdatabase.org/} makes also use of the \epa{} data in order to derive Predicted no-effect concentrations (PNEC) \citep{health_and_environmental_sciences_institute_hesi_envirotox_2019}. In comparison to the \etoxbase, these examples partly rely on the same data, yet not aiming to derive \ecfifty, LOEC and NOEC from it automatically.
 \subsection*{Other data bases}
-
-Ecotox tool for PENEC
-Lara's work for regulatory thresholds
-
-
-greater and greater demand to numerically  analyse large amount of ecotoxicological data.
-
-Other data bases are also thought of. Compare Sascha Bub's work.
-
-
+Other initiatives tidying the large number of ecotoxicological test results were also developed recently. They partly aim for overlapping goals, yet have limitations or objectives that differentiate them from Standartox. Since 2006, the PPDB provides validated ecotoxicological information on pesticides \citep{lewis_international_2016}.
+% TODO lookup NORMAN citation
+The Network of reference laboratories, research centres and related organisations for monitoring of emerging environmental substances (NORMAN) focuses on assembling river basin specific pollutants \citep{von_der_ohe_new_2011}. 
+Connors et al. \citet{healthandenvironmentalsciencesinstitutehesi_envirotox_2019, connors_creation_2019} published the EnviroTox data base \href{https://envirotoxdatabase.org/} which also uses, amongst others the EPA ECOTOX data as an input. In comparison to Standartox, ENviroTox focuses only on aquatic organisms and uses an qualitative algorithm to exclude unreliable test results. They filter for example the data to fish, amphibian invertebrate and algae taxa, to test durations of above 24 hours and aquatic taxa only and add additional information on toxicity endpoints, such as chronic or acute tests as well as mode of action assignments. In contrast, Standartox doesn't refine to specific test durations, but leaves it up to the user to decide on such parameters. The EnvirTox data base also allows for an aggregation of test results to derive single toxicity values for individual taxa whereas Standartox performs this aggregation for individual chemicals. This has to be done in a cumbersome way by down- and uploading the data manually. Comptox, is a web tool published by the EPA which, similar to Standartox allows for filtering test results and the retrieval of additional chemical information. However, it lacks the possibility to aggregate toxicity test results \citep{usenvironmentalprotectionagency_comptox_2019}. Petschick et al. (in submission) modeled risk threshold level equivalents for aquatic organisms by using ecotoxicological effect data from the EPA ECOTOX. However, none of the above mentioned approaches aim for a standardized aggregation method of toxicity endpoints for individual chemicals. Besides, they also lack the possibility for automated and scriptable user requests for high level programming languages, such as R or Python. Along with newly created ecotoxicological data bases here, methods of how to efficiently store ecotoxicological data are also proposed as can be seen in the MAGIC Knowledge Base \citep{bub_graphing_2019}. This recent increase of efforts to compile ecotoxicological test data bases clearly emphasizes the need for holistic and automated analyses of large-scale ecotoxicological data. Standartox is a tool that puts its focus on the aggregation of toxicity data and by this adds a piece to the puzzle of modern ecotoxicological analyses.
 
 \subsection*{Identify chemicals to be tested}
+There is a clear need in ecotoxicology for harmonised approaches to collect ecotoxicological data as other data base compilation attempts recently published show. Hitchock et al. \citet{hitchcock_improving_2018} argue for an increased awareness concerning newly published ecotoxicological test results to facilitate meta analyses across studies. Important statistical parameters, such as mean estimates, variances and sample sizes. Likewise, state variables, including medium temperature, pH, mineral contents or organism age and sex should be reported (if not in the text, in an online repository). Standartox doesn't include such information mainly because the EPA ECOTOX reports only a few of these variables. A future research aim could be to use machine learning techniques to retrieve this information from the referenced articles.
+Above all, recent studies showed that, in defiance of many regulation efforts \citep{schafer_future_2019} chemicals can still cause strong adverse effects on organisms and in turn the environment. Neonicotinoids, a group of insecticides was for example related to declines in insectivorous birds \citep{hallmann_declines_2014} and fish yields due to cascading food web effects \citep{yamamuro_neonicotinoids_2019}. Standartox provides means to synthesise ecotoxicological test data, thereby identify research gaps. Furthermore, standardized approaches could potentially reduce unnecessary animal testing by synthesizing existing ecotoxicological test data.
 
 \begin{figure}
     \includegraphics[width=1\linewidth]{article/figures/heatmap_tests_n.png}
@@ -83,48 +71,10 @@ Other data bases are also thought of. Compare Sascha Bub's work.
     \label{fig:standartox_ppdb_diff}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+1) \citep{staveley_challenge_2016} describe what is necessary for future ecotoxicology.
 
-
-There is a clear need in ecotoxicology for harmonised approaches to collect ecotoxicological data as other data base compilation attempts recently published show.
-
-Hitchock et al. \citet{hitchcock_improving_2018} argue for an increased awareness concerning newly published ecotoxicological test results to facilitate meta analyses across studies. Important statistical parameters, such as mean estimates, variances ans sample sizes. Likewise, state variables, including medium temperature, pH, mineral contents or organism age and sex should be reported (if not in the text, in an online repository). Standartox doesn't include such information mainly because the EPA ECOTOX data base reports only a few of these variables. A future research aim could be to use machine learning techniques to retrieve this information from the referenced articles.
-
-Agrochemicals contribute to a decline in biodiversity \citep{schafer_future_2019}
-contrary to EU pesticide regulation
-
-Current risk assessment or pesticide regulation consists of Stadard Toxicity Tests and Safety factors. They are not sufficient 
-
-tiered framework critizized, especiall the two main assumptions:
-(1) 1st tier provides and overly protective measure
-(2) higher tiers provide more ecologically relevant predictions
-
-"Inacurate predictions of exposure and effect" \citep{schafer_future_2019}
-
-In their policy brief for a future risk assessment Schäfer et al. \citet{schafer_future_2019} propose to include a greater ecological context, meaning that not only single but communities need to evaluated and a landscape-oriented contemplation should be envisaged inter alia. Standartox partly follows such a route in making ecotoxicological data more easily available by standardizing ????? (1st tier) and integrating habitat and occurrence data, allowing for a more geographically detailed refinement.
-
-
-
-
-Hallmann et al. \citet{hallmann_declines_2014} showed a decline of insectivorous birds associated with neonicotinoid usage.
-
-Fungicides paper zitieren?
-
-
-The units are denoted as ppm or ppb which comprises ug/l and mg/l
-
-List the units which are kept. 
-
-Thereby 'food', soil, ai and other information are lost but these are coded in other variables anyway. And they don't belong in a unit variable. Characteristic for ecotoxicology
-
-
-units such as per day (mg/kg/day) are generally excluded.
-
-
-Standartox follows such a route in trying to synthesize information from a plethora of studies.
-
-
-
-
-
-
-\pagebreak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OLD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+Besides that, two cleaning steps can also be chosen. Firstly the application allows to exclude test results exhibiting concentrations that are higher than the actual water solubility of the respective chemical at \ang{20} C. Secondly the user can choose to exclude outliers (cf. Table \ref{tab:scripts-app}). The outliers are selected as values that exceed lower (0.25) and the upper (0.75) quartile by 1.5 times the inter-quartile range.
+\fi

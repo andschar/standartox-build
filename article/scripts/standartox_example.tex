@@ -19,16 +19,4 @@
   tabsize=3
 }
 
-\begin{lstlisting}
-# install
-install.packages('remotes')
-remotes::install_github('andschar/standartox') # package not yet on CRAN
-# retrieve catalog    
-require(standartox)
-catal = stx_catalog()
-# retrieve data
-l = stx_query(cas = cas,
-              endpoint = 'XX50',
-              taxa = 'Oncorhynchus',
-              duration = c(24, 120))
-\end{lstlisting}
+
