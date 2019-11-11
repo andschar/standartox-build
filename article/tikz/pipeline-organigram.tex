@@ -28,21 +28,23 @@
 	ids/.style = {diamond, minimum width = 3cm, minimum height = 2cm, text centered, draw = black, fill = green!30},
 	db/.style = {rectangle, text centered, draw = black, rounded corners, minimum width = 3cm, minimum height = 1.25cm},
 	arrow1/.style = {->, > = stealth, draw = black, color = gray!80, line width = 2.5pt},
-	arrow2/.style = {->, > = latex, draw = black, line width=10pt},
+	arrow2/.style = {->, > = latex, draw = black, line width = 10pt},
+	arrow3/.style = {draw = gray!10, line width = 2cm},
 	background/.style = {rectangle, rounded corners, draw = black, fill=gray!0.01}
 }
 
 \begin{tikzpicture}
 %% nodes
 % pipeline
-\node (epa-ecotox) [ecotox, align = center] at (0cm,0cm) {EPA ECOTOX\\data base\\(cleaned)};
-\node (cas) [ids, below of = epa-ecotox, xshift = 6cm, yshift = 3cm] {CAS};
+\node (epa-ecotox) [ecotox, above of = epa-ecotox-clean, yshift = 5cm] {EPA};
+\node (epa-ecotox-clean) [ecotox, align = center] at (-3cm,-0.5cm) {EPA ECOTOX\\data base\\(cleaned)};
+\node (cas) [ids, below of = epa-ecotox-clean, xshift = 6cm, yshift = 3cm] {CAS};
 \node (taxa) [ids, below of = cas, xshift = 0cm, yshift = -2.5cm] {Taxa};
 \node (db-chemical) [db, right of = cas, xshift = 4cm, align = center] {Chemical\\data bases};
 \node (db-habitat) [db, right of = taxa, xshift = 4cm, yshift = 1cm, align = center] {Habitat\\data bases};
 \node (db-region) [db, right of = taxa, xshift = 4cm, yshift = -1cm, align = center] {Region\\data bases};
 % standartox data
-\node (stx-data) [data, below of = bg1-pipeline, xshift = 5.5cm, yshift = -6cm, align = center] {Standatox\\data set};
+\node (stx-data) [data, below of = epa-ecotox-clean, xshift = 7.5cm, yshift = -5.9cm, align = center] {Standartox\\data set};
 % user interfaces
 \node (stx-app) [app, below of = stx-data, yshift = -3.5cm, xshift = -2cm, align = center] {Web\\application};
 \begin{pgfonlayer}{bg1}
@@ -55,20 +57,21 @@
 \end{pgfonlayer}
 %% backgrounds
 \begin{pgfonlayer}{bg2}
-    \node (bg1-pipeline) [background, minimum height = 9cm, minimum width = 17cm, above of = epa-ecotox, xshift = 5.5cm, yshift = -1cm];
-    \node (bg1-user) [background, below of = bg1-pipeline, minimum height = 7cm, minimum width = 17cm, yshift = -12cm];
+    %\node (bg1-pipeline) [background, minimum height = 9cm, minimum width = 17cm, above of = epa-ecotox-clean, xshift = 5.5cm, yshift = -1cm];
+    \node (bg1-user) [background, below of = bg1-pipeline, minimum height = 8cm, minimum width = 17cm, yshift = -13cm, xshift = 5cm];
+    
+    \draw [arrow3] (12cm,0cm) arc[radius = 7.5cm, start angle = 0, delta angle = 360];
+    
 \end{pgfonlayer}
 %% arrows
 % small
-\draw [arrow1] (epa-ecotox.east) -- (cas.west);
-\draw [arrow1] (epa-ecotox.east) -- (taxa.west);
+\draw [arrow1] (epa-ecotox-clean.east) -- (cas.west);
+\draw [arrow1] (epa-ecotox-clean.east) -- (taxa.west);
 \draw [arrow1] (cas.east)-- (db-chemical.west);
 \draw [arrow1] (taxa.east) -- (db-habitat.west);
 \draw [arrow1] (taxa.east) -- (db-region.west);
 \begin{pgfonlayer}{bg2}
-    \draw [arrow2] (bg1-pipeline.south) -- (stx-data.north);
-    \draw [arrow2] (stx-data.south) -- (stx-app.north east);
-    \draw [arrow2] (stx-data.south) -- (stx-api.north west);
+    \draw [->, > = latex, draw = gray!10, line width = 1cm] (stx-data.south) -- node[auto] ++ (0cm,-8cm);
 \end{pgfonlayer}
 \draw [arrow1] (stx-api) -- (stx-rpackage);
 % large
