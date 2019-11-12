@@ -1,4 +1,4 @@
-# create lookup tables
+# create NORMAN lookup tables
 
 # setup -------------------------------------------------------------------
 source('R/gn_setup.R')
@@ -130,7 +130,7 @@ sapply(lookup_l, chck_dupl, col = 'code')
 # write lookup tables -----------------------------------------------------
 for (i in seq_along(lookup_l)) {
   
-  schema = 'ecotox'
+  schema = 'lookup'
   tbl = lookup_l[[i]]
   name = names(lookup_l[i])
   name = paste0(name, '_lookup')
@@ -143,7 +143,7 @@ for (i in seq_along(lookup_l)) {
 }
 
 # log ---------------------------------------------------------------------
-log_msg('LOOK: NORMAN lookup tables script run.')
+log_msg('LOOKUP: NORMAN: lookup tables script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

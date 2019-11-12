@@ -22,12 +22,12 @@ chck_dupl(look, 'species_number')
 
 # write -------------------------------------------------------------------
 write_tbl(look, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'ecotox', tbl = 'ecotox_group_lookup',
+          dbname = DBetox, schema = 'lookup', tbl = 'ecotox_group_lookup',
           key = 'species_number',
           comment = 'NORMAN ecotox_group lookup table')
 
 # log ---------------------------------------------------------------------
-log_msg('LOOK: NORMAN lookup tables script run.')
+log_msg('LOOK: NORMAN: lookup tables script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

@@ -1,109 +1,109 @@
-unit,prefix,word,si,multiplier,conv,unit_conv,type,remove,notes
-fg,femto,gram,yes,1E-15,yes,g,mass,no,
-pg,pico,gram,yes,1E-12,yes,g,mass,no,
-ng,nano,gram,yes,1E-09,yes,g,mass,no,
-ug,micro,gram,yes,1E-06,yes,g,mass,no,
-mg,milli,gram,yes,0.001,yes,g,mass,no,
-g,,gram,yes,1,yes,g,mass,no,
-kg,kilo,gram,yes,1000,yes,g,mass,no,
-t,mega,gram,no,1000000,yes,g,mass,no,
-tons,mega,gram,no,1000000,yes,g,mass,no,
-pl,pico,liter,yes,1E-12,yes,l,volume,no,
-nl,nano,liter,yes,1E-09,yes,l,volume,no,
-ul,micro,liter,yes,1E-06,yes,l,volume,no,
-ml,milli,liter,yes,0.001,yes,l,volume,no,
-l,,liter,yes,1,yes,l,volume,no,
-hl,hecto,liter,yes,100,yes,l,volume,no,
-bu,,bushel,no,35.23907,yes,l,volume,no,
-ppq,quadrillion,partsper,no,1E-06,yes,ppb,fraction,no,
-ppt,trillion,partsper,no,0.001,yes,ppb,fraction,no,
-ppb,billion,partsper,no,1,yes,ppb,fraction,no,
-ppm,million,partsper,no,1000,yes,ppb,fraction,no,
-no,,number,no,,no,,amount,no,
-amol,atto,mol,yes,1E-18,yes,mol,mol,no,
-fmol,femto,mol,yes,1E-15,yes,mol,mol,no,
-pmol,pico,mol,yes,1E-12,yes,mol,mol,no,
-nmol,nano,mol,yes,1E-09,yes,mol,mol,no,
-umol,micro,mol,yes,1E-06,yes,mol,mol,no,
-mmol,milli,mol,yes,0.001,yes,mol,mol,no,
-mol,one,mol,yes,1,yes,mol,mol,no,
-kmol,kilo,mol,yes,1000,yes,mol,mol,no,
-nM,nano,mol,yes,1E-09,yes,mol,mol,no,
-uM,micro,mol,yes,1E-06,yes,mol,mol,no,
-mM,milli,mol,yes,0.001,yes,mol,mol,no,
-M,one,mol,yes,1,yes,mol,mol,no,
-yd,,yard,no,0.9144,yes,m,length,no,
-ft,,foot,no,0.3048,yes,m,length,no,
-cm,centi,meter,yes,0.01,yes,m,length,no,
-mm,milli,meter,yes,,yes,,length,,
-m,,meter,yes,,,,length,,
-neq,nano,equivalent,no,,no,,noscience,yes,
-meq,milli,equivalent,no,,no,,noscience,yes,
-ueq,micro,equivalent,no,,no,,noscience,yes,
-mm2,milli,,yes,0.001,yes,m2,area,no,
-cm2,centi,,yes,0.01,yes,m2,area,no,
-m2,one,,yes,1,yes,m2,area,no,
-ha,,hectare,yes,10000,yes,m2,area,no,
-acre,,,no,4050,yes,m2,area,no,
-ac,,,no,4050,yes,m2,area,no,
-mi2,,squaremile,no,,yes,m2,area,no,
-km2,kilo,squaremeter,yes,1000000,yes,m2,area,no,
-ft2,,squarefeet,no,0.0929,yes,m2,area,no,
-feddan,,feddan,no,4200,yes,m2,area,no,
-dn(Cyprus),,donum,no,330,yes,m2,area,no,
-%,,percent,no,1.00E+07,yes,ppb,percentage,no,
-‰,,permille,no,1.00E+06,yes,ppb,percentage,no,
-d,,day,no,24,yes,h,time,no,
-h,,hour,no,1,yes,h,time,,
-mi,,minute,no,,,,time,,
-wk,,week,no,,,,time,,
-yr,,year,no,,no,,time,,
-ft3,,squarefeet,no,,,,volume,no,
-mm3,milli,cubic,no,1E-09,yes,m3,volume,no,
-cm3,centi,cubic,no,1E-06,yes,m3,volume,no,
-dm3,deci,cubic,no,0.001,yes,m3,volume,no,
-m3,,cubic,no,1,yes,m3,volume,no,
-fl oz,,,no,0.0296,yes,l,volume,no,28.4ml in the imperial system – 29.6ml in the US
-pt,,pint,no,,no,,volume,yes,three different pints
-oz,,ounce,no,28.34,yes,g,volume,no,
-gal,,,no,4.54609,yes,l,volume,no,
-qt,,quarts,no,,,,volume,,
-lb,,pound,no,453.592,yes,g,mass,no,
-psu,,practical salinity unit,no,,no,,salinity,no,
---,,no data,no,,no,,nodata,yes,
-nr,,no data,no,,no,,nodata,yes,
-ai,,active ingredient,no,,no,,noscience,yes,
-eu,,experimental unit,no,1,no,eu,experimentalunit,yes,
-kbq,kilo,becquerel,no,,,,radioactivity,,
-bq,,becquerel,no,,no,,radioactivity,no,
-mbq,milli,becquerel,,,,,radioactivity,,
-ubq,micro,becquerel,no,,no,,radioactivity,yes,
-ci,,curie,no,2.7E-11,yes,Bq,radioactivity,no,
-mci,milli,curie,,,,,radioactivity,,
-uci,micro,curie,no,,,,radioactivity,,
-nci,nano,curie,,,,,radioactivity,,
-icu,,international chick units,no,,no,,noscience,yes,
-iu,,international units,no,,no,,noscience,yes,
-fibers,,fibers,no,,no,,noscience,yes,
-kj,kilo,joule,no,,no,,energy,yes,
-n,,normal,no,,no,,noscience,yes,
-ra,,ratio,no,,no,,ratio,yes,
-unit,,unit,no,,no,,noscience,yes,
-org,,organism,no,1,no,org,organism,yes,
-v,,volume,no,,no,,volume,yes,
-% v,,percentage volume,,,,,percentage,,
-cwt,,hundred weight,no,,no,,noscience,yes,
-w,,weight,no,,no,,noscience,yes,
-% w,,percentage weight,,,,,percentage,,
-in dia,,inch diameter,no,,no,,noscience,yes,
-egg,,egg,no,,no,,noscience,yes,
-pellets,,pellets,no,,no,,noscience,yes,
-bee,,bee,no,,no,,noscience,yes,
-fish,,fish,no,,no,,noscience,yes,
-u,,units,no,,no,,noscience,yes,
-dpm,,disintegrations per minute,no,,no,,radioactivity,yes,
-cwt,,hundredweight,no,,no,,noscience,yes,
-sd,,seed,no,,no,,noscience,yes,
-cntr,,container,,,,,noscience,,
-plot,,plot,,,,,noscience,,
-cpm,,counts per minute,,,,,counts,,
+unit,prefix,word,multiplier,conv,unit_conv,type
+fg,femto,gram,1E-15,yes,g,mass
+pg,pico,gram,1E-12,yes,g,mass
+ng,nano,gram,1E-09,yes,g,mass
+ug,micro,gram,1E-06,yes,g,mass
+mg,milli,gram,0.001,yes,g,mass
+g,,gram,1,yes,g,mass
+kg,kilo,gram,1000,yes,g,mass
+t,mega,gram,1000000,yes,g,mass
+tons,mega,gram,1000000,yes,g,mass
+pl,pico,liter,1E-12,yes,l,volume
+nl,nano,liter,1E-09,yes,l,volume
+ul,micro,liter,1E-06,yes,l,volume
+ml,milli,liter,0.001,yes,l,volume
+l,,liter,1,yes,l,volume
+hl,hecto,liter,100,yes,l,volume
+bu,,bushel,35.23907,yes,l,volume
+ppq,quadrillion,partsper,1E-06,yes,ppb,fraction
+ppt,trillion,partsper,0.001,yes,ppb,fraction
+ppb,billion,partsper,1,yes,ppb,fraction
+ppm,million,partsper,1000,yes,ppb,fraction
+no,,number,,no,,amount
+amol,atto,mol,1E-18,yes,mol,mol
+fmol,femto,mol,1E-15,yes,mol,mol
+pmol,pico,mol,1E-12,yes,mol,mol
+nmol,nano,mol,1E-09,yes,mol,mol
+umol,micro,mol,1E-06,yes,mol,mol
+mmol,milli,mol,0.001,yes,mol,mol
+mol,one,mol,1,yes,mol,mol
+kmol,kilo,mol,1000,yes,mol,mol
+nM,nano,mol,1E-09,yes,mol,mol
+uM,micro,mol,1E-06,yes,mol,mol
+mM,milli,mol,0.001,yes,mol,mol
+M,one,mol,1,yes,mol,mol
+yd,,yard,0.9144,yes,m,length
+ft,,foot,0.3048,yes,m,length
+cm,centi,meter,0.01,yes,m,length
+mm,milli,meter,,yes,,length
+m,,meter,,,,length
+neq,nano,equivalent,,no,,noscience
+meq,milli,equivalent,,no,,noscience
+ueq,micro,equivalent,,no,,noscience
+mm2,milli,,0.001,yes,m2,area
+cm2,centi,,0.01,yes,m2,area
+m2,one,,1,yes,m2,area
+ha,,hectare,10000,yes,m2,area
+acre,,,4050,yes,m2,area
+ac,,,4050,yes,m2,area
+mi2,,squaremile,,yes,m2,area
+km2,kilo,squaremeter,1000000,yes,m2,area
+ft2,,squarefeet,0.0929,yes,m2,area
+feddan,,feddan,4200,yes,m2,area
+dn(Cyprus),,donum,330,yes,m2,area
+%,,percent,10000000,yes,ppb,percentage
+‰,,permille,1000000,yes,ppb,percentage
+d,,day,24,yes,h,time
+h,,hour,1,yes,h,time
+mi,,minute,,,,time
+wk,,week,,,,time
+yr,,year,,no,,time
+ft3,,squarefeet,,,,volume
+mm3,milli,cubic,1E-09,yes,m3,volume
+cm3,centi,cubic,1E-06,yes,m3,volume
+dm3,deci,cubic,0.001,yes,m3,volume
+m3,,cubic,1,yes,m3,volume
+fl oz,,,0.0296,yes,l,volume
+pt,,pint,,no,,volume
+oz,,ounce,28.34,yes,g,volume
+gal,,,4.54609,yes,l,volume
+qt,,quarts,,,,volume
+lb,,pound,453.592,yes,g,mass
+psu,,practical salinity unit,,no,,salinity
+--,,no data,,no,,nodata
+nr,,no data,,no,,nodata
+ai,,active ingredient,,no,,noscience
+eu,,experimental unit,1,no,eu,experimentalunit
+kbq,kilo,becquerel,,,,radioactivity
+bq,,becquerel,,no,,radioactivity
+mbq,milli,becquerel,,,,radioactivity
+ubq,micro,becquerel,,no,,radioactivity
+ci,,curie,2.7E-11,yes,Bq,radioactivity
+mci,milli,curie,,,,radioactivity
+uci,micro,curie,,,,radioactivity
+nci,nano,curie,,,,radioactivity
+icu,,international chick units,,no,,noscience
+iu,,international units,,no,,noscience
+fibers,,fibers,,no,,noscience
+kj,kilo,joule,,no,,energy
+n,,normal,,no,,noscience
+ra,,ratio,,no,,ratio
+unit,,unit,,no,,noscience
+org,,organism,1,no,org,organism
+v,,volume,,no,,volume
+% v,,percentage volume,,,,percentage
+cwt,,hundred weight,,no,,noscience
+w,,weight,,no,,noscience
+% w,,percentage weight,,,,percentage
+in dia,,inch diameter,,no,,noscience
+egg,,egg,,no,,noscience
+pellets,,pellets,,no,,noscience
+bee,,bee,,no,,noscience
+fish,,fish,,no,,noscience
+u,,units,,no,,noscience
+dpm,,disintegrations per minute,,no,,radioactivity
+cwt,,hundredweight,,no,,noscience
+sd,,seed,,no,,noscience
+cntr,,container,,,,noscience
+plot,,plot,,,,noscience
+cpm,,counts per minute,,,,counts

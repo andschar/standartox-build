@@ -8,6 +8,7 @@ SELECT
 	tests.test_id,
 	results.result_id,
 	tests.test_cas AS casnr,
+	coalesce(substring(results.conc1_mean, '<|>'), '=') AS conc1_qualifier,
 	results.conc1_mean AS conc1_mean,
 	results.conc1_unit AS conc1_unit,
 	CASE
@@ -22,7 +23,6 @@ SELECT
 		END
       ELSE clean(results.conc1_mean)::numeric
   	END AS conc1_mean2,
-	coalesce(substring(results.conc1_mean, '<|>'), '=') AS conc1_qualifier,
 	CASE
 	  WHEN concentration_unit_lookup.conv = 'yes'
 	  	THEN 
@@ -98,6 +98,7 @@ SELECT
 	END AS exposure_type,
 	------- END
 	-- ACUTE CHRONIC HERE
+	response_site_codes.description AS response_site,
 	tests.species_number,
 	tests.reference_number
 
@@ -107,8 +108,8 @@ FROM
 LEFT JOIN ecotox.results ON tests.test_id = results.test_id
 	LEFT JOIN ecotox.response_site_codes ON results.response_site = response_site_codes.code
 	LEFT JOIN ecotox.measurement_codes ON results.measurement = measurement_codes.code
-LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
-LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
+LEFT JOIN lookup.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
+LEFT JOIN lookup.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
 LEFT JOIN ecotox.exposure_type_codes ON tests.exposure_type = exposure_type_codes.code
 LEFT JOIN ecotox.effect_codes ON results.effect = effect_codes.code
 LEFT JOIN phch_fin.chem_prop ON tests.test_cas = chem_prop.cas_number -- for molecularweight
@@ -195,6 +196,7 @@ SELECT
 	refs.title,
 	refs.author,
 	refs.publication_year
-FROM ecotox.refs;
+FROM ecotox.refs
+WHERE refs.publication_year != '19xx';
 
 ALTER TABLE standartox.refs ADD PRIMARY KEY (reference_number);

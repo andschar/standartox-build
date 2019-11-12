@@ -29,7 +29,10 @@ dbUnloadDriver(drv)
 
 # merge -------------------------------------------------------------------
 fin = merge(ids, dat, by = 'id', all.x = TRUE)
-fin = fin[ ,.SD, .SDcols = c('result_id', 'nor_use', 'nor_acute_chronic', 'nor_standard_test') ]
+setnames(fin,
+         c('norman_use', 'acute_chronic', 'standard_test'),
+         c('nor_use', 'nor_acute_chronic', 'nor_standard_test'))
+fin = fin[ , .SD, .SDcols = c('result_id', 'nor_use', 'nor_acute_chronic', 'nor_standard_test') ]
 
 # chck --------------------------------------------------------------------
 chck_dupl(fin, 'result_id')
@@ -41,7 +44,7 @@ write_tbl(fin, user = DBuser, host = DBhost, port = DBport, password = DBpasswor
           comment = 'NORMAN use, acute-chronic and standard-test lookup table')
 
 # log ---------------------------------------------------------------------
-log_msg('LOOK: NORMAN use, acute-chronic and standard-test tables script run.')
+log_msg('LOOK: NORMAN: use, acute-chronic and standard-test tables script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

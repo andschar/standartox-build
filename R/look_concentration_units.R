@@ -197,7 +197,7 @@ fwrite(units, file.path(summdir, 'concentration_unit_lookup_summary.csv'))
 
 ## postgres
 write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'ecotox', tbl = 'concentration_unit_lookup',
+          dbname = DBetox, schema = 'lookup', tbl = 'concentration_unit_lookup',
           key = 'conc1_unit',
           comment = 'Lookup table for concentration units')
 

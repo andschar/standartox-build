@@ -31,12 +31,12 @@ chck_dupl(units, 'obs_duration_unit')
 
 # write -------------------------------------------------------------------
 write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'ecotox', tbl = 'duration_unit_lookup',
+          dbname = DBetox, schema = 'lookup', tbl = 'duration_unit_lookup',
           key = 'obs_duration_unit',
           comment = 'Lookup table for duration units')
 
 # log ---------------------------------------------------------------------
-log_msg('LOOK: Duration lookup tables script run.')
+log_msg('LOOKUP: Duration lookup tables script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

@@ -47,7 +47,8 @@ pkg_cran = c(
   'foreach',
   'doParallel',
   'fst',
-  'DT'
+  'DT',
+  'knitr'
   # TODO check if all packages are still needed!
 )
 pkg_gith = c('ropensci/bib2df', 'webchem') # , 'NIVANorge/chemspideR') # no citation available!
@@ -61,16 +62,16 @@ pacman::p_load_gh(char = pkg_gith)
 # pacman::p_update()
 
 # switches ----------------------------------------------------------------
-download_db = T # should database query be run
-build_db = T # build data base?
-download = F # run download scripts (takes days)? 
-build = T # run build scripts?
-build_standartox = T
-build_norman = F
-export = T # should data be exported?
-debug_mode = F # should only 10 input rows for each quering script be run
-sink_console = T # sink console to file
-general = T
+download_db = TRUE # should database query be run
+build_db = TRUE # build data base?
+download = FALSE # run download scripts (takes days)? 
+build = TRUE # run build scripts?
+lookup = TRUE # build lookup_tables
+build_standartox = TRUE
+build_norman = FALSE
+debug_mode = FALSE # should only 10 input rows for each quering script be run
+sink_console = TRUE # sink console to file
+general = TRUE
 
 # variables ----------------------------------------------------------------
 cachedir = file.path(prj, 'cache')

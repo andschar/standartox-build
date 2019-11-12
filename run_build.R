@@ -36,8 +36,6 @@ if (build_db) {
   source(file.path(src, 'bd_sql_functions.R'), max.deparse.length = mdl)
   # errata
   source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
-  # lookup tables
-  source(file.path(src, 'bd_epa_lookup.R'), max.deparse.length = mdl)
   # changes
   source(file.path(src, 'bd_epa_changes.R'), max.deparse.length = mdl) # TODO move to bd_epa_download.R
   # meta files
@@ -83,11 +81,21 @@ if (build) {
 }
 
 # Lookup ------------------------------------------------------------------
-# TODO put all lookup scripts here
+if (lookup) {
+  source(file.path(src, 'look_schema.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_concentration_units.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_duration_units.R'), max.deparse.length = mdl)
+  # NORMAN
+  source(file.path(src, 'look_norman_variables.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman_ecotox_group.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman_acute_chronic_standard.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman_id_cas.R'), max.deparse.length = mdl) # TODO wait for Peter's answer!
+}
 
-
-# Application -------------------------------------------------------------
+# Standartox --------------------------------------------------------------
 if (build_standartox) {
+  # TODO source(file.path(src, 'run_standartox.R'))
   source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_standartox_catalog.R'), max.deparse.length = mdl)
@@ -96,12 +104,6 @@ if (build_standartox) {
 
 # NORMAN ------------------------------------------------------------------
 if (build_norman) {
-  # TODO rework lookup
-  source(file.path(src, 'look_lookup_schema.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_norman.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_norman_ecotox_group.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_norman_acute_chronic_standard.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_norman_id_cas.R'), max.deparse.length = mdl)
   source(file.path(src, 'bd_norman.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
   source(file.path(src, 'cpy_norman.R'), max.deparse.length = mdl)

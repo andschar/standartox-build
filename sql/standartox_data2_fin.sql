@@ -10,10 +10,24 @@ SELECT
   chemicals.casnr::text AS cas,
   chemicals.cname::text,
   tests.conc1_mean2::numeric AS concentration,
-  tests.conc1_unit2::text AS concentration_unit,
+  CASE
+    WHEN tests.conc1_unit2 = 'ug/l'
+      THEN 'ug/l'
+    WHEN tests.conc1_unit2 = 'ppb'
+      THEN 'ppb'
+    WHEN tests.conc1_unit2 = 'mg/kg'
+      THEN 'mg/kg'
+    WHEN tests.conc1_unit2 = '%'
+      THEN '%'
+    ELSE 'other'
+  END AS concentration_unit,
   tests.conc1_type::text AS concentration_type,
   tests.obs_duration_mean2::double precision AS duration,
-  tests.obs_duration_unit2::text AS duration_unit,
+  CASE
+    WHEN tests.obs_duration_unit2 = 'h'
+      THEN 'h'
+    ELSE 'other'
+  END AS duration_unit,
   tests.test_type::text,
   tests.effect::text,
   tests.endpoint::text,
@@ -53,15 +67,9 @@ LEFT JOIN standartox.chemicals USING(casnr)
 LEFT JOIN standartox.taxa USING(species_number)
 LEFT JOIN standartox.refs USING(reference_number)
 
-WHERE tests.conc1_mean2 IS NOT NULL
-  AND tests.conc1_unit2 IS NOT NULL
-  AND tests.conc1_qualifier = '='
-  AND tests.obs_duration_mean2 IS NOT NULL
-  AND tests.obs_duration_unit2 IN ('h') AND tests.obs_duration_unit2 IS NOT NULL
+WHERE tests.conc1_qualifier = '='
+  AND tests.conc1_mean2 IS NOT NULL AND tests.conc1_unit2 IS NOT NULL 
+  AND tests.obs_duration_mean2 IS NOT NULL AND tests.obs_duration_unit2 IS NOT NULL
   AND tests.effect IS NOT NULL
-  AND tests.endpoint IN ('NOEX', 'LOEX', 'XX50') AND tests.endpoint IS NOT NULL
-  AND tests.conc1_unit2 IN ('ug/l', 'g/m2', 'ppb', 'g/g', 'mol/l')
-  -- errata
-  AND refs.publication_year != '19xx'
-
+  AND tests.endpoint IN ('NOEX', 'LOEX', 'XX50')
 ;
