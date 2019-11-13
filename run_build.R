@@ -6,7 +6,7 @@
 # 00 22 * * * /home/scharmueller/Projects/run_build.sh
 
 # setup -------------------------------------------------------------------
-saveRDS(Sys.time(), 'start_time')
+saveRDS(Sys.time(), 'cache/start_time')
 source('~/Projects/standartox-build/R/gn_setup.R', max.deparse.length = mdl)
 
 # console log -------------------------------------------------------------

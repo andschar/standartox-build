@@ -46,7 +46,11 @@ dbUnloadDriver(drv)
 # 13042	"A"		"Merck and Co.Inc."	"Fish Toxicity Data"	"U.S.EPA-OPP Registration Standard:"	"19xx"
 # 13043	"A"		"Nalco Chemical Co."	"Fish Toxicity Studies on NALCO D-2088"	"U.S.EPA-OPP Registration Standard:"	"19xx"
 
+# log ---------------------------------------------------------------------
+log_msg('DATABASE: errors corrected.')
 
+# cleaning ----------------------------------------------------------------
+clean_workspace()
 
 
 

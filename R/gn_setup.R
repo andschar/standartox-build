@@ -171,12 +171,12 @@ source(file.path(src, 'ggplot_theme_etox_base.R'))
 theme_set(theme_minimal_etox_base_sans)
 
 # cite packages -----------------------------------------------------------
-pkg = c('pacman', pkg_cran)
-fl_bib = file.path(article, 'refs', 'references-standartox-build.bib')
-fl_tex = file.path(article, 'supplement', 'r-package-list.tex')
-file.remove(fl_bib)
-file.remove(fl_tex)
 # TODO turn on for final paper draft
+# pkg = c('pacman', pkg_cran)
+# fl_bib = file.path(article, 'refs', 'references-standartox-build.bib')
+# fl_tex = file.path(article, 'supplement', 'r-package-list.tex')
+# file.remove(fl_bib)
+# file.remove(fl_tex)
 # for (i in pkg) {
 #   capture.output(
 #     print(citation(i), style = "Bibtex"),

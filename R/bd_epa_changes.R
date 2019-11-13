@@ -6,6 +6,8 @@ source(file.path(src, 'gn_setup.R'))
 
 # query -------------------------------------------------------------------
 q1 = "ALTER TABLE ecotox.tests
+      DROP COLUMN IF EXISTS cas;
+      ALTER TABLE ecotox.tests
       ADD COLUMN cas text;"
 q2 = "UPDATE ecotox.tests SET cas = casconv(test_cas, 'cas');"
 
@@ -19,7 +21,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # log ---------------------------------------------------------------------
-log_msg("ECOTOX changes")
+log_msg("DATABASE: changes and additions.")
 
 # clean -------------------------------------------------------------------
 clean_workspace()

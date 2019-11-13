@@ -23,7 +23,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # log ---------------------------------------------------------------------
-log_msg('Postgres: functions written')
+log_msg('DATABASE: functions written.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
