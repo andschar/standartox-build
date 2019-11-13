@@ -104,10 +104,10 @@ for (i in 1:nrow(chem)) {
 Sys.time() - time
 
 # write -------------------------------------------------------------------
-saveRDS(l, file.path(cachedir, 'wikidata2.rds'), version = 2)
+saveRDS(l, file.path(cachedir, 'wikidata2.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('WIKIDATA2 (INTERMEDIATE!): download script run')
+log_msg('WIKIDATA2 (INTERMEDIATE!): download script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

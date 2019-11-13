@@ -5,7 +5,7 @@ source(file.path(src, 'gn_setup.R'))
 v = gsub('etox', '', DBetox)
 
 # data --------------------------------------------------------------------
-header = names(read_fst(file.path(exportdir, v, paste0('standartox', v, '.fst')), to = 1))
+header = names(read_fst(file.path(exportdir, paste0('standartox', v, '.fst')), to = 1))
 
 # query -------------------------------------------------------------------
 # cols
@@ -92,11 +92,10 @@ catalog_l = list(cas = cas,
 # write -------------------------------------------------------------------
 # TODO can't be read from R 3.4 (changed with 3.5)
 # TODO update R version on server
-saveRDS(catalog_l, file.path(exportdir, v, paste0('standartox', v, '_catalog.rds')),
-        version = 2) # TODO change the server R version
+saveRDS(catalog_l, file.path(exportdir, v, paste0('standartox', v, '_catalog.rds'))) # TODO change the server R version
 
 # log ---------------------------------------------------------------------
-log_msg('Export: application summary stats exported')
+log_msg('EXPORT: Standartox catalog exported.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

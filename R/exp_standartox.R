@@ -42,7 +42,7 @@ export_tbl(schema = 'standartox', table = 'data2_explanation', type = 'csv', deb
            dir = exportdir, file_name = paste0('standartox_explanation', v))
 
 # log ---------------------------------------------------------------------
-log_msg('Export: application data exported')
+log_msg('EXPORT: application data set exported.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

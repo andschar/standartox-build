@@ -111,7 +111,7 @@ if (build_norman) {
 }
 
 # check scripts -----------------------------------------------------------
-source(file.path(src, 'chck_unit_conversions.R'))
+source(file.path(src, 'chck_unit_conversions.R'), max.deparse.length = mdl)
 
 # backup ------------------------------------------------------------------
 if (general) {
