@@ -85,12 +85,6 @@ if (lookup) {
   source(file.path(src, 'look_schema.R'), max.deparse.length = mdl)
   source(file.path(src, 'look_concentration_units.R'), max.deparse.length = mdl)
   source(file.path(src, 'look_duration_units.R'), max.deparse.length = mdl)
-  # NORMAN
-  source(file.path(src, 'look_norman_variables.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_norman.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_norman_ecotox_group.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_norman_acute_chronic_standard.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_norman_id_cas.R'), max.deparse.length = mdl) # TODO wait for Peter's answer!
 }
 
 # Standartox --------------------------------------------------------------
@@ -104,6 +98,13 @@ if (build_standartox) {
 
 # NORMAN ------------------------------------------------------------------
 if (build_norman) {
+  # LOOKUP
+  source(file.path(src, 'look_norman_variables.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman_ecotox_group.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman_acute_chronic_standard.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_norman_id_cas.R'), max.deparse.length = mdl) # TODO wait for Peter's answer!
+  # BUILD
   source(file.path(src, 'bd_norman.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_norman.R'), max.deparse.length = mdl)
   source(file.path(src, 'cpy_norman.R'), max.deparse.length = mdl)
