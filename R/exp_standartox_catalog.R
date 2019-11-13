@@ -90,9 +90,7 @@ catalog_l = list(cas = cas,
                  endpoint = endpoint)
 
 # write -------------------------------------------------------------------
-# TODO can't be read from R 3.4 (changed with 3.5)
-# TODO update R version on server
-saveRDS(catalog_l, file.path(exportdir, v, paste0('standartox', v, '_catalog.rds'))) # TODO change the server R version
+saveRDS(catalog_l, file.path(exportdir, paste0('standartox', v, '_catalog.rds'))) # TODO change the server R version
 
 # log ---------------------------------------------------------------------
 log_msg('EXPORT: Standartox catalog exported.')
