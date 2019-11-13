@@ -105,7 +105,7 @@ if (nrow(chck_conc1_unit2) != 0) {
 fwrite(conc, file.path(article, 'cache', 'chck-units-concentration.csv'))
 
 # log ---------------------------------------------------------------------
-log_msg('Check: Concentration conversion check script run.')
+log_msg('CHCK: Concentration units conversions check script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

@@ -60,7 +60,7 @@ if (nrow(chck_obs_duration_unit2) != 0) {
 fwrite(dur, file.path(article, 'cache', 'chck-units-duration.csv'))
 
 # log ---------------------------------------------------------------------
-log_msg('Check: Concentration conversion check script run.')
+log_msg('CHCK: Duration units conversions check script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
