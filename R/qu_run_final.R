@@ -13,7 +13,7 @@ mapply(source,
        SIMPLIFY = FALSE)
 
 # log ---------------------------------------------------------------------
-log_msg('Query final tables script run')
+log_msg('QUERY: final tables script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

@@ -49,7 +49,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # log ---------------------------------------------------------------------
-log_msg('Query taxa final table')
+log_msg('QUERY: taxa final table created.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

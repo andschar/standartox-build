@@ -293,9 +293,7 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   log_msg(paste(DBetox, 'built into PostgresDB', sep = ' '))
   
 } else {
-  
-  msg = 'ECOTOX already built into Postgres DB.'
-  log_msg(msg)
+  log_msg('ECOTOX: already built into Postgres DB.')
 }
 
 # cleaning ----------------------------------------------------------------

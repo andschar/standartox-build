@@ -28,7 +28,7 @@ write_tbl(info,
           comment = 'Meta information table on data base build.')
 
 # log ---------------------------------------------------------------------
-log_msg('EPA META: files have been downloaded')
+log_msg('ECOTOX: META: files have been downloaded')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

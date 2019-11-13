@@ -26,9 +26,7 @@ if (!basename(output) %in% list.files(data_ecotox)) {
   system(sprintf('wget -P %s %s', data_ecotox, file_url)) # quite slow
   system(sprintf('unzip %s -d %s', output, data_ecotox))
 } else {
-  
-  msg = 'ECOTOX up to date - no new build needed.'
-  log_msg(msg); rm(msg)
+  log_msg('ECOTOX: up to date - no new build needed.')
 }
 
 # setup ECOTOX variables --------------------------------------------------
@@ -56,7 +54,7 @@ if (length(releases) == 0) {
 }
 
 # log ---------------------------------------------------------------------
-log_msg('EPA download run.')
+log_msg('ECOTOX: download run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

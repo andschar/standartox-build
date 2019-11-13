@@ -85,7 +85,7 @@ dbUnloadDriver(drv)
 
 
 # log ---------------------------------------------------------------------
-log_msg('Query phch final table')
+log_msg('QUERY: phch final table created.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
