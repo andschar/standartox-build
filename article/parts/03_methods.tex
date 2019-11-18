@@ -1,0 +1,65 @@
+%%The Methods should include detailed text describing any steps or procedures 
+%%used in producing the data, including full descriptions of the experimental 
+%%design, data acquisition assays, and any computational processing (e.g. 
+%%normalization, image feature extraction). Related methods should be grouped 
+%%under corresponding subheadings where possible, and methods should be described 
+%%in enough detail to allow other researchers to interpret and repeat, if required, 
+%%the full study. Specific data outputs should be explicitly referenced via data 
+%%citation (see Data Records and Data Citations, below). Authors should cite 
+%%previous descriptions of the methods under use, but ideally the method 
+%%descriptions should be complete enough for others to understand and reproduce 
+%%the methods and processing steps without referring to associated publications. 
+%%There is no limit to the length of the Methods section.
+\section*{Methods}
+
+Standartox consists of three parts of software explained in detail below. Firstly a data acquisition and preparation processing pipeline which downloads quarterly released new versions of the EPA ECOTOX data base, upon which Standartox is built and performs several processing steps on the data. Secondly, the final Standartox table is accessible via a web application (APP) and an application programming interface (API). Lastly, the R \citep{rcoreteam_language_2017} package standartox constitutes an easily usable way of accessing the tool via the API.
+
+\subsection*{Processing pipe line}
+The US Environmental Protection Agency (EPA) releases the EPA ECOTOX data base on a quarterly basis. The latest version, released on 12.09.2019 contains data on 11,756 chemicals, 12,906 taxa, 49,153 references and 952,634 results \citep{usepa_ecotox_2019} constituting a vast collection of ecotoxicological tests, which can be downloaded as pipe delimited ASCII files. Standartox downloads the EPA ECOTOX data base whenever a new version is published and builds into a local PostgreSQL data base \citep{szocs_build_2019}. Subsequently SQL functions for further processing are added and known errors are corrected (and also reported). Lookup tables (Supplement \ref{sup:conv-concentration}, \ref{sup:conv-duration}) for filtering and converting the data together with a meta table, containing inter alia the release version of the EPA ECOTOX data base are created as well. In a next step Chemical Abstracts Service (CAS) identifiers are used to query identifier data bases, including the Chemical Identifier Resolver (CIR) service \citep{nationalinstitutesofhealthnih_chemical_2019} and the Pubchem data base \citep{kim_pubchem_2016}. Chemical identifiers (CAS, InchI) and taxonomic names are then used to query chemical and taxonomic specific data bases (Table \ref{tab:data-base-additional}) to add information, such as chemical grouping or organism habitat preferences and global occurrence patterns to the local build.
+
+\input{article/tables/data_base_tables.tex}
+
+From here on the final Standartox data set is compiled, whereupon concentration and duration units are converted in the process of harmonizing the data. Out of the unique 1229 concentration units in the EPA ECOTOX data base, Standartox retains only those (n = X) which are convertible to one of the following units: ug/l, g/m2, ppb, mg/kg, \% and flags the remaining as \textit{other}, resulting in 873473 out of 952625 test results. Likewise, out of the 125 test duration units in the EPA ECOTOX, Standartox retains only those (n = X) which are accurately convertible to hours, leading to 905110 out of 952625 test results). Thereby concentration unit additions such as \textit{food}, \textit{soil}, \textit{ai} etc. are neglected since they are also coded in other variables and only hinder the processing of units. Units such as per day (mg/kg/day) are generally excluded. Endpoints were refined to three endpoint groups NOEX, LOEX and XX50. The former two summarise no-observed-adverse-effect level and lowest-observed-adverse-effect levels, respectively. The latter includes various half maximal effective concentration (e.g. EC50, LC50, LD50 etc.) commonly used in ecotoxicology. Other endpoints are not included in Standartox. Beyond that, filters for the CAS number, the concentration type (e.g. active ingredient, formulation etc.), the chemical class (e.g. fungicides, metals etc.), taxa, organism habitat and region, test duration as well as effect (e.g. Mortality, Growth etc.) groups (See Table \ref{tab:app-parameters}) are created. Along with the compiled Standartox data set, a catalog, listing all distinct entries and value ranges, for categorical and continuous variables, respectively is created. As the end, to guarantee the accuracy of the data, check scripts are run. Single processing scripts are listed in figure \ref{fig:pipeline-tree}. The final Standartox table together with the catalog is exported. Both the APP and the API access it.
+
+\begin{figure}
+    \includestandalone[scale=0.5]{article/tikz/pipeline-organigram}
+    %\input[scale = 0.5]{article/tikz/pipeline-organigram.tex}
+    \caption{Organigram of Standartox.}
+    \label{fig:stx-organigram}
+\end{figure}
+
+\subsection*{Web application (APP) and Application Programming Interface (API)}
+The web application (APP) and the Application Programming Interface (API) load the compressed serialized Standartox data into memory and allow a client to interact with it. The client can then call the functions stx\_filter() and stx\_aggregate() which filter and aggregate the data according to specific parameters (Table \ref{tab:app-parameters}).
+
+\subsubsection*{Web application (APP)}
+The interactive APP was built in R, using the shiny web application framework which runs with the help of a shiny server \citep{chang_shiny_2018} on \url{www.standartox.uni-landau.de}. It is set of R functions that allow a user to filter and aggregate the data. The data can then be downloaded.
+
+\subsubsection*{Application programming interface (API)}
+The API is built by using the R package plumber \citep{trestletechnologyllc_plumber_2018} which allows for the creation of RESTful APIs from R. The API is reachable via the URL \url{http://139.14.20.252} and port 8000. Four API-endpoints (\textit{/catalog}, \textit{/filter}, \textit{/aggregate} and \textit{/meta}) can be queried from the client side. The \textit{/catalog} API-endpoint returns a JavaScript Object Notation (JSON) file containing a catalog of possible filter parameters to choose from. The \textit{/filter} returns the filtered Standartox table as a compressed serialized binary file created by the R fst package \citep{klik_fst_2019}, to reduce size and allow for fast user queries. The \textit{/aggregate} API-endpoint returns a R function to the client allowing the client the aggregation of the filtered data. Lastly, the \textit{/meta} API-endpoint returns a JSON file with meta information, such as the timestamp of the request and the used Standartox version. The API is designed to be used with the R-package standartox and therefore uses serialization methods specific to R (rds() from the R package base and fst() from the package fst).
+
+\subsubsection*{R-package}
+The R-package standartox accesses the API through two functions \textit{stx\_catalog()} and \textit{stx\_query()}. The former accesses the \textit{/catalog} API-endpoint and returns a R list object of possible filter parameters (Table \ref{tab:app-parameters}) that can be used in \textit{stx\_query()}. The latter returns a R list of three tables (i.e. R data.frames) containing the filtered data set, the aggregated data set and a table with the meta information retrieved from the API endpoints \textit{/filter} and \textit{/meta}.
+
+\subsection*{Technical Validity}
+In order to guarantee appropriate conversion and harmonisation of units we take a random sample of the 50 most occurring concentration and six of the most occurring duration units and compare units created by Standartox to manually calculated unit conversions. This is done at the end of the processing pipeline and stops the it if not all units match.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+- Endpoint: For the last parameter here, only be exclusive. 
+
+TODO: How does this fit?
+\begin{table}
+    \input{article/tables/data_refinement_counts.tex}
+    \caption{Reduction of data in the compilation process for Standartox}
+    \label{tab:data-refinement}
+\end{table}
+
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OLD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+\textbf{OLD: Standartox aggregates the test results according to chosen filters in a two step process. Firstly the filtered test results are aggregated by the CAS number, the chosen taxon and the selected test duration. Secondly, the returned data is then aggregated by the CAS number. The former can't be influenced by the user and calculates either the minimum or the median depending on the amount of results to aggregate (n <= 2: minimum, if n > 2: median). Thereof the second step calculates the minimum, the maximum, the median, the geometric mean, or the arithmetic mean as an aggregate.}
+\fi
+
+
