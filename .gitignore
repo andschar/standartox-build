@@ -10,7 +10,7 @@
 /data/*
 
 # log
-*.log
+log/*
 
 # notes
 deploy_shiny_app.txt

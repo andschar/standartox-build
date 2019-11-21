@@ -49,6 +49,7 @@ options(stringsAsFactors = FALSE,
 # variables ---------------------------------------------------------------
 src = file.path(prj, 'R')
 datadir = file.path(prj, 'data')
+logdir = file.path(prj, 'log')
 # folder for article references
 article = file.path(gsub('-app', '-build', prj), 'article')
 

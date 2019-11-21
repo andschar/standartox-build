@@ -48,6 +48,13 @@ sidebar = dashboardSidebar(
         )
       ),
       prettyCheckboxGroup(
+        inputId = 'concentration_unit',
+        label = 'Concentration unit',
+        choiceValues = catalog_l$concentration_unit$variable,
+        choiceNames = catalog_l$concentration_unit$name_perc,
+        selected = grep('ug/l|ppb', catalog_l$concentration_unit$variable, ignore.case = TRUE, value = TRUE)[1]
+      ),
+      prettyCheckboxGroup(
         inputId = 'concentration_type',
         label = 'Concentration type',
         choiceValues = catalog_l$concentration_type$variable,
@@ -301,15 +308,13 @@ server = function(input, output, session) {
   data_fil = reactive({
     stx_filter(
       dt = dat,
+      concentration_unit = input$concentration_unit,
       concentration_type = input$concentration_type,
       chemical_class = input$chemical_class,
       taxa = taxa_input(),
       habitat = input$habitat,
       region = input$region,
       duration = c(input$dur1, input$dur2),
-      publ_year = c(input$yr1, input$yr2), # NOTE currently not incorporated 
-      # acch = input$acch, # NOTE currently not incorporated 
-      # exposure = input$exposure,
       effect = input$effect,
       endpoint = input$endpoint,
       cas = rv$data
@@ -320,15 +325,13 @@ server = function(input, output, session) {
     stx_aggregate(
       dt = stx_filter(
         dt = dat,
+        concentration_unit = input$concentration_unit,
         concentration_type = input$concentration_type,
         chemical_class = input$chemical_class,
         tax = taxa_input(),
         habitat = input$habitat,
         region = input$region,
         duration = c(input$dur1, input$dur2),
-        publ_year = c(input$yr1, input$yr2),
-        # acch = input$acch,
-        # exposure = input$exposure,
         effect = input$effect,
         endpoint = input$endpoint,
         cas = rv$data

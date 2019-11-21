@@ -26,11 +26,11 @@ function(req) {
                       request_method = req$REQUEST_METHOD,
                       path_info = req$PATH_INFO,
                       http_user_agent = paste0(req$HTTP_USER_AGENT, "@", req$REMOTE_ADDR))
-  fwrite(log_df, 'request.log', append = TRUE)
+  fwrite(log_df, file.path(logdir, 'api', 'request.log'), append = TRUE)
   cat(paste0(unlist(log_df), collapse = '\n'))
   
   body_log = paste0(gsub('-|/|:|,|\\s+', '-', paste0(unlist(log_df[1, ]), collapse = '')), '_body.json')
-  jsonlite::write_json(req$postBody, file.path('log', body_log))
+  jsonlite::write_json(req$postBody, file.path(logdir, 'api', 'requests', body_log))
   
   plumber::forward()
 }
@@ -168,7 +168,7 @@ function() {
   return(catal)
 }
 
-# endpoint: st_aggregate --------------------------------------------------
+  # endpoint: aggregate -----------------------------------------------------
 #* @get /aggregate
 #* @serializer contentType list(type="application/octet-stream")
 function() {
@@ -178,9 +178,10 @@ function() {
   readBin(tmp, "raw", n = file.info(tmp)$size)
 }
 
-# endpoint: data: rds -----------------------------------------------------
+# endpoint: filter --------------------------------------------------------
 #* @param:character cas
-#* @param:character concentration_type:character Concentration type (e.g. 'A', 'F')
+#* @param:character concentration_unit Concentration (e.g. ug/l)
+#* @param:character concentration_type Concentration type (e.g. A, F)
 #* @param:character chemical_class Chemical class (e.g. 'herbicide')
 #* @param:character taxa taxonomic name (e.g. Algae)
 #* @param:character habitat Organism habitat (e.g. freshwater)
@@ -193,6 +194,7 @@ function() {
 function(req,
          res,
          cas = NULL,
+         concentration_unit = NULL,
          concentration_type = NULL,
          chemical_class = NULL,
          taxa = NULL,
@@ -201,9 +203,6 @@ function(req,
          duration = NULL,
          effect = NULL,
          endpoint = NULL
-         # publ_year = publ_year, # NOTE possible addition
-         # acch = acch, # NOTE possible addition
-         # exposure = exposure, # NOTE possible addition
 ) {
   # data
   dat = fst::read_fst(file.path('data',
@@ -213,6 +212,7 @@ function(req,
   # function
   out = stx_filter(dt = dat,
                    cas_ = cas,
+                   concentration_unit_ = concentration_unit,
                    concentration_type_ = concentration_type,
                    chemical_class_ = chemical_class,
                    taxa_ = taxa,
@@ -231,16 +231,9 @@ function(req,
     
     jsonlite::toJSON(msg)
   } else {
-    time = Sys.time()
-    tmp = file.path(tempdir(), 'data')
-    fst::write_fst(out, tmp, compress = 100)
-    write_speed = Sys.time() - time
-    logger_write_speed = data.frame(date = Sys.time(),
-                                    time = write_speed)
-    fwrite(logger_write_speed, 'write_speed.log', append = TRUE)
-    cat('\n', tmp)
-    
-    readBin(tmp, "raw", n = file.size(tmp))
+    tmp = 'tmp/data'
+    fst::write_fst(out, tmp, compress = 100) # write compressed
+    readBin(tmp, "raw", n = file.size(tmp)) # read to serve API request
   }
 }
 

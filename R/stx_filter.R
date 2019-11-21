@@ -2,18 +2,15 @@
 
 stx_filter = function(dt,
                       cas_ = NULL,
+                      concentration_unit_ = NULL,
                       concentration_type_ = NULL,
                       chemical_class_ = NULL,
                       taxa_ = NULL,
                       habitat_ = NULL,
                       region_ = NULL,
                       duration_ = NULL,
-                      publ_year_ = NULL, # TODO
-                      # acch_ = NULL, # TODO
-                      # exposure_ = NULL, # TODO
                       effect_ = NULL,
                       endpoint_ = NULL
-                      # chck_solub_ = FALSE # TODO
                       ) {
   # checks -----------------------------------------------------------------
   if (!is.data.frame(dt)) {
@@ -26,6 +23,9 @@ stx_filter = function(dt,
     dt = dt[ cas %in% cas_todo ]
   }
   # filters -----------------------------------------------------------------
+  if (!is.null(concentration_unit_)) {
+    dt = dt[ concentration_unit %in% concentration_unit_ ]
+  }
   if (!is.null(concentration_type_)) {
     dt = dt[ concentration_type %in% concentration_type_ ]
   }
