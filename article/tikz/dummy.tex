@@ -1,0 +1,66 @@
+\documentclass{article}
+\usepackage{forest}
+\usetikzlibrary{shadows,arrows.meta}
+
+\tikzset{parent/.style={align=center,text width=2cm,fill=green!20,rounded corners=2pt},
+    child/.style={align=center,text width=2.8cm,fill=green!50,rounded corners=6pt},
+    grandchild/.style={fill=pink!50,text width=2.3cm}
+}
+\begin{document}
+\begin{forest}
+for tree={%
+    thick,
+    drop shadow,
+    l sep=0.6cm,
+    s sep=0.8cm,
+    node options={draw,font=\sffamily},
+    edge={semithick,-Latex},
+    where level=0{parent}{},
+    where level=1{
+        minimum height=1cm,
+        child,
+        parent anchor=south west,
+        tier=p,
+        l sep=0.25cm,
+        for descendants={%
+            grandchild,
+            minimum height=0.6cm,
+            anchor=150,
+            edge path={
+                \noexpand\path[\forestoption{edge}]
+                (!to tier=p.parent anchor) |-(.child anchor)\forestoption{edge label};
+            },
+        }
+    }{},
+}
+[Filtered\\Data
+    [Defining node and arrow styles
+        [Setting shape
+            [Choosing color
+                [Adding shading]
+            ]
+        ]
+    ]
+    [Positioning the nodes
+        [Using a Matrix
+            [Relatively
+                [Absolutely
+                    [Using overlays]
+                ]
+            ]
+        ]
+    ]
+    [Drawing arrows between nodes
+        [Default arrows
+            [Arrow library
+                [Resizing tips
+                    [Shortening
+                        [Bending]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
+\end{forest}
+\end{document}

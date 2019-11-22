@@ -1,0 +1,15 @@
+\begin{table}[ht]
+  \caption{Application programming interface (API) endpoints, Http methods, Requests and Response objects. Object is abbreviated with obj.}
+  \label{tab:api-endpoints}
+  \centering
+\begin{tabular}{cccc}
+  \hline
+  Endpoint & Http Method & Request & Response \\ 
+  \hline
+  /catalog & POST & \makecell{Standartox \\ version string} & \makecell{Catalog object of \\ possible filter parameters \\ JSON obj.}    \\[0.5cm]
+  /filter & POST & \makecell{Standartox filter \\ parameters (Table \ref{tab:app-parameters})} & \makecell{Filtered Standartox data \\ serialized R data.frame \\ R fst:: \citep{klik_fst_2019} obj.}   \\[0.5cm]
+  /aggregate & GET & / & \makecell{Aggregate function \\ serialized R function \\ R .rds \citep{rcoreteam_language_2017} obj.}    \\[0.5cm]
+  /meta & POST & \makecell{Standartox \\ version string} & \makecell{Meta data on request \\ JSON obj.}    \\
+  \hline
+\end{tabular}
+\end{table}
