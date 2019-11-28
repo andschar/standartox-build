@@ -74,6 +74,10 @@ cols = c('marin', 'brack', 'fresh', 'terre')
 gbif_hab_wat_dc[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
 
 # write -------------------------------------------------------------------
+# country
+write_tbl(gbif_ccode_dc, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'taxa', tbl = 'gbif_country',
+          comment = 'Results from the GBIF query (countries)')
 # continent
 write_tbl(gbif_conti_dc, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'taxa', tbl = 'gbif_continent',

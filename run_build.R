@@ -89,11 +89,10 @@ if (lookup) {
 
 # Standartox --------------------------------------------------------------
 if (build_standartox) {
-  # TODO source(file.path(src, 'run_standartox.R'))
   source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_standartox_catalog.R'), max.deparse.length = mdl)
-  source(file.path(src, 'cpy_standartox.R'), max.deparse.length = mdl)
+  # source(file.path(src, 'cpy_standartox.R'), max.deparse.length = mdl)
 }
 
 # NORMAN ------------------------------------------------------------------
@@ -111,7 +110,8 @@ if (build_norman) {
 }
 
 # check scripts -----------------------------------------------------------
-source(file.path(src, 'chck_unit_conversions.R'), max.deparse.length = mdl)
+source(file.path(src, 'chck_unit_conversions_concentration.R'), max.deparse.length = mdl)
+source(file.path(src, 'chck_unit_conversions_duration.R'), max.deparse.length = mdl)
 
 # backup ------------------------------------------------------------------
 if (general) {
