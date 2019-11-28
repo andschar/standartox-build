@@ -29,7 +29,7 @@ rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
                   output_file = 'tests',
                   params = list(
-                    title = 'Standartox raw data summary',
+                    title = 'standartox.tests',
                     schema = 'standartox',
                     table = 'tests',
                     output_dir = summdir #! strange that output_dir has to be specified 2 times
@@ -38,7 +38,7 @@ rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
                   output_file = 'taxa',
                   params = list(
-                    title = 'Standartox raw data summary',
+                    title = 'standartox.taxa',
                     schema = 'standartox',
                     table = 'taxa',
                     output_dir = summdir #! strange that output_dir has to be specified 2 times
@@ -47,7 +47,7 @@ rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
                   output_file = 'chemicals',
                   params = list(
-                    title = 'Standartox raw data summary',
+                    title = 'standartox.chemicals',
                     schema = 'standartox',
                     table = 'chemicals',
                     output_dir = summdir #! strange that output_dir has to be specified 2 times
@@ -56,7 +56,7 @@ rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
                   output_file = 'refs',
                   params = list(
-                    title = 'Standartox raw data summary',
+                    title = 'standartox.refs',
                     schema = 'standartox',
                     table = 'refs',
                     output_dir = summdir #! strange that output_dir has to be specified 2 times
@@ -65,7 +65,7 @@ rmarkdown::render(file.path(srcrmd, 'summary_db_cols_standartox.Rmd'),
                   output_dir = summdir,
                   output_file = 'data2',
                   params = list(
-                    title = 'Standartox raw data summary',
+                    title = 'standartox.data2',
                     schema = 'standartox',
                     table = 'data2',
                     output_dir = summdir #! strange that output_dir has to be specified 2 times

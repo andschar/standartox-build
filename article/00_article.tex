@@ -3,7 +3,7 @@
 %% ---------------------------- packages ------------------------------------ %%
 \usepackage[T1]{fontenc}
 \usepackage{natbib} % citations
-\usepackage{csvsimple, longtable, booktabs}
+\usepackage{csvsimple, longtable, makecell, booktabs}
 \usepackage{pgfplotstable}
 \usepackage{rotating} % to rotate tables
 %% tikz packages
@@ -55,7 +55,7 @@
 \begin{document}
 
 
-\title{Standartox: A tool to derive exposure endpoints from chemical test results}
+\title{Standartox: Standardising toxicity data}
 
 \author{Andreas Scharm{\"u}ller\textsuperscript{1{*}},
         Verena C. Schreiner\textsuperscript{1},
@@ -80,25 +80,26 @@ Andreas Scharm{\"u}ller (andschar@protonmail.com)
 \end{abstract}
 \pagebreak
 
-%%%%%%%%%%%%%%%%%%%%%% 01 Background
-\input{article/parts/01_background.tex}
-\pagebreak
+%%%%%%%%%%%%%%%%%%%%%% 01 Introduction
+\input{article/parts/01_introduction.tex}
 
-%%%%%%%%%%%%%%%%%%%%%% 02 Methods
-\input{article/parts/02_methods.tex}
-\pagebreak
+%%%%%%%%%%%%%%%%%%%%%% 02 Results and Discussion
+\input{article/parts/02_results_discussion.tex}
 
-%%%%%%%%%%%%%%%%%%%%%% 03 Data records
-\input{article/parts/03_data_records.tex}
-\pagebreak
+%%%%%%%%%%%%%%%%%%%%%% 03 Methods
+\input{article/parts/03_methods.tex}
 
-%%%%%%%%%%%%%%%%%%%%%% 04 Technical validation
-\input{article/parts/04_technical_validation.tex}
-\pagebreak
+%%%%%%%%%%%%%%%%%%%%%% 04 Conclusion
+\input{article/parts/04_conclusion.tex}
 
-%%%%%%%%%%%%%%%%%%%%%% 05 Usage notes
-\input{article/parts/05_usage_notes.tex}
+%%%%%%%%%%%%%%%%%%%%%% 05 Code Availability
+\input{article/parts/05_code_availability.tex}
 
+%%%%%%%%%%%%%%%%%%%%%% References
+% only reference from Zotero to avoid key conflicts
+% NOTE multiple refs would have to be written w/o space and separated by <,>
+\bibliographystyle{apalike}
+\bibliography{refs/references-standartox.bib} 
 
 \section*{Acknowledgements}
 %%Text acknowledging non-author contributors. Acknowledgements should
@@ -111,103 +112,21 @@ Andreas Scharm{\"u}ller (andschar@protonmail.com)
 %%
 %%BG did this and that and the other. 
 
-
 \section*{Competing financial interests}
 %%A competing financial interests statement is required for all accepted
 %%papers published in \emph{Scientific Data}. If none exist simply write,
 %%``The author(s) declare no competing financial interests''.
 
+\section*{Author Information}
 
-\section*{Figures Legends}
-%%Figure should be referred to using a consistent numbering scheme through
-%%the entire Data Descriptor. For initial submissions, authors may choose
-%%to supply this document as a single PDF with embedded figures, but
-%%separate figure image files must be provided for revisions and accepted
-%%manuscripts. In most cases, a Data Descriptor should not contain more
-%%than three figures, but more may be allowed when needed. We discourage
-%%the inclusion of figures in the Supplementary Information \textendash{}
-%%all key figures should be included here in the main Figure section. 
-%%
-%%Figure legends begin with a brief title sentence for the whole figure
-%%and continue with a short description of what is shown in each panel,
-%%as well as explaining any symbols used. Legend must total no more
-%%than 350 words, and may contain literature references. 
+\section*{Ethics Declaration}
 
+\section*{Additional Information}
 
-\section*{Tables}
-%%Tables supporting the Data Descriptor. These can provide summary information
-%%(sample numbers, demographics, etc.), but they should generally not
-%%be used to present primary data (i.e. measurements). Tables containing
-%%primary data should be submitted to an appropriate data repository. 
-%%
-%%Tables may be provided within the \LaTeX{} document or as separate
-%%files (tab-delimited text or Excel files). Legends, where needed,
-%%should be included here. Generally, a Data Descriptor should have
-%%fewer than ten Tables, but more may be allowed when needed. Tables
-%%may be of any size, but only Tables which fit onto a single printed
-%%page will be included in the PDF version of the article (up to a maximum
-%%of three). 
+\section*{Rights and permissions}
 
-%\begin{sidewaystable}
-%    \csvautotabular[respect all]{data/meta.csv};
-%    \caption{Meta variables table};
-%    \label{table:meta-variables};
-%\end{sidewaystable}
-
-
-
-
-\pagebreak
-
-\bibliographystyle{apalike}
-\bibliography{refs/references-standartox.bib} % only reference from Zotero to avoid key conflicts
-% NOTE multiple refs would have to be written w/o space and separated by <,>
-
-\section*{Data Citations}
-
-\pagebreak
-\section*{TODO}
-
-\begin{itemize}
-
-\item compare Etox-BAse output with PPDB
-
-\item plot example SSD and TU
-
-\item acute vs chronic
-
-\item OECD guidlines are not machine readable
-
-\item discuss flaws in column types (e.g some concentration entries contain '+' or '~' and are therefore not convertable to numeric) - This hampers large scale analysis greatly!
-
-\pagebreak
-\section*{MISC}
-
-\begin{figure}
-    % TODO make better graphic
-    \includegraphics[width=1\linewidth]{article/figures/scripts_dendrogram.png}
-    \caption{Processing pipeline}
-    \label{fig:pipeline-tree}
-\end{figure}
-
-\section*{not included citations}
-
-\item Put in citation \citep{hartung_chemical_2009} ? which claims that REACH won't meet their assumptions and say 54 million vertebrate animals are needed for tests that would cost €9.5 billion over the next ten years. I.e 20 times more animals, 6 times the costs in comparison to the official estimates 
-
-\item "comparison of rate of change in the production and variety of pesticides, pharmaceuticals and other chemicals over the past four decades to CO2 nutrient pollution and other global change factors" \citep{bernhardt_synthetic_2017}
-
-\item worldwide decline in entomofauna: \citep{sanchez-bayo_worldwide_2019}
-
-
-\end{itemize}
-
-\subsubsection*{Future of the project}
-Since new versions of the EPA ECOTOX data base are published on a quarterly basis the data acquisition process is automated and new versions of the Standartox are scheduled to be released regularly.
-
-
-\input{article/parts/06_supplement.tex}
-\pagebreak
-
+%%%%%%%%%%%%%%%%%%%%%% 10 Supplement
+\input{article/parts/10_supplement.tex}
 
 \end{document}
 

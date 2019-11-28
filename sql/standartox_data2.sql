@@ -35,6 +35,7 @@ SELECT
 		END
 	  ELSE results.conc1_unit
 	END AS conc1_unit2,
+	concat_ws('/', concentration_unit_lookup.type) AS unit_type,
 	CASE
 	  WHEN conc1_type IN ('A')
 	  	THEN 'active ingredient'
@@ -62,8 +63,6 @@ SELECT
 	  	THEN duration_unit_lookup.unit_conv
   	  ELSE results.obs_duration_unit
   	END AS obs_duration_unit2,
-	-- test properties
-	------ CONTINUE HERE!!!!
 	CASE
 	  WHEN tests.test_type IN ('ACUTE', 'ACTELS', 'SBACUTE')
 	    THEN 'acute'
@@ -71,8 +70,7 @@ SELECT
 	    THEN 'chronic'
 	  ELSE 'not reported'
 	END AS test_type,
-	------- END
-	effect_codes.description AS effect, -- clean(results.effect)
+	effect_codes.description AS effect,
 	CASE
 	  WHEN clean(results.endpoint) IN ('NOEL', 'NOEC')
 	  	THEN 'NOEX'
@@ -88,7 +86,6 @@ SELECT
 	  	THEN 'field'
 	  ELSE 'not reported'
 	END AS test_location,
-	------ CONTINUE HERE!!!!
 	CASE
 	  WHEN clean(exposure_type_codes.description) IS NULL
       	THEN 'not reported'
@@ -96,8 +93,6 @@ SELECT
       	THEN 'not reported'
       ELSE clean(exposure_type_codes.description)  
 	END AS exposure_type,
-	------- END
-	-- ACUTE CHRONIC HERE
 	response_site_codes.description AS response_site,
 	tests.species_number,
 	tests.reference_number
@@ -179,7 +174,7 @@ SELECT
 	continent.europe AS reg_europe,
 	continent.oceania AS reg_oceania
 FROM ecotox.species
-LEFT JOIN taxa_fin.habitat ON species.latin_name = habitat.taxon -- TODO latin_name and taxon don't match 100%
+LEFT JOIN taxa_fin.habitat ON species.latin_name = habitat.taxon
 LEFT JOIN taxa_fin.continent ON species.latin_name = continent.taxon
 LEFT JOIN taxa_fin.taxa ON species.latin_name = taxa.taxon;
 

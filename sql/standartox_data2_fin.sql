@@ -17,8 +17,6 @@ SELECT
       THEN 'ppb'
     WHEN tests.conc1_unit2 = 'mg/kg'
       THEN 'mg/kg'
-    WHEN tests.conc1_unit2 = '%'
-      THEN '%'
     ELSE 'other'
   END AS concentration_unit,
   tests.conc1_type::text AS concentration_type,
@@ -28,12 +26,9 @@ SELECT
       THEN 'h'
     ELSE 'other'
   END AS duration_unit,
-  tests.test_type::text,
   tests.effect::text,
   tests.endpoint::text,
   tests.test_location::text,
-  -- tests.exposure_type, CONTINUE HERE!!!!
-  -- acute_chronic
   chemicals.ccl_fungicide::integer,
   chemicals.ccl_herbicide::integer,
   chemicals.ccl_insecticide::integer,
@@ -69,7 +64,8 @@ LEFT JOIN standartox.refs USING(reference_number)
 
 WHERE tests.conc1_qualifier = '='
   AND tests.conc1_mean2 IS NOT NULL AND tests.conc1_unit2 IS NOT NULL 
-  AND tests.obs_duration_mean2 IS NOT NULL AND tests.obs_duration_unit2 IS NOT NULL
+  AND tests.obs_duration_mean2 IS NOT NULL
+  AND tests.obs_duration_unit2 IS NOT NULL AND tests.obs_duration_unit2 = 'h'
   AND tests.effect IS NOT NULL
   AND tests.endpoint IN ('NOEX', 'LOEX', 'XX50')
 ;

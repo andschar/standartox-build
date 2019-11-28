@@ -9,7 +9,7 @@ header = names(read_fst(file.path(exportdir, paste0('standartox', v, '.fst')), t
 
 # query -------------------------------------------------------------------
 # cols
-cols = c('cas', 'concentration_type', grep('ccl_', header, value = TRUE),
+cols = c('cas', 'concentration_unit', 'concentration_type', grep('ccl_', header, value = TRUE),
          grep('tax_', header, value = TRUE), grep('hab_', header, value = TRUE), grep('reg_', header, value = TRUE),
          'duration', 'effect', 'endpoint')
 # loop
@@ -40,6 +40,10 @@ DBI::dbDisconnect(con)
 cas = l$cas
 setnames(cas, c('variable', 'n', 'n_total'))
 cas[ , perc := round(n / n_total * 100) ]
+# concentration unit
+concentration_unit = l$concentration_unit
+setnames(concentration_unit, c('variable', 'n', 'n_total'))
+concentration_unit[ , perc := round(n / n_total * 100) ]
 # concentration type
 concentration_type = l$concentration_type
 setnames(concentration_type, c('variable', 'n', 'n_total'))
@@ -80,6 +84,7 @@ endpoint[ , perc := round(n / n_total * 100) ]
 
 # list --------------------------------------------------------------------
 catalog_l = list(cas = cas,
+                 concentration_unit = concentration_unit,
                  concentration_type = concentration_type,
                  chemical_class = chemical_class,
                  taxa = taxa,

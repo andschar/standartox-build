@@ -68,7 +68,7 @@ un2_cl = gsub('^eu$', 'enzymeunit', un2_cl)
 # 0/00 to ‰
 un2_cl = gsub('0/00', '‰', un2_cl)
 # tolower
-un2_cl = tolower(un2_cl)
+un2_cl = tolower(un2_cl) # TODO maybe remove (e.g. Bq needs upper case)
 
 ## split
 unit_l2 = strsplit(un2_cl, '/')
@@ -123,7 +123,7 @@ units[nas == 0, conc1_unit_clean := paste0(u1cl, '/', u2cl, '/', u3cl, '/', u4cl
 units[nas == 0, type := paste0(u1type, '/', u2type, '/', u3type, '/', u4type)]
 
 ## upper case for Curie and Becquerel
-units[, conc1_unit_clean := gsub('ci', 'Ci', conc1_unit_clean)]
+units[, conc1_unit_clean := gsub('ci', 'Ci', conc1_unit_clean)] # TODO this could be removed (see TODO above)
 units[, conc1_unit_clean := gsub('bq', 'Bq', conc1_unit_clean)]
 
 # classification ----------------------------------------------------------
