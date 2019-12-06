@@ -5,17 +5,22 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 ep_habi = readRDS(file.path(cachedir, 'ep_habi_source.rds'))
+# 
+# ep_habi[ , .N, media_type ][ order(-N) ]
+# ep_habi[ , .N, organism_habitat ][ order(-N) ]
+# ep_habi[ , .N, subhabitat ][ order(-N) ]
+# 
 
 # preparation -------------------------------------------------------------
-# tests.organism_habitat: 'soil'
-# subhabitat: 'P', 'R', 'L', 'E', 'D', 'F', 'G', 'M' -- Palustrine, Riverine, Lacustrine, Estuarine
-ep_habi[ media_type == 'FW', fresh := 1L ]
-ep_habi[ media_type == 'SW', marin := 1L ]
-ep_habi[ organism_habitat == 'Soil', terre := 1L ]
-ep_habi[ subhabitat %in% c('P', 'R', 'L'), fresh := 1L ]
-ep_habi[ subhabitat %in% c('E'), brack := 1L ]
-ep_habi[ subhabitat %in% c('D', 'F', 'G'), terre := 1L ]
-ep_habi[ subhabitat %in% c('M'), marin := 1L ]
+ep_habi[ media_type == 'Fresh water', fresh := 1L ]
+ep_habi[ media_type == 'Salt water', marin := 1L ]
+ep_habi[ ! media_type %in% c('Fresh water', 'Salt water'), terre := 1L ]
+ep_habi[ organism_habitat %in% c('Water'), fresh := 1L ] # NOTE includes probably some marine taxa
+ep_habi[ organism_habitat %in% c('Soil', 'Non-Soil'), terre := 1L ]
+ep_habi[ subhabitat %in% c('Palustrine', 'Riverine', 'Lacustrine'), fresh := 1L ]
+ep_habi[ subhabitat %in% c('Estuarine'), brack := 1L ]
+ep_habi[ subhabitat %in% c('Desert', 'Forest', 'Grasslands'), terre := 1L ]
+ep_habi[ subhabitat %in% c('Marine'), marin := 1L ]
 
 # final table
 ep_habi_fin = ep_habi[ , 

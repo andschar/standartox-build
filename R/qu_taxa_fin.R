@@ -19,7 +19,7 @@ setDT(taxa_cols)
 cols = c('marin', 'brack', 'fresh', 'terre')
 cols = gsub('(.+)', '^\\1$', cols)
 cols_tx = taxa_cols[ grep(paste0(cols, collapse = '|'), column_name) ]
-cols_tx = cols_tx[ !table_name %in% c('worms_fm', 'worms_gn') ]
+cols_tx = cols_tx[ !table_name %in% c('worms_fm', 'worms_gn', 'gbif_habitat') ]
 
 q = q_join(cols_tx, schema = 'taxa', main_tbl = 'epa', col_join = 'taxon',
            fun = 'GREATEST', debug = FALSE)

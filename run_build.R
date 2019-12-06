@@ -55,7 +55,7 @@ if (build) {
 ## 2nd identifiers 
 if (download) {
   source(file.path(src, 'id_pc_cid_dwld.R'), max.deparse.length = mld) # PubChem
-  # TODO source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mld) # Chemspider
+  # TODO source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mdl) # Chemspider
   source(file.path(src, 'id_epa_tax_dwld.R'), max.deparse.length = mdl) # EPA: extracts identifiers
 }
 

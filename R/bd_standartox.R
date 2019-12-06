@@ -19,7 +19,9 @@ dbSendQuery(con, "CREATE SCHEMA standartox;")
 
 dbSendQuery(con, q2) # converted data
 dbSendQuery(con, q2_fin) # combined data
-dbWriteTable(con, value = explanation, name = c('standartox', 'data2_explanation'), row.names = FALSE)
+dbWriteTable(con, value = explanation, name = c('standartox', 'data2_explanation'),
+             row.names = FALSE,
+             overwrite = TRUE)
 
 dbDisconnect(con)
 dbUnloadDriver(drv)

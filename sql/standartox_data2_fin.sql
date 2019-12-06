@@ -27,7 +27,7 @@ SELECT
     ELSE 'other'
   END AS duration_unit,
   tests.effect::text,
-  tests.endpoint::text,
+  tests.endpoint2::text AS endpoint,
   tests.test_location::text,
   chemicals.ccl_fungicide::integer,
   chemicals.ccl_herbicide::integer,
@@ -67,5 +67,5 @@ WHERE tests.conc1_qualifier = '='
   AND tests.obs_duration_mean2 IS NOT NULL
   AND tests.obs_duration_unit2 IS NOT NULL AND tests.obs_duration_unit2 = 'h'
   AND tests.effect IS NOT NULL
-  AND tests.endpoint IN ('NOEX', 'LOEX', 'XX50')
+  AND tests.endpoint2 IN ('NOEX', 'LOEX', 'XX50')
 ;

@@ -9,11 +9,11 @@ read_query = function(user = NULL, host = NULL, port = NULL, password = NULL,
   
   ## data base
   con = DBI::dbConnect(RPostgreSQL::PostgreSQL(),
-                       dbname = DBetox,
-                       host = DBhost,
-                       port = DBport,
-                       user = DBuser,
-                       password = DBpassword)
+                       dbname = dbname,
+                       host = host,
+                       port = port,
+                       user = user,
+                       password = password)
                        # bigint = 'integer') # to not return integer64 https://stackoverflow.com/questions/45171762/set-dbgetquery-to-return-integer64-as-integer
   on.exit(DBI::dbDisconnect(con))
   

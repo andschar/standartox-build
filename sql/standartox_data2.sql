@@ -71,14 +71,16 @@ SELECT
 	  ELSE 'not reported'
 	END AS test_type,
 	effect_codes.description AS effect,
+	clean(results.endpoint) AS endpoint,
 	CASE
 	  WHEN clean(results.endpoint) IN ('NOEL', 'NOEC')
 	  	THEN 'NOEX'
 	  WHEN clean(results.endpoint) IN ('LOEL', 'LOEC')
 	    THEN 'LOEX'
-	  WHEN clean(results.endpoint) IN ('LC50', 'EC50', 'LD50', 'LT50', 'LC50', 'IC50')
+	  WHEN clean(results.endpoint) IN ('LC50', 'LD50', 'EC50', 'ED50', 'IC50', 'ID50', 'ET50', 'LT50')
 	    THEN 'XX50'
-	END AS endpoint,
+	  ELSE clean(results.endpoint)
+	END AS endpoint2,
 	CASE
 	  WHEN clean(tests.test_location) IN ('LAB')
 	  	THEN 'lab'
@@ -94,6 +96,15 @@ SELECT
       ELSE clean(exposure_type_codes.description)  
 	END AS exposure_type,
 	response_site_codes.description AS response_site,
+	test_method_codes.description AS test_method,
+	media_type_codes.description AS media_type,
+	substrate_codes.description AS substrate_type,
+	tests.organism_habitat,
+	habitat_codes.description AS subhabitat,
+	tests.organism_age_mean_op,
+	tests.organism_age_mean,
+	tests.organism_age_unit,
+	lifestage_codes.description AS lifestage,
 	tests.species_number,
 	tests.reference_number
 
@@ -107,6 +118,11 @@ LEFT JOIN lookup.duration_unit_lookup ON results.obs_duration_unit = duration_un
 LEFT JOIN lookup.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
 LEFT JOIN ecotox.exposure_type_codes ON tests.exposure_type = exposure_type_codes.code
 LEFT JOIN ecotox.effect_codes ON results.effect = effect_codes.code
+LEFT JOIN ecotox.lifestage_codes ON tests.organism_lifestage = lifestage_codes.code
+LEFT JOIN ecotox.habitat_codes ON tests.subhabitat = habitat_codes.code
+LEFT JOIN ecotox.test_method_codes ON tests.test_method = test_method_codes.code
+LEFT JOIN ecotox.media_type_codes on tests.media_type = media_type_codes.code
+LEFT JOIN ecotox.substrate_codes on tests.substrate = substrate_codes.code
 LEFT JOIN phch_fin.chem_prop ON tests.test_cas = chem_prop.cas_number -- for molecularweight
 
 WHERE

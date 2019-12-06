@@ -5,19 +5,19 @@ source(file.path(src, 'gn_setup.R'))
 
 # query -------------------------------------------------------------------
 # NOTE query to retrieve a sample of the top50 units
-# q = '
-# WITH t1 AS (
-# SELECT conc1_unit, count(*) n
-# FROM ecotox.results
-# GROUP BY conc1_unit
-# ORDER BY n DESC
-# LIMIT 50
-# )
-# SELECT DISTINCT ON (conc1_unit) result_id, conc1_mean, conc1_unit
-# FROM ecotox.results
-# RIGHT JOIN t1 USING (conc1_unit)
-# ORDER BY conc1_unit;
-# '
+q = '
+WITH t1 AS (
+SELECT conc1_unit, count(*) n
+FROM ecotox.results
+GROUP BY conc1_unit
+ORDER BY n DESC
+LIMIT 50
+)
+SELECT DISTINCT ON (conc1_unit) result_id, conc1_mean, conc1_unit
+FROM ecotox.results
+RIGHT JOIN t1 USING (conc1_unit)
+ORDER BY conc1_unit;
+'
 
 # sample ------------------------------------------------------------------
 # 50 most occurring result_id s
@@ -30,9 +30,11 @@ ids = c(2227707L, 2144511L, 1177875L, 1012510L, 2267424L, 1059003L,
         1189176L, 1050168L, 88612L, 2248365L, 1219977L, 55416L, 1219748L, 
         2229405L, 2348737L, 756609L)
 
-q = paste0("SELECT stx.result_id, stx.casnr, che.molecularweight, stx.conc1_mean, stx.conc1_unit, stx.conc1_mean2, stx.conc1_unit2
+q = paste0("SELECT stx.result_id, stx.casnr, che.molecularweight, stx.conc1_mean, stx.conc1_unit, stx.conc1_mean2, stx.conc1_unit2,
+conv, conc1_info, conc1_unit_clean, multiplier, unit_conv, unit_type
             FROM standartox.tests stx
             LEFT JOIN standartox.chemicals che ON stx.casnr = che.casnr
+            LEFT JOIN lookup.concentration_unit_lookup using(conc1_unit)
             WHERE stx.result_id IN (", paste0(ids, collapse = ','), ")
               AND conc1_mean != 'NR';")
 

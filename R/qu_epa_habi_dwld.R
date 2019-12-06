@@ -4,20 +4,20 @@
 source(file.path(src, 'gn_setup.R'))
 
 # query -------------------------------------------------------------------
-drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
+q = "SELECT species.latin_name,
+            species.species_number,
+            media_type_codes.description AS media_type,
+            tests.organism_habitat,
+            habitat_codes.description AS subhabitat
+     FROM ecotox.species species
+     RIGHT JOIN ecotox.tests tests ON tests.species_number = species.species_number
+     LEFT JOIN ecotox.media_type_codes ON clean(tests.media_type) = media_type_codes.code
+     LEFT JOIN ecotox.habitat_codes ON clean(tests.subhabitat) = habitat_codes.code;"
 
-ep_habi = dbGetQuery(
-  con, 
-  "SELECT species.latin_name, species.species_number, tests.media_type, tests.organism_habitat, tests.subhabitat
-   FROM ecotox.species species
-   RIGHT JOIN ecotox.tests tests ON tests.species_number = species.species_number;"
-)
-setDT(ep_habi)
+ep_habi = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                     query = q)
 
-dbDisconnect(con)
-dbUnloadDriver(drv)
-
+# write -------------------------------------------------------------------
 saveRDS(ep_habi, file.path(cachedir, 'ep_habi_source.rds'))
 
 # log ---------------------------------------------------------------------

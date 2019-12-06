@@ -38,6 +38,8 @@ pkg_cran = c(
   'feather',
   'ggplot2',
   'ggrepel',
+  'ggridges',
+  'scales',
   'cowplot',
   'RColorBrewer',
   'treemap',
