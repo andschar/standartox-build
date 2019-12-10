@@ -53,13 +53,13 @@
 \node (meta) [element, below of = aggregated, yshift = -5cm] {Meta Information};
 %% frames
 \node (frame-stx) [frame, fit = (epa-ecotox) (filter-last) (meta) ] {};
-\node (frame-stx-text) [above, blue, inner sep = 2mm] at (frame-stx.north) {Standartox data set};
+\node (frame-stx-text) [above, blue, inner sep = 2mm] at (frame-stx.north) {Standartox database};
 \node (frame-app) [frame, fit = (stx-app-screenshot)] {};
-\node (frame-app-text) [above, blue, inner sep = 2mm] at (frame-app.north) {APP};
+\node (frame-app-text) [above, blue, inner sep = 2mm, align=center] at (frame-app.north) {web application:\\ standartox.uni-landau.de};
 \node (frame-api) [frame, fit = (stx-rpackage-screenshot)] {};
-\node (frame-api-text) [above, blue, inner sep = 2mm] at (frame-api.north) {API};
+\node (frame-api-text) [above, blue, inner sep = 2mm] at (frame-api.north) {Application Programming Interface};
 \node (frame-rpackage) [frame, fit = (frame-api) (frame-api-text)] {};
-\node (frame-rpackage-text) [above, blue, inner sep = 2mm] at (frame-rpackage.north) {R package};
+\node (frame-rpackage-text) [above, blue, inner sep = 2mm] at (frame-rpackage.north) {R-package: standartox};
 %% arrows
 \draw [arrow1] (filtered.east) -- (aggregated.west);
 \draw [arrow1] (epa-ecotox.south) -- (filtered.north);
