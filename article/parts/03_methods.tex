@@ -10,10 +10,10 @@
 %%descriptions should be complete enough for others to understand and reproduce 
 %%the methods and processing steps without referring to associated publications. 
 %%There is no limit to the length of the Methods section.
-\section*{Methods}
+\section{Methods}
 An automated processing pipeline downloads the quarterly released EPA ECOTOX database, performs several preparation steps on it and exports a final Standartox data set. This data set is accessible via a web application (APP) and an application programming interface (API). To facilitate the API access, the R \citep{rcoreteam_language_2017} package \textit{standartox} is built.
 
-\subsection*{Processing pipe line}
+\subsection{Processing pipe line}
 Standartox downloads the quarterly released EPA ECOTOX data base whenever a new version is published and builds it into a local PostgreSQL data base \citep{szocs_build_2019}. Subsequently Structured Query Language (SQL) functions for further processing the data are developed. In addition lookup tables (Supplement \ref{sup:conv-concentration}, \ref{sup:conv-duration}) that enable duration and concentration unit conversions of the data are created. A meta table providing information such as the release version of the EPA ECOTOX data base is then added. In the next step, Chemical Abstracts Service Numbers (CAS) and International Chemical Identifier (InChI) as well as taxonomic names are used to query additional information from publicly available databases on chemicals and organisms, respectively. This includes the Compendium of Pesticide Common Names \citep{wood_compendium_2019}, the Chemical Entities of Biological Interest (ChEBI) database \citep{hastings_chebi_2016}, the Chemical Identifier Resolver (CIR) service \citep{nationalinstitutesofhealthnih_chemical_2019}, the PHYSPROP database, the Pubchem data base \citep{kim_pubchem_2016}, Eurostat \citep{europeancommission_eurostat_2019} and Wikidata \citep{vrandecic_wikidata_2014} for chemicals and the World Register of Marine Species (WoRMS) \citep{wormseditorialboard_world_2018} and the Global Biodiversity Information Facility (GBIF) \citep{_gbif_2019} (Table \ref{tab:data-base-additional}) for habitat and spatial distribution of organisms. This information is added to Standartox to allow filtering for specific classes of chemicals as well as spatial distribution (i.e. continents) and habitat preferences (e.g. freshwater) of individual taxa.
 
 \input{article/tables/data_base_tables.tex}
@@ -28,20 +28,20 @@ Likewise, out of the 125 test duration units in the EPA ECOTOX, Standartox retai
     \label{fig:stx-organigram}
 \end{figure}
 
-\subsection*{Web application (APP) and Application Programming Interface (API)}
+\subsection{Web application (APP) and Application Programming Interface (API)}
 The web application (APP) and the Application Programming Interface (API) load the compressed serialized Standartox data into memory and allow a client to interact with it. The client can then call the functions stx\_filter() and stx\_aggregate() that filter and aggregate the data according to specific parameters (Table \ref{tab:app-parameters}).
 
-\subsubsection*{Web application (APP)}
+\subsubsection{Web application (APP)}
 The interactive APP was built in R using the shiny web application framework, which runs with the help of a shiny server \citep{chang_shiny_2018} on \url{standartox.uni-landau.de}. It is a set of R functions that allow a user to filter, aggregate and download the data.
 
-\subsubsection*{Application programming interface (API)}
+\subsubsection{Application programming interface (API)}
 The API is built by using the R package plumber \citep{trestletechnologyllc_plumber_2018}, which allows for the creation of RESTful APIs from R. The API is reachable via the URL \url{http://139.14.20.252} and port 8000. Four API-endpoints (\textit{/catalog}, \textit{/filter}, \textit{/aggregate} and \textit{/meta}) can be queried from the client side. The \textit{/catalog} API-endpoint returns a JavaScript Object Notation (JSON) file containing a catalog of possible filter parameters to choose from. The \textit{/filter} returns the filtered Standartox table as a compressed serialized binary file created by the R fst package \citep{klik_fst_2019}, to reduce size and allow for fast user queries. The \textit{/aggregate} API-endpoint returns an R function allowing the client to aggregate the filtered data. Lastly, the \textit{/meta} API-endpoint returns a JSON file with meta information, such as the timestamp of the request and the used Standartox version. The API is designed to be used with the R-package standartox and therefore uses serialization methods specific to R (rds() from the R package base and fst() from the package fst).
 
-\subsubsection*{R-package}
+\subsubsection{R-package}
 The R-package standartox accesses the API through two functions \textit{stx\_catalog()} and \textit{stx\_query()}. The former accesses the \textit{/catalog} API-endpoint and returns a R list object of possible filter parameters (Table \ref{tab:app-parameters}) that can be used in \textit{stx\_query()}. The latter returns a R list of three tables (i.e. R data.frames) containing the filtered data set, the aggregated data set and a table with the meta information retrieved from the API endpoints \textit{/filter} and \textit{/meta}.
 
-\subsection*{Technical Validity}
-To guarantee appropriate unit conversion and harmonisation, we compare one automatically converted entry to a manual conversion for every distinct concentration (1229) and duration (129) unit.
+\subsection{Technical Validity}
+To guarantee appropriate unit conversion and harmonisation, we compare for each of the 1229 distinct concentration and for each of the 129 duration units the automatically converted units to one manually calculated one.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
