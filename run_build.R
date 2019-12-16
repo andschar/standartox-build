@@ -6,8 +6,8 @@
 # 00 22 * * * /home/scharmueller/Projects/run_build.sh
 
 # setup -------------------------------------------------------------------
-saveRDS(Sys.time(), 'cache/start_time')
 source('~/Projects/standartox-build/R/gn_setup.R', max.deparse.length = mdl)
+saveRDS(Sys.time(), file.path(cachedir, 'start_time.rds'))
 
 # console log -------------------------------------------------------------
 if (sink_console) {
@@ -120,6 +120,7 @@ if (general) {
 
 # end ---------------------------------------------------------------------
 source(file.path(src, 'gn_end.R'), max.deparse.length = mdl)
+readRDS(file.path(cachedir, 'start_time.rds'))
 
 # console log 2 -----------------------------------------------------------
 if (sink_console) {
