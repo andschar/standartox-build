@@ -1,6 +1,6 @@
 \documentclass[border = 1.5cm]{standalone}
 
-    %%%% packages
+%%%% packages
 \usepackage{tikz}
 \usetikzlibrary{trees,
                 arrows,
@@ -33,11 +33,19 @@
 	background/.style = {rectangle, rounded corners, draw = black, fill=gray!0.01}
 }
 
+
+\iffalse
+ Könnten Aspekte von oben nicht noch in das Organigramm (e.g. Cleaning units and test durations)... Weitere Anmerkungen zur Abbildung: Die Daten EPA Ecotox und Standardtox sind irgendwie auf der gleichen Ebene - aber wozu ist die EPA da noch drin? Warum geht der flowchart nicht von so, dass irgendwas auf standartox data set mit Pfeil geht? Dann wird aus der API das R package? Insgesamt schön zur Visualisierung usw., aber die Logik ist unklar und kann einfacher gehalten werden
+\fi
+
+
+
+
 \begin{tikzpicture}
 %% nodes
 % pipeline
-\node (epa-ecotox) [ecotox, above of = epa-ecotox-clean, yshift = 5cm] {EPA};
-\node (epa-ecotox-clean) [ecotox, align = center] at (-3cm,0cm) {EPA ECOTOX\\data base\\(cleaned)};
+\node (epa-ecotox) [ecotox, above of = epa-ecotox-clean, align=center, yshift = 5cm] {EPA ECOTOX\\raw data};
+\node (epa-ecotox-clean) [ecotox, align = center] at (-3cm,0cm) {EPA ECOTOX\\cleaned};
 \node (cas) [ids, below of = epa-ecotox-clean, xshift = 6cm, yshift = 3cm] {CAS};
 \node (taxa) [ids, below of = cas, xshift = 0cm, yshift = -2.5cm] {Taxa};
 \node (db-chemical) [db, right of = cas, xshift = 4cm, align = center] {Chemical\\data bases};
