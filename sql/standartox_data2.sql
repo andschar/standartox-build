@@ -149,11 +149,11 @@ SELECT
 	chem_prop.molecularweight::double precision,
 	chem_prop.p_log::double precision,
 	chem_prop.solubility_water::double precision,
-	chem_class.fungicide AS ccl_fungicide,
-	chem_class.herbicide AS ccl_herbicide,
-	chem_class.insecticide AS ccl_insecticide,
-	chem_class.metal AS ccl_metal,
-	chem_class.drug AS ccl_drug
+	chem_class.fungicide::boolean AS ccl_fungicide,
+	chem_class.herbicide::boolean AS ccl_herbicide,
+	chem_class.insecticide::boolean AS ccl_insecticide,
+	chem_class.metal::boolean AS ccl_metal,
+	chem_class.drug::boolean AS ccl_drug
 FROM ecotox.chemicals
 LEFT JOIN phch_fin.chem_names ON chemicals.cas_number = chem_names.cas_number
 LEFT JOIN phch_fin.chem_class ON chemicals.cas_number = chem_class.cas_number
@@ -179,16 +179,16 @@ SELECT
 	species.subphylum_div,
 	species.phylum_division,
 	species.kingdom,
-	habitat.marin AS hab_marine,
-	habitat.brack AS hab_brackish,
-	habitat.fresh AS hab_freshwater,
-	habitat.terre AS hab_terrestrial,
-	continent.africa AS reg_africa,
-	continent.north_america AS reg_america_north,
-	continent.south_america AS reg_america_south,
-	continent.asia AS reg_asia,
-	continent.europe AS reg_europe,
-	continent.oceania AS reg_oceania
+	habitat.marin::boolean AS hab_marine,
+	habitat.brack::boolean AS hab_brackish,
+	habitat.fresh::boolean AS hab_freshwater,
+	habitat.terre::boolean AS hab_terrestrial,
+	continent.africa::boolean AS reg_africa,
+	continent.north_america::boolean AS reg_america_north,
+	continent.south_america::boolean AS reg_america_south,
+	continent.asia::boolean AS reg_asia,
+	continent.europe::boolean AS reg_europe,
+	continent.oceania::boolean AS reg_oceania
 FROM ecotox.species
 LEFT JOIN taxa_fin.habitat ON species.latin_name = habitat.taxon
 LEFT JOIN taxa_fin.continent ON species.latin_name = continent.taxon

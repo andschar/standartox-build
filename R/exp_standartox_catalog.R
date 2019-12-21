@@ -81,6 +81,17 @@ effect[ , perc := round(n / n_total * 100) ]
 endpoint = l$endpoint
 setnames(endpoint, c('variable', 'n', 'n_total'))
 endpoint[ , perc := round(n / n_total * 100) ]
+# meta
+meta = melt(data.table(n_results = l$cas$n_total[1],
+                       n_cas = nrow(l$cas),
+                       n_concentration_unit = nrow(l$concentration_unit),
+                       n_concentration_type = nrow(l$concentration_type),
+                       n_chemical_class = nrow(chemical_class),
+                       n_taxa = nrow(l$tax_taxon),
+                       n_habitat = nrow(habitat),
+                       n_region = nrow(region),
+                       n_effect = nrow(l$effect),
+                       n_endpoints = nrow(l$endpoint)))
 
 # list --------------------------------------------------------------------
 catalog_l = list(cas = cas,
@@ -92,10 +103,16 @@ catalog_l = list(cas = cas,
                  region = region,
                  duration = duration,
                  effect = effect,
-                 endpoint = endpoint)
+                 endpoint = endpoint,
+                 meta = meta)
+
+# TODO CONTINUE HERE
+# add the same information as stx_query returns
+# check with /meta endpoint in API
+# decide for one approach
 
 # write -------------------------------------------------------------------
-saveRDS(catalog_l, file.path(exportdir, paste0('standartox', v, '_catalog.rds'))) # TODO change the server R version
+saveRDS(catalog_l, file.path(exportdir, paste0('standartox', v, '_catalog.rds')))
 
 # log ---------------------------------------------------------------------
 log_msg('EXPORT: Standartox catalog exported.')

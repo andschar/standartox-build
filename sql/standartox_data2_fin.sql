@@ -2,9 +2,9 @@
 -- Standartox data export
 -- define type and name for every column
 
-DROP MATERIALIZED VIEW IF EXISTS standartox.data2;
+DROP TABLE IF EXISTS standartox.data2;
 
-CREATE MATERIALIZED VIEW standartox.data2 AS
+CREATE TABLE standartox.data2 AS
 
 SELECT
   chemicals.casnr::text AS cas,
@@ -21,6 +21,7 @@ SELECT
   END AS concentration_unit,
   tests.conc1_type::text AS concentration_type,
   tests.obs_duration_mean2::double precision AS duration,
+  false AS outlier,
   CASE
     WHEN tests.obs_duration_unit2 = 'h'
       THEN 'h'
@@ -29,11 +30,11 @@ SELECT
   tests.effect::text,
   tests.endpoint2::text AS endpoint,
   tests.test_location::text,
-  chemicals.ccl_fungicide::integer,
-  chemicals.ccl_herbicide::integer,
-  chemicals.ccl_insecticide::integer,
-  chemicals.ccl_metal::integer,
-  chemicals.ccl_drug::integer,
+  chemicals.ccl_fungicide::integer::bool,
+  chemicals.ccl_herbicide::integer::bool,
+  chemicals.ccl_insecticide::integer::bool,
+  chemicals.ccl_metal::integer::bool,
+  chemicals.ccl_drug::integer::bool,
   taxa.taxon::text AS tax_taxon,
   taxa.genus::text AS tax_genus,
   taxa.family::text AS tax_family,
@@ -43,16 +44,17 @@ SELECT
   taxa.subphylum_div::text AS tax_subphylum_div,
   taxa.phylum_division::text AS tax_phylum_division,
   taxa.kingdom::text AS tax_kingdom,
-  taxa.hab_marine::integer,
-  taxa.hab_brackish::integer,
-  taxa.hab_freshwater::integer,
-  taxa.hab_terrestrial::integer,
-  taxa.reg_africa::integer,
-  taxa.reg_america_north::integer,
-  taxa.reg_america_south::integer,
-  taxa.reg_asia::integer,
-  taxa.reg_europe::integer,
-  taxa.reg_oceania::integer,
+  taxa.ecotox_group2::text AS tax_ecotox_group,
+  taxa.hab_marine::boolean,
+  taxa.hab_brackish::boolean,
+  taxa.hab_freshwater::boolean,
+  taxa.hab_terrestrial::boolean,
+  taxa.reg_africa::boolean,
+  taxa.reg_america_north::boolean,
+  taxa.reg_america_south::boolean,
+  taxa.reg_asia::boolean,
+  taxa.reg_europe::boolean,
+  taxa.reg_oceania::boolean,
   refs.title::text AS publ_title,
   refs.author::text AS publ_author,
   refs.publication_year::integer AS publ_year
@@ -68,4 +70,6 @@ WHERE tests.conc1_qualifier = '='
   AND tests.obs_duration_unit2 IS NOT NULL AND tests.obs_duration_unit2 = 'h'
   AND tests.effect IS NOT NULL
   AND tests.endpoint2 IN ('NOEX', 'LOEX', 'XX50')
+  AND taxa.genus != '' AND taxa.genus IS NOT NULL
+  AND taxa.taxon NOT IN ('Algae', 'Plankton', 'Invertebrates')
 ;

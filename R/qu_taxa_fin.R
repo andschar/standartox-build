@@ -22,7 +22,7 @@ cols_tx = taxa_cols[ grep(paste0(cols, collapse = '|'), column_name) ]
 cols_tx = cols_tx[ !table_name %in% c('worms_fm', 'worms_gn', 'gbif_habitat') ]
 
 q = q_join(cols_tx, schema = 'taxa', main_tbl = 'epa', col_join = 'taxon',
-           fun = 'GREATEST', debug = FALSE)
+           fun = 'GREATEST', cast = '::integer::boolean', debug = FALSE)
 q = paste0("CREATE TABLE taxa_fin.habitat AS ( ", q, ")")
 dbSendQuery(con, "DROP TABLE IF EXISTS taxa.habitat;")
 dbSendQuery(con, q)
@@ -33,7 +33,7 @@ cols = gsub('(.+)', '^\\1$', cols)
 cols_hb = taxa_cols[ grep(paste0(cols, collapse = '|'), column_name) ]
 
 q = q_join(cols_hb, schema = 'taxa', main_tbl = 'epa', col_join = 'taxon',
-           fun = 'GREATEST', debug = FALSE)
+           fun = 'GREATEST', cast = '::integer::boolean', debug = FALSE)
 q = paste0("CREATE TABLE taxa_fin.continent AS ( ", q, ")")
 dbSendQuery(con, "DROP TABLE IF EXISTS taxa_fin.continent;")
 dbSendQuery(con, q)

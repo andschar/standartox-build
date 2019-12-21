@@ -26,7 +26,7 @@ class_cols = phch_cols[ grep(paste0(cols_exact, collapse = '|'), column_name) ]
 
 # query
 q = q_join(class_cols, schema = 'phch', main_tbl = 'epa', col_join = 'cas',
-           fun = 'GREATEST', debug = FALSE)
+           fun = 'GREATEST', cast = '::integer::boolean', debug = FALSE)
 q = paste0("CREATE TABLE phch_fin.chem_class AS ( ", q, ")")
 # TODO intermediate solution - change!
 q = gsub('SELECT epa.cas', 'SELECT epa.cas_number, epa.cas', q, fixed = TRUE)

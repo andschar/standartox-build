@@ -5,11 +5,6 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 ep_habi = readRDS(file.path(cachedir, 'ep_habi_source.rds'))
-# 
-# ep_habi[ , .N, media_type ][ order(-N) ]
-# ep_habi[ , .N, organism_habitat ][ order(-N) ]
-# ep_habi[ , .N, subhabitat ][ order(-N) ]
-# 
 
 # preparation -------------------------------------------------------------
 ep_habi[ media_type == 'Fresh water', fresh := 1L ]

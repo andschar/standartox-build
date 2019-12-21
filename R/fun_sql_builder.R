@@ -9,7 +9,7 @@
 # main_sch = 'phch'
 # col_join = 'cas'
 
-q_join = function(dat, schema, main_tbl, col_join, fun, debug = TRUE) {
+q_join = function(dat, schema, main_tbl, col_join, fun, cast, debug = TRUE) {
   
   # checks
   if (is.null(fun))
@@ -37,7 +37,7 @@ q_join = function(dat, schema, main_tbl, col_join, fun, debug = TRUE) {
       paste0(
         paste0(fun, '('),
         lapply(col_full, paste0, collapse = ', '),
-        ') AS ',
+        ')', cast, ' AS ',
         '\"', lapply(col, function(x) paste0(unique(x), collapse = ', ')), '\"'), 
       collapse = ', '
     )

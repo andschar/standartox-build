@@ -27,7 +27,8 @@ pp_l = lapply(pp_l, pp_resolve)
 pp = rbindlist(pp_l, fill = TRUE, idcol = 'cas')
 setnames(pp,
          c('Water Solubility', 'Log P (octanol-water)'),
-         c('solubility_water', 'p_log'))
+         c('solubility_water', 'p_log'),
+         skip_absent = TRUE)
 setnames(pp, tolower(names(pp)))
 setcolorder(pp, c('cas', 'cname'))
 pp[, cname := tolower(cname)]
