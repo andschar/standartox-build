@@ -53,7 +53,9 @@ pkg_cran = c(
   'knitr'
   # TODO check if all packages are still needed!
 )
-pkg_gith = c('ropensci/bib2df', 'webchem', 'standartox') # , 'NIVANorge/chemspideR') # no citation available!
+pkg_gith = c('ropensci/bib2df',
+             'ropensci/webchem',
+             'andschar/standartox') # , 'NIVANorge/chemspideR') # no citation available!
 
 ## install via CRAN
 pacman::p_load(char = pkg_cran)

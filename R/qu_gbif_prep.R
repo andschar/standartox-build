@@ -4,97 +4,96 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-gbif_data = readRDS(file.path(cachedir, 'gbif_data.rds'))
+l_fl = list.files(file.path(cachedir, 'gbif'),
+                  full.names = TRUE)
 
-## preparation ------------------------------------------------------------
-
-# country code ------------------------------------------------------------ 
-gbif_ccode = gbif_data[ !is.na(countrycode) & countrycode != 'none',
-                        .(ccode = unique(countrycode)),
-                        taxon]
-gbif_ccode_dc = dcast(gbif_ccode, taxon ~ ccode, value.var = 'ccode',
-                      fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
-
-# continent ---------------------------------------------------------------
-gbif_continent = gbif_data[ !is.na(continent) & continent != 'none',
-                            .(continent = unique(continent)),
-                            taxon]
-gbif_conti_dc = dcast(gbif_continent, taxon ~ continent, value.var = 'continent',
-                      fun.aggregate = function(x) as.numeric(length(x) >= 1), fill = NA)
-setnames(gbif_conti_dc, tolower(names(gbif_conti_dc)))
-
-# habitat -----------------------------------------------------------------
-gbif_habitat = gbif_data[ !is.na(habitat) & habitat != 'none',
-                          .(habitat = unique(habitat)),
-                          taxon]
-gbif_habitat_dc = dcast(gbif_habitat, taxon ~ ., value.var = 'habitat',
-                        fun.aggregate = function(x) paste0(x, collapse=' '), fill = NA)
-setnames(gbif_habitat_dc, '.', 'habitat')
-# match habitat variables
+# variables ---------------------------------------------------------------
 fresh = c('bach', 'weiher', 'fluss', 'strom', 'teich', 'estanque', 'puddle', 'water body', 'gravel', 'cobble', 'aquarium', 'spring', 'ditch', 'bog','peat', 'swamp', 'myr', 'fresh', 'creek', 'riffle', 'current', 'rapid', 'brook', 'canal', 'channel', 'kanal', 'stream', '^å$', 'river', 'r.', 'reservoir', 'riparian', 'marginal vegetation', 'río', 'rio', 'tributary', 'lago', 'lac', 'lake', 'pool', 'pond', 'freshwater', 'floodplain', 'flood plain', 'wetland', 'humedal', 'sumpskog', 'waterhole', 'damm', 'doce', 'douce', 'vattendrag', 'léntico', 'marsh', 'marais', 'dulce', 'lótico', 'ruisseau', 'fleuve', 'cours', 'epiliton', 'inundable', 'bäck', 'cenote', 'grunt vatten', 'kärr', 'stagnant water',
           'ganges', 'nil', 'danube', 'volga')
 brack = c('estuar', 'brackish', 'brackvatten', 'intermareal', 'saumâtre', 'saumatre')
 marin = c('sandstrand', 'sea', 'ocean', 'marin', 'litoral', 'littoral', 'pelágico', 'intertidal', 'gulf', 'indian', 'atlantic', 'mediterranean', 'pacific', 'laguna', 'havsstrand', 'cotier', 'coster', 'coast', 'lagoon', 'sand', 'strand', 'playa', 'beach', 'seagrass', 'bay', 'intermareal', 'hällkar', 'manglar', 'mangrov', 'reef', 'tide', 'salée', 'mer', 'meer')
 terre = c('terre', 'bush', 'wood', 'palma', 'spruce', 'birch', 'forest', 'foret', 'skog', 'barrskog', 'lövskog', 'hagmark', 'skogsmark', 'skräpmark', 'pasture', 'mud', 'jordhög', 'grassland', 'ruderat', 'ruderatmark', 'trädgård', 'marsh', 'vägkant', 'garden', 'kompost', 'bosque', 'åkerkant', 'roadside', 'meadow', 'culture', 'soil', 'urban', 'dunes', 'epifiton', 'soptipp', 'inomhus', 'åker', 'park', 'jordtipp', 'vägren', 'grustag', 'rock', 'industriavfall', 'tipp', 'farm', 'arboretum', 'greenhouse', 'savan', 'sabana', 'filed', 'grass', 'indoors')
 
-# waterBody ---------------------------------------------------------------
-gbif_waterbody = gbif_data[ !is.na(waterbody) & waterbody != 'none',
-                            .(waterbody = unique(waterbody)),
-                            taxon]
-gbif_waterbody_dc = dcast(gbif_waterbody, taxon ~ ., value.var = 'waterbody',
-                          fun.aggregate = function(x) paste0(x, collpase = ' '), fill = NA)
-setnames(gbif_waterbody_dc, '.', 'waterbody')
+# extract -----------------------------------------------------------------
+l = list()
+for (i in seq_along(l_fl)) {
+  taxon = from_filename(basename(l_fl[i]))
+  message('Reading: ', taxon)
+  gbif = readRDS(l_fl[i])
+  if (is.list(gbif)) {
+    dat = list(taxon = from_filename(basename(l_fl[i])),
+               taxonkey = to_dt(gbif$data$taxonKey),
+               country = to_dt(gbif$data$country),
+               country_code = to_dt(gbif$data$countryCode),
+               continent = to_dt(gbif$data$continent),
+               habitat = data.table(fresh = as.logical(length(grep(paste0(fresh, collapse = '|'), vec, ignore.case = TRUE, value = TRUE))),
+                                    marin = as.logical(length(grep(paste0(marin, collapse = '|'), vec, ignore.case = TRUE, value = TRUE))),
+                                    brack = as.logical(length(grep(paste0(brack, collapse = '|'), vec, ignore.case = TRUE, value = TRUE))),
+                                    terre = as.logical(length(grep(paste0(terre, collapse = '|'), vec, ignore.case = TRUE, value = TRUE)))),
+               elevation = data.table(min = min(gbif$data$elevation, na.rm = TRUE),
+                                      median = median(gbif$data$elevation, na.rm = TRUE),
+                                      mean = mean(gbif$data$elevation, na.rn = TRUE),
+                                      sd = sd(gbif$data$elevation, na.rm = TRUE),
+                                      max = max(gbif$data$elevation, na.rm = TRUE)),
+               geo = unique(data.table(lat = gbif$data$decimalLatitude,
+                                       lon = gbif$data$decimalLongitude,
+                                       geodetic_datum = gbif$data$geodeticDatum)))
+  } else {
+    dat = list(NA)
+  }
+  l[[i]] = dat
+  names(l)[i] = taxon
+}
 
-# elevation ---------------------------------------------------------------
-gbif_elevation = unique(gbif_data[ !is.na(elevation), 
-                                   elevation,
-                                   by = taxon])
+# prepare -----------------------------------------------------------------
+country = rbindlist(lapply(l, `[[`, 'country'), fill = TRUE, idcol = 'taxon')
+setcolorder(country, sort_vec(names(country), ignore = 'taxon'))
+country_code = rbindlist(lapply(l, `[[`, 'country_code'), fill = TRUE, idcol = 'taxon')
+setcolorder(country_code, sort_vec(names(country_code), ignore = 'taxon'))
+continent = rbindlist(lapply(l, `[[`, 'continent'), fill = TRUE, idcol = 'taxon')
+setcolorder(continent, sort_vec(names(continent), ignore = 'taxon'))
+habitat = rbindlist(lapply(l, `[[`, 'habitat'), fill = TRUE, idcol = 'taxon')
+setcolorder(habitat, sort_vec(names(habitat), ignore = 'taxon'))
+elevation = rbindlist(lapply(l, `[[`, 'elevation'), fill = TRUE, idcol = 'taxon')
+for (col in names(elevation)) set(elevation, i = which(is.infinite(elevation[[col]])), j = col, value = NA)
+geo = rbindlist(lapply(l, `[[`, 'geo'), fill = TRUE, idcol = 'taxon')
 
-# geo data ----------------------------------------------------------------
-gbif_geo = unique(gbif_data[ , .SD, 
-                             .SDcols = c('decimallatitude',
-                                         'decimallongitude',
-                                         'geodeticdatum'),
-                             by = taxon])
-
-# merge + classify --------------------------------------------------------
-gbif_hab_wat_dc = merge(gbif_habitat_dc, gbif_waterbody_dc, by = 'taxon', all = TRUE)
-gbif_hab_wat_dc[ , fresh := ifelse(tolower(habitat) %like% paste0(fresh, collapse = '|') |
-                                     tolower(waterbody) %like% paste0(fresh, collapse = '|'), 1L, NA) ]
-gbif_hab_wat_dc[ , brack := ifelse(tolower(habitat) %like% paste0(brack, collapse = '|') |
-                                     tolower(waterbody) %like% paste0(brack, collapse = '|'), 1L, NA) ]
-gbif_hab_wat_dc[ , marin := ifelse(tolower(habitat) %like% paste0(marin, collapse = '|') |
-                                     tolower(waterbody) %like% paste0(marin, collapse = '|'), 1L, NA) ]
-gbif_hab_wat_dc[ , terre := ifelse(tolower(habitat) %like% paste0(terre, collapse = '|'), 1L, NA) ]
-
-# types -------------------------------------------------------------------
-cols = c('africa', 'asia', 'europe', 'north_america', 'oceania', 'south_america')
-gbif_conti_dc[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
-cols = c('marin', 'brack', 'fresh', 'terre')
-gbif_hab_wat_dc[ , (cols) := lapply(.SD, as.numeric), .SDcols = cols ]
+# chck --------------------------------------------------------------------
+chck_dupl(country, 'taxon')
+chck_dupl(country_code, 'taxon')
+chck_dupl(continent, 'taxon')
+chck_dupl(habitat, 'taxon')
+chck_dupl(elevation, 'taxon')
 
 # write -------------------------------------------------------------------
 # country
-write_tbl(gbif_ccode_dc, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'taxa', tbl = 'gbif_country',
-          comment = 'Results from the GBIF query (countries)')
+write_tbl(country, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'gbif', tbl = 'country',
+          comment = 'Results from the GBIF query (country)')
+# country code
+write_tbl(country, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'gbif', tbl = 'country_code',
+          comment = 'Results from the GBIF query (country_code)')
 # continent
-write_tbl(gbif_conti_dc, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'taxa', tbl = 'gbif_continent',
-          comment = 'Results from the GBIF query (continents)')
+write_tbl(continent, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'gbif', tbl = 'continent',
+          comment = 'Results from the GBIF query (continent)')
 # habitat
-write_tbl(gbif_hab_wat_dc, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'taxa', tbl = 'gbif_habitat',
+write_tbl(habitat, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'gbif', tbl = 'habitat',
           comment = 'Results from the GBIF query (habitat)')
-# all
-write_tbl(gbif_data, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'taxa', tbl = 'gbif_all',
-          comment = 'Results from the GBIF query (all)')
+# habitat
+write_tbl(elevation, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'gbif', tbl = 'elevation',
+          comment = 'Results from the GBIF query (elevation)')
+# habitat
+write_tbl(geo, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'gbif', tbl = 'geo',
+          comment = 'Results from the GBIF query (geo)')
 
 # log ---------------------------------------------------------------------
 log_msg('GBIF preparation script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
-
 
