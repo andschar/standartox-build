@@ -6,7 +6,7 @@ source(file.path(src, 'gn_setup.R'))
 # chemical scripts --------------------------------------------------------
 scripts = c('qu_aw_dwld.R',
             'qu_chebi_dwld.R',
-            'qu_pan_dwld.R', # DEPRECATE?
+            'qu_pan_dwld.R', # TODO DEPRECATE?
             'qu_pc_prop_dwld.R',
             'qu_pc_syn_dwld.R',
             'qu_pp_dwld.R',

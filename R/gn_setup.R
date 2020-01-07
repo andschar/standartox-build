@@ -10,6 +10,18 @@ if (nodename == 'scharmueller-t460s') {
   stop('New system. Define prj variable.')
 }
 
+# switches ----------------------------------------------------------------
+download_db = TRUE # should database query be run
+build_db = TRUE # build data base?
+download = FALSE # run download (dwld) scripts (takes days)? 
+build = TRUE # run preparation (prep) scripts?
+lookup = TRUE # build lookup_tables
+build_standartox = TRUE
+build_norman = F
+debug_mode = FALSE # should only 10 input rows for each quering script be run
+sink_console = TRUE # sink console to file
+general = TRUE
+
 # packages ----------------------------------------------------------------
 if (!require('pacman')) {
   install.packages('pacman')
@@ -57,6 +69,8 @@ pkg_gith = c('ropensci/bib2df',
              'ropensci/webchem',
              'andschar/standartox') # , 'NIVANorge/chemspideR') # no citation available!
 
+require(dbreport) # TODO put into pfg_github once it's published
+
 ## install via CRAN
 pacman::p_load(char = pkg_cran)
 
@@ -64,18 +78,6 @@ pacman::p_load(char = pkg_cran)
 pacman::p_load_gh(char = pkg_gith)
 
 # pacman::p_update()
-
-# switches ----------------------------------------------------------------
-download_db = TRUE # should database query be run
-build_db = TRUE # build data base?
-download = FALSE # run download scripts (takes days)? 
-build = TRUE # run build scripts?
-lookup = TRUE # build lookup_tables
-build_standartox = TRUE
-build_norman = FALSE
-debug_mode = FALSE # should only 10 input rows for each quering script be run
-sink_console = TRUE # sink console to file
-general = TRUE
 
 # variables ----------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
@@ -147,7 +149,6 @@ source(file.path(src, 'fun_norman.R'))
 source(file.path(src, 'fun_udunits2_vectorize.R'))
 source(file.path(src, 'fun_coalesce.R'))
 source(file.path(src, 'fun_clean_names.R'))
-source(file.path(src, 'fun_sql_builder.R'))
 source(file.path(src, 'fun_mail.R'))
 source(file.path(src, 'fun_chck.R'))
 source(file.path(src, 'fun_export_db.R'))
@@ -155,6 +156,8 @@ source(file.path(src, 'fun_geometric_mean.R'))
 source(file.path(src, 'fun_summary_db.R'))
 source(file.path(src, 'fun_treemap.R'))
 source(file.path(src, 'fun_firstup.R'))
+source(file.path(src, 'fun_filename.R'))
+source(file.path(src, 'fun_sort_vec.R'))
 
 # database ----------------------------------------------------------------
 fl = file.path(cred, 'chemspider_apikey.txt')

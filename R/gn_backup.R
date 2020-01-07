@@ -5,7 +5,7 @@ source(file.path(src, 'gn_setup.R'))
 
 # backup ------------------------------------------------------------------
 cmd = sprintf("pg_dump -Fc -h %s -p %s %s > %s2.bak",
-              DBhost, DBport, DBetox, DBetox) # -Fc reduces size by 90%
+              DBhost, DBport, DBetox, DBetox) # NOTE -Fc reduces size by 90%
 system(cmd)
 
 # log ---------------------------------------------------------------------

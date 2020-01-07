@@ -13,7 +13,7 @@ chck_dupl(wd, 'cas')
 
 # write -------------------------------------------------------------------
 write_tbl(wd, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'wiki',
+          dbname = DBetox, schema = 'wiki', tbl = 'prop',
           key = 'cas',
           comment = 'Results from Wikidata')
 

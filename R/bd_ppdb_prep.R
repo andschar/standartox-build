@@ -108,13 +108,9 @@ chck_dupl(ppdb2, 'casnr')
 #   theme_bw() +
 #   theme()
 
-# tmp ---------------------------------------------------------------------
-# TODO remove this
-fwrite(ppdb2, '/tmp/ppdb2.csv')
-
 # write -------------------------------------------------------------------
 write_tbl(ppdb2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'ppdb',
+          dbname = DBetox, schema = 'ppdb', tbl = 'data',
           comment = 'Results from the PPDB query')
 
 # log ---------------------------------------------------------------------

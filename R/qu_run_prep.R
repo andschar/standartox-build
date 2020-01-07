@@ -10,7 +10,7 @@ scripts_chem = c('qu_aw_prep.R',
                  'qu_pan_prep.R',
                  'qu_pc_prop_prep.R',
                  'qu_pc_syn_prep.R',
-                 'qu_pp_prep.R',
+                 # 'qu_pp_prep.R', # TODO doesn't work now
                  'qu_epa_chem_prep.R',
                  'qu_eurostat_prep.R',
                  'qu_wiki_prep.R',

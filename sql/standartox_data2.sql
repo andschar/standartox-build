@@ -123,7 +123,7 @@ LEFT JOIN ecotox.habitat_codes ON tests.subhabitat = habitat_codes.code
 LEFT JOIN ecotox.test_method_codes ON tests.test_method = test_method_codes.code
 LEFT JOIN ecotox.media_type_codes on tests.media_type = media_type_codes.code
 LEFT JOIN ecotox.substrate_codes on tests.substrate = substrate_codes.code
-LEFT JOIN phch_fin.chem_prop ON tests.test_cas = chem_prop.cas_number -- for molecularweight
+LEFT JOIN phch.chem_prop ON tests.test_cas = chem_prop.cas_number -- for molecularweight
 
 WHERE
 	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT LIKE '%ca%';
@@ -155,9 +155,9 @@ SELECT
 	chem_class.metal::boolean AS ccl_metal,
 	chem_class.drug::boolean AS ccl_drug
 FROM ecotox.chemicals
-LEFT JOIN phch_fin.chem_names ON chemicals.cas_number = chem_names.cas_number
-LEFT JOIN phch_fin.chem_class ON chemicals.cas_number = chem_class.cas_number
-LEFT JOIN phch_fin.chem_prop ON chemicals.cas_number = chem_prop.cas_number;
+LEFT JOIN phch.chem_names ON chemicals.cas_number = chem_names.cas_number
+LEFT JOIN phch.chem_class ON chemicals.cas_number = chem_class.cas_number
+LEFT JOIN phch.chem_prop ON chemicals.cas_number = chem_prop.cas_number;
 
 ALTER TABLE standartox.chemicals ADD PRIMARY KEY (casnr);
 
@@ -168,8 +168,8 @@ DROP TABLE IF EXISTS standartox.taxa;
 CREATE TABLE standartox.taxa AS
 SELECT
 	species.species_number,
-	taxa.taxon,
-	taxa.ecotox_group2,
+	epa.taxon,
+	epa.ecotox_group2,
 	species.common_name,
 	species.genus,
 	species.family,
@@ -184,15 +184,15 @@ SELECT
 	habitat.fresh::boolean AS hab_freshwater,
 	habitat.terre::boolean AS hab_terrestrial,
 	continent.africa::boolean AS reg_africa,
-	continent.north_america::boolean AS reg_america_north,
-	continent.south_america::boolean AS reg_america_south,
+	continent.america_north::boolean AS reg_america_north,
+	continent.america_south::boolean AS reg_america_south,
 	continent.asia::boolean AS reg_asia,
 	continent.europe::boolean AS reg_europe,
 	continent.oceania::boolean AS reg_oceania
 FROM ecotox.species
-LEFT JOIN taxa_fin.habitat ON species.latin_name = habitat.taxon
-LEFT JOIN taxa_fin.continent ON species.latin_name = continent.taxon
-LEFT JOIN taxa_fin.taxa ON species.latin_name = taxa.taxon;
+LEFT JOIN taxa.habitat ON species.latin_name = habitat.taxon
+LEFT JOIN taxa.continent ON species.latin_name = continent.taxon
+LEFT JOIN taxa.epa ON species.latin_name = epa.taxon;
 
 ALTER TABLE standartox.taxa ADD PRIMARY KEY (species_number);
 

@@ -22,7 +22,7 @@ chck_dupl(wd2, 'cas')
 
 # write -------------------------------------------------------------------
 write_tbl(wd2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'wiki2',
+          dbname = DBetox, schema = 'wiki2', tbl = 'prop',
           key = 'cas',
           comment = 'Results from Wikidata INTERMEDIATE')
 

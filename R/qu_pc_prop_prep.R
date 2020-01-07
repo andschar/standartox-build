@@ -7,18 +7,10 @@ source(file.path(src, 'gn_setup.R'))
 # Pubchem
 pc_prop_l = readRDS(file.path(cachedir, 'pc_prop_l.rds'))
 # CIR
-
-drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
-
 q = "SELECT inchikey, cas
-     FROM phch.cir"
-
-cir = dbGetQuery(con, q)
-setDT(cir)
-
-dbDisconnect(con)
-dbUnloadDriver(drv)
+     FROM cir.prop"
+cir = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                 query = q)
 
 # preparation -------------------------------------------------------------
 pc_prop_l[ is.na(pc_prop_l) ] = lapply(pc_prop_l[ is.na(pc_prop_l) ], data.table)
@@ -39,7 +31,7 @@ chck_dupl(pc_prop, 'cas')
 
 # write -------------------------------------------------------------------
 write_tbl(pc_prop, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'pubchem',
+          dbname = DBetox, schema = 'pubchem', tbl = 'prop',
           key = 'cas',
           comment = 'Results from the PubChem query')
 

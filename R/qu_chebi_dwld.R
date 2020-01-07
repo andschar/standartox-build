@@ -4,17 +4,10 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-drv = dbDriver("PostgreSQL")
-# DBetox = 'etox20190314' # TODO remove in future
-con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
-
-dat = dbGetQuery(con, "SELECT DISTINCT ON (inchikey) *
-                       FROM phch.cir")
-setDT(dat)
-
-dbDisconnect(con)
-dbUnloadDriver(drv)
-
+q = "SELECT DISTINCT ON (inchikey) *
+     FROM cir.prop"
+dat = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                 query = q)
 q1 = unique(dat$inchikey)
 
 # debuging

@@ -31,7 +31,7 @@ setnames(pp,
          skip_absent = TRUE)
 setnames(pp, tolower(names(pp)))
 setcolorder(pp, c('cas', 'cname'))
-pp[, cname := tolower(cname)]
+pp[, cname := tolower(cname) ]
 pp[, `.` := NULL]
 # conversions
 pp[, solubility_water := solubility_water * 1000 ] # orignianly in mg/L

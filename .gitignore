@@ -38,3 +38,6 @@ cred/credentials.R
 ag/*
 # log
 log
+# sync scripts
+sync_to_server.R
+sync_from_server.R

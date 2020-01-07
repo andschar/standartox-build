@@ -28,7 +28,7 @@ formula = formula[ , .(formula = data[1]), by = chebiid ]
 ont_par = rbindlist(lapply(comp, '[[', 'parents'), idcol = 'chebiid')
 ont_par = ont_par[ type %in% c('has role', 'is a') ]
 ont_par = dcast(ont_par, chebiid ~ chebiName, value.var = 'chebiName', fill = NA,
-                fun.aggregate = function(x) length(x) / length(x))
+                fun.aggregate = function(x) as.logical(length(x) / length(x)))
 # merge
 l = list(prop, reg, iupac, formula)
 chebi_fin = Reduce(function(...) merge(..., by = 'chebiid', all = TRUE), l)
@@ -49,56 +49,39 @@ chebi_envi = ont_par[ , .SD, .SDcols = c('chebiid', cols) ]
 #! necessary 'cause it can be that a chemical is an azole fungicide but not classifed as a fungicide
 fung = grep('fungicide', names(chebi_envi), value = TRUE)
 if (length(fung) > 0) {
-  chebi_envi[ , fungicide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = fung ]
-  chebi_envi[ fungicide == 1, pesticide := 1 ]
+  chebi_envi[ , fungicide := as.logical(do.call(pmin, c(.SD, na.rm = TRUE))), .SDcols = fung ]
+  chebi_envi[ isTRUE(fungicide), pesticide := TRUE ]
 }
 herb = grep('herbicide', names(chebi_envi), value = TRUE)
 if (length(herb) > 0) {
-  chebi_envi[ , herbicide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = herb ]
-  chebi_envi[ herbicide == 1, pesticide := 1 ]
+  chebi_envi[ , herbicide := as.logical(do.call(pmin, c(.SD, na.rm = TRUE))), .SDcols = herb ]
+  chebi_envi[ isTRUE(herbicide) == 1, pesticide := TRUE ]
 }
 inse = grep('insecticide', names(chebi_envi), value = TRUE)
 if (length(inse) > 0) {
-  chebi_envi[ , insecticide := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = inse ]  
-  chebi_envi[ insecticide == 1, pesticide := 1 ]
+  chebi_envi[ , insecticide := as.logical(do.call(pmin, c(.SD, na.rm = TRUE))), .SDcols = inse ]  
+  chebi_envi[ isTRUE(insecticide) == 1, pesticide := TRUE ]
 }
-
-# TODO DEPRECATE?
-# vec = c('chebiid', 'fungicide', 'herbicide', 'insecticide')
-# cols = grep(paste0(vec, collapse = '|'), names(chebi_envi), value = TRUE)
-# chebi_envi1 = chebi_envi[ , .SD, .SDcols = cols ]
-# 
-# chebi_envi_m = melt(chebi_envi1[ , .SD, .SDcols =! c('fungicide', 'herbicide', 'insecticide') ],
-#                     id.vars = 'chebiid')
-# chebi_envi_m[ , variable2 := trimws(gsub(' (fungicide|herbicide|insecticide|pesticide)', '', variable)) ]
-# chebi_envi2 = dcast(chebi_envi_m, chebiid ~ variable2,
-#                     fun.aggregate = function(x) min(x, na.rm = TRUE))
-# for (i in names(chebi_envi2)) {
-#   chebi_envi2[ get(i) == Inf, (i) := NA ]
-# }
-# chebi_envi3 = merge(chebi_envi1, chebi_envi2, by = 'chebiid')
-# chebi_envi3[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
-# chebi_envi3 = chebi_envi3[ , unique(.SD, by = 'cas') ] # take the first in case of duplicates
-### END
-
 # cas
 chebi_envi[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
-
 # names
 setcolorder(chebi_envi, c('chebiid', 'cas'))
 clean_names(chebi_envi)
+# final
+chebi_envi = chebi_envi[ !is.na(cas) ] # NOTE query was done with INCHI keys, there could be more than CAS due to CIR results
 
 ## drugs
 drug = c('drug')
 cols = grep(paste0(drug, collapse = '|'), names(ont_par), value = TRUE)
 chebi_drug = ont_par[ , .SD, .SDcols = c('chebiid', cols) ]
-chebi_drug[ , drug := do.call(pmin, c(.SD, na.rm = TRUE)), .SDcols = cols ]
+chebi_drug[ , drug := as.logical(do.call(pmin, c(.SD, na.rm = TRUE))), .SDcols = cols ]
 chebi_drug[chebi_fin, cas := i.cas, on = 'chebiid' ] # merge cas
 chebi_drug = chebi_drug[ , unique(.SD, by = 'cas') ] # take the first in case of duplicates
-
 # names
 setcolorder(chebi_drug, c('chebiid', 'cas'))
 clean_names(chebi_drug)
+# final
+chebi_drug = chebi_drug[ !is.na(cas) ] # NOTE query was done with INCHI keys, there could be more than CAS due to CIR results
 
 # check -------------------------------------------------------------------
 chck_dupl(chebi_fin, 'cas')
@@ -108,18 +91,18 @@ chck_dupl(chebi_drug, 'cas')
 # write -------------------------------------------------------------------
 # chebi general
 write_tbl(chebi_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'chebi',
+          dbname = DBetox, schema = 'chebi', tbl = 'prop',
           key = 'cas',
-          comment = 'Results from ChEBI (general)')
+          comment = 'Results from ChEBI (properties)')
 # environmental table
 write_tbl(chebi_envi, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'chebi_envi',
-          # key = 'cas',
+          dbname = DBetox, schema = 'chebi', tbl = 'envi',
+          key = 'cas',
           comment = 'Results from ChEBI (enrionmental chemicals)')
 # drug table
 write_tbl(chebi_drug, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'chebi_drug',
-          # key = 'cas',
+          dbname = DBetox, schema = 'chebi', tbl = 'drug',
+          key = 'cas',
           comment = 'Results from ChEBI (drug chemicals)')
 
 # log ---------------------------------------------------------------------

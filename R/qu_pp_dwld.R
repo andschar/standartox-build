@@ -18,7 +18,6 @@ setorder(chem, casnr)
 dbDisconnect(con)
 dbUnloadDriver(drv)
 
-
 # debuging
 if (debug_mode) {
   chem = chem[1:10]

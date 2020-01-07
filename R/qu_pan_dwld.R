@@ -6,23 +6,11 @@ source(file.path(src, 'gn_setup.R'))
 # source('/home/scharmueller/Projects/webchem/R/pan.R') # TODO replace this in the future
 
 # data --------------------------------------------------------------------
-drv = dbDriver("PostgreSQL")
-con = dbConnect(
-  drv,
-  user = DBuser,
-  dbname = DBetox,
-  host = DBhost,
-  port = DBport,
-  password = DBpassword
-)
-
-chem = dbGetQuery(con, "SELECT *
-                        FROM phch.cir")
-setDT(chem)
-
-dbDisconnect(con)
-dbUnloadDriver(drv)
-
+q = "SELECT *
+     FROM cir.prop"
+dat = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                 query = q)
+# debuging
 if (debug_mode) {
   chem = chem[1:10]
 }

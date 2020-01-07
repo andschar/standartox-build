@@ -5,7 +5,7 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-cla_che = readRDS(file.path(cachedir, 'ep_chemicals_source.rds'))
+epa_chem = readRDS(file.path(cachedir, 'ep_chemicals_source.rds'))
 
 # classification chemicals ------------------------------------------------
 # grouping
@@ -40,39 +40,36 @@ ions = 'Major Ions'
 metals = c(metal_alkaline_earth, metal_trans, metal_posttrans, metalloid)
 
 # variables
-cla_che[ grep(paste0(metals, collapse = '|'), ecotox_group),
-         metal := 1L ]
-cla_che[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
-         pesticide := 1L ]
-cla_che[ grep('(?i)conazoles', ecotox_group),
-         fungicide := 1L ]
-cla_che[ grep('(?i)pfoa', ecotox_group),
-         pfoa := 1L ]
-cla_che[ grep('(?i)ppcp', ecotox_group),
-         pcp := 1L ]
-cla_che[ grep('(?i)pcb', ecotox_group),
-         pcb := 1L ]
-cla_che[ grep('(?i)edc', ecotox_group),
-         edc := 1L ]
-cla_che[ grep('(?i)organotin', ecotox_group),
-         organotin := 1L ]
+epa_chem[ grep(paste0(metals, collapse = '|'), ecotox_group),
+         metal := TRUE ]
+epa_chem[ grep(paste0(pesticide, collapse = '|'), ecotox_group),
+         pesticide := TRUE ]
+epa_chem[ grep('(?i)conazoles', ecotox_group),
+         fungicide := TRUE ]
+epa_chem[ grep('(?i)pfoa', ecotox_group),
+         pfoa := TRUE ]
+epa_chem[ grep('(?i)ppcp', ecotox_group),
+         pcp := TRUE ]
+epa_chem[ grep('(?i)pcb', ecotox_group),
+         pcb := TRUE ]
+epa_chem[ grep('(?i)edc', ecotox_group),
+         edc := TRUE ]
+epa_chem[ grep('(?i)organotin', ecotox_group),
+         organotin := TRUE ]
 
-cla_che[ , .N, ecotox_group][order(-N)] # TODO CONTINUE HERE!
+epa_chem[ , .N, ecotox_group][order(-N)] # TODO CONTINUE HERE!
 
 # final table -------------------------------------------------------------
-ep_chem_fin = cla_che[ , lapply(.SD, as.integer),
-                       .SDcols =! c('cas', 'cname', 'ecotox_group'), cas ]
-ep_chem_fin[cla_che, cname := i.cname, on = 'cas']
 # names
-clean_names(ep_chem_fin)
-setcolorder(ep_chem_fin, c('cas', 'cas_number', 'cname'))
+clean_names(epa_chem)
+setcolorder(epa_chem, c('cas', 'cas_number', 'cname'))
 
 # check -------------------------------------------------------------------
-chck_dupl(ep_chem_fin, 'cas')
+chck_dupl(epa_chem, 'cas')
 
 # write -------------------------------------------------------------------
-write_tbl(ep_chem_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'epa',
+write_tbl(epa_chem, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'epa_chem', tbl = 'prop',
           key = 'cas',
           comment = 'Chemical Information from EPA ECotox DB.')
 

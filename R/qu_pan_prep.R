@@ -3,53 +3,47 @@
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
 
+# function ----------------------------------------------------------------
+pan_resolve = function(x, col, id) {
+  n = max(lengths(strsplit(x[ ,get(col)], ',')))
+  x[ , paste0('V', 1:n) := tstrsplit(get(col), ",") ]
+  out = dcast(melt(x[ , .SD, .SDcols = c(id, paste0('V', 1:n)) ], id.vars = id)[ !is.na(value) ],
+              cas ~ value,
+              fun.aggregate = length)
+  cols = names(out)[ names(out) != id ]
+  out[ , (cols) := lapply(.SD, as.logical), .SDcols = cols ]
+  out
+}
+
 # data --------------------------------------------------------------------
 pan_l = readRDS(file.path(cachedir, 'pan_l.rds'))
 
 # prepare -----------------------------------------------------------------
 pan_l = pan_l[ !is.na(pan_l) ]
 pan = rbindlist(pan_l, fill = TRUE, idcol = 'cas')
-setnames(pan, 'Chemical name', 'che_name')
 clean_names(pan)
 
-######################### OLD ###############################################
-# 
-# 
-# 
-# # prepare -----------------------------------------------------------------
-# # convert all entries to data.tables
-# for (i in seq_along(pan_l)) {
-#   if (!is.list(pan_l[[i]])) {
-#     pan_l[[i]] = data.table(pan_l[[i]])
-#   } else if (is.list(pan_l[[i]])) {
-#     pan_l[[i]] = rbindlist(pan_l[i])
-#   }
-# }
-# 
-# pan = rbindlist(pan_l, fill = TRUE, idcol = 'cas')
-# pan[ , V1 := NULL ]
-# pan = pan[!is.na(cas)] # TODO why are NAs created in the first place?
-# 
-# # names -------------------------------------------------------------------
-# setnames(pan, 'Chemical Class', 'chemical_class')
-# 
-# # final dt ----------------------------------------------------------------
-# cols_pan_fin = c('cas', 'chemical_class')
-# pan2 = pan[ , .SD, .SDcols = cols_pan_fin ]
-# 
-# setnames(pan2, c('cas', paste0('pa_', tolower(names(pan2[ ,2:length(names(pan2))])))))
+pan[ , .N, use_type][ order(-N) ]
 
-############################### END #############################################
 
+pan_type = pan_resolve(pan, 'use_type', 'cas')
+clean_names(pan_type)
+pan_class = pan_resolve(pan, 'chemical_class', 'cas')
+clean_names(pan_class)
 
 # check -------------------------------------------------------------------
-chck_dupl(pan, 'cas')
+chck_dupl(pan_type, 'cas')
+chck_dupl(pan_class, 'cas')
 
 # write -------------------------------------------------------------------
-write_tbl(pan, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'pan',
+write_tbl(pan_type, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'pan', tbl = 'type',
           key = 'cas',
-          comment = 'Results from PAN - Pesticide Action Network')
+          comment = 'Results from PAN - Pesticide Action Network (use_type)')
+write_tbl(pan_class, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'pan', tbl = 'class',
+          key = 'cas',
+          comment = 'Results from PAN - Pesticide Action Network (chemical_class)')
 
 # log ---------------------------------------------------------------------
 log_msg('PAN preparation script run')

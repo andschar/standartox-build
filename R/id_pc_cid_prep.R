@@ -13,7 +13,7 @@ setnames(cid, 'V1', 'cid')
 
 # write -------------------------------------------------------------------
 write_tbl(cid, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'pc_cid',
+          dbname = DBetox, schema = 'pubchem', tbl = 'cid',
           comment = 'PubChem identifier')
 
 # log ---------------------------------------------------------------------

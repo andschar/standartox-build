@@ -77,7 +77,8 @@ if (build) {
 
 # merge tables ------------------------------------------------------------
 if (build) {
-  source(file.path(src, 'qu_run_final.R'), max.deparse.length = mdl)
+  source(file.path(src, 'qu_phch_fin.R'), max.deparse.length = mdl)
+  source(file.path(src, 'qu_taxa_fin.R'), max.deparse.length = mdl)
 }
 
 # Lookup ------------------------------------------------------------------
@@ -90,6 +91,7 @@ if (lookup) {
 # Standartox --------------------------------------------------------------
 if (build_standartox) {
   source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
+  source(file.path(src, 'rep_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_standartox_catalog.R'), max.deparse.length = mdl)
   # source(file.path(src, 'cpy_standartox.R'), max.deparse.length = mdl)
@@ -117,6 +119,9 @@ source(file.path(src, 'chck_unit_conversions_duration.R'), max.deparse.length = 
 if (general) {
   source(file.path(src, 'gn_backup.R'), max.deparse.length = mdl)
 }
+
+# article -----------------------------------------------------------------
+# source(file.path(aritcle, 'R/run_article.R'), max.deparse.length = mdl)
 
 # end ---------------------------------------------------------------------
 source(file.path(src, 'gn_end.R'), max.deparse.length = mdl)

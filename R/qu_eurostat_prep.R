@@ -49,14 +49,14 @@ dt[ , group2 := fill(group2) ]
 dt2 = dt[ grep('^[A-Z]+[0-9]+_[0-9]+_.+$', code) ]
 
 # is pesticide
-dt2[ , pesticide := 1L ]
+dt2[ , pesticide := TRUE ]
 # pesticide sub-groups
-dt2[ group1 == 'fungicides and bactericides', fungicide := 1L ]
-dt2[ group1 == 'herbicides. haulm destructors and moss killers', herbicide := 1L ]
-dt2[ group1 == 'insecticides and acaricides', insecticide := 1L ]
-dt2[ group2 == 'molluscicides', molluscicide := 1L ]
-dt2[ group2 == 'rodenticides', rodenticide := 1L ]
-dt2[ group2 == 'repellents', repellent := 1L ]
+dt2[ group1 == 'fungicides and bactericides', fungicide := TRUE ]
+dt2[ group1 == 'herbicides. haulm destructors and moss killers', herbicide := TRUE ]
+dt2[ group1 == 'insecticides and acaricides', insecticide := TRUE ]
+dt2[ group2 == 'molluscicides', molluscicide := TRUE ]
+dt2[ group2 == 'rodenticides', rodenticide := TRUE ]
+dt2[ group2 == 'repellents', repellent := TRUE ]
 
 # final dt ----------------------------------------------------------------
 cols = c('cas', 'pesticide', 'fungicide', 'herbicide', 'insecticide', 
@@ -71,7 +71,7 @@ chck_dupl(eu_fin, 'cas')
 
 # write -------------------------------------------------------------------
 write_tbl(eu_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'eurostat',
+          dbname = DBetox, schema = 'eurostat', tbl = 'chem_class',
           key = 'cas',
           comment = 'Chemical Information from EUROSTAT.')
 

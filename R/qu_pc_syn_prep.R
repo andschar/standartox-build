@@ -13,12 +13,12 @@ setnames(syn2, 'V1', 'synonym')
 syn2[ , synonym := tolower(synonym) ]
 
 # check -------------------------------------------------------------------
-
+# no check
 
 # write -------------------------------------------------------------------
 # synonyms
 write_tbl(syn2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'pubchem_synonyms',
+          dbname = DBetox, schema = 'pubchem', tbl = 'synonyms',
           key = NULL,
           comment = 'Results from the PubChem query')
 

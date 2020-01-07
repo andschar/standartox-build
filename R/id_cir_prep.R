@@ -52,23 +52,23 @@ chck_dupl(cir, 'cas')
 
 # write -------------------------------------------------------------------
 write_tbl(cir, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'cir',
+          dbname = DBetox, schema = 'cir', tbl = 'prop',
           key = 'cas',
           comment = 'Results from the CIR (cas, inchi, smiles)')
 write_tbl(nam_all, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'cir_names',
+          dbname = DBetox, schema = 'cir', tbl = 'names',
           comment = 'Results from the CIR (cas, names) - duplicates')
 write_tbl(nam_cl, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'cir_names_clean',
+          dbname = DBetox, schema = 'cir', tbl = 'names_clean',
           comment = 'Results from the CIR (cas, names - cleaned) - duplicates')
 write_tbl(pub_sid, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'cir_sid',
+          dbname = DBetox, schema = 'cir', tbl = 'sid',
           comment = 'Results from the CIR (cas, PubChem SID) - duplicates')
 write_tbl(cs_id, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'cir_csid',
+          dbname = DBetox, schema = 'cir', tbl = 'csid',
           comment = 'Results from the CIR (cas, ChemSpider ID) - duplicates')
 write_tbl(chebiid, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'phch', tbl = 'cir_chebi',
+          dbname = DBetox, schema = 'cir', tbl = 'chebi',
           comment = 'Results from the CIR (cas, ChebiId) - duplicates (?)')
 
 # log ---------------------------------------------------------------------

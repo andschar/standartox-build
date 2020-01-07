@@ -3,6 +3,14 @@
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
 
+# helper function ---------------------------------------------------------
+to_dt = function(vec) {
+  vec = na.omit(unique(vec))
+  dt = data.table(t(as.logical(gsub('.+', TRUE, vec))))
+  setnames(dt, tolower(vec))
+  dt
+}
+
 # data --------------------------------------------------------------------
 l_fl = list.files(file.path(cachedir, 'gbif'),
                   full.names = TRUE)
@@ -26,10 +34,10 @@ for (i in seq_along(l_fl)) {
                country = to_dt(gbif$data$country),
                country_code = to_dt(gbif$data$countryCode),
                continent = to_dt(gbif$data$continent),
-               habitat = data.table(fresh = as.logical(length(grep(paste0(fresh, collapse = '|'), vec, ignore.case = TRUE, value = TRUE))),
-                                    marin = as.logical(length(grep(paste0(marin, collapse = '|'), vec, ignore.case = TRUE, value = TRUE))),
-                                    brack = as.logical(length(grep(paste0(brack, collapse = '|'), vec, ignore.case = TRUE, value = TRUE))),
-                                    terre = as.logical(length(grep(paste0(terre, collapse = '|'), vec, ignore.case = TRUE, value = TRUE)))),
+               habitat = data.table(fresh = as.logical(length(grep(paste0(fresh, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE))),
+                                    marin = as.logical(length(grep(paste0(marin, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE))),
+                                    brack = as.logical(length(grep(paste0(brack, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE))),
+                                    terre = as.logical(length(grep(paste0(terre, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE)))),
                elevation = data.table(min = min(gbif$data$elevation, na.rm = TRUE),
                                       median = median(gbif$data$elevation, na.rm = TRUE),
                                       mean = mean(gbif$data$elevation, na.rn = TRUE),
@@ -46,10 +54,12 @@ for (i in seq_along(l_fl)) {
 }
 
 # prepare -----------------------------------------------------------------
-country = rbindlist(lapply(l, `[[`, 'country'), fill = TRUE, idcol = 'taxon')
-setcolorder(country, sort_vec(names(country), ignore = 'taxon'))
 country_code = rbindlist(lapply(l, `[[`, 'country_code'), fill = TRUE, idcol = 'taxon')
 setcolorder(country_code, sort_vec(names(country_code), ignore = 'taxon'))
+country_code[ , none := NULL ]
+country_code_lookup = data.table(code = names(country_code))
+country_code_lookup = country_code_lookup[ code != 'taxon' ]
+country_code_lookup[ , name := countrycode::countrycode(code, 'iso2c', 'iso.name.en') ]
 continent = rbindlist(lapply(l, `[[`, 'continent'), fill = TRUE, idcol = 'taxon')
 setcolorder(continent, sort_vec(names(continent), ignore = 'taxon'))
 habitat = rbindlist(lapply(l, `[[`, 'habitat'), fill = TRUE, idcol = 'taxon')
@@ -59,21 +69,21 @@ for (col in names(elevation)) set(elevation, i = which(is.infinite(elevation[[co
 geo = rbindlist(lapply(l, `[[`, 'geo'), fill = TRUE, idcol = 'taxon')
 
 # chck --------------------------------------------------------------------
-chck_dupl(country, 'taxon')
 chck_dupl(country_code, 'taxon')
+chck_dupl(country_code_lookup, 'code')
 chck_dupl(continent, 'taxon')
 chck_dupl(habitat, 'taxon')
 chck_dupl(elevation, 'taxon')
 
 # write -------------------------------------------------------------------
-# country
-write_tbl(country, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'gbif', tbl = 'country',
-          comment = 'Results from the GBIF query (country)')
 # country code
-write_tbl(country, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+write_tbl(country_code, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'gbif', tbl = 'country_code',
           comment = 'Results from the GBIF query (country_code)')
+# country code elookup
+write_tbl(country_code, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'lookup', tbl = 'country_code',
+          comment = 'Results from the GBIF query (country_code_lookup)')
 # continent
 write_tbl(continent, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'gbif', tbl = 'continent',
