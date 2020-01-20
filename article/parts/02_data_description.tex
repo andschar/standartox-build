@@ -1,28 +1,24 @@
 \section{Data Description}
 
-\subsection{The tool}
-%% Filter
-The ECOTOX database contains almost 1,000,000 ecotoxicological test results from almost 12,000 chemicals and about 13,000 taxa \citep{usepa_ecotox_2019} and represents the largest publicly available collection of ecotoxicological test data. However, it constitutes only a collection of test results without aiming for a complete quality check or for summarising the information, the latter leading to the problem of multiple test result occurrences for individual chemicals. To tackle this Standartox introduces filter and aggregation methods that enable the derivation of single ecotoxicological endpoints for specific test parameter combinations. Hence, Standartox contains about 600,000 ecotoxicological test results comprising roughly 8000 distinct chemicals and 8000 taxa. The data can be restricted to three endpoints (XX50, LOEX and NOEX) and filtered to 23 distinct effect groups (e.g. mortality, population, growth). Furthermore, the data can be refined to five chemical classes (e.g. pesticides, metals, drugs) as well as to species-specific habitats (e.g. freshwater, marine, terrestrial) and regions (e.g. Europe, South America). Additionally, different parameters in order to filter the test data, such as compound-specific parameters, including the CAS number, the concentration type (e.g. Active Ingredient, Formulation) or the chemical class (e.g. insecticides, metals) as well as taxon-specific parameters, including common taxonomic groups (e.g. Daphniidae, algae), the habitat (e.g. freshwater) or the regional occurrence (e.g. Europe, Asia) of the organisms can be chosen. Furthermore, users can refine the results to specific test durations (in hours), effect groups (e.g. mortality, population, growth) and endpoints (EC\textsubscript{50}, LOEC or NOEC).
+Standartox contains about 600,000 ecotoxicological test results comprising roughly 8000 distinct chemicals and 8000 taxa. The data can be restricted to three endpoint groups (XX50, LOEX and NOEX) and filtered to 23 distinct effect groups (e.g. mortality, population, growth). Furthermore, the data can be refined to five chemical classes (e.g. pesticides, metals, drugs) as well as to species-specific habitats (e.g. freshwater, marine, terrestrial) and regions (e.g. Europe, South America). Additionally, different parameters in order to filter the test data, such as compound-specific parameters, including the CAS number, the concentration type (e.g. Active Ingredient, Formulation) or the chemical class (e.g. insecticides, metals) as well as taxon-specific parameters, including common taxonomic groups (e.g. Daphniidae, algae), the habitat (e.g. freshwater) or the regional occurrence (e.g. Europe, Asia) of the organisms can be chosen. Furthermore, users can refine the results to specific test durations (in hours), effect groups (e.g. mortality, population, growth) and endpoints (EC\textsubscript{50}, LOEC or NOEC). Figure (\ref{fig:stx-parameters}).
 
+\begin{figure}
+    \includegraphics[width=1.0\textwidth]{article/figures/standartox_parameters.png}
+    \caption{Parameters in Standartox.}
+    \label{fig:stx-parameters}
+\end{figure}
 
-
-%%%% TODO plot: ~/standartox-build/article/figures/standartox_paramteres.png %%%%
-
-
-
-list how many freshwater species, marine etc.
-how many regions
-how many chemical groups
-
-
-%% Aggregation
-
-In order to deal with multiple test result occurrences of individual chemicals, Standartox enables the aggregation of the data by calculating the minimum, the maximum, or the geometric mean.
+This constitutes a collection of quality checked test results without aggregating, which leads to the problem of multiple test result occurrences for individual chemicals. To tackle this, Standartox introduces aggregation methods that enable the derivation of single ecotoxicological endpoints for specific test parameter combinations. Standartox therefore calculates the minimum, the maximum and the geometric mean for chosen test combinations in order to derive a single toxicity endpoint from it. This aggregation step is important because multiple test results lead to highly variable results, which in turn can lead to differences in chemical risk assessment (CRA) by different researchers. To derive one single value out of many test results, people can perform qualitative assessments and pick the most adequate test and the associated toxicity equivalent or like Standartox use aggregation methods..
 
 filtered data set + flags (for outliers)
 aggregated data set
 meta
 
+\begin{figure}
+    \includegraphics[width=1.0\textwidth]{article/figures/results_variability.png}
+    \caption{Variability of test results.}
+    \label{fig:stx-organigram}
+\end{figure}
 %%%% TODO: plot geometric mean above all data for a specific chemical (like on poster)
 
 %% Accuracy assessment
@@ -112,6 +108,10 @@ We chose the geometric mean in comparison to the arithmetic mean, since it is co
 - \citep{gadaleta_new_2018} what does this software exactly do an how to access it?
 \fi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OLD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+The ECOTOX database contains almost 1,000,000 ecotoxicological test results from almost 12,000 chemicals and about 13,000 taxa \citep{usepa_ecotox_2019} and represents the largest publicly available collection of ecotoxicological test data. However, it constitutes only a collection of test results without aiming for a complete quality check or for summarising the information, the latter leading to the problem of multiple test result occurrences for individual chemicals.
+
 
 \iffalse
 SSD try to extrapolate effects of chemicals towards organisms from species to a community level by fitting a statistical distribution to toxicity test results on organisms of different trophic levels in order to derive concentrations at which a specific fraction of organisms are effected (often at 5\% - HC\textsubscript{5} \citep{posthuma_species_2002}. Figure \ref{fig:ssd-isoproturon} shows an example of a SSD and the derived HC\textsubscript{5} value (red dassed line) created for the herbicide Isoproturon. TUs are another indicator of effects of chemicals on organisms. They are calculated by dividing a measured concentration (c) by an EC\textsubscript{50} value (cf. Equation \ref{eq:tu}).
