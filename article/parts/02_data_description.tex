@@ -1,6 +1,6 @@
 \section{Data Description}
 
-Standartox contains about 600,000 ecotoxicological test results comprising roughly 8000 distinct chemicals and 8000 taxa. The data can be restricted to three endpoint groups (XX50, LOEX and NOEX) and filtered to 23 distinct effect groups (e.g. mortality, population, growth). Furthermore, the data can be refined to five chemical classes (e.g. pesticides, metals, drugs) as well as to species-specific habitats (e.g. freshwater, marine, terrestrial) and regions (e.g. Europe, South America). Additionally, different parameters in order to filter the test data, such as compound-specific parameters, including the CAS number, the concentration type (e.g. Active Ingredient, Formulation) or the chemical class (e.g. insecticides, metals) as well as taxon-specific parameters, including common taxonomic groups (e.g. Daphniidae, algae), the habitat (e.g. freshwater) or the regional occurrence (e.g. Europe, Asia) of the organisms can be chosen. Furthermore, users can refine the results to specific test durations (in hours), effect groups (e.g. mortality, population, growth) and endpoints (EC\textsubscript{50}, LOEC or NOEC). Figure (\ref{fig:stx-parameters}).
+Standartox contains about 600,000 ecotoxicological test results comprising roughly 8000 distinct chemicals and 8000 taxa. The data can be restricted to three endpoint groups XX50, LOEX and NOEX, conflating commonly used endpoints such as half maximal effective concentration (EC\textsubscript{50}) values, no observed effect level/concentration (NOEC/L) values, as well as lowest observed effect level/concentration (LOEC/L) values respectively \ref{tab:endpoints-conflate}. Standartox allows users to filter to 23 distinct effect groups (e.g. mortality, population, growth). Furthermore, the data can be refined to five chemical classes (e.g. pesticides, metals, drugs) as well as to species-specific habitats (e.g. freshwater, marine, terrestrial) and regions (e.g. Europe, South America). Additionally, different parameters in order to filter the test data, such as compound-specific parameters, including the CAS number, the concentration type (e.g. Active Ingredient, Formulation) or the chemical class (e.g. insecticides, metals) as well as taxon-specific parameters, including common taxonomic groups (e.g. Daphniidae, algae), the habitat (e.g. freshwater) or the regional occurrence (e.g. Europe, Asia) of the organisms can be chosen. Furthermore, users can refine the results to specific test durations (in hours), effect groups (e.g. mortality, population, growth) and endpoints (EC\textsubscript{50}, LOEC or NOEC). Figure (\ref{fig:stx-parameters}).
 
 \begin{figure}
     \includegraphics[width=1.0\textwidth]{article/figures/standartox_parameters.png}
@@ -8,18 +8,32 @@ Standartox contains about 600,000 ecotoxicological test results comprising rough
     \label{fig:stx-parameters}
 \end{figure}
 
-This constitutes a collection of quality checked test results without aggregating, which leads to the problem of multiple test result occurrences for individual chemicals. To tackle this, Standartox introduces aggregation methods that enable the derivation of single ecotoxicological endpoints for specific test parameter combinations. Standartox therefore calculates the minimum, the maximum and the geometric mean for chosen test combinations in order to derive a single toxicity endpoint from it. This aggregation step is important because multiple test results lead to highly variable results, which in turn can lead to differences in chemical risk assessment (CRA) by different researchers. To derive one single value out of many test results, people can perform qualitative assessments and pick the most adequate test and the associated toxicity equivalent or like Standartox use aggregation methods..
+Standartox constitutes a collection of quality checked test results without aggregating, which leads to the problem of multiple test result occurrences for individual chemicals. To tackle this, Standartox introduces aggregation methods that enable the derivation of single ecotoxicological endpoints for specific test parameter combinations. Standartox therefore calculates the minimum, the maximum and the geometric mean for chosen test combinations in order to derive a single toxicity endpoint from it. This aggregation step is important because multiple test results exhibit highly variable results, which in turn lead to uncertainties in chemical risk assessment (CRA). Here, variability results from many factors, such as differences in the susceptibility of different taxa to a chemical (Fig. \ref{fig:stx-variability} A), test results variability of one and the same taxon and chemical due to different test durations (Fig. \ref{fig:stx-variability} B) as well as variability caused by unexplainable factors, due to different laboratories, physiological differences between organism populations or other un-accounted variation (Fig. \ref{fig:stx-variability} C).
+
+\begin{figure}
+    \includegraphics[width=1.0\textwidth]{article/figures/results_variability.png}
+    \caption{Variability of test results (EC\textsubscript{50}) in Standartox due to (A) the susceptibility of different taxa (i.e. \textit{Xenopus laevis}, \textit{Pseudokirchneriella subcapitata}, \textit{Oncorhynchus mykiss}, \textit{Lemna minor}) to the chemical atrazine tested for 96h, due to (B) different durations of tests of zinc sulfate on \textit{Daphnia magna} and due to (C) un-accountable variability of cupric sulfate tested on \textit{Pimephales promelas} for 96h. Yellow dots depict Standartox approximations and black and gray dots show un-aggregated values for each group.}
+    \label{fig:stx-variability}
+\end{figure}
+
+
+Another approach would be to derive single toxicity equivalents via rule-based approaches, demanding considerable amounts of time. 
+
+Standartox will be subject to change
+
+In the course of the aggregation process, outliers that exceed 1.5 times the interquartile range are flagged to caution practitioners. However, since the geometric mean is not strongly influenced by such entries, outliers are not removed from the Standartox output.
+
+Researchers and practitioners spend a consdiderable amount of time on  
+
+In order to derive one single value out of many test results, Standartox takes the 
+
+people can perform qualitative assessments and pick the most adequate test and the associated toxicity equivalent or like Standartox use aggregation methods..
 
 filtered data set + flags (for outliers)
 aggregated data set
 meta
 
-\begin{figure}
-    \includegraphics[width=1.0\textwidth]{article/figures/results_variability.png}
-    \caption{Variability of test results.}
-    \label{fig:stx-organigram}
-\end{figure}
-%%%% TODO: plot geometric mean above all data for a specific chemical (like on poster)
+
 
 %% Accuracy assessment
 
