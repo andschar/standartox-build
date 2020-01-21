@@ -9,8 +9,7 @@
 source('~/Projects/standartox-build/R/gn_setup.R', max.deparse.length = mdl)
 
 # SCRIPT TO TEST ----------------------------------------------------------
-source(file.path(src, 'qu_phch_fin.R'), max.deparse.length = mdl)
-source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
+source(file.path(src, 'rep_standartox.R'), max.deparse.length = mdl)
 
 # end ---------------------------------------------------------------------
 source(file.path(src, 'gn_end.R'))
