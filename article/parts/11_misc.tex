@@ -1,0 +1,19 @@
+%%%%%%%%%%%%% OLD SUMMARY TEXT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In order to locate ecotoxicological test data, researchers can rely on individual test results reported in publications, on compiled and published data sets \citep{malaj_organic_2014, morrissey_neonicotinoid_2015} or on data bases such as the Pesticide Property Data Base (PPDB) \citep{lewis_international_2016}. Each approach has its limitations though. Collecting toxicity information from individual publications is laborious and using already compiled data from publications or published data bases is often limited to specific groups of chemicals, such as pesticides, biocides etc. Additionally it is not always clear whether presented effect values are aggregated or single specific tests have been selected. These resources can provide out of date data and rarely provide sophisticated means to directly process the data. Standartox overcomes these paucities by making use of the quarterly updated EPA ECOTOX data base, the largest publicly available collection of ecotoxicological test information. In doing so, Standartox allows for a quick access to ecotoxicological test data, not being confined to specific chemical classes. Furthermore, Standartox constitutes not only a one-time compiled data set but rather a scalable method that can steadily incorporate new ecotoxicological test data in an automated manner, allowing for constant improvement of toxicity estimations over time. Data retrieval is streamlined and can be easily done via the APP or the R package. On top of filtering the data, Standartox provides means to aggregate results from multiple ecotoxicological tests to retrieve single exposure endpoints for specific chemical, taxon and test parameter combinations. Test results for each chemical in the filtered data set are thereby aggregated by calculating the minimum, the geometric mean or the maximum. Standartox returns then a filtered and an aggregated data set. Besides, Standartox allows users to access older versions of the data base as well and is created as open source software and therefore a fully reproducible method.
+%%% END
+
+%%%%%%%%%%%%%%%% remove this? %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+
+\input{article/tables/app-parameters.tex}
+\pagebreak
+
+\input{article/tables/api-endpoints.tex}
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%% OLD method %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+\textbf{OLD: Standartox aggregates the test results according to chosen filters in a two step process. Firstly the filtered test results are aggregated by the CAS number, the chosen taxon and the selected test duration. Secondly, the returned data is then aggregated by the CAS number. The former can't be influenced by the user and calculates either the minimum or the median depending on the amount of results to aggregate (n <= 2: minimum, if n > 2: median). Thereof the second step calculates the minimum, the maximum, the median, the geometric mean, or the arithmetic mean as an aggregate.}
+\fi
+
+
