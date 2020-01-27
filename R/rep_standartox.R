@@ -9,18 +9,31 @@ con = DBI::dbConnect(RPostgres::Postgres(),
                      host = DBhost,
                      port = DBport,
                      user = DBuser,
-                     password = DBpassword,
-                     bigint = 'integer')
+                     password = DBpassword)
+
+tbl = c('tests', 'results', 'chemicals', 'species')
+mapply(dbreport::dbreport,
+       tbl = tbl,
+       output_file = tbl,
+       title = paste0('ecotox', '.', tbl),
+       MoreArgs = list(con = con,
+                       schema = 'ecotox',
+                       output_dir = file.path(summdir, 'ecotox'),
+                       output_format = 'html_document',
+                       verbose = TRUE,
+                       exit = FALSE))
 
 tbl = c('tests', 'taxa', 'chemicals', 'refs', 'data2')
 mapply(dbreport::dbreport,
        tbl = tbl,
        output_file = tbl,
+       title = paste0('standartox', '.', tbl),
        MoreArgs = list(con = con,
-                       schema = 'ecotox',
-                       output_dir = summdir,
-                       output_format = 'html_vignette',
-                       exit = FALSE))
+                       schema = 'standartox',
+                       output_dir = file.path(summdir, 'standartox'),
+                       output_format = 'html_document',
+                       verbose = TRUE,
+                       exit = TRUE))
 
 DBI::dbDisconnect(con)
 

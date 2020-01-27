@@ -52,6 +52,7 @@ pkg_cran = c(
   'ggrepel',
   'ggridges',
   'scales',
+  'treemapify',
   'cowplot',
   'RColorBrewer',
   'treemap',
@@ -67,9 +68,8 @@ pkg_cran = c(
 )
 pkg_gith = c('ropensci/bib2df',
              'ropensci/webchem',
-             'andschar/standartox') # , 'NIVANorge/chemspideR') # no citation available!
-
-require(dbreport) # TODO put into pfg_github once it's published
+             'andschar/standartox',
+             'andschar/dbreport') # , 'NIVANorge/chemspideR') # no citation available!
 
 ## install via CRAN
 pacman::p_load(char = pkg_cran)

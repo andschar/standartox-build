@@ -42,16 +42,30 @@ l2$hab$hab = str_to_title(sub('hab_', '', l2$hab$hab))
 l2$reg$reg = str_to_title(sub('america_south', 'South America', sub('america_north', 'North America', (gsub('reg_', '', l2$reg$reg)))))
 
 # plot --------------------------------------------------------------------
-pl_l = list()
+tr_l = list()
 gg_l = list()
 for (i in seq_along(l2)) {
   col = names(l2)[i]
   dat = l2[[i]]
   setorder(dat, -n)
-  dat = na.omit(dat[1:20]) # NOTE limit x-axis
+  if (nrow(dat) > 10) {
+    dat[ 11:nrow(dat), (col) := 'other' ] # NOTE limit x-axis
+    dat = dat[ , .(n = sum(n)), col ]
+  }
+  # dat = na.omit(dat)
   # treemap
-  pl_l[[i]] = treemap(dat, index = col, vSize = 'n')
-  names(pl_l)[i] = col
+  tr_l[[i]] = ggplot(dat, aes_string(area = 'n',
+                                     fill = col,
+                                     label = col)) +
+    geom_treemap() +
+    geom_treemap_text(fontface = 'italic',
+                      colour = 'white',
+                      place = 'centre',
+                      grow = FALSE,
+                      reflow = TRUE) +
+    scale_fill_viridis_d() +
+    theme(legend.position = 'none')
+  names(tr_l)[i] = col
   # ggplot
   # https://stackoverflow.com/questions/43999317/how-to-call-reorder-within-aes-string-of-ggplot
   gg_l[[i]] = ggplot(dat, aes_string(y = 'n', x = paste0('reorder(', col, ', -n)'))) +
@@ -63,10 +77,11 @@ for (i in seq_along(l2)) {
 }
 
 ## cowplot
-fin = cowplot::plot_grid(plotlist = gg_l, ncol = 2, labels = 'AUTO')
+gg_fin = cowplot::plot_grid(plotlist = gg_l, ncol = 2, labels = 'AUTO')
+tr_fin = cowplot::plot_grid(plotlist = tr_l, ncol = 2, labels = 'AUTO')
 
 # write -------------------------------------------------------------------
-ggsave(plot = fin, file.path(article, 'figures', 'standartox_parameters.png'),
+ggsave(plot = tr_fin, file.path(article, 'figures', 'standartox_parameters.png'),
        width = 10, height = 12)
 
 # log ---------------------------------------------------------------------
@@ -74,38 +89,6 @@ log_msg('ARTICLE: Standartox data overview ploted')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
