@@ -4,8 +4,7 @@
 source(file.path(src, 'gn_setup.R'))
 
 # query -------------------------------------------------------------------
-q = "SELECT species.latin_name,
-            species.species_number,
+q = "SELECT species.species_number,
             media_type_codes.description AS media_type,
             tests.organism_habitat,
             habitat_codes.description AS subhabitat
@@ -18,10 +17,10 @@ ep_habi = read_query(user = DBuser, host = DBhost, port = DBport, password = DBp
                      query = q)
 
 # write -------------------------------------------------------------------
-saveRDS(ep_habi, file.path(cachedir, 'ep_habi_source.rds'))
+saveRDS(ep_habi, file.path(cachedir, 'epa', 'ep_habi_source.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('EPA taxa habitat download script run')
+log_msg('QUERY: EPA: taxa habitat download script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

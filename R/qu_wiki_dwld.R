@@ -2,31 +2,35 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
+source(file.path(src, 'wikidata2.R')) # TODO intermediate
 
 # data --------------------------------------------------------------------
 q = "SELECT *
-     FROM cir.prop"
-dat = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-                 query = q)
+     FROM standartox.chem_id"
+chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                  query = q)
 # debuging
 if (debug_mode) {
-  chem = chem[1:50]
+  chem = chem[1:10]
 }
-
-todo = as.character(chem$cas)
+todo = chem$wdid
+names(todo) = chem$cas
+todo = na.omit(todo)
 
 # query -------------------------------------------------------------------
-## identifier
-wd_id = get_wdid(todo)
-# save
-saveRDS(wd_id, file.path(cachedir, 'wd_id.rds'))
-## data
-wd = wd_ident(wd_id$id)
-# save
-saveRDS(wd, file.path(cachedir, 'wd.rds'))
+wd_l = list()
+for (i in seq_along(todo)) {
+  id = todo[i]
+  nam = names(todo)[i]
+  wd_l[[i]] = try(wd_data(id, type = c('identifier', 'property')))
+  names(wd_l)[i] = nam
+}
+
+# write -------------------------------------------------------------------
+saveRDS(wd_l, file.path(cachedir, 'wikidata', 'wd_l.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('WIKIDATA download script run')
+log_msg('QUERY: WIKIDATA: download script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

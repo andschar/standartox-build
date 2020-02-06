@@ -4,12 +4,9 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-fl = file.path(sql, 'fun_clean.sql')
-f_clean = readChar(fl, file.info(fl)$size)
-fl = file.path(sql, 'fun_casconv.sql')
-f_casconv = readChar(fl, file.info(fl)$size)
-fl = file.path(sql, 'fun_molconv.sql')
-f_molconv = readChar(fl, file.info(fl)$size)
+f_clean = read_char(file.path(sql, 'fun_clean.sql'))
+f_casconv = read_char(file.path(sql, 'fun_casconv.sql'))
+f_molconv = read_char(file.path(sql, 'fun_molconv.sql'))
 
 # query -------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")

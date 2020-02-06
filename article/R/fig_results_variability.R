@@ -13,8 +13,12 @@ q = "SELECT cas, cname, tax_taxon taxon, concentration, concentration_unit, dura
 dat = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                  query = q)
 
+# erros -------------------------------------------------------------------
+# TODO fix this before
+dat[ taxon == 'Pseudokirchneriella subcapitata', taxon := 'Raphidocelis subcapitata' ]
+
 # prepare -----------------------------------------------------------------
-dat2 = dat[ taxon %in% c('Pseudokirchneriella subcapitata', 'Lemna minor', 'Oncorhynchus mykiss', 'Rattus norvegicus', 'Xenopus laevis', 'Daphnia magna', 'Pimephales promelas') &
+dat2 = dat[ taxon %in% c('Raphidocelis subcapitata', 'Lemna minor', 'Oncorhynchus mykiss', 'Rattus norvegicus', 'Xenopus laevis', 'Daphnia magna', 'Pimephales promelas') &
               endpoint == 'XX50' &
               concentration_unit %in% c('ug/l', 'ppb') &
               duration %in% c(24,48,72,96) ]
@@ -32,7 +36,7 @@ tax = dat2[ cname == 'atrazine' &
               duration == 96 &
               !taxon %in% c('Daphnia magna', 'Pimephales promelas') ]
 
-tax[ taxon == 'Pseudokirchneriella subcapitata', taxon := 'P. subcapitata' ] %>% 
+tax[ taxon == 'Raphidocelis subcapitata', taxon := 'R. subcapitata' ] %>% 
   .[ taxon == 'Lemna minor', taxon := 'L. minor' ] %>% 
   .[ taxon == 'Oncorhynchus mykiss', taxon := 'O. mykiss' ] %>% 
   .[ taxon == 'Xenopus laevis', taxon := 'X. laevis' ]
@@ -54,6 +58,7 @@ gg_tax = ggplot(tax, aes(x = taxon, y = concentration)) +
                 limits = c(1, 100000)) +
   coord_flip() +
   theme(axis.title.x = element_blank(),
+        axis.text.x = element_text(face = 'italic'),
         axis.title.y = element_blank())
 
 ## ggrigdes code
@@ -256,7 +261,7 @@ clean_workspace()
 # 
 # 
 # # Ridgeline plot ----------------------------------------------------------
-# tax = c("Rattus norvegicus", "Oncorhynchus mykiss", "Daphnia magna", "Pseudokirchneriella subcapitata", "Apis mellifera",
+# tax = c("Rattus norvegicus", "Oncorhynchus mykiss", "Daphnia magna", "", "Apis mellifera",
 #         "Danio rerio", "Pimephales promelas", "Mus musculus", "Cyprinus carpio", 
 #         "Lepomis macrochirus", "Anas platyrhynchos")
 # 

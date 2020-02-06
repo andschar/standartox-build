@@ -38,31 +38,22 @@ if (build_db) {
   source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
   # changes
   source(file.path(src, 'bd_epa_changes.R'), max.deparse.length = mdl) # TODO move to bd_epa_download.R
+  # chemical and taxa IDs
+  source(file.path(src, 'bd_epa_chem_taxa_id.R'), max.deparse.length = mdl)
   # meta files
   source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
+  # PPDB
+  source(file.path(src, 'bd_ppdb_prep.R'), max.deparse.length = mdl)
 }
 
 # identifiers -------------------------------------------------------------
-## 1st identifiers
 if (download) {
-  source(file.path(src, 'id_cir_dwld.R'), max.deparse.length = mdl) # CIR
+  source(file.path(src, 'id_run_dwld.R'), max.deparse.length = mdl)
 }
 
 if (build) {
-  source(file.path(src, 'id_cir_prep.R'), max.deparse.length = mdl)
-}
-
-## 2nd identifiers 
-if (download) {
-  source(file.path(src, 'id_pc_cid_dwld.R'), max.deparse.length = mld) # PubChem
-  # TODO source(file.path(src, 'qu_cs_csid_dwld.R'), max.deparse.length = mdl) # Chemspider
-  source(file.path(src, 'id_epa_tax_dwld.R'), max.deparse.length = mdl) # EPA: extracts identifiers
-}
-
-if (build) {
-  source(file.path(src, 'id_pc_cid_prep.R'), max.deparse.length = mld)
-  # TODO source(file.path(src, 'id_cs_csid_prep.R'), max.deparse.length = mdl)
-  source(file.path(src, 'id_epa_tax_prep.R'), max.deparse.length = mdl)
+  source(file.path(src, 'id_run_prep.R'), max.deparse.length = mdl)
+  source(file.path(src, 'id_compile_table.R'), max.deparse.length = mdl)
 }
 
 # queries + results -------------------------------------------------------
@@ -70,9 +61,11 @@ if (build) {
 if (download) {
   source(file.path(src, 'qu_run_dwld.R'), max.deparse.length = mdl)  
 }
-
 if (build) {
   source(file.path(src, 'qu_run_prep.R'), max.deparse.length = mdl)
+}
+if (report) {
+  source(file.path(src, 'rep_query_prep.R'), max.deparse.length = mdl)
 }
 
 # merge tables ------------------------------------------------------------
@@ -91,7 +84,9 @@ if (lookup) {
 # Standartox --------------------------------------------------------------
 if (build_standartox) {
   source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
-  source(file.path(src, 'rep_standartox.R'), max.deparse.length = mdl)
+  if (report) {
+    source(file.path(src, 'rep_standartox.R'), max.deparse.length = mdl)
+  }
   source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
   source(file.path(src, 'exp_standartox_catalog.R'), max.deparse.length = mdl)
   # source(file.path(src, 'cpy_standartox.R'), max.deparse.length = mdl)
@@ -112,9 +107,11 @@ if (build_norman) {
 }
 
 # check scripts -----------------------------------------------------------
-source(file.path(src, 'chck_unit_conversions_concentration.R'), max.deparse.length = mdl)
-source(file.path(src, 'chck_unit_conversions_duration.R'), max.deparse.length = mdl)
-
+if (chck) {
+  source(file.path(src, 'chck_unit_conversions_concentration.R'), max.deparse.length = mdl)
+  source(file.path(src, 'chck_unit_conversions_duration.R'), max.deparse.length = mdl)
+}
+  
 # backup ------------------------------------------------------------------
 if (general) {
   source(file.path(src, 'gn_backup.R'), max.deparse.length = mdl)

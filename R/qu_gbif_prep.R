@@ -34,10 +34,10 @@ for (i in seq_along(l_fl)) {
                country = to_dt(gbif$data$country),
                country_code = to_dt(gbif$data$countryCode),
                continent = to_dt(gbif$data$continent),
-               habitat = data.table(fresh = as.logical(length(grep(paste0(fresh, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE))),
-                                    marin = as.logical(length(grep(paste0(marin, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE))),
-                                    brack = as.logical(length(grep(paste0(brack, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE))),
-                                    terre = as.logical(length(grep(paste0(terre, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE)))),
+               habitat = data.table(fresh = as_true(length(grep(paste0(fresh, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE))),
+                                    marin = as_true(length(grep(paste0(marin, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE))),
+                                    brack = as_true(length(grep(paste0(brack, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE))),
+                                    terre = as_true(length(grep(paste0(terre, collapse = '|'), gbif$data$habitat, ignore.case = TRUE, value = TRUE)))),
                elevation = data.table(min = min(gbif$data$elevation, na.rm = TRUE),
                                       median = median(gbif$data$elevation, na.rm = TRUE),
                                       mean = mean(gbif$data$elevation, na.rn = TRUE),
@@ -78,7 +78,7 @@ chck_dupl(elevation, 'taxon')
 # write -------------------------------------------------------------------
 # country code
 write_tbl(country_code, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'gbif', tbl = 'country_code',
+          dbname = DBetox, schema = 'gbif', tbl = 'gbif_country_code',
           comment = 'Results from the GBIF query (country_code)')
 # country code elookup
 write_tbl(country_code, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
@@ -86,23 +86,23 @@ write_tbl(country_code, user = DBuser, host = DBhost, port = DBport, password = 
           comment = 'Results from the GBIF query (country_code_lookup)')
 # continent
 write_tbl(continent, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'gbif', tbl = 'continent',
+          dbname = DBetox, schema = 'gbif', tbl = 'gbif_continent',
           comment = 'Results from the GBIF query (continent)')
 # habitat
 write_tbl(habitat, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'gbif', tbl = 'habitat',
+          dbname = DBetox, schema = 'gbif', tbl = 'gbif_habitat',
           comment = 'Results from the GBIF query (habitat)')
 # habitat
 write_tbl(elevation, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'gbif', tbl = 'elevation',
+          dbname = DBetox, schema = 'gbif', tbl = 'gbif_elevation',
           comment = 'Results from the GBIF query (elevation)')
 # habitat
 write_tbl(geo, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'gbif', tbl = 'geo',
+          dbname = DBetox, schema = 'gbif', tbl = 'gbif_geo',
           comment = 'Results from the GBIF query (geo)')
 
 # log ---------------------------------------------------------------------
-log_msg('GBIF preparation script run')
+log_msg('QUERY: GBIF: preparation script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

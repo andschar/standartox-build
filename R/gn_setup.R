@@ -15,12 +15,14 @@ download_db = TRUE # should database query be run
 build_db = TRUE # build data base?
 download = FALSE # run download (dwld) scripts (takes days)? 
 build = TRUE # run preparation (prep) scripts?
-lookup = TRUE # build lookup_tables
-build_standartox = TRUE
+lookup = F # build lookup_tables
+chck = F # unit check scripts
+build_standartox = F
 build_norman = F
 debug_mode = FALSE # should only 10 input rows for each quering script be run
-sink_console = TRUE # sink console to file
-general = TRUE
+sink_console = F # sink console to file
+general = F
+report = TRUE # should reports be created? dbreport::
 
 # packages ----------------------------------------------------------------
 if (!require('pacman')) {
@@ -158,11 +160,11 @@ source(file.path(src, 'fun_treemap.R'))
 source(file.path(src, 'fun_firstup.R'))
 source(file.path(src, 'fun_filename.R'))
 source(file.path(src, 'fun_sort_vec.R'))
+source(file.path(src, 'fun_read_char.R'))
+source(file.path(src, 'fun_as_true.R'))
 
 # database ----------------------------------------------------------------
-fl = file.path(cred, 'chemspider_apikey.txt')
-csapikey = readChar(fl, file.info(fl)$size)
-rm(fl)
+csapikey = read_char(file.path(cred, 'chemspider_apikey.txt'))
 
 # library dependencies ----------------------------------------------------
 # libsodium - for JS module fs - fun_scrape_phantomjs.R

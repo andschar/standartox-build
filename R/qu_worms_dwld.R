@@ -6,65 +6,39 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
-source(file.path(src, 'fun_worms_query.R'))
+source(file.path(src, 'fun_worms_query.R')) # TODO
 
 # data --------------------------------------------------------------------
-drv = dbDriver("PostgreSQL")
-con = dbConnect(
-  drv,
-  user = DBuser,
-  dbname = DBetox,
-  host = DBhost,
-  port = DBport,
-  password = DBpassword
-)
-
-taxa = dbGetQuery(con, "SELECT *
-                        FROM taxa.epa
-                        ORDER BY taxon ASC")
-setDT(taxa)
-
-dbDisconnect(con)
-dbUnloadDriver(drv)
-
-# debuging
+q = "SELECT *
+     FROM standartox.taxa_id"
+taxa = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                  query = q)
 if (debug_mode) {
-  taxa = taxa[1:40] #! here 40 to be quite sure to get some reuslts
+  taxa = taxa[1:10]
 }
-
-# aphia id ----------------------------------------------------------------
-todo_wo_id = sort(unique(c(taxa$tax_family, taxa$tax_genus, taxa$taxon)))
-todo_wo_id = todo_wo_id[ todo_wo_id != '' ]
-
-worms_aphiaid_l = list()
-for (i in seq_along(todo_wo_id)) {
-  todo = todo_wo_id[i]
-  aphiaid = wo_get_aphia(todo, verbose = TRUE)
-  message('WoRMS: ', todo, ' --> AphiaID: ',
-          aphiaid, ' (', i, '/', length(todo_wo_id), ')')
-  
-  worms_aphiaid_l[[i]] = aphiaid
-  names(worms_aphiaid_l)[i] = todo
-}
-saveRDS(worms_aphiaid_l, file.path(cachedir, 'worms_aphiaid_l.rds'))
 
 # query -------------------------------------------------------------------
-todo_wo = unique(na.omit(unlist(worms_aphiaid_l)))
+todo = taxa$worms_id
+names(todo) = taxa$taxon
+todo = na.omit(todo)
 
 worms_l = list()
-for (i in seq_along(todo_wo)) {
-  todo = todo_wo[i]
-  res = wo_get_record(todo, verbose = TRUE)
-  message('WoRMS: ', names(todo), ': aphiaid: ',
-          todo, ' (', i, '/', length(todo_wo), ')')
+for (i in seq_along(todo)) {
+  id = todo[i]
+  nam = names(todo)[i]
+  res = wo_get_record(id, verbose = FALSE)
+  message('WoRMS: ', nam, ': aphiaid: ',
+          id, ' (', i, '/', length(todo), ')')
   
   worms_l[[i]] = res
-  names(worms_l)[i] = names(todo)
+  names(worms_l)[i] = nam
 }
-saveRDS(worms_l, file.path(cachedir, 'worms_l.rds'))
+
+# write -------------------------------------------------------------------
+saveRDS(worms_l, file.path(cachedir, 'worms', 'worms_l.rds'))
   
 # log ---------------------------------------------------------------------
-log_msg('WoRMS download query run')
+log_msg('QUERY: WoRMS: download query run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

@@ -4,27 +4,10 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-drv = dbDriver("PostgreSQL")
-con = dbConnect(
-  drv,
-  user = DBuser,
-  dbname = DBetox,
-  host = DBhost,
-  port = DBport,
-  password = DBpassword
-)
-
-chem = dbGetQuery(con, "SELECT DISTINCT ON (cas_number) *
-                        FROM ecotox.chemicals")
-setDT(chem)
-chem[, cas := casconv(cas_number) ]
-setnames(chem, 'cas_number', 'casnr')
-setorder(chem, casnr)
-setcolorder(chem, c('casnr', 'cas'))
-
-dbDisconnect(con)
-dbUnloadDriver(drv)
-
+q = "SELECT *
+     FROM ecotox.chem_id"
+chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                  query = q)
 # debuging
 if (debug_mode) {
   chem = chem[1:10]
@@ -33,18 +16,10 @@ if (debug_mode) {
 todo_cir = chem$cas
 
 # query -------------------------------------------------------------------
-reps = c(
-  'cas',
-  'names',
-  'stdinchi',
-  'stdinchikey',
-  'smiles',
-  'chemspider_id',
-  'pubchem_sid'
-)
+reps = c('stdinchikey', 'stdinchi', 'smiles')
 
 time = Sys.time()
-l = mapply(
+cir_l = mapply(
   cir_query,
   representation = reps,
   MoreArgs = list(identifier = todo_cir),
@@ -52,17 +27,10 @@ l = mapply(
 )
 Sys.time() - time
 
-# extract chebi identifier of names
-l$chebiid = lapply(l$names, function(x)
-  grep('chebi', x, ignore.case = TRUE, value = TRUE))
-# clean common names
-l$names_clean = lapply(l$names, function(x)
-  grep('^[A-z]{1}[a-z]+$', x, value = TRUE))
-
-saveRDS(l, file.path(cachedir, 'cir_l.rds'))
+saveRDS(cir_l, file.path(cachedir, 'cir', 'cir_l.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('CIR download script run')
+log_msg('ID: CIR: download script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

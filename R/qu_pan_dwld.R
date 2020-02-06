@@ -7,23 +7,23 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 q = "SELECT *
-     FROM cir.prop"
-dat = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-                 query = q)
+     FROM standartox.chem_id"
+chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                  query = q)
 # debuging
 if (debug_mode) {
   chem = chem[1:10]
 }
+todo_pan = na.omit(chem$cas)
 
 # query -------------------------------------------------------------------
-todo_pan = sort(chem$cas)
 pan_l = pan_query(todo_pan)
 
-## save
-saveRDS(pan_l, file.path(cachedir, 'pan_l.rds'))
+# write -------------------------------------------------------------------
+saveRDS(pan_l, file.path(cachedir, 'pan', 'pan_l.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('PAN download script run.')
+log_msg('QUERY: PAN: download script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

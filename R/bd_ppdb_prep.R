@@ -76,10 +76,8 @@ setcolorder(ppdb, 'cas')
 
 # filter ------------------------------------------------------------------
 ## remove bad quality entries
-tax = ppdb[ , .N, taxon][order(-N)][N >= 50]$taxon
 rem = c('Unknown species', 'Whole fish', 'Seedling emergence', 'Other literature')
-tax = tax[ !is.na(tax) & !tax %in% rem ]
-ppdb2 = ppdb[ taxon %in% tax ]
+ppdb2 = ppdb[ !is.na(taxon) & !taxon %in% rem ]
 ## remove qulifier (apart form =)
 ppdb2 = ppdb2[ qualifier == '=' ]
 ## no cas
@@ -91,30 +89,15 @@ ppdb2 = ppdb2[ !is.na(duration) ]
 ppdb2[ , casnr := as.integer(casconv(cas, 'tocasnr')) ]
 
 # chck --------------------------------------------------------------------
-chck_dupl(ppdb2, 'casnr')
-# TODO?
-
-# plot --------------------------------------------------------------------
-# TODO only for testing
-# TODO move to different script
-# TODO make linear model between these values and STANDARTOX values for same test properties
-# TODO e.g. D. magna 48 h
-
-# p1 = ggplot(ppdb2[ taxon == 'Daphnia magna' & duration == 48 ],
-#             aes(y = value, x = reorder(cas, -value))) +
-#   geom_point() +
-#   scale_y_log10() +
-#   labs(x = 'CAS') +
-#   theme_bw() +
-#   theme()
+# NOTE no check
 
 # write -------------------------------------------------------------------
 write_tbl(ppdb2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'ppdb', tbl = 'data',
+          dbname = DBetox, schema = 'ppdb', tbl = 'ppdb_data',
           comment = 'Results from the PPDB query')
 
 # log ---------------------------------------------------------------------
-log_msg('PPDB: preparation script run')
+log_msg('BD: PPDB: preparation script run')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

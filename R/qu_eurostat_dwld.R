@@ -1,26 +1,18 @@
 # sctipt to query the annex files from the meta data on pesticide sales in Europe
-# why? because they contain information on the classification of chemicals
-
+# NOTE downloaded and prepared manually since the file structure is very bad
+# NOTE 'https://ec.europa.eu/eurostat/cache/metadata/Annexes/aei_fm_salpest09_esms_an1.xlsx'
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
 
-url = 'https://ec.europa.eu/eurostat/cache/metadata/Annexes/aei_fm_salpest09_esms_an5.xls'
-file = tempfile()
-
 # data --------------------------------------------------------------------
-download.file(url = url, destfile = file)
-dt = as.data.table(read_excel(file, skip = 1))
-setnames(dt, c('code', 'cname', 'cas', 'cipac'))
+dt = fread(file.path(data, 'eurostat', 'eurostat_20200210.csv'),
+           na.strings = '')
 
-saveRDS(dt, file.path(cachedir, 'eurostat_annexes.rds'))
+# write -------------------------------------------------------------------
+saveRDS(dt, file.path(cachedir, 'eurostat', 'eurostat_annexes.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('Eurostat download script run')
+log_msg('QUERY: Eurostat: download script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
-
-
-
-
-

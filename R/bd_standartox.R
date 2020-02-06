@@ -4,10 +4,8 @@
 source(file.path(src, 'gn_setup.R'))
 
 # scripts -----------------------------------------------------------------
-fl = file.path(sql, 'standartox_data2.sql')
-q2 = readChar(fl, file.info(fl)$size)
-fl = file.path(sql, 'standartox_data2_fin.sql')
-q2_fin = readChar(fl, file.info(fl)$size)
+q2 = read_char(file.path(sql, 'standartox_data2.sql'))
+q2_fin = read_char(file.path(sql, 'standartox_data2_fin.sql'))
 explanation = fread(file.path(lookupdir, 'lookup_explanation.csv'), na.strings = '')
 
 # query -------------------------------------------------------------------
@@ -27,7 +25,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # log ---------------------------------------------------------------------
-log_msg('Standartox: data compiled')
+log_msg('BD: Standartox: data compiled.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

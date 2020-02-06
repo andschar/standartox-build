@@ -1,114 +1,222 @@
 -- script to aggregate chemical information
+-- TODO rework
 
 -- chemical names -------------------------------------------------------------
-DROP TABLE IF EXISTS phch.chem_names;
-CREATE TABLE phch.chem_names AS (
-	SELECT ep.cas_number,
-		ep.cas,
-		COALESCE(wi2.cname, ch.cname, aw.cname, ep.cname) cname,
-		COALESCE(ch.iupac_name, pc.iupac_name, aw.iupac_name) iupacname,
-		COALESCE(ci.inchi, ch.inchi, pc.inchi, aw.inchi, wi.inchi) inchi,
-		COALESCE(ci.inchikey, ch.inchikey, pc.inchikey, aw.inchikey, wi.inchikey) inchikey,
-		COALESCE(ci.smiles, ch.smiles, pc.canonicalsmiles, wi.smiles) smiles,
-		COALESCE(pc.molecularweight, ch.mass) molar_mass,
-		ch.definition  
-	FROM epa_chem.prop ep
-	LEFT JOIN cir.prop ci ON ep.cas = ci.cas
-	LEFT JOIN alanwood.prop aw ON ep.cas = aw.cas
-	LEFT JOIN chebi.prop ch ON ep.cas = ch.cas
-	LEFT JOIN wiki.prop wi ON ep.cas = wi.cas
-	LEFT JOIN wiki2.prop wi2 ON ep.cas = wi2.cas
-	LEFT JOIN pubchem.prop pc ON ep.cas = pc.cas
+DROP TABLE IF EXISTS chem.chem_id2;
+CREATE TABLE chem.chem_id2 AS (
+	SELECT 
+		id.casnr,
+		id.cas,
+		COALESCE(wi.label, wi.name_who, ch.chebiasciiname, aw.cname, srs.epaname, pc.name) AS cname, -- ?? id.chemical_name
+		COALESCE(pc2.molecularformula) AS formula,
+		COALESCE(ch.iupac_name, pc2.iupac_name, aw.iupac_name) AS iupacname,
+		COALESCE(ci.inchi, ch.inchi, pc2.inchi, aw.inchi, wi.inchi) AS inchi,
+		COALESCE(ci.inchikey, ch.inchikey, pc2.inchikey, aw.inchikey, wi.inchikey) AS inchikey,
+		COALESCE(ci.smiles, ch.smiles, pc2.canonicalsmiles, wi.smiles) AS smiles,
+		COALESCE(wi.einecs, pc.einec) AS einec,
+		COALESCE(wi.chebi, pc.chebiid) AS chebi_id,
+		COALESCE(wi.chembl, pc.chembl) AS chembl_id,
+	    COALESCE(wi.kegg) AS kegg,
+		COALESCE(pc2.cid::integer, pc.cid::integer, wi.cid::integer) AS pubchem_id, -- resolve this beforehands
+	    COALESCE(wi.csid) AS chemspider_id,
+		COALESCE(wi.drugbank) AS drugbank_id,
+		COALESCE(wi.unii) AS unii,
+	    COALESCE(wi.zvg) AS zvg,
+	    COALESCE(wi.dsstox) AS dsstox_id, -- TODO resolve different dsstox_id s
+		COALESCE(pc.dsstox_cid) AS dsstox_cid,
+		COALESCE(pc.dsstox_gsid) AS dsstox_gsid,
+		COALESCE(pc.dsstox_rid) AS dsstox_rid,
+	    COALESCE(wi.echa_infocard_id) AS echa_infocard_id,
+		ch.definition
+	FROM chem.chem_id id
+	LEFT JOIN alanwood.alanwood_prop aw USING (cas)
+	LEFT JOIN cir.cir_id ci USING (cas)
+	LEFT JOIN chebi.chebi_prop ch USING (cas)
+	LEFT JOIN pubchem.pubchem_id pc USING (cas)
+	LEFT JOIN pubchem.pubchem_prop pc2 USING (cas) -- TODO separate prop into id and prop here
+	LEFT JOIN srs.srs_id srs USING (cas)
+	LEFT JOIN wiki.wiki_id wi USING (cas)
+	-- TODO include eurostat
 );
+
+ALTER TABLE chem.chem_id2 ADD PRIMARY KEY (casnr);
 
 -- chemical properties --------------------------------------------------------
-DROP TABLE IF EXISTS phch.chem_prop;
-CREATE TABLE phch.chem_prop AS (
-	SELECT ep.cas_number,
-	    ep.cas,
-	    COALESCE(pc.molecularweight, ch.mass) molecularweight,
-	    COALESCE(pc.xlogp) p_log,
-	    NULL::double precision solubility_water-- COALESCE(pp.solubility_water) solubility_water -- TODO find alternative source pp. is not working anymore
-    FROM epa_chem.prop ep
-    LEFT JOIN pubchem.prop pc ON ep.cas = pc.cas
-    LEFT JOIN chebi.prop ch ON ep.cas = ch.cas
+DROP TABLE IF EXISTS chem.chem_prop;
+CREATE TABLE chem.chem_prop AS (
+	SELECT
+		id.casnr,
+		id.cas,
+	    COALESCE(pc.molecularweight, ch.mass) AS molecularweight,
+	    COALESCE(pc.xlogp) AS p_log,
+	    NULL::double precision AS solubility_water
+	-- COALESCE(pp.solubility_water) solubility_water -- TODO find alternative source pp. is not working anymore
+	    -- TODO search for more
+	FROM chem.chem_id id
+    LEFT JOIN pubchem.pubchem_prop pc USING (cas)
+    LEFT JOIN chebi.chebi_prop ch USING (cas)
 );
 
--- chemical class -------------------------------------------------------------
-DROP TABLE IF EXISTS phch.chem_class;
-CREATE TABLE phch.chem_class AS (
-	SELECT ep.cas_number,
-		ep.cas,
-		GREATEST(ep.metal) AS metal,
-		GREATEST(aw.herbicide, ch_envi.herbicide, eu.herbicide) AS herbicide,
-		GREATEST(aw.fungicide, ch_envi.fungicide, ep.fungicide, eu.fungicide) AS fungicide,
-		GREATEST(aw.insecticide, ch_envi.insecticide, eu.insecticide) AS insecticide,
-		GREATEST(ch_drug.drug) AS drug,
-		GREATEST(ch_envi.agrochemical) AS agrochemical,
-		-- sub groups
-		GREATEST(ch_envi.amide_fungicide) AS amide_fungicide,
-		GREATEST(ch_envi.anilide_fungicide) AS anilide_fungicide,
-		GREATEST(ch_envi.anilinopyrimidine_fungicide) AS anilinopyrimidine_fungicide,
-		GREATEST(ch_envi.antibiotic_fungicide) AS antibiotic_fungicide,
-		GREATEST(ch_envi.antifouling_biocide) AS antifouling_biocide,
-		GREATEST(ch_envi.antifungal_agrochemical) AS antifungal_agrochemical,
-		GREATEST(ch_envi.aromatic_fungicide) AS aromatic_fungicide,
-		GREATEST(ch_envi.aryl_phenyl_ketone_fungicide) AS aryl_phenyl_ketone_fungicide,
-		GREATEST(ch_envi.benzanilide_fungicide) AS benzanilide_fungicide,
-		GREATEST(ch_envi.benzimidazole_fungicide) AS benzimidazole_fungicide,
-		GREATEST(ch_envi.benzimidazole_precursor_fungicide) AS benzimidazole_precursor_fungicide,
-		GREATEST(ch_envi.benzimidazolylcarbamate_fungicide) AS benzimidazolylcarbamate_fungicide,
-		GREATEST(ch_envi.benzoylurea_insecticide) AS benzoylurea_insecticide,
-		GREATEST(ch_envi.bisacylhydrazine_insecticide) AS bisacylhydrazine_insecticide,
-		GREATEST(ch_envi.bridged_diphenyl_fungicide) AS bridged_diphenyl_fungicide,
-		GREATEST(ch_envi.carbamate_fungicide) AS carbamate_fungicide,
-		GREATEST(ch_envi.carbamate_insecticide) AS carbamate_insecticide,
-		GREATEST(ch_envi.carbanilate_fungicide) AS carbanilate_fungicide,
-		GREATEST(ch_envi.chloropyridyl_insecticide) AS chloropyridyl_insecticide,
-		GREATEST(ch_envi.conazole_fungicide) AS conazole_fungicide,
-		GREATEST(ch_envi.cyclodiene_organochlorine_insecticide) AS cyclodiene_organochlorine_insecticide,
-		GREATEST(ch_envi.dicarboximide_fungicide) AS dicarboximide_fungicide,
-		GREATEST(ch_envi.dichlorophenyl_dicarboximide_fungicide) AS dichlorophenyl_dicarboximide_fungicide,
-		GREATEST(ch_envi.dinitrophenol_insecticide) AS dinitrophenol_insecticide,
-		GREATEST(ch_envi.fumigant_insecticide) AS fumigant_insecticide,
-		GREATEST(ch_envi.furamide_fungicide) AS furamide_fungicide,
-		GREATEST(ch_envi.furanilide_fungicide) AS furanilide_fungicide,
-		GREATEST(ch_envi.herbicide_safener) AS herbicide_safener,
-		GREATEST(ch_envi.imidazole_fungicide) AS imidazole_fungicide,
-		GREATEST(ch_envi.morpholine_fungicide) AS morpholine_fungicide,
-		GREATEST(ch_envi.nereistoxin_analogue_insecticide) AS nereistoxin_analogue_insecticide,
-		GREATEST(ch_envi.organochlorine_insecticide) AS organochlorine_insecticide,
-		GREATEST(ch_envi.organochlorine_pesticide) AS organochlorine_pesticide,
-		GREATEST(ch_envi.organofluorine_insecticide) AS organofluorine_insecticide,
-		GREATEST(ch_envi.organofluorine_pesticide) AS organofluorine_pesticide,
-		GREATEST(ch_envi.organophosphate_insecticide) AS organophosphate_insecticide,
-		GREATEST(ch_envi.organosulfur_insecticide) AS organosulfur_insecticide,
-		GREATEST(ch_envi.organothiophosphate_insecticide) AS organothiophosphate_insecticide,
-		GREATEST(aw.pesticide, ch_envi.pesticide, ep.pesticide, eu.pesticide) AS pesticide,
-		GREATEST(ch_envi.pesticide_synergist) AS pesticide_synergist,
-		GREATEST(ch_envi.phenylsulfamide_fungicide) AS phenylsulfamide_fungicide,
-		GREATEST(ch_envi.phthalimide_fungicide) AS phthalimide_fungicide,
-		GREATEST(ch_envi.phytogenic_insecticide) AS phytogenic_insecticide,
-		GREATEST(ch_envi.profungicide) AS profungicide,
-		GREATEST(ch_envi.proherbicide) AS proherbicide,
-		GREATEST(ch_envi.proinsecticide) AS proinsecticide,
-		GREATEST(ch_envi.pyrazole_insecticide) AS pyrazole_insecticide,
-		GREATEST(ch_envi.pyrazole_pesticide) AS pyrazole_pesticide,
-		GREATEST(ch_envi.pyrethroid_ester_insecticide) AS pyrethroid_ester_insecticide,
-		GREATEST(ch_envi.pyrethroid_ether_insecticide) AS pyrethroid_ether_insecticide,
-		GREATEST(ch_envi.pyrimidinamine_insecticide) AS pyrimidinamine_insecticide,
-		GREATEST(ch_envi.pyrimidine_fungicide) AS pyrimidine_fungicide,
-		GREATEST(ch_envi.quinoxaline_herbicide) AS quinoxaline_herbicide,
-		GREATEST(ch_envi.spinosyn_insecticide) AS spinosyn_insecticide,
-		GREATEST(ch_envi.sulfonamide_fungicide) AS sulfonamide_fungicide,
-		GREATEST(ch_envi.sulfonanilide_fungicide) AS sulfonanilide_fungicide,
-		GREATEST(ch_envi.thiourea_insecticide) AS thiourea_insecticide,
-		GREATEST(ch_envi.triazine_insecticide) AS triazine_insecticide,
-		GREATEST(ch_envi.triazole_fungicide) AS triazole_fungicide,
-		GREATEST(ch_envi.triazole_insecticide) AS triazole_insecticide
-	FROM epa_chem.prop ep
-	LEFT JOIN alanwood.prop aw ON ep.cas = aw.cas
-	LEFT JOIN chebi.envi ch_envi ON ep.cas = ch_envi.cas
-	LEFT JOIN chebi.drug ch_drug ON ep.cas = ch_drug.cas
-	LEFT JOIN eurostat.chem_class eu ON ep.cas = eu.cas
+ALTER TABLE chem.chem_prop ADD PRIMARY KEY (casnr);
+
+-- chemical role --------------------------------------------------------------
+DROP TABLE IF EXISTS chem.chem_role;
+CREATE TABLE chem.chem_role AS (
+	SELECT
+		id.casnr,
+		id.cas,
+		GREATEST(eu.acaricide, aw.acaricide, ch.acaricide) AS acaricide,
+		ch.antibiotic,
+		ch.antifouling,
+		eu.antisprouting_product AS antisprouting_product,
+		ch.avicide,
+		eu.bactericide AS bactericide,
+		ch.biocide,
+		ep.endocrine_disruptor,
+		ch.ectoparasiticide,
+		ch.drug,
+		ch.fumigant AS fumigant,
+		GREATEST(ep.fungicide, eu.fungicide, aw.fungicide, ch.fungicide) AS fungicide,
+		GREATEST(eu.herbicide, aw.herbicide, ch.herbicide) AS herbicide,
+		ch.herbicide_safener,
+		GREATEST(eu.insecticide, aw.insecticide, ch.insecticide) AS insecticide,
+		eu.insect_attractant AS insect_attractant,
+		GREATEST(eu.molluscicide, aw.molluscicide, ch.molluscicide) AS molluscicide,
+		GREATEST(eu.nematicide, ch.nematicide) AS nematicide,
+		ch.pediculicide,
+		ep.personal_care_product,
+		GREATEST(aw.pesticide, ch.pesticide, ep.pesticide, eu.pesticide) AS pesticide,
+		ch.pesticide_synergist,
+		ch.phytogenic,
+		eu.plant_growth_regulator,
+		ch.precursor,
+		ch.proacaricide,
+		ch.profungicide,
+		ch.proherbicide,
+		ch.proinsecticide,
+		ch.pronematicide,
+		eu.repellent,
+		GREATEST(eu.rodenticide, aw.rodenticide, ch.rodenticide) AS rodenticide,
+		ch.scabicide,
+		ch.schistosomicide,
+		eu.soil_sterilant
+	FROM chem.chem_id id
+	LEFT JOIN epa.epa_prop ep USING (cas)
+	LEFT JOIN alanwood.alanwood_prop aw USING (cas)
+	LEFT JOIN chebi.chebi_role ch USING (cas)
+	LEFT JOIN eurostat.eurostat_role eu USING (cas)
 );
+
+ALTER TABLE chem.chem_role ADD PRIMARY KEY (casnr);
+
+-- chemical class -------------------------------------------------------------
+DROP TABLE IF EXISTS chem.chem_class;
+CREATE TABLE chem.chem_class AS (
+	SELECT
+		id.casnr,
+		id.cas,
+		GREATEST(ep.metal) AS metal,
+		ch.acylamino_acid,
+		eu.aliphatic_nitrogen AS aliphatic,
+		GREATEST(eu.amide, ch.amide) AS amide,
+		GREATEST(eu.anilide, ch.anilide) AS anilide,
+		ch.anilinopyrimidine,
+		GREATEST(eu.aromatic, ch.aromatic) AS aromatic,
+		eu."aryloxyphenoxy-_propionic",
+		ch.aryl_phenyl_ketone,
+		ch.avermectin,
+		ch.benzamide,
+		ch.benzanilide,
+		GREATEST(eu.benzimidazole, ch.benzimidazole) AS benzimidazole,
+		GREATEST(eu.benzoylurea, ch.benzoylurea) AS benzoylurea,
+		eu.benzofurane,
+		eu."benzoic-acid",
+		ch.benzothiazole,
+		eu.bipyridylium,
+		ch.bisacylhydrazine,
+		ch.bridged_diphenyl,
+		GREATEST(eu.carbamate, ch.carbamate, ch.benzimidazolylcarbamate, eu."oxime-carbamate", eu."bis-carbamate", eu.dithiocarbamate, eu.thiocarbamate) AS carbamate,
+		GREATEST(eu.carbanilate, ch.carbanilate) AS carbanilate,
+		eu.carbazate,
+		eu.chloroacetanilide,
+		ch.chloropyridyl,
+		GREATEST(eu.conazole, ch.conazole) AS conazole,
+		eu.cyclohexanedione,
+		eu.diazine,
+		eu.diazylhydrazine,
+		GREATEST(eu.dicarboximide, ch.dicarboximide, ch.dichlorophenyl_dicarboximide) AS dicarboximide,
+		eu.dinitroaniline,
+		GREATEST(eu.dinitrophenol, ch.dinitrophenol) AS dinitrophenol,
+		eu.diphenyl_ether,
+		eu.fermentation,
+		ch.formamidine,
+		ch.furamide,
+		ch.furanilide,
+		GREATEST(eu.imidazole, ch.imidazole) AS imidazole,
+		eu.imidazolinone,
+		eu.inorganic,
+		eu.insect_growth_regulators,
+		eu.isoxazole,
+		GREATEST(eu.morpholine, ch.morpholine) AS morpholine,
+		ch.nereistoxin_analogue,
+		eu.nitrile,
+		eu.nitroguanidine,
+		ep.nitrosamine,
+		GREATEST(ch.organochlorine, ch.cyclodiene_organochlorine) AS organochlorine,
+		ch.organofluorine,
+		GREATEST(eu.organophosphorus, ch.organophosphate, ch.organothiophosphate) AS organophosphorus,
+		ch.organosulfur,
+		ch.organotin,		
+		eu.oxadiazine,
+		eu.oxazole,
+		ep.pah,
+		ep.pbde, -- Polybrominated Diphenyl Ethers (PBDEs)
+		ep.pcb, -- Polychlorinated Biphenyls (PCBs)
+		ep.perchlorate,
+		ep.pfa, --  Per- and Polyfluoroalkyl Substances (PFAS)
+		ep.pfoa,
+		GREATEST(eu.phenoxy, ch.phenoxy) AS phenoxy,
+		eu."phenyl-ether",
+		eu.phenylpyrrole,
+		ch.phenylsulfamide,
+		GREATEST(eu.phthalimide, ch.phthalimide) AS phthalimide,
+		GREATEST(eu.pyrazole, ch.pyrazole, eu.phenylpyrazole) AS pyrazole,
+		GREATEST(eu.pyrimidine, ch.pyrimidine) AS pyrimidine,
+		GREATEST(ch.pyrethroid_ester, ch.pyrethroid_ether, eu.pyrethroid) AS pyrethroid,
+		eu.pyridazinone,
+		eu.pyridine,
+		eu.pyridinecarboxamide,
+		eu."pyridinecarboxylic-acid",
+		eu.pyridylmethylamine,
+		eu."pyridyloxyacetic-acid",
+		ch.pyrimidinamine,
+		eu.quinoline,
+		eu.quinone,
+		ch.quinoxaline,
+		ch.spinosyn,
+		eu.strobilurine,
+		ch.sulfite_ester,
+		ch.sulfonamide,
+		ch.sulfonanilide,
+		eu.sulfonylurea,
+		GREATEST(eu.tetrazine, ch.tetrazine) AS tetrazine,
+		eu.tetronic_acid,
+		eu.thiadiazine,
+		ch.thiourea,
+		GREATEST(eu.triazine, ch.triazine) AS triazine,
+		GREATEST(eu.triazole, ch.triazole) AS triazole,
+		eu.triazinone,
+		eu.triazolinone,
+		eu.triazolone,
+		eu.triketone,
+		eu.uracil,
+		eu.urea,
+		ch.valinamide
+	FROM chem.chem_id id
+	LEFT JOIN epa.epa_prop ep USING (cas)
+	LEFT JOIN alanwood.alanwood_prop aw USING (cas)
+	LEFT JOIN chebi.chebi_class ch USING (cas)
+	LEFT JOIN eurostat.eurostat_class eu USING (cas)
+);
+
+ALTER TABLE chem.chem_class ADD PRIMARY KEY (casnr);

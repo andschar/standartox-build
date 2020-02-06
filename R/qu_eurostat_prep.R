@@ -4,79 +4,80 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-dt = readRDS(file.path(cachedir, 'eurostat_annexes.rds'))
+dt = readRDS(file.path(cachedir, 'eurostat', 'eurostat_annexes.rds'))
 
-# function ----------------------------------------------------------------
-# taken from:
-# https://stackoverflow.com/questions/10554741/fill-in-data-frame-with-values-from-rows-above
-
-fill = function(x, blank = is.na) {
-  # Find the values
-  if (is.function(blank)) {
-    isnotblank <- !blank(x)
-  } else {
-    isnotblank <- x != blank
-  }
-  # Fill down
-  x[which(isnotblank)][cumsum(isnotblank)]
+# prepare -----------------------------------------------------------------
+dt = dt[ !is.na(cas) ]
+cols = c('group', 'category', 'chemical_class', 'common_name')
+dt[ , (cols) := lapply(.SD, tolower), .SDcols = cols ]
+dt = dt[ !duplicated(cas) ] # NOTE deletes zeta-cypermethrin and leaces cypermethrin
+## names
+eu_name = dt[ , .SD, .SDcols = c('cas', 'common_name') ]
+## chemical role
+eu_role = dt[ , .SD, .SDcols = c('cas', 'category') ]
+todo_role = c('acaricide', 'antisprouting product', 'bactericide', 'fungicide',
+              'herbicide', 'insecticide',
+              'insect attractant', 'molluscicide', 'nematicide',
+              'pesticide', 'plant growth regulator',
+              'repellent', 'rodenticide', 'soil sterilant')
+for (i in todo_role) {
+  eu_role[ grep(i, category), (i) := TRUE ]
 }
+eu_role[ , category := NULL ]
+clean_names(eu_role)
 
-# errata ------------------------------------------------------------------
-dt[ cas == '0', cas := NA ]
-# some cas are written in the same cell - pretty anoying!
-dt[ , cas := trimws(cas) ]
-
-#### TODO what about this?
-# broken_cas = strsplit(dt$cas, split = '\n|,|\\s') # split cas within cells
-# pos = lapply(broken_cas, function(x) which(sapply(x, function(y) nchar(y) > 0L))) # positions without ''
-# broken_cas2 = Map(`[`, broken_cas, pos) # https://stackoverflow.com/questions/42373902/subset-list-of-vectors-with-vector-of-positions
-# max_cas = max(sapply(broken_cas2, length)) # get maximum of CAS numbers
-# vl = lapply(broken_cas2, `[`, 1:max_cas)
-# cas_dt = rbindlist(lapply(vl, as.data.frame.list), fill = TRUE)
-# setnames(cas_dt, c('cas', paste0('cas', 1:3)))
-# dt[ , cas := NULL ]
-# dt = cbind(dt, cas_dt)
-### END
-
-# preparation -------------------------------------------------------------
-# retrieve group data into separate columns
-dt[ grep('(?i)pes', code), c('group1', 'group2') := tolower(cname) ]
-dt[ grep('^[A-Z]+[0-9]+_[0-9]+$', code), group2 := tolower(cname) ]
-# fill empty group rows
-dt[ , group1 := fill(group1) ]
-dt[ , group2 := fill(group2) ]
-# keep only actual compounds
-dt2 = dt[ grep('^[A-Z]+[0-9]+_[0-9]+_.+$', code) ]
-
-# is pesticide
-dt2[ , pesticide := TRUE ]
-# pesticide sub-groups
-dt2[ group1 == 'fungicides and bactericides', fungicide := TRUE ]
-dt2[ group1 == 'herbicides. haulm destructors and moss killers', herbicide := TRUE ]
-dt2[ group1 == 'insecticides and acaricides', insecticide := TRUE ]
-dt2[ group2 == 'molluscicides', molluscicide := TRUE ]
-dt2[ group2 == 'rodenticides', rodenticide := TRUE ]
-dt2[ group2 == 'repellents', repellent := TRUE ]
-
-# final dt ----------------------------------------------------------------
-cols = c('cas', 'pesticide', 'fungicide', 'herbicide', 'insecticide', 
-         'molluscicide', 'rodenticide', 'repellent')
-eu_fin = dt2[ , .SD, .SDcols = cols ]
-eu_fin = eu_fin[!is.na(cas)] # as the whole approach is based on CAS
-# unique
-eu_fin = unique(eu_fin)
+## chemical class
+eu_class = dt[ , .SD, .SDcols = c('cas', 'chemical_class') ]
+todo_class = c('aliphatic nitrogen', 'amide', 'anilide', 'aromatic', 'aryloxyphenoxy- propionic', 
+               'benzimidazole', 'benzofurane', 'benzoic-acid', 'benzoylurea', 
+               'bipyridylium', 'bis-carbamate', 'carbamate', 'carbanilate', 
+               'carbazate', 'chloroacetanilide', 'conazole', 'cyclohexanedione', 
+               'diazine', 'diazylhydrazine', 'dicarboximide', 'dinitroaniline', 
+               'dinitrophenol', 'diphenyl ether', 'dithiocarbamate', 'fermentation', 'imidazole', 
+               'imidazolinone', 'inorganic', 'inorganic', 'insect growth regulators', 
+               'isoxazole', 'morpholine', 'nitrile', 'nitroguanidine', 'organophosphorus', 
+               'oxadiazine', 'oxazole', 'oxime-carbamate', 
+               'phenoxy', 'phenyl-ether', 'phenylpyrazole', 'phenylpyrrole', 
+               'phthalimide', 'pyrazole', 
+               'pyrethroid', 'pyridazinone', 'pyridine', 'pyridinecarboxamide', 
+               'pyridinecarboxylic-acid', 'pyridylmethylamine', 'pyridyloxyacetic-acid', 
+               'pyrimidine', 'quinoline', 'quinone', 'strobilurine', 'sulfonylurea', 
+               'tetrazine', 'tetronic acid', 'thiadiazine', 'thiocarbamate', 
+               'triazine', 'triazinone', 'triazole', 'triazolinone', 'triazolone', 
+               'triketone', 'uracil', 'urea')
+for (i in todo_class) {
+  eu_class[ grep(i, chemical_class), (i) := TRUE ]
+}
+# non-grep-able
+eu_class[ chemical_class == 'copper compounds', inorganic := TRUE ]
+eu_class[ , chemical_class := NULL ]
+clean_names(eu_class)
 
 # check -------------------------------------------------------------------
-chck_dupl(eu_fin, 'cas')
+chck_dupl(eu_name, 'cas')
+chck_dupl(eu_role, 'cas')
+chck_dupl(eu_class, 'cas')
 
 # write -------------------------------------------------------------------
-write_tbl(eu_fin, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'eurostat', tbl = 'chem_class',
+# name
+write_tbl(eu_name, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'eurostat', tbl = 'eurostat_name',
+          key = 'cas',
+          comment = 'Chemical Information from EUROSTAT.')
+# role
+write_tbl(eu_role, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'eurostat', tbl = 'eurostat_role',
+          key = 'cas',
+          comment = 'Chemical Information from EUROSTAT.')
+# class
+write_tbl(eu_class, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+          dbname = DBetox, schema = 'eurostat', tbl = 'eurostat_class',
           key = 'cas',
           comment = 'Chemical Information from EUROSTAT.')
 
 # log ---------------------------------------------------------------------
-log_msg('Eurostat preparation script run')
+log_msg('PREP: Eurostat: preparation script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
+

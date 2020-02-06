@@ -1,0 +1,4 @@
+# Ignore everything in this directory (to be able to commit this directory)
+*
+# Except these files
+!.gitignore

@@ -2,10 +2,8 @@
 
 write_tbl = function(df = NULL, user = NULL, host = NULL, port = NULL, password = NULL,
                      dbname = NULL, schema = NULL, tbl = NULL,
-                     key = NULL,
+                     key = NULL, key_foreign = NULL,
                      comment = NULL) {
-  
-  ## checks
   if (is.null(df)) {
     stop('No data supplied.')
   }
@@ -18,8 +16,6 @@ write_tbl = function(df = NULL, user = NULL, host = NULL, port = NULL, password 
   if (is.null(comment)) {
     stop('No comment supplied.')
   }
-  
-  ## data base
   con = DBI::dbConnect(RPostgreSQL::PostgreSQL(), # RPostgres::Postgres(),
                        dbname = dbname,
                        host = host,
@@ -41,19 +37,24 @@ write_tbl = function(df = NULL, user = NULL, host = NULL, port = NULL, password 
     dbSendQuery(con, paste0("COMMENT ON TABLE ", schema, ".", tbl, " IS '",
                             paste0(comment, '\n', paste0('Creation date: ', Sys.Date())), "';"))
   }
-  # get table path
-  path = data.table(dbGetQuery(con, paste0("SELECT *
-                                            FROM information_schema.tables
-                                            WHERE table_name = '", tbl, "';")))
-  path = path[ , .SD, .SDcols = c('table_catalog', 'table_schema', 'table_name') ]
-  path = paste0(path[1], collapse = '.')
-  
   # primary key
   if (!is.null(key)) {
     dbSendQuery(con, paste0("ALTER TABLE ", schema, ".", tbl,
                             " ADD PRIMARY KEY (", key, ");"))
   }
-
+  # foreign key
+  if (!is.null(key_foreign)) {
+    if (length(key_foreign) != 2)
+      stop('FOREIGN KEY has to be a vector of length two. E.g:\nc("PK", "',
+           paste0(schema, '.', tbl, '.', 'FK'), '") ')
+    kf = strsplit(key_foreign, "\\.")
+    dbSendQuery(con, paste0("ALTER TABLE ", schema, ".", tbl,
+                            " ADD CONSTRAINT fkey FOREIGN KEY (", kf[[1]][1], ")",
+                            " REFERENCES ", paste0(kf[[2]][1:2], collapse = '.'), " (", kf[[2]][3], ");"))
+  }
+  
+  # table path
+  path = paste(dbname, schema, tbl, sep = '.')
   message(Sys.time(), ' Table created in: ', path)
 }
 

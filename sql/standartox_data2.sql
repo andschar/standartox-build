@@ -123,7 +123,7 @@ LEFT JOIN ecotox.habitat_codes ON tests.subhabitat = habitat_codes.code
 LEFT JOIN ecotox.test_method_codes ON tests.test_method = test_method_codes.code
 LEFT JOIN ecotox.media_type_codes on tests.media_type = media_type_codes.code
 LEFT JOIN ecotox.substrate_codes on tests.substrate = substrate_codes.code
-LEFT JOIN phch.chem_prop ON tests.test_cas = chem_prop.cas_number -- for molecularweight
+LEFT JOIN chem.chem_prop ON tests.test_cas = chem_prop.casnr -- for molecularweight
 
 WHERE
 	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT LIKE '%ca%';
@@ -132,34 +132,124 @@ ALTER TABLE standartox.tests ADD PRIMARY KEY (result_id);
 
 
 -------------------------------------------------------------------------------
--- chemicals
-DROP TABLE IF EXISTS standartox.chemicals;
+-- chemical names
+DROP TABLE IF EXISTS standartox.chem_prop;
 
-CREATE TABLE standartox.chemicals AS
+CREATE TABLE standartox.chem_prop AS
 
 SELECT
-	chemicals.cas_number AS casnr,
-	casconv(chemicals.cas_number, 'cas') AS cas,
-	lower(chemicals.chemical_name) AS chemical_name_epa,
-	chemicals.ecotox_group,
-	lower(chem_names.cname) AS cname,
-	chem_names.iupacname,
-	chem_names.inchikey,
-	chem_names.inchi,
+	id.casnr,
+	id.cas,
+	lower(id.iupacname) AS iupac_name,
+	lower(id.cname) AS cname,
+	id.inchikey,
+	id.inchi,
 	chem_prop.molecularweight::double precision,
 	chem_prop.p_log::double precision,
-	chem_prop.solubility_water::double precision,
-	chem_class.fungicide::boolean AS ccl_fungicide,
-	chem_class.herbicide::boolean AS ccl_herbicide,
-	chem_class.insecticide::boolean AS ccl_insecticide,
-	chem_class.metal::boolean AS ccl_metal,
-	chem_class.drug::boolean AS ccl_drug
-FROM ecotox.chemicals
-LEFT JOIN phch.chem_names ON chemicals.cas_number = chem_names.cas_number
-LEFT JOIN phch.chem_class ON chemicals.cas_number = chem_class.cas_number
-LEFT JOIN phch.chem_prop ON chemicals.cas_number = chem_prop.cas_number;
+	chem_prop.solubility_water::double precision
+FROM chem.chem_id2 id
+LEFT JOIN chem.chem_prop chem_prop USING(casnr);
 
-ALTER TABLE standartox.chemicals ADD PRIMARY KEY (casnr);
+ALTER TABLE standartox.chem_prop ADD PRIMARY KEY (casnr);
+
+-------------------------------------------------------------------------------
+-- chemical roles
+DROP TABLE IF EXISTS standartox.chem_role;
+
+CREATE TABLE standartox.chem_role AS
+
+SELECT
+	id.casnr,
+	chem_role.acaricide AS cro_acaricide,
+	chem_role.antibiotic AS cro_antibiotic,
+	chem_role.antifouling AS cro_antifouling,
+	chem_role.avicide AS cro_avicide,
+	chem_role.bactericide AS cro_bactericide,
+	chem_role.biocide AS cro_biocide,
+	chem_role.drug AS cro_drug,
+	chem_role.endocrine_disruptor AS cro_endocrine_disruptor,
+	chem_role.fungicide AS cro_fungicide,
+	chem_role.herbicide AS cro_herbicide,
+	chem_role.insecticide AS cro_insecticide,
+	chem_role.molluscicide AS cro_molluscicide,
+	chem_role.nematicide AS cro_nematicide,
+	chem_role.personal_care_product AS cro_personal_care_product,
+	chem_role.pesticide AS cro_pesticide,
+	chem_role.plant_growth_regulator AS cro_plant_growth_regulator,
+	chem_role.precursor AS cro_precursor,
+	chem_role.repellent AS cro_repellent,
+	chem_role.rodenticide AS cro_rodenticide,
+	chem_role.scabicide AS cro_scabicide,
+	chem_role.schistosomicide AS cro_schistosomicide,
+	chem_role.soil_sterilant AS cro_soil_sterilant
+FROM chem.chem_id2 id
+LEFT JOIN chem.chem_role chem_role USING (casnr);
+
+ALTER TABLE standartox.chem_role ADD PRIMARY KEY (casnr);
+
+-------------------------------------------------------------------------------
+-- chemical class
+DROP TABLE IF EXISTS standartox.chem_class;
+
+CREATE TABLE standartox.chem_class AS
+
+SELECT
+	id.casnr,
+	chem_class.acylamino_acid AS ccl_acylamino_acid,
+	chem_class.aliphatic AS ccl_aliphatic,
+	chem_class.amide AS ccl_amide,
+	chem_class.anilide AS ccl_anilide,
+	chem_class.anilinopyrimidine AS ccl_anilinopyrimidine,
+	chem_class.aromatic AS ccl_aromatic,
+	chem_class.benzamide AS ccl_benzamide,
+	chem_class.benzanilide AS ccl_benzanilide,
+	chem_class.benzimidazole AS ccl_benzimidazole,
+	chem_class.benzoylurea AS ccl_benzoylurea,
+	chem_class.benzothiazole AS ccl_benzothiazole,
+	chem_class.bipyridylium AS ccl_bipyridylium,
+	chem_class.carbamate AS ccl_carbamate,
+	chem_class.conazole AS ccl_conazole,
+	chem_class.cyclohexanedione AS ccl_cyclohexanedione,
+	chem_class.dicarboximide AS ccl_dicarboximide,
+	chem_class.dinitroaniline AS ccl_dinitroaniline,
+	chem_class.dinitrophenol AS ccl_dinitrophenol,
+	chem_class.furamide AS ccl_furamide,
+	chem_class.furanilide AS ccl_furanilide,
+	chem_class.imidazole AS ccl_imidazole,
+	chem_class.isoxazole AS ccl_isoxazole,
+	chem_class.metal AS ccl_metal,
+	chem_class.morpholine AS ccl_morpholine,
+	chem_class.organochlorine AS ccl_organochlorine,
+	chem_class.organofluorine AS ccl_organofluorine,
+	chem_class.organophosphorus AS ccl_organophosphorus,
+	chem_class.organosulfur AS ccl_organosulfur,
+	chem_class.organotin AS ccl_organotin,
+	chem_class.pah AS ccl_pah, -- Polycyclic aromatic hydrocarbon
+	chem_class.pbde AS ccl_pbde, -- Polybrominated Diphenyl Ethers (PBDEs)
+	chem_class.pcb AS ccl_pcb, -- Polychlorinated Biphenyls (PCBs)
+	chem_class.phenoxy AS ccl_phenoxy,
+	chem_class.phenylpyrrole AS ccl_phenylpyrrole,
+	chem_class.phenylsulfamide AS ccl_phenylsulfamide,
+	chem_class.phthalimide AS ccl_phthalimide,
+	chem_class.pyrazole AS ccl_pyrazole,
+	chem_class.pyrimidine AS ccl_pyrimidine,
+	chem_class.pyrethroid AS ccl_pyrethroid,
+	chem_class.pyridine AS ccl_pyridine,
+	chem_class.quinoline AS ccl_quinoline,
+	chem_class.quinone AS ccl_quinone,
+	chem_class.quinoxaline AS ccl_quinoxaline,
+	chem_class.strobilurine AS ccl_strobilurine,
+	chem_class.sulfonamide AS ccl_sulfonamide,
+	chem_class.sulfonylurea AS ccl_sulfonylurea,
+	chem_class.thiourea AS ccl_thiourea,
+	chem_class.triazine AS ccl_triazine,
+	chem_class.triazole AS ccl_triazole,
+	chem_class.urea AS ccl_urea
+FROM chem.chem_id2 id
+LEFT JOIN chem.chem_class chem_class USING (casnr);
+
+ALTER TABLE standartox.chem_class ADD PRIMARY KEY (casnr);
+
 
 -------------------------------------------------------------------------------
 -- taxa
@@ -167,32 +257,31 @@ DROP TABLE IF EXISTS standartox.taxa;
 
 CREATE TABLE standartox.taxa AS
 SELECT
-	species.species_number,
-	epa.taxon,
-	epa.ecotox_group2,
-	species.common_name,
-	species.genus,
-	species.family,
-	species.tax_order,
-	species.class,
-	species.superclass,
-	species.subphylum_div,
-	species.phylum_division,
-	species.kingdom,
-	habitat.marin::boolean AS hab_marine,
-	habitat.brack::boolean AS hab_brackish,
-	habitat.fresh::boolean AS hab_freshwater,
-	habitat.terre::boolean AS hab_terrestrial,
-	continent.africa::boolean AS reg_africa,
-	continent.america_north::boolean AS reg_america_north,
-	continent.america_south::boolean AS reg_america_south,
-	continent.asia::boolean AS reg_asia,
-	continent.europe::boolean AS reg_europe,
-	continent.oceania::boolean AS reg_oceania
-FROM ecotox.species
-LEFT JOIN taxa.habitat ON species.latin_name = habitat.taxon
-LEFT JOIN taxa.continent ON species.latin_name = continent.taxon
-LEFT JOIN taxa.epa ON species.latin_name = epa.taxon;
+	id.species_number,
+	id.taxon,
+	id.common_name,
+	id.genus,
+	id.family,
+	id.tax_order,
+	id.class,
+	id.superclass,
+	id.subphylum_div,
+	id.phylum_division,
+	id.kingdom,
+	id.ecotox_group2,
+	habi.marin::boolean AS hab_marine,
+	habi.brack::boolean AS hab_brackish,
+	habi.fresh::boolean AS hab_freshwater,
+	habi.terre::boolean AS hab_terrestrial,
+	cont.africa::boolean AS reg_africa,
+	cont.america_north::boolean AS reg_america_north,
+	cont.america_south::boolean AS reg_america_south,
+	cont.asia::boolean AS reg_asia,
+	cont.europe::boolean AS reg_europe,
+	cont.oceania::boolean AS reg_oceania
+FROM taxa.taxa_id2 id
+LEFT JOIN taxa.taxa_habitat habi USING (species_number)
+LEFT JOIN taxa.taxa_continent cont USING (species_number);
 
 ALTER TABLE standartox.taxa ADD PRIMARY KEY (species_number);
 

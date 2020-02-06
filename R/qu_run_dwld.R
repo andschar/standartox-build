@@ -1,19 +1,16 @@
-# script runs queries against 3rd party data bases
+# script runs queries against 3rd party data bases for data
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
 
 # chemical scripts --------------------------------------------------------
-scripts = c('qu_aw_dwld.R',
+scripts = c('qu_aw_dwld.R', # NOTE doesn't have IDs query with CAS directly
             'qu_chebi_dwld.R',
-            'qu_pan_dwld.R', # TODO DEPRECATE?
-            'qu_pc_prop_dwld.R',
-            'qu_pc_syn_dwld.R',
-            'qu_pp_dwld.R',
-            'qu_epa_chem_dwld.R',
             'qu_eurostat_dwld.R',
-            'qu_wiki_dwld.R',
-            'qu_wiki_dwld_INTERMEDIATE.R')
+            'qu_epa_chem_dwld.R',
+            'qu_pan_dwld.R',
+            'qu_pc_prop_dwld.R',
+            'qu_wiki_dwld.R')
 
 time = Sys.time()
 n_cores = length(scripts)
@@ -32,7 +29,8 @@ stopCluster(cl)
 Sys.time() - time
 
 # taxa: habitat and region scripts ----------------------------------------
-scripts = c('qu_epa_habi_dwld.R',
+scripts = c('qu_epa_taxa_dwld.R',
+            'qu_epa_habi_dwld.R',
             'qu_gbif_dwld.R',
             'qu_worms_dwld.R')
 
@@ -53,7 +51,7 @@ stopCluster(cl)
 Sys.time() - time
 
 # log ---------------------------------------------------------------------
-log_msg('Download scripts run')
+log_msg('QUERY: download scripts run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

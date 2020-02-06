@@ -5,24 +5,32 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 # select columns programmatically
-q = "SELECT column_name
+q = "SELECT table_schema, table_name, column_name
      FROM information_schema.columns
-     WHERE table_schema = 'standartox' AND table_name = 'data2'
-     AND (column_name IN ('endpoint', 'effect', 'tax_order') OR
-          column_name LIKE 'ccl_%' OR
-          column_name LIKE 'hab_%' OR
-          column_name LIKE 'reg_%')"
+     WHERE table_schema = 'standartox'
+       AND table_name IN ('tests', 'chem_role', 'chem_class', 'taxa')"
+# AND table_name = 'data2'
+#      AND (column_name IN ('endpoint', 'effect', 'tax_order') OR
+#           column_name LIKE 'ccl_%' OR
+#           column_name LIKE 'cro_%' OR
+#           column_name LIKE 'hab_%' OR
+#           column_name LIKE 'reg_%')"
 cols = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
+pattern = c('effect', 'tax_order', 'cro', 'ccl_', 'hab_', 'reg_')
+
+cols = cols[ grep(paste0(pattern, collapse = '|'), column_name) ]
+
 # data
 l = list()
 for (i in seq_along(cols$column_name)) {
-  
+  schema = cols$table_schema[i]
+  tbl = cols$table_name[i]
   col = cols$column_name[i]
   message('Fetching: ', col)
   q = paste0("SELECT ", col, ", count(*) n
-              FROM standartox.data2
-              GROUP BY ", col, " ",
+              FROM ", paste0(schema, '.', tbl), " ",
+             "GROUP BY ", col, " ",
              "ORDER BY n DESC")
   l[[i]] = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                       query = q)
@@ -30,29 +38,30 @@ for (i in seq_along(cols$column_name)) {
 }
 
 # prepare -----------------------------------------------------------------
-l2 = list(endpoint = l$endpoint,
-          effect = l$effect,
+l2 = list(effect = l$effect,
+          cro = na.omit(rbindlist(l[ grep('cro_', names(l)) ], idcol = 'cro', use.names = FALSE)),
           ccl = na.omit(rbindlist(l[ grep('ccl_', names(l)) ], idcol = 'ccl', use.names = FALSE)),
           tax_order = l$tax_order,
           hab = na.omit(rbindlist(l[ grep('hab_', names(l)) ], idcol = 'hab', use.names = FALSE)),
           reg = na.omit(rbindlist(l[ grep('reg_', names(l)) ], idcol = 'reg', use.names = FALSE)))
-
+# TODO resolve in original data set (make to NA)
+l2$tax_order = l2$tax_order[ l2$tax_order$tax_order != '' ]
+l2$cro$cro = str_to_title(gsub('_', ' ',
+                               sub('cro_', '', l2$cro$cro)))
 l2$ccl$ccl = str_to_title(sub('ccl_', '', l2$ccl$ccl))
 l2$hab$hab = str_to_title(sub('hab_', '', l2$hab$hab))
-l2$reg$reg = str_to_title(sub('america_south', 'South America', sub('america_north', 'North America', (gsub('reg_', '', l2$reg$reg)))))
+l2$reg$reg = str_to_title(sub('america_south', 'South America',
+                              sub('america_north', 'North America',
+                                  gsub('reg_', '', l2$reg$reg))))
 
 # plot --------------------------------------------------------------------
 tr_l = list()
 gg_l = list()
 for (i in seq_along(l2)) {
   col = names(l2)[i]
-  dat = l2[[i]]
+  dat = copy(l2[[i]])
   setorder(dat, -n)
-  if (nrow(dat) > 10) {
-    dat[ 11:nrow(dat), (col) := 'other' ] # NOTE limit x-axis
-    dat = dat[ , .(n = sum(n)), col ]
-  }
-  # dat = na.omit(dat)
+  dat = na.omit(dat[1:15])
   # treemap
   tr_l[[i]] = ggplot(dat, aes_string(area = 'n',
                                      fill = col,
@@ -85,7 +94,7 @@ ggsave(plot = tr_fin, file.path(article, 'figures', 'standartox_parameters.png')
        width = 10, height = 12)
 
 # log ---------------------------------------------------------------------
-log_msg('ARTICLE: Standartox data overview ploted')
+log_msg('ARTICLE: Standartox data overview ploted.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

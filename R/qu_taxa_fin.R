@@ -4,8 +4,7 @@
 source(file.path(src, 'gn_setup.R'))
 
 # scripts -----------------------------------------------------------------
-fl = file.path(sql, 'taxa_fin.sql')
-q = readChar(fl, file.info(fl)$size)
+q = read_char(file.path(sql, 'taxa_fin.sql'))
 
 # query -------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")

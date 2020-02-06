@@ -4,7 +4,7 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-aw_l = readRDS(file.path(cachedir, 'aw_l.rds'))
+aw_l = readRDS(file.path(cachedir, 'aw', 'aw_l.rds'))
 
 # preparation -------------------------------------------------------------
 aw_l2 = aw_l[ !is.na(aw_l) ] # remove NAs
@@ -49,12 +49,12 @@ chck_dupl(aw, 'cas')
 
 # write -------------------------------------------------------------------
 write_tbl(aw, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'alanwood', tbl = 'prop',
+          dbname = DBetox, schema = 'alanwood', tbl = 'alanwood_prop',
           key = 'cas',
           comment = 'Results from the Alan Wood Pesticide Compendium query')
 
 # log ---------------------------------------------------------------------
-log_msg('AlanWood preparation script run')
+log_msg('PREP: AlanWood: preparation script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

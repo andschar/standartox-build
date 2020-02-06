@@ -4,22 +4,16 @@
 source(file.path(src, 'gn_setup.R'))
 
 # query ---------------------------------------------------------------
+q = "SELECT cas, ecotox_group
+     FROM ecotox.chem_id"
+epa_chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                  query = q)
 
-drv = dbDriver("PostgreSQL")
-con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBport, password = DBpassword)
-
-cla_che = dbGetQuery(con, "SELECT cas_number, chemical_name AS cname, ecotox_group
-                           FROM ecotox.chemicals")
-setDT(cla_che)
-cla_che[ , cas := casconv(cas_number) ]
-
-dbDisconnect(con)
-dbUnloadDriver(drv)
-
-saveRDS(cla_che, file.path(cachedir, 'ep_chemicals_source.rds'))
+# write -------------------------------------------------------------------
+saveRDS(epa_chem, file.path(cachedir, 'ep_chemicals_source.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('EPA chemicals download script run')
+log_msg('QUERY: EPA: chemicals download script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()

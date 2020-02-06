@@ -9,7 +9,9 @@
 /data
 /plots
 TODO.*
+/DEPRECATED*
 R/TODO*
+R/DEPRECATED*
 # cache -> is done via /cache/.gitignore
 # commit .gitignore files to also commit the folders (work around)
 # https://stackoverflow.com/questions/115983/how-can-i-add-an-empty-directory-to-a-git-repository

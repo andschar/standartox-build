@@ -5,17 +5,15 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 q = "SELECT *
-     FROM pubchem.prop"
-cid = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-                 query = q)
-setDT(cid)
-
+     FROM standartox.chem_id"
+chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                  query = q)
 # debuging
 if (debug_mode) {
-  cid = cid[1:10]
+  chem = chem[1:10]
 }
 
-todo = cid$cid
+todo = na.omit(chem$cid)
 
 # query -------------------------------------------------------------------
 time = Sys.time()
@@ -30,10 +28,11 @@ for (i in seq_along(todo)) {
 }
 Sys.time() - time
 
-saveRDS(pc_prop_l, file.path(cachedir, 'pc_prop_l.rds'))
+# write -------------------------------------------------------------------
+saveRDS(pc_prop_l, file.path(cachedir, 'pubchem', 'pc_prop_l.rds'))
 
 # log ---------------------------------------------------------------------
-log_msg('PubChem download (properties) script run')
+log_msg('QUERY: PubChem: download (properties) script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
