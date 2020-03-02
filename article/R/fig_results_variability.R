@@ -50,7 +50,7 @@ tax_gm = tax[ ,
 gg_tax = ggplot(tax, aes(x = taxon, y = concentration)) +
   geom_point(position = position_jitter(seed = 1234)) +
   geom_violin(position = position_dodge(), alpha = 0.5) +
-  geom_point(data = tax_gm, aes(x = taxon, y = gm), size = 3, col = 'yellow') +
+  geom_point(data = tax_gm, aes(x = taxon, y = gm), size = 3, col = viridis_pal()(1)) +
   geom_point(data = tax_gm, aes(x = taxon, y = min), size = 1.5, col = 'black') +
   geom_point(data = tax_gm, aes(x = taxon, y = max), size = 1.5, col = 'black') +
   scale_y_log10(breaks = c(10, 100, 1000, 10000),
@@ -58,8 +58,8 @@ gg_tax = ggplot(tax, aes(x = taxon, y = concentration)) +
                 limits = c(1, 100000)) +
   coord_flip() +
   theme(axis.title.x = element_blank(),
-        axis.text.x = element_text(face = 'italic'),
-        axis.title.y = element_blank())
+        axis.title.y = element_blank(),
+        axis.text.y = element_text(face = 'italic'))
 
 ## ggrigdes code
 # gg_tax = ggplot(tax, aes(y = taxon, x = concentration)) +
@@ -87,7 +87,7 @@ dur_gm = dur[ ,
 gg_dur = ggplot(dur, aes(x = duration, y = concentration)) +
   geom_point(position = position_jitter(seed = 1234)) +
   geom_violin(position = position_dodge(), alpha = 0.5) +
-  geom_point(data = dur_gm, aes(x = duration, y = gm), size = 3, col = 'yellow') +
+  geom_point(data = dur_gm, aes(x = duration, y = gm), size = 3, col = viridis_pal()(1)) +
   geom_point(data = dur_gm, aes(x = duration, y = min), size = 1.5, col = 'black') +
   geom_point(data = dur_gm, aes(x = duration, y = max), size = 1.5, col = 'black') +
   scale_y_log10(breaks = c(10, 100, 1000, 10000),
@@ -129,7 +129,7 @@ lab_gm = lab[ ,
 gg_lab = ggplot(lab, aes(x = cname, y = concentration)) +
   geom_point(position = position_jitter(seed = 1234)) +
   geom_violin(position = position_dodge(), alpha = 0.5) +
-  geom_point(data = lab_gm, aes(x = cname, y = gm), size = 3, col = 'yellow') +
+  geom_point(data = lab_gm, aes(x = cname, y = gm), size = 3, col = viridis_pal()(1)) +
   geom_point(data = lab_gm, aes(x = cname, y = min), size = 1.5, col = 'black') +
   geom_point(data = lab_gm, aes(x = cname, y = max), size = 1.5, col = 'black') +
   scale_y_log10(breaks = c(10, 100, 1000, 10000),
@@ -137,7 +137,7 @@ gg_lab = ggplot(lab, aes(x = cname, y = concentration)) +
                 limits = c(1, 100000)) +
   coord_flip() +
   theme(axis.title.x = element_blank(),
-        axis.text.x = element_text('sadfdsaf'),
+        axis.text.x = element_text(),
         axis.title.y = element_blank())
 
 ## ggrigdes code
