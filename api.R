@@ -3,6 +3,9 @@
 # setup -------------------------------------------------------------------
 source('setup.R', local = FALSE)
 
+# data --------------------------------------------------------------------
+source('data.R', local = FALSE)
+
 # description -------------------------------------------------------------
 #* @apiTitle Standartox API
 #* @apiDescription Retieve filtered data
@@ -10,12 +13,12 @@ source('setup.R', local = FALSE)
 
 # debugger ----------------------------------------------------------------
 #* @filter debugger
-function(req) {
-  
-  req_envir <<- req
-  
-  plumber::forward()
-}
+# function(req) {
+#   
+#   req_envir <<- req
+#   
+#   plumber::forward()
+# }
 
 
 # filter: logger ----------------------------------------------------------
@@ -54,109 +57,91 @@ function(req, res) {
   plumber::forward()
 }
 
-# filter: catalog ---------------------------------------------------------
-#*
-#* @filter catalog
-function(req) {
-  catal <<- readRDS(file.path('data',
-                              v,
-                              paste0('standartox', v, '_catalog.rds')))
-  catal$vers <<- dirs
-  
-  plumber::forward()
-}
-
 # filter: sanitizing ------------------------------------------------------
 #*
 #* @filter sanitzing
 function(req, res) {
   if (!is.null(req$args$cas)) {
     req$args$cas = as.integer(gsub('-|\\W', '', req$args$cas))
-    chck_catal = in_catalog(req$args$cas, catal$cas$variable)
-    if (!is.null(chck_catal)) {
-      msg = paste0('CAS not in Standartox data base:\n', paste0(chck_catal, collapse = '\n')) 
+    chck_catalog = in_catalog(req$args$cas, catalog$casnr$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('CAS not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n')) 
       res$status = 400
       return(list(error = msg))
     }
   }
   if (!is.null(req$args$concentration_type)) {
-    chck_catal = in_catalog(req$args$concentration_type, catal$concentration_type$variable)
-    if (!is.null(chck_catal)) {
-      msg = paste0('Concentration type not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
+    chck_catalog = in_catalog(req$args$concentration_type, catalog$concentration_type$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('Concentration type not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
+      res$status = 400
+      return(list(error = msg))
+    }
+  }
+  if (!is.null(req$args$chemical_role)) {
+    chck_catalog = in_catalog(req$args$chemical_role, catalog$chemical_role$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('Chemical role not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
   }
   if (!is.null(req$args$chemical_class)) {
-    chck_catal = in_catalog(req$args$chemical_class, catal$chemical_class$variable)
-    if (!is.null(chck_catal)) {
-      msg = paste0('Chemical class not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
+    chck_catalog = in_catalog(req$args$chemical_class, catalog$chemical_class$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('Chemical class not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
   }
   if (!is.null(req$args$taxa))  {
-    chck_catal = in_catalog(req$args$taxa, catal$taxa$variable)
-    if (!is.null(chck_catal)) {
-      msg = paste0('Taxa not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
+    chck_catalog = in_catalog(req$args$taxa, catalog$taxa$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('Taxa not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
   }
   if (!is.null(req$args$habitat)) {
-    chck_catal = in_catalog(req$args$habitat, catal$habitat$variable)
-    if (!is.null(chck_catal)) {
-      msg = paste0('Habitat value not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
+    chck_catalog = in_catalog(req$args$habitat, catalog$habitat$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('Habitat value not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
   }
   if (!is.null(req$args$region)) {
-    chck_catal = in_catalog(req$args$region, catal$region$variable)
-    if (!is.null(chck_catal)) {
-      msg = paste0('Region value not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
+    chck_catalog = in_catalog(req$args$region, catalog$region$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('Region value not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
   }
   if (!is.null(req$args$duration)) {
     req$args$duration = as.integer(gsub('\\W', '', req$args$duration)) # numeric sanitizing
-    if (!all(req$args$duration %between% catal$duration)) {
+    if (!all(req$args$duration %between% catalog$duration)) {
       res$status = 400
       return(list(error = 'Duration period not in Standartox data base.'))
     }
   }
   if (!is.null(req$args$effect)) {
-    chck_catal = in_catalog(req$args$effect, catal$effect$variable)
-    if (!is.null(chck_catal)) {
-      msg = paste0('Effect value not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
+    chck_catalog = in_catalog(req$args$effect, catalog$effect$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('Effect value not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
   }
   if (!is.null(req$args$endpoint)) {
-    chck_catal = in_catalog(req$args$endpoint, catal$endpoint$variable)
-    if (!is.null(chck_catal)) {
-      msg = paste0('Endpoint value not in Standartox data base:\n', paste0(chck_catal, collapse = '\n'))
+    chck_catalog = in_catalog(req$args$endpoint, catalog$endpoint$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('Endpoint value not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
   }
 
-  plumber::forward()
-}
-
-# filter: prefix ----------------------------------------------------------
-#* add prefixes to certain arguments
-#* @filter prefix
-function(req) {
-  if (!is.null(req$args$chemical_class))
-    req$args$chemical_class = paste0('ccl_', req$args$chemical_class)
-  if (!is.null(req$args$habitat))
-    req$args$habitat = paste0('hab_', req$args$habitat)
-  if (!is.null(req$args$region))
-    req$args$region = paste0('reg_', req$args$region)
-  
   plumber::forward()
 }
 
@@ -165,10 +150,10 @@ function(req) {
 #* @json
 function() {
   
-  return(catal)
+  return(catalog)
 }
 
-  # endpoint: aggregate -----------------------------------------------------
+# endpoint: aggregate -----------------------------------------------------
 #* @get /aggregate
 #* @serializer contentType list(type="application/octet-stream")
 function() {
@@ -182,7 +167,8 @@ function() {
 #* @param:character cas
 #* @param:character concentration_unit Concentration (e.g. ug/l)
 #* @param:character concentration_type Concentration type (e.g. A, F)
-#* @param:character chemical_class Chemical class (e.g. 'herbicide')
+#* @param:character chemical_role Chemical role (e.g. 'herbicide')
+#* @param:character chemical_class Chemical class (e.g. 'neonicotinoid')
 #* @param:character taxa taxonomic name (e.g. Algae)
 #* @param:character habitat Organism habitat (e.g. freshwater)
 #* @param:character region Organism geographical region (e.g. europe)
@@ -196,6 +182,7 @@ function(req,
          cas = NULL,
          concentration_unit = NULL,
          concentration_type = NULL,
+         chemical_role = NULL,
          chemical_class = NULL,
          taxa = NULL,
          habitat = NULL,
@@ -204,16 +191,12 @@ function(req,
          effect = NULL,
          endpoint = NULL
 ) {
-  # data
-  dat = fst::read_fst(file.path('data',
-                                v,
-                                paste0('standartox', v, '.fst')),
-                      as.data.table = TRUE)
   # function
   out = stx_filter(dt = dat,
                    cas_ = cas,
                    concentration_unit_ = concentration_unit,
                    concentration_type_ = concentration_type,
+                   chemical_role_ = chemical_role,
                    chemical_class_ = chemical_class,
                    taxa_ = taxa,
                    habitat_ = habitat,

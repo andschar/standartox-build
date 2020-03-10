@@ -68,16 +68,18 @@ source(file.path(src, 'gg_theme.R'))
 epa_versions = list.dirs(datadir, full.names = FALSE)
 epa_versions = epa_versions[ epa_versions != '' ]
 epa_versions_newest = max(epa_versions)
+datadir2 = file.path(datadir, epa_versions_newest)
 
 # cite packages -----------------------------------------------------------
-fl_bib = file.path(article, 'refs', 'references-standartox-app.bib')
-file.remove(fl_bib)
-
-for (i in pkg_cran) {
-  capture.output(
-    print(citation(i), style = "Bibtex"),
-    file = fl_bib,
-    append = TRUE)
-}
+# NOTE only uncomment locally - TAKES EXTRA TIME
+# fl_bib = file.path(article, 'refs', 'references-standartox-app.bib')
+# file.remove(fl_bib)
+# 
+# for (i in pkg_cran) {
+#   capture.output(
+#     print(citation(i), style = "Bibtex"),
+#     file = fl_bib,
+#     append = TRUE)
+# }
 
 

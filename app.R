@@ -8,6 +8,15 @@ sidewidth = 350
 
 # data --------------------------------------------------------------------
 source('data.R')
+# add name percetnage column
+catalog = lapply(catalog[ names(catalog) != 'meta' ],
+               function(x) {
+                 if (is.data.table(x)) {
+                   x[ , name_perc := paste0(variable, ' (', perc, '%)') ]
+                 } else {
+                   x
+                 }
+               })
 
 # header ------------------------------------------------------------------
 header = dashboardHeaderPlus(
@@ -32,41 +41,57 @@ sidebar = dashboardSidebar(
     'Filters',
     id = 'sidebar_filter',
     menuItem(
+      # TODO include chemical name search as well?
       'Chemical',
       tabName = 'chemical',
-      splitLayout(
-        fileInput(
-          inputId = 'file_cas',
-          label = 'Upload CAS',
-          accept = '.csv',
-          placeholder = 'one column .csv'
-        ),
-        actionButton(
-          inputId = 'reset',
-          label = 'Reset',
-          style = 'margin-top:37px'
-        )
-      ),
+      selectizeInput(inputId = 'cas',
+                     label = 'CAS or chemical name',
+                     choices = catalog$casnr$variable,
+                     selected = 'Atrazine',
+                     multiple = TRUE,
+                     options = list(create = FALSE)),
+      ### OLD file upload CAS ------------
+      # splitLayout(
+      #   fileInput(
+      #     inputId = 'file_cas',
+      #     label = 'Upload CAS',
+      #     accept = '.csv',
+      #     placeholder = 'one column .csv'
+      #   ),
+      #   actionButton(
+      #     inputId = 'reset',
+      #     label = 'Reset',
+      #     style = 'margin-top:37px'
+      #   )
+      # ),
+      ### END OLD
       prettyCheckboxGroup(
         inputId = 'concentration_unit',
         label = 'Concentration unit',
-        choiceValues = catalog_l$concentration_unit$variable,
-        choiceNames = catalog_l$concentration_unit$name_perc,
-        selected = grep('ug/l|ppb', catalog_l$concentration_unit$variable, ignore.case = TRUE, value = TRUE)[1]
+        choiceValues = catalog$concentration_unit$variable,
+        choiceNames = catalog$concentration_unit$name_perc,
+        selected = grep('ug/l|ppb', catalog$concentration_unit$variable, ignore.case = TRUE, value = TRUE)[1]
       ),
       prettyCheckboxGroup(
         inputId = 'concentration_type',
         label = 'Concentration type',
-        choiceValues = catalog_l$concentration_type$variable,
-        choiceNames = catalog_l$concentration_type$name_perc,
-        selected = grep('active.ingredien', catalog_l$concentration_type$variable, ignore.case = TRUE, value = TRUE)[1]
+        choiceValues = catalog$concentration_type$variable,
+        choiceNames = catalog$concentration_type$name_perc,
+        selected = grep('active.ingredien', catalog$concentration_type$variable, ignore.case = TRUE, value = TRUE)[1]
+      ),
+      prettyCheckboxGroup(
+        inputId = 'chemical_role',
+        label = 'Chemical role',
+        choiceValues = catalog$chemical_role$variable,
+        choiceNames = catalog$chemical_role$name_perc,
+        selected = grep('insecticide', catalog$chemical_role$variable, ignore.case = TRUE, value = TRUE)[1]
       ),
       prettyCheckboxGroup(
         inputId = 'chemical_class',
         label = 'Chemical class',
-        choiceValues = catalog_l$chemical_class$variable,
-        choiceNames = catalog_l$chemical_class$name_perc,
-        selected = grep('insecticide', catalog_l$chemical_class$variable, ignore.case = TRUE, value = TRUE)[1]
+        choiceValues = catalog$chemical_class$variable,
+        choiceNames = catalog$chemical_class$name_perc,
+        selected = grep('neonicotinoid', catalog$chemical_class$variable, ignore.case = TRUE, value = TRUE)[1]
       )
     ),
     menuItem(
@@ -74,23 +99,23 @@ sidebar = dashboardSidebar(
       tabName = 'taxon',
       selectizeInput(inputId = 'tax',
                      label = 'Taxa',
-                     choices = catalog_l$taxa$variable,
+                     choices = catalog$taxa$variable,
                      selected = 'Daphnia magna',
                      multiple = TRUE,
                      options = list(create = FALSE)),
       prettyCheckboxGroup(
         inputId = 'habitat',
         label = 'Organism hatbitat',
-        choiceValues = catalog_l$habitat$variable,
-        choiceNames = catalog_l$habitat$name_perc,
-        selected = grep('fresh', catalog_l$habitat$variable, ignore.case = TRUE, value = TRUE)[1]
+        choiceValues = catalog$habitat$variable,
+        choiceNames = catalog$habitat$name_perc,
+        selected = grep('fresh', catalog$habitat$variable, ignore.case = TRUE, value = TRUE)[1]
       ),
       prettyCheckboxGroup(
         inputId = 'region',
         label = 'Region',
-        choiceValues = catalog_l$region$variable,
-        choiceNames = catalog_l$region$name_perc,
-        selected = grep('europe', catalog_l$region$variable, ignore.case = TRUE, value = TRUE)[1]
+        choiceValues = catalog$region$variable,
+        choiceNames = catalog$region$name_perc,
+        selected = grep('europe', catalog$region$variable, ignore.case = TRUE, value = TRUE)[1]
       )
     ),
     menuItem(
@@ -139,23 +164,23 @@ sidebar = dashboardSidebar(
       # prettyRadioButtons(
       #   inputId = 'test_location',
       #   label = 'Test location',
-      #   choiceValues = catalog_l$test_location$variable,
-      #   choiceNames = catalog_l$test_location$variable
+      #   choiceValues = catalog$test_location$variable,
+      #   choiceNames = catalog$test_location$variable
       # ),
       ### END TODO
       splitLayout(
         prettyCheckboxGroup(
           inputId = 'effect',
           label = 'Effect group',
-          choiceValues = catalog_l$effect$variable,
-          choiceNames = catalog_l$effect$name_perc,
+          choiceValues = catalog$effect$variable,
+          choiceNames = catalog$effect$name_perc,
           selected = c('MOR', 'POP', 'GRO', 'ITX')
         ),
         prettyRadioButtons(
           inputId = 'endpoint',
           label = 'Endpoint',
-          choiceValues = catalog_l$endpoint$variable,
-          choiceNames = catalog_l$endpoint$name_perc,
+          choiceValues = catalog$endpoint$variable,
+          choiceNames = catalog$endpoint$name_perc,
           selected = c('XX50')
         )
       )
@@ -288,28 +313,31 @@ server = function(input, output, session) {
   })
   # read csv + action button ------------------------------------------------
   # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
-  rv = reactiveValues(data = NULL,
-                      reset = FALSE)
-  observe({
-    req(input$file_cas)
-    req(!rv$reset)
-    data = read.csv(input$file_cas$datapath,
-                    header = FALSE,
-                    stringsAsFactors = FALSE) # $datapath not very intuitive
-    data = data[ ,1]
-    rv$data = data
-  })
-  observeEvent(input$reset, {
-    rv$data = NULL
-    rv$clear = TRUE
-    reset('file_cas')
-  }, priority = 1000) # priority?
+  ### OLD CAS FILE UPLOAD
+  # rv = reactiveValues(data = NULL,
+  #                     reset = FALSE)
+  # observe({
+  #   req(input$cas)
+  #   req(!rv$reset)
+  #   data = read.csv(input$cas$datapath,
+  #                   header = FALSE,
+  #                   stringsAsFactors = FALSE) # $datapath not very intuitive
+  #   data = data[ ,1]
+  #   rv$data = data
+  # })
+  # observeEvent(input$reset, {
+  #   rv$data = NULL
+  #   rv$clear = TRUE
+  #   reset('cas')
+  # }, priority = 1000) # priority?
+  ### END OLD
   # filter ------------------------------------------------------------------
   data_fil = reactive({
     stx_filter(
       dt = dat,
       concentration_unit = input$concentration_unit,
       concentration_type = input$concentration_type,
+      chemical_role = input$chemical_role,
       chemical_class = input$chemical_class,
       taxa = taxa_input(),
       habitat = input$habitat,
@@ -317,7 +345,8 @@ server = function(input, output, session) {
       duration = c(input$dur1, input$dur2),
       effect = input$effect,
       endpoint = input$endpoint,
-      cas = rv$data
+      # cas = rv$data OLD CAS FILE UPLOAD
+      cas = input$cas
     )
   })
   # aggregate ---------------------------------------------------------------
@@ -327,6 +356,7 @@ server = function(input, output, session) {
         dt = dat,
         concentration_unit = input$concentration_unit,
         concentration_type = input$concentration_type,
+        chemical_role = input$chemical_role,
         chemical_class = input$chemical_class,
         tax = taxa_input(),
         habitat = input$habitat,
@@ -334,7 +364,8 @@ server = function(input, output, session) {
         duration = c(input$dur1, input$dur2),
         effect = input$effect,
         endpoint = input$endpoint,
-        cas = rv$data
+        # cas = rv$data OLD CAS FILE UPLOAD
+        cas = input$cas
       ),
       agg = input$agg,
       comp = input$chemical,

@@ -4,6 +4,7 @@ stx_filter = function(dt,
                       cas_ = NULL,
                       concentration_unit_ = NULL,
                       concentration_type_ = NULL,
+                      chemical_role_ = NULL,
                       chemical_class_ = NULL,
                       taxa_ = NULL,
                       habitat_ = NULL,
@@ -35,14 +36,21 @@ stx_filter = function(dt,
   if (!is.null(endpoint_)) {
     dt = dt[ endpoint %in% endpoint_ ]
   }
+  if (!is.null(chemical_role_)) {
+    chemical_role_ = paste0('cro_', chemical_role_)
+    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, TRUE)), .SDcols = chemical_role_ ]]
+  }
   if (!is.null(chemical_class_)) {
-    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = chemical_class_ ]]
+    chemical_class_ = paste0('ccl_', chemical_class_)
+    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, TRUE)), .SDcols = chemical_class_ ]]
   }
   if (!is.null(habitat_)) {
-    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = habitat_ ]]
+    habitat_ = paste0('hab_', habitat_)
+    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, TRUE)), .SDcols = habitat_ ]]
   }
   if (!is.null(region_)) {
-    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, 1L)), .SDcols = region_ ]]
+    region_ = paste0('reg_', region_)
+    dt = dt[dt[ , Reduce(`|`, lapply(.SD, `==`, TRUE)), .SDcols = region_ ]]
   }
   if (!is.null(taxa_)) {
     col_tax = grep('tax_', names(dt), ignore.case = TRUE, value = TRUE)
