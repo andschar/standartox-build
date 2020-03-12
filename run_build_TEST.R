@@ -16,12 +16,12 @@ if (sink_console) {
 }
 
 # SCRIPT TO TEST ----------------------------------------------------------
-source(file.path(src, 'rep_query_prep.R'), max.deparse.length = mdl)
+# source(file.path(src, 'rep_query_prep.R'), max.deparse.length = mdl)
 # source(file.path(src, 'qu_taxa_fin.R'), max.deparse.length = mdl) # TODO error  GREATEST(wo.brack, epa_habi.brackish)::boolean AS brack
-source(file.path(src, 'qu_phch_fin.R'), max.deparse.length = mdl)
+# source(file.path(src, 'qu_phch_fin.R'), max.deparse.length = mdl)
 source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
 source(file.path(src, 'rep_standartox.R'), max.deparse.length = mdl)
-source(file.path(src, 'exp_standartox2.R'), max.deparse.length = mdl)
+source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
 source(file.path(src, 'exp_standartox_catalog.R'), max.deparse.length = mdl)
 
 # end ---------------------------------------------------------------------
@@ -33,5 +33,3 @@ if (sink_console) {
   sink()
   sink(type = "message")
 }
-
-

@@ -2,7 +2,7 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
-con = DBI::dbConnect(RPostgres::Postgres(),
+con = DBI::dbConnect(RPostgreSQL::PostgreSQL(), #RPostgres::Postgres(),
                      dbname = DBetox,
                      host = DBhost,
                      port = DBport,
@@ -49,7 +49,7 @@ mapply(dbreport::dbreport,
                        exit = FALSE))
 
 # Standartox tables -------------------------------------------------------
-tbl = c('tests', 'chem_prop', 'chem_role', 'chem_class', 'refs', 'data2')
+tbl = c('tests', 'tests_fin', 'chemicals', 'taxa', 'refs')
 mapply(dbreport::dbreport,
        tbl = tbl,
        output_file = tbl,

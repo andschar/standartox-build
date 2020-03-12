@@ -11,23 +11,23 @@ CREATE TABLE chem.chem_id AS (
 		LOWER(COALESCE(wiki.label, chebi.chebiasciiname, srs.epaname, pubchem.name)) AS cname,
 		cir.inchikey,
 		COALESCE(cir.inchi, srs.inchi) AS inchi,
-		CASE WHEN cir.inchi IS NOT NULL THEN 'cir' WHEN srs.inchi IS NOT NULL THEN 'srs' ELSE NULL END AS inchi_src,
+		-- TODO CASE WHEN cir.inchi IS NOT NULL THEN 'cir' WHEN srs.inchi IS NOT NULL THEN 'srs' ELSE NULL END AS inchi_src,
 		COALESCE(cir.smiles, srs.smiles) AS smiles,
-		CASE WHEN cir.smiles IS NOT NULL THEN 'cir' WHEN srs.smiles IS NOT NULL THEN 'srs' ELSE NULL END AS smiles_src,
+		-- TDOO CASE WHEN cir.smiles IS NOT NULL THEN 'cir' WHEN srs.smiles IS NOT NULL THEN 'srs' ELSE NULL END AS smiles_src,
 		COALESCE(chebi.chebiid, pubchem.chebiid) AS chebiid,
-		CASE WHEN chebi.chebiid IS NOT NULL THEN 'chebi' WHEN pubchem.chebiid IS NOT NULL THEN 'pubchem' ELSE NULL END AS chebiid_src,
+		-- TODO CASE WHEN chebi.chebiid IS NOT NULL THEN 'chebi' WHEN pubchem.chebiid IS NOT NULL THEN 'pubchem' ELSE NULL END AS chebiid_src,
 		wiki.wdid AS wdid,
-		CASE WHEN wiki.wdid IS NOT NULL THEN 'wiki' ELSE NULL END AS wdid_src,
+		-- TODO CASE WHEN wiki.wdid IS NOT NULL THEN 'wiki' ELSE NULL END AS wdid_src,
 		pubchem.cid AS cid,
-		CASE WHEN pubchem.cid IS NOT NULL THEN 'pubchem' ELSE NULL END AS cid_src,
+		-- TODO CASE WHEN pubchem.cid IS NOT NULL THEN 'pubchem' ELSE NULL END AS cid_src,
 		pubchem.chembl AS chembl,
-		CASE WHEN pubchem.chembl IS NOT NULL THEN 'pubchem' ELSE NULL END AS chembl_src,
+		-- TODO CASE WHEN pubchem.chembl IS NOT NULL THEN 'pubchem' ELSE NULL END AS chembl_src,
 		pubchem.einec AS einec,
-		CASE WHEN pubchem.einec IS NOT NULL THEN 'pubchem' ELSE NULL END AS einec_src,
+		-- TODO CASE WHEN pubchem.einec IS NOT NULL THEN 'pubchem' ELSE NULL END AS einec_src,
 		srs.internaltrackingnumber,
-		CASE WHEN srs.internaltrackingnumber IS NOT NULL THEN 'srs' ELSE NULL END AS internaltrackingnumber_src,
-		srs.epaidentificationnumber,
-		CASE WHEN srs.epaidentificationnumber IS NOT NULL THEN 'srs' ELSE NULL END AS epaidentificationnumber_src
+		-- TODO CASE WHEN srs.internaltrackingnumber IS NOT NULL THEN 'srs' ELSE NULL END AS internaltrackingnumber_src,
+		srs.epaidentificationnumber
+		-- TODO CASE WHEN srs.epaidentificationnumber IS NOT NULL THEN 'srs' ELSE NULL END AS epaidentificationnumber_src
 	FROM ecotox.chem_id id
 	LEFT JOIN cir.cir_id cir USING (cas)
 	LEFT JOIN chebi.chebi_id chebi USING (cas)

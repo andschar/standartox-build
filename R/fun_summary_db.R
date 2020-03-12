@@ -225,14 +225,14 @@ summary_db_cols = function(schema, table, cols = NULL) {
 
 summary_db_perc = function(con, schema, table, col = NULL) {
 
-  con = DBI::dbConnect(RPostgreSQL::PostgreSQL(), # RPostgres::Postgres(),
+  con = DBI::dbConnect(RPostgreSQL::PostgreSQL(),
                        dbname = DBetox,
                        host = DBhost,
                        port = DBport,
                        user = DBuser,
                        password = DBpassword)
   on.exit(DBI::dbDisconnect(con))
-  
+  # col = 'concentration_unit'; schema = 'standartox'; table = 'data2' # debuging
   q = paste0("WITH
               t1 AS (
                 SELECT ", col, ", count(*) n
@@ -244,14 +244,14 @@ summary_db_perc = function(con, schema, table, col = NULL) {
                 SELECT count(*) n_total
                 FROM ", paste0(schema, '.', table), "
               )
-              SELECT ", col, ",
+              SELECT ", col, " AS variable,
               n,
-              n_total--,
-              -- round(n::decimal / n_tot::decimal * 100, 0) perc,
-              --", col, " || ' - ' || round(n::decimal / n_total::decimal * 100, 0)::text || '%' perc_str
-              FROM t1, t2")
-  
+              n_total,
+              round(n::decimal / n_total::decimal * 100, 0) perc
+              FROM t1, t2
+              ORDER BY n DESC")
   out = DBI::dbGetQuery(con, q)
+  data.table::setDT(out)
   
   return(out)
 }

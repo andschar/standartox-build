@@ -5,7 +5,7 @@ source(file.path(src, 'gn_setup.R'))
 
 # scripts -----------------------------------------------------------------
 q2 = read_char(file.path(sql, 'standartox_data2.sql'))
-q2_fin = read_char(file.path(sql, 'standartox_data2_fin.sql'))
+# TODO remove? q2_fin = read_char(file.path(sql, 'standartox_data2_fin.sql'))
 explanation = fread(file.path(lookupdir, 'lookup_explanation.csv'), na.strings = '')
 
 # query -------------------------------------------------------------------
@@ -16,7 +16,7 @@ dbSendQuery(con, "DROP SCHEMA IF EXISTS standartox CASCADE;")
 dbSendQuery(con, "CREATE SCHEMA standartox;")
 
 dbSendQuery(con, q2) # converted data
-dbSendQuery(con, q2_fin) # combined data
+# TODO remove? dbSendQuery(con, q2_fin) # combined data
 dbWriteTable(con, value = explanation, name = c('standartox', 'data2_explanation'),
              row.names = FALSE,
              overwrite = TRUE)

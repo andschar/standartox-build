@@ -1,13 +1,14 @@
 -------------------------------------------------------------------------------
 -- Standartox data export
 -- define type and name for every column
-
+-- TODO DEPRECATE????????????????????????????????????????????????????????????????
 DROP TABLE IF EXISTS standartox.data2;
 
 CREATE TABLE standartox.data2 AS
 
 SELECT
-  chem_prop.casnr::text AS cas,
+  chem_prop.casnr,
+  chem_prop.cas::text AS cas,
   chem_prop.cname::text,
   test.conc1_mean2::numeric AS concentration,
   CASE
@@ -139,7 +140,58 @@ WHERE test.conc1_qualifier = '='
   AND test.obs_duration_mean2 IS NOT NULL
   AND test.obs_duration_unit2 IS NOT NULL AND test.obs_duration_unit2 = 'h'
   AND test.effect IS NOT NULL
+  --AND test.endpoint2 IN ('NOEX', 'LOEX', 'XX50')
+  AND taxa.genus != '' AND taxa.genus IS NOT NULL
+  AND taxa.taxon NOT IN ('Algae', 'Plankton', 'Invertebrates')
+;
+
+
+--------------------------------------------------------------------------------------
+-- TESTING
+/*
+DROP TABLE IF EXISTS standartox.data2;
+
+CREATE TABLE standartox.data2 AS
+
+SELECT
+  chem_prop.casnr::text AS cas,
+  chem_prop.cname::text,
+  test.conc1_mean2::numeric AS concentration,
+  CASE
+    WHEN test.conc1_unit2 = 'ug/l'
+      THEN 'ug/l'
+    WHEN test.conc1_unit2 = 'ppb'
+      THEN 'ppb'
+    WHEN test.conc1_unit2 = 'mg/kg'
+      THEN 'mg/kg'
+    ELSE 'other'
+  END AS concentration_unit,
+  test.conc1_type::text AS concentration_type,
+  test.obs_duration_mean2::double precision AS duration,
+  false AS outlier,
+  CASE
+    WHEN test.obs_duration_unit2 = 'h'
+      THEN 'h'
+    ELSE 'other'
+  END AS duration_unit,
+  test.effect::text,
+  test.endpoint2::text AS endpoint,
+  test.test_location::text,
+  test.test_method::text
+FROM standartox.tests test
+LEFT JOIN standartox.chem_prop chem_prop USING (casnr)
+LEFT JOIN standartox.chem_role chem_role USING(casnr)
+LEFT JOIN standartox.chem_class chem_class USING(casnr)
+LEFT JOIN standartox.taxa taxa USING(species_number)
+LEFT JOIN standartox.refs refs USING(reference_number)
+
+WHERE test.conc1_qualifier = '='
+  AND test.conc1_mean2 IS NOT NULL AND test.conc1_unit2 IS NOT NULL 
+  AND test.obs_duration_mean2 IS NOT NULL
+  AND test.obs_duration_unit2 IS NOT NULL AND test.obs_duration_unit2 = 'h'
+  AND test.effect IS NOT NULL
   AND test.endpoint2 IN ('NOEX', 'LOEX', 'XX50')
   AND taxa.genus != '' AND taxa.genus IS NOT NULL
   AND taxa.taxon NOT IN ('Algae', 'Plankton', 'Invertebrates')
 ;
+*/

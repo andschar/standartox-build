@@ -76,88 +76,92 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
   # clean tables --------
   # not done in loop above due to changes
   # list all .txt files
-  files = list.files(etoxdir, pattern="*.txt", full.names=TRUE)
+  files = list.files(etoxdir, pattern = "*.txt", full.names=TRUE)
   # exclude the release notes
   files = files[!grepl('release', files)]
   # extract the file/table names
-  names = gsub(".txt", "", basename(files))
+  nam = gsub(".txt", "", basename(files))
   # for every file, read into R amd copy to postgresql
-  # for (i in seq_along(files)) {
-  #   message("Read File: ", files[i], "\n")
-  #   dt = read.table(files[i], header=T, sep='|', comment.char= '', quote='')
-  #   setDT(dt)
-  #   dbWriteTable(con, names[i], value=dt, row.names=FALSE)
-  # }
-
-  # chemical carriers -----------------------------------------------------
-  dt = read.table(file.path(etoxdir, 'chemical_carriers.txt'),
-                  header = TRUE, sep = '|', comment.char = '', quote = '',
-                  stringsAsFactors = FALSE)
-  setDT(dt)
-  dbWriteTable(con, 'chemical_carriers', value = dt, row.names = FALSE)
-  message('Writing chemical_carriers.txt')
-  # dose_response_details ---------------------------------------------------
-  dt = read.table(file.path(etoxdir, 'dose_response_details.txt'),
-                  header = TRUE, sep = '|', comment.char = '', quote = '',
-                  stringsAsFactors = FALSE)
-  setDT(dt)
-  pat = c('\\+NR', '\\-NR', '.+X.+E.+', '^$', 'NR')
-  dt[ , response_mean_cl := gsub(paste0(pat, collapse = '|'), NA, response_mean) ]
-  dt[ , response_mean_cl := as.numeric(response_mean_cl) ]
-  dbWriteTable(con, 'dose_response_details', value = dt, row.names = FALSE)
-  message('Writing dose_response_details.txt')
-  # dose_response_links -----------------------------------------------------
-  dt = read.table(file.path(etoxdir, 'dose_response_links.txt'),
-                  header = TRUE, sep = '|', comment.char = '', quote = '',
-                  stringsAsFactors = FALSE)
-  setDT(dt)
-  dbWriteTable(con, 'dose_response_links', value = dt, row.names = FALSE)
-  message('Writing dose_response_links.txt')
-  # dose_responses ----------------------------------------------------------
-  dt = read.table(file.path(etoxdir, 'dose_responses.txt'),
-                  header = TRUE, sep = '|', comment.char = '', quote = '',
-                  stringsAsFactors = FALSE)
-  setDT(dt)
-  pat = c('-', '\\*', 'st', 'nd', 'rd', 'th', '~', '<', '>')
-  dt[ , obs_duration_mean_cl := trimws(gsub(paste0(pat, collapse = '|'), '', obs_duration_mean,
-                                            ignore.case = TRUE)) ]
-  dt[ , obs_duration_mean_cl := gsub('NR|\\*|-.NR|NR', NA, obs_duration_mean_cl) ]
-  dt[ , obs_duration_mean_cl := as.numeric(obs_duration_mean_cl) ]
-  dbWriteTable(con, 'dose_responses', value = dt, row.names = FALSE)
-  message('Writing dose_responses.txt')
-  # doses -------------------------------------------------------------------
-  dt = read.table(file.path(etoxdir, 'doses.txt'),
-                  header = TRUE, sep = '|', comment.char = '', quote = '',
-                  stringsAsFactors = FALSE)
-  setDT(dt)
-  dt[ , dose1_mean_cl := as.numeric(gsub('NR', NA, dose1_mean)) ]
-  dbWriteTable(con, 'doses', value = dt, row.names = FALSE)
-  message('Writing doses.txt')
-  # media_characteristics ---------------------------------------------------
-  dt = read.table(file.path(etoxdir, 'media_characteristics.txt'),
-                  header = TRUE, sep = '|', comment.char = '', quote = '',
-                  stringsAsFactors = FALSE)
-  setDT(dt)
-  dbWriteTable(con, 'media_characteristics', value = dt, row.names = FALSE)
-  message('Writing media_characteristics.txt')
-  # results -----------------------------------------------------------------
-  dt = read.table(file.path(etoxdir, 'results.txt'),
-                  header = TRUE, sep = '|', comment.char = '', quote = '',
-                  stringsAsFactors = FALSE)
-  setDT(dt)
-  pat = c('\\+', '-', '~', '\\*', 'ca', 'x', '>', '<', '=')
-  dt[ , conc1_mean_cl := trimws(gsub(paste0(pat, collapse = '|'), '', conc1_mean)) ]
-  dt[ , conc1_mean_cl := gsub('^$|NR', NA, gsub(',', '.', conc1_mean_cl)) ]
-  dt[ , conc1_mean_cl := as.numeric(conc1_mean_cl) ]
-  dbWriteTable(con, 'results', value = dt, row.names = FALSE)
-  message('Writing results.txt')
-  # tests -------------------------------------------------------------------
-  dt = read.table(file.path(etoxdir, 'tests.txt'),
-                  header = TRUE, sep = '|', comment.char = '', quote = '',
-                  stringsAsFactors = FALSE)
-  setDT(dt)
-  dbWriteTable(con, 'tests', value = dt, row.names = FALSE)
-  message('Writing tests.txt')
+  for (i in seq_along(files)) {
+    message("Read File: ", files[i], "\n")
+    dt = fread(files[i], sep = '|', quote = '', na.strings = '')
+    dbWriteTable(con, nam[i], value = dt, row.names=FALSE)
+  }
+# TODO remove
+  # # chemical carriers -----------------------------------------------------
+  # dt = read.table(file.path(etoxdir, 'chemical_carriers.txt'),
+  #                 header = TRUE, sep = '|', comment.char = '', quote = '',
+  #                 stringsAsFactors = FALSE)
+  # dt = fread(file.path(etoxdir,  'chemical_carriers.txt'),
+  #            sep = '|', quote = '')
+  # dt = fread(file.path(etoxdir, 'validation', 'species.txt'),
+  #            sep = '|', quote = '', na.strings = '')
+  # setDT(dt)
+  # dbWriteTable(con, 'chemical_carriers', value = dt, row.names = FALSE)
+  # message('Writing chemical_carriers.txt')
+  # # dose_response_details ---------------------------------------------------
+  # dt = read.table(file.path(etoxdir, 'dose_response_details.txt'),
+  #                 header = TRUE, sep = '|', comment.char = '', quote = '',
+  #                 stringsAsFactors = FALSE)
+  # setDT(dt)
+  # pat = c('\\+NR', '\\-NR', '.+X.+E.+', '^$', 'NR')
+  # dt[ , response_mean_cl := gsub(paste0(pat, collapse = '|'), NA, response_mean) ]
+  # dt[ , response_mean_cl := as.numeric(response_mean_cl) ]
+  # dbWriteTable(con, 'dose_response_details', value = dt, row.names = FALSE)
+  # message('Writing dose_response_details.txt')
+  # # dose_response_links -----------------------------------------------------
+  # dt = read.table(file.path(etoxdir, 'dose_response_links.txt'),
+  #                 header = TRUE, sep = '|', comment.char = '', quote = '',
+  #                 stringsAsFactors = FALSE)
+  # setDT(dt)
+  # dbWriteTable(con, 'dose_response_links', value = dt, row.names = FALSE)
+  # message('Writing dose_response_links.txt')
+  # # dose_responses ----------------------------------------------------------
+  # dt = read.table(file.path(etoxdir, 'dose_responses.txt'),
+  #                 header = TRUE, sep = '|', comment.char = '', quote = '',
+  #                 stringsAsFactors = FALSE)
+  # setDT(dt)
+  # pat = c('-', '\\*', 'st', 'nd', 'rd', 'th', '~', '<', '>')
+  # dt[ , obs_duration_mean_cl := trimws(gsub(paste0(pat, collapse = '|'), '', obs_duration_mean,
+  #                                           ignore.case = TRUE)) ]
+  # dt[ , obs_duration_mean_cl := gsub('NR|\\*|-.NR|NR', NA, obs_duration_mean_cl) ]
+  # dt[ , obs_duration_mean_cl := as.numeric(obs_duration_mean_cl) ]
+  # dbWriteTable(con, 'dose_responses', value = dt, row.names = FALSE)
+  # message('Writing dose_responses.txt')
+  # # doses -------------------------------------------------------------------
+  # dt = read.table(file.path(etoxdir, 'doses.txt'),
+  #                 header = TRUE, sep = '|', comment.char = '', quote = '',
+  #                 stringsAsFactors = FALSE)
+  # setDT(dt)
+  # dt[ , dose1_mean_cl := as.numeric(gsub('NR', NA, dose1_mean)) ]
+  # dbWriteTable(con, 'doses', value = dt, row.names = FALSE)
+  # message('Writing doses.txt')
+  # # media_characteristics ---------------------------------------------------
+  # dt = read.table(file.path(etoxdir, 'media_characteristics.txt'),
+  #                 header = TRUE, sep = '|', comment.char = '', quote = '',
+  #                 stringsAsFactors = FALSE)
+  # setDT(dt)
+  # dbWriteTable(con, 'media_characteristics', value = dt, row.names = FALSE)
+  # message('Writing media_characteristics.txt')
+  # # results -----------------------------------------------------------------
+  # dt = read.table(file.path(etoxdir, 'results.txt'),
+  #                 header = TRUE, sep = '|', comment.char = '', quote = '',
+  #                 stringsAsFactors = FALSE)
+  # setDT(dt)
+  # # TODO remove with new release
+  # pat = c('\\+', '-', '~', '\\*', 'ca', 'x', '>', '<', '=')
+  # dt[ , conc1_mean_cl := trimws(gsub(paste0(pat, collapse = '|'), '', conc1_mean)) ]
+  # dt[ , conc1_mean_cl := gsub('^$|NR', NA, gsub(',', '.', conc1_mean_cl)) ]
+  # dt[ , conc1_mean_cl := as.numeric(conc1_mean_cl) ]
+  # dbWriteTable(con, 'results', value = dt, row.names = FALSE)
+  # message('Writing results.txt')
+  # # tests -------------------------------------------------------------------
+  # dt = read.table(file.path(etoxdir, 'tests.txt'),
+  #                 header = TRUE, sep = '|', comment.char = '', quote = '',
+  #                 stringsAsFactors = FALSE)
+  # setDT(dt)
+  # dbWriteTable(con, 'tests', value = dt, row.names = FALSE)
+  # message('Writing tests.txt')
   
   # primary keys --------
   dbSendQuery(con, "ALTER TABLE chemical_carriers ADD PRIMARY KEY (carrier_id)")
@@ -226,14 +230,13 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
                   password = DBpassword)
   
   # Copy validation tables to server
-  files2 = list.files(file.path(etoxdir, "validation"), pattern = "*.txt", 
-                       full.names = T)
-  names2 = gsub(".txt", "", basename(files2))
-  for (i in seq_along(files2)) {
-    message("Read File: ", files2[i], "\n")
-    df = read.table(files2[i], header = TRUE, sep = '|', comment.char = '', 
-                    quote = '')
-    dbWriteTable(con, names2[i], value = df, row.names = FALSE)
+  files_val = list.files(file.path(etoxdir, "validation"), pattern = "*.txt", 
+                         full.names = TRUE)
+  nam_val = gsub(".txt", "", basename(files_val))
+  for (i in seq_along(files_val)) {
+    message("Read File: ", files_val[i], "\n")
+    dt = fread(files_val[i], sep = '|', quote = '', na.strings = '')
+    dbWriteTable(con, nam_val[i], value = dt, row.names = FALSE)
   }
   
   # Add primary keys (some table without PK -> these are just lookup tables)
@@ -273,19 +276,6 @@ if (nrow(DBetox_chck1) != 1 | DBetox_chck2 != 48) {
     q <- paste0("ALTER TABLE ", i, " SET SCHEMA ecotox")
     dbSendQuery(con, q)
   }
-  
-  dbDisconnect(con)
-  dbUnloadDriver(drv)
-  
-  # CLEANING ----------------------------------------------------------------
-  drv = dbDriver("PostgreSQL")
-  con = dbConnect(drv, user = DBuser,
-                  dbname = DBetox,
-                  host = DBhost,
-                  port = DBport,
-                  password = DBpassword)
-  
-  
   
   dbDisconnect(con)
   dbUnloadDriver(drv)

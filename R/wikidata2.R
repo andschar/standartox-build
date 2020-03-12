@@ -1,8 +1,8 @@
 # funcion to query chemical information from wikidata
 # inspired by ropensci/webchem
-# TODO include it in webchem
 # TODO handle many results per property
 # TODO check wikidata time constraints
+# TODO (7.3.2020) why does type = 'role' return an URI and not the label of the role itself?
 # TODO put into webchem:: once it is finished
 
 # function ----------------------------------------------------------------
@@ -13,8 +13,9 @@ id_list <- function(type = NULL) {
   # ?prop wdt:P31 wd:Q21294996.
   # SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }}'
   l <- list(
-    # identifiers
+    # label
     c('name', 'label', 'rdfs', '@en', 'label'),
+    # identifiers
     c('cas', 'P231', 'wdt', NA, 'identifier'),
     c('ec', 'P232', 'wdt', NA, 'identifier'),
     c('smiles', 'P233', 'wdt', NA, 'identifier'),
@@ -47,15 +48,14 @@ id_list <- function(type = NULL) {
     c('density', 'P2054', 'wdt', NA, 'property'),
     c('heat_capacity', 'P2056', 'wdt', NA, 'property'),
     c('sound_speed', 'P2075', 'wdt', NA, 'property'),
-    c('ionization_energy', 'P2260', 'wdt', NA, 'property')#,
-
-#
-#     c('instance_of', 'P31', 'wdt', NA, 'role'),
-#     c('has_role', 'P2868', 'wdt', NA, 'role'),
-#     c('part_of', 'P361', 'wdt', NA, 'role'),
-#     c('has_effect', 'P1542', 'wdt', NA, 'role'),
-#     c('has_quality', 'P1552', 'wdt', NA, 'role'),
-#     c('use', 'P366', 'wdt', NA, 'role')
+    c('ionization_energy', 'P2260', 'wdt', NA, 'property'),
+    # roles
+    c('instance_of', 'P31', 'wdt', NA, 'role'),
+    c('has_role', 'P2868', 'wdt', NA, 'role'),
+    c('part_of', 'P361', 'wdt', NA, 'role'),
+    c('has_effect', 'P1542', 'wdt', NA, 'role'),
+    c('has_quality', 'P1552', 'wdt', NA, 'role'),
+    c('use', 'P366', 'wdt', NA, 'role')
   )
   df <- data.frame(do.call(rbind, l),
                    stringsAsFactors = FALSE)
@@ -99,15 +99,13 @@ sparql_build <- function(wdid, type) {
                        'PREFIX wdt: <http://www.wikidata.org/prop/direct/>',
                        'SELECT * WHERE {')
   label <- paste0('wd:', wdid, ' rdfs:label ?label .')
-  prop <- paste0(paste0('OPTIONAL{wd:', wdid, ' wdt:', ids$p, ' ?', ids$param, ' .}'), collapse = ' ')
+  prop <- paste0(paste0('OPTIONAL{wd:', wdid, ' wdt:', ids$p, ' ?', ids$param, ' .}'),
+                 collapse = ' ')
   filter <- 'FILTER(LANG(?label) = "en").'
   sparql_body <- paste(label, prop, filter)
   sparql <- paste0(sparql_head, sparql_body, '}')
-  # URL
-  qurl <- paste0(baseurl, sparql)
-  qurl <- URLencode(qurl)
-  
-  return(qurl)
+
+  return(sparql)
 }
 
 get_wdid <- function(query = NULL,
@@ -167,19 +165,21 @@ wd_data <- function(wdid = NULL,
                     type = c('label', 'identifier', 'property', 'role'),
                     verbose = TRUE) {
   foo <- function(wdid,
-                  type,
+                  type = c('label', 'identifier', 'property', 'role'),
                   verbose) {
     if (is.null(wdid))
       stop('No identifier supplied.')
-    # type <- match.arg(type)
+    type <- match.arg(type)
     # query
-    qurl <- sparql_build(wdid, type = type)
+    sparql <- sparql_build(wdid, type = type)
+    qurl <- paste0(baseurl, sparql)
+    qurl <- URLencode(qurl)
     Sys.sleep(rgamma(1, shape = 15, scale = 1/10)) # TODO check sys sleep requirements at wikidata
     if (verbose)
-      message('Querying: ', wdid, '\n', qurl)
-    cont <- fromJSON(
-      content(GET(qurl,
-                  user_agent('webchem (https://github.com/ropensci/webchem)')), 'text'))
+      message('Querying: ', wdid, '\n', sparql)
+    get_req <- GET(qurl,
+                   user_agent('webchem (https://github.com/ropensci/webchem)'))
+    cont <- fromJSON(content(get_req, 'text'))
     res <- as.list(cont$results$bindings)
     if (length(res) == 0) {
       if (verbose)
@@ -191,12 +191,12 @@ wd_data <- function(wdid = NULL,
       return(out)
     }
     res <- do.call(rbind, lapply(res, `[`, 'value'))
+    res <- unique(res) # NOTE in case multiple entries are returned
     id_l <- id_list(type = type)
-    out <- data.frame(label = rownames(res),
+    out <- data.frame(label = sub('\\.[0-9]+', '', rownames(res)),
                       value = res$value,
                       type = c('label', id_l[ id_l$param %in% rownames(res), ]$type), # NOTE UGLY BUILD!
                       stringsAsFactors = FALSE)
-    out$label <- sub('\\.[0-9]+', '', out$label)
     out <- unique(out)
 
     return(out)
@@ -208,12 +208,17 @@ wd_data <- function(wdid = NULL,
 
 # query = '9041-08-1'; identifier = 'cas'  # multiple entries
 # query = 'asdfsadf'; identifier = 'cas' # no entry
-
 # query = 'WSFSSNUMVMOOMR-UHFFFAOYSA-N'; identifier = 'inchikey'
 # query = 'triclosan'; identifier = 'name'
-# query = '50-00-0'; identifier = 'cas' # one entry
-# get_wdid(query = query, identifier = identifier, verbose = TRUE)
-# wd_data('Q161210', type = 'property')
+query = '50-00-0'; identifier = 'cas' # one entry
+get_wdid(query = query, identifier = identifier, verbose = TRUE)
+dat = wd_data(wdid = 'Q161210', type = 'identifier')
+dat
+prop = wd_data(wdid = 'Q161210', type = 'property')
+prop
+role = wd_data(wdid = 'Q161210', type = 'role')
+# role = wd_data(wdid = 'Q407232', type = 'role')
+role
 # example -----------------------------------------------------------------
 # require(jsonlite)
 # require(httr)

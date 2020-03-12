@@ -7,6 +7,8 @@ CREATE TABLE standartox.tests AS
 SELECT
 	tests.test_id,
 	results.result_id,
+	tests.species_number,
+	tests.reference_number,
 	tests.test_cas AS casnr,
 	coalesce(substring(results.conc1_mean, '<|>'), '=') AS conc1_qualifier,
 	results.conc1_mean AS conc1_mean,
@@ -20,6 +22,7 @@ SELECT
 		  WHEN concentration_unit_lookup.unit_conv = 'mol/g'
 		  THEN molconv(clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier::numeric, chem_prop.molecularweight::numeric) * 1e6 -- mol/g to g/g to mg/kg
 	      ELSE clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier
+	    -- TODO include day multiplication  
 		END
       ELSE clean(results.conc1_mean)::numeric
   	END AS conc1_mean2,
@@ -33,9 +36,9 @@ SELECT
 		  THEN 'mg/kg'
 		  ELSE concentration_unit_lookup.unit_conv
 		END
-	  ELSE results.conc1_unit
+	  ELSE 'other'
 	END AS conc1_unit2,
-	concat_ws('/', concentration_unit_lookup.type) AS unit_type,
+	concat_ws('/', concentration_unit_lookup.type) AS conc1_unit_type,
 	CASE
 	  WHEN conc1_type IN ('A')
 	  	THEN 'active ingredient'
@@ -50,7 +53,7 @@ SELECT
 	  WHEN conc1_type IN ('L')
 	    THEN 'labile'
 	  ELSE 'not reported'
-	END AS conc1_type,
+	END AS conc1_type2,
  	results.obs_duration_mean,
 	results.obs_duration_unit,
 	CASE
@@ -71,7 +74,7 @@ SELECT
 	  ELSE 'not reported'
 	END AS test_type,
 	effect_codes.description AS effect,
-	clean(results.endpoint) AS endpoint,
+	clean(results.endpoint) endpoint,
 	CASE
 	  WHEN clean(results.endpoint) IN ('NOEL', 'NOEC')
 	  	THEN 'NOEX'
@@ -104,13 +107,10 @@ SELECT
 	tests.organism_age_mean_op,
 	tests.organism_age_mean,
 	tests.organism_age_unit,
-	lifestage_codes.description AS lifestage,
-	tests.species_number,
-	tests.reference_number
+	lifestage_codes.description AS lifestage
 
 FROM
 	ecotox.tests
-
 LEFT JOIN ecotox.results ON tests.test_id = results.test_id
 	LEFT JOIN ecotox.response_site_codes ON results.response_site = response_site_codes.code
 	LEFT JOIN ecotox.measurement_codes ON results.measurement = measurement_codes.code
@@ -126,16 +126,47 @@ LEFT JOIN ecotox.substrate_codes on tests.substrate = substrate_codes.code
 LEFT JOIN chem.chem_prop ON tests.test_cas = chem_prop.casnr -- for molecularweight
 
 WHERE
-	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT LIKE '%ca%';
+	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT LIKE '%ca%'
+;
 
 ALTER TABLE standartox.tests ADD PRIMARY KEY (result_id);
+
+-------------------------------------------------------------------------------
+-- tests fin
+DROP TABLE IF EXISTS standartox.tests_fin;
+
+CREATE TABLE standartox.tests_fin AS
+
+SELECT
+	result_id,
+	species_number,
+	reference_number,
+	casnr,
+	conc1_mean2 AS concentration,
+	conc1_unit2 AS concentration_unit,
+	conc1_type2 AS concentration_type,
+	obs_duration_mean2 AS duration,
+	obs_duration_unit2 AS duration_unit, 
+ 	effect,
+ 	endpoint2 AS endpoint
+
+FROM standartox.tests
+WHERE
+	conc1_qualifier = '='
+    AND conc1_mean2 IS NOT NULL AND conc1_unit2 IS NOT NULL 
+    AND obs_duration_mean2 IS NOT NULL AND obs_duration_unit2 IS NOT NULL AND obs_duration_unit2 = 'h'
+    AND effect IS NOT NULL
+    AND endpoint2 IN ('NOEX', 'LOEX', 'XX50')
+;
+
+ALTER TABLE standartox.tests_fin ADD PRIMARY KEY (result_id);
 
 
 -------------------------------------------------------------------------------
 -- chemical names
-DROP TABLE IF EXISTS standartox.chem_prop;
+DROP TABLE IF EXISTS standartox.chemicals;
 
-CREATE TABLE standartox.chem_prop AS
+CREATE TABLE standartox.chemicals AS
 
 SELECT
 	id.casnr,
@@ -146,20 +177,8 @@ SELECT
 	id.inchi,
 	chem_prop.molecularweight::double precision,
 	chem_prop.p_log::double precision,
-	chem_prop.solubility_water::double precision
-FROM chem.chem_id2 id
-LEFT JOIN chem.chem_prop chem_prop USING(casnr);
-
-ALTER TABLE standartox.chem_prop ADD PRIMARY KEY (casnr);
-
--------------------------------------------------------------------------------
--- chemical roles
-DROP TABLE IF EXISTS standartox.chem_role;
-
-CREATE TABLE standartox.chem_role AS
-
-SELECT
-	id.casnr,
+	chem_prop.solubility_water::double precision,
+	-- chemical role -----------------------------------------------------------------
 	chem_role.acaricide AS cro_acaricide,
 	chem_role.antibiotic AS cro_antibiotic,
 	chem_role.antifouling AS cro_antifouling,
@@ -181,20 +200,8 @@ SELECT
 	chem_role.rodenticide AS cro_rodenticide,
 	chem_role.scabicide AS cro_scabicide,
 	chem_role.schistosomicide AS cro_schistosomicide,
-	chem_role.soil_sterilant AS cro_soil_sterilant
-FROM chem.chem_id2 id
-LEFT JOIN chem.chem_role chem_role USING (casnr);
-
-ALTER TABLE standartox.chem_role ADD PRIMARY KEY (casnr);
-
--------------------------------------------------------------------------------
--- chemical class
-DROP TABLE IF EXISTS standartox.chem_class;
-
-CREATE TABLE standartox.chem_class AS
-
-SELECT
-	id.casnr,
+	chem_role.soil_sterilant AS cro_soil_sterilant,
+	-- chemical class -----------------------------------------------------------------
 	chem_class.acylamino_acid AS ccl_acylamino_acid,
 	chem_class.aliphatic AS ccl_aliphatic,
 	chem_class.amide AS ccl_amide,
@@ -246,9 +253,11 @@ SELECT
 	chem_class.triazole AS ccl_triazole,
 	chem_class.urea AS ccl_urea
 FROM chem.chem_id2 id
+LEFT JOIN chem.chem_prop chem_prop USING(casnr)
+LEFT JOIN chem.chem_role chem_role USING (casnr)
 LEFT JOIN chem.chem_class chem_class USING (casnr);
 
-ALTER TABLE standartox.chem_class ADD PRIMARY KEY (casnr);
+ALTER TABLE standartox.chemicals ADD PRIMARY KEY (casnr);
 
 
 -------------------------------------------------------------------------------
@@ -258,16 +267,16 @@ DROP TABLE IF EXISTS standartox.taxa;
 CREATE TABLE standartox.taxa AS
 SELECT
 	id.species_number,
-	id.taxon,
-	id.common_name,
-	id.genus,
-	id.family,
-	id.tax_order,
-	id.class,
-	id.superclass,
-	id.subphylum_div,
-	id.phylum_division,
-	id.kingdom,
+	nullif(id.taxon, '') AS tax_taxon,
+	nullif(id.common_name, '') AS common_name,
+	nullif(id.genus, '') AS tax_genus,
+	nullif(id.family, '') AS tax_family,
+	nullif(id.tax_order, '') AS tax_order,
+	nullif(id.class, '') AS tax_class,
+	nullif(id.superclass, '') AS tax_superclass,
+	nullif(id.subphylum_div, '') AS subphylum_div,
+	nullif(id.phylum_division, '') AS tax_phylum_division,
+	nullif(id.kingdom, '') AS tax_kingdom,
 	id.ecotox_group2,
 	habi.marin::boolean AS hab_marine,
 	habi.brack::boolean AS hab_brackish,

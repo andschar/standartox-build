@@ -2,44 +2,30 @@
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
-v = basename(exportdir)
 unlink(exportdir, recursive = TRUE)
 mkdirs(exportdir)
 
+# query -------------------------------------------------------------------
+q = "SELECT table_schema, table_name 
+     FROM information_schema.tables
+     WHERE table_schema = 'standartox';"
+
+stx = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                 query = q)
+
 # export ------------------------------------------------------------------
-## data
-# as .fst object
-export_tbl(schema = 'standartox', tbl = 'data2', type = 'fst', debug = FALSE,
-           compress = FALSE,
-           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-           dir = exportdir, file_name = paste0('standartox', v))
-# as .fst object (compressed)
-export_tbl(schema = 'standartox', tbl = 'data2', type = 'fst', debug = FALSE,
-           compress = TRUE,
-           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-           dir = exportdir, file_name = paste0('standartox_comp', v))
-# as .feather object
-export_tbl(schema = 'standartox', tbl = 'data2', type = 'feather', debug = FALSE,
-           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-           dir = exportdir, file_name = paste0('standartox', v))
-# as .rds object
-export_tbl(schema = 'standartox', tbl = 'data2', type = 'rds', debug = FALSE,
-           compress = TRUE,
-           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-           dir = exportdir, file_name = paste0('standartox', v))
-# as .rda object
-export_tbl(schema = 'standartox', tbl = 'data2', type = 'rda', debug = FALSE,
-           compress = TRUE,
-           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-           dir = exportdir, file_name = paste0('standartox', v))
-# as .csv object
-export_tbl(schema = 'standartox', tbl = 'data2', type = 'csv', debug = FALSE,
-           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-           dir = exportdir, file_name = paste0('standartox', v))
-## explanations
-export_tbl(schema = 'standartox', tbl = 'data2_explanation', type = 'csv', debug = FALSE,
-           user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-           dir = exportdir, file_name = paste0('standartox_explanation', v))
+for (i in 1:nrow(stx)) {
+  schema = stx$table_schema[i]
+  tbl = stx$table_name[i]
+  export_tbl(schema = schema,
+             tbl = tbl,
+             type = 'fst',
+             debug = FALSE,
+             compress = 0,
+             user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+             dir = exportdir,
+             file_name = paste0(schema, '.', tbl))  
+}
 
 # log ---------------------------------------------------------------------
 log_msg('EXPORT: application data set exported.')
