@@ -1,0 +1,62 @@
+\documentclass[border = 1.5cm]{standalone}
+\usepackage{tikzpeople}
+\usetikzlibrary{trees,
+                arrows,
+                shapes.geometric,
+                positioning,
+                calc,
+                backgrounds,
+                fit}
+%% document
+\begin{document}
+%% layers
+\pgfdeclarelayer{bg1}    % declare background layer
+\pgfsetlayers{bg1, main}  % set the order of the layers (main is the standard layer)
+%% styles
+\tikzset{
+	font = {\sffamily},
+	ecotox/.style = {rectangle, minimum width = 4cm, minimum height = 3cm, text centered, rounded corners, draw = black, fill = yellow!10},
+	standartox/.style = {rectangle, minimum width = 4cm, minimum height = 2cm, text centered, rounded corners, draw = black, fill = purple!10},
+	app/.style = {rectangle, minimum width = 4cm, minimum height = 2cm, text centered, rounded corners, draw = black, fill = red!10},
+	frame/.style = {draw, rectangle, rounded corners, dashed, blue, line width = 1pt, inner sep = 4mm},
+	data/.style = {rectangle, minimum width = 7cm, minimum height = 3cm, text centered, rounded corners, draw = black},
+	ids/.style = {diamond, minimum width = 3cm, minimum height = 2cm, text centered, draw = black, fill = green!10},
+	db/.style = {rectangle, text centered, draw = black, rounded corners, minimum width = 3cm, minimum height = 1.25cm},
+	arrow1/.style = {->, > = stealth, draw = black, color = gray!80, line width = 3pt}
+}
+\begin{tikzpicture}
+%% processing
+\node (epa-ecotox) [ecotox, above of = ecotox-id, align=center, xshift = -3cm, yshift = 4cm] {\Large EPA ECOTOX\\\Large raw data};
+\node (ecotox-id) [standartox, align = center] at (-3cm,0cm) {\Large Identifiers};
+\node (ecotox-unit) [standartox, below of = ecotox-id, align = center, yshift = -2cm] {\Large Unit\\\Large harmonisation};
+\node (ecotox-chck) [standartox, below of = ecotox-unit, align = center, yshift = -2cm] {\Large Check\\\Large Conversions};
+\node (cas) [ids, below of = ecotox-id, xshift = 6cm, yshift = 3cm] {\Large CAS};
+\node (taxa) [ids, below of = cas, xshift = 0cm, yshift = -2.5cm] {\Large Taxa};
+\node (db-chemical) [db, right of = cas, xshift = 4cm, align = center] {\Large Chemical\\\Large databases};
+\node (db-habitat) [db, right of = taxa, xshift = 4cm, yshift = 1cm, align = center] {\Large Habitat\\\Large databases};
+\node (db-region) [db, right of = taxa, xshift = 4cm, yshift = -1cm, align = center] {\Large Region\\\Large databases};
+%% standartox
+\node (stx-data) [standartox, below of = ecotox-chck, xshift = 3cm, yshift = -2.5cm, align = center] {\Large Standartox\\\Large data set};
+\node (stx-filter) [standartox, below of = stx-data, xshift = 0cm, yshift = -2cm, align = center] {\Large Filter\\\Large methods};
+\node (stx-agg) [standartox, below of = stx-filter, xshift = 0cm, yshift = -2cm, align = center] {\Large Aggregation\\\Large methods};
+\node (stx-app) [app, below of = stx-data, yshift = 1cm, xshift = 6cm, align = center] {\Large Web\\\Large application};
+\node (stx-rpackage) [app, below of = stx-data, yshift = -4cm, xshift = 6cm, minimum height = 5cm] {\Large R-package};
+\node (stx-api) [app, below of = stx-rpackage, yshift = 2.25cm, xshift = 0cm, minimum width = 3cm, minimum height = 1.5cm] {\Large API};
+%% arrows
+\begin{pgfonlayer}{bg1}
+    \draw [arrow1] (epa-ecotox.south) to [out=75,in=180] (stx-data.west);
+    \draw [arrow1] (stx-data) -- (stx-filter);
+    \draw [arrow1] (stx-filter) -- (stx-agg);
+    \draw [arrow1] (ecotox-id.east) -- (cas.west);
+    \draw [arrow1] (ecotox-id.east) -- (taxa.west);
+    \draw [arrow1] (cas.east)-- (db-chemical.west);
+    \draw [arrow1] (taxa.east) -- (db-habitat.west);
+    \draw [arrow1] (taxa.east) -- (db-region.west);
+\end{pgfonlayer}
+%% frames
+\node (frame-stx) [frame, fit = (stx-data) (stx-rpackage) (stx-app) ] {};
+\node (frame-stx-text) [above, blue, inner sep = 2mm] at (frame-stx.north) {\Large Standartox};
+%% people
+\node (person) [bob, right of = stx-data, xshift = 9cm, yshift = -8cm, minimum size = 2cm] {};
+\end{tikzpicture}
+\end{document}
