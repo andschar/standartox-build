@@ -1,0 +1,17 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# self defined:
+*.Rproj
+
+# data
+/data/*
+
+# log
+log/*
+
+# notes
+deploy_shiny_app.txt
+
