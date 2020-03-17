@@ -1,10 +1,10 @@
 # API script
 
 # setup -------------------------------------------------------------------
-source('setup.R', local = FALSE)
+source('setup.R')
 
 # data --------------------------------------------------------------------
-source('data.R', local = FALSE)
+source('data.R')
 
 # description -------------------------------------------------------------
 #* @apiTitle Standartox API
@@ -13,12 +13,12 @@ source('data.R', local = FALSE)
 
 # debugger ----------------------------------------------------------------
 #* @filter debugger
-# function(req) {
-#   
-#   req_envir <<- req
-#   
-#   plumber::forward()
-# }
+function(req) {
+
+  req_envir <<- req
+
+  plumber::forward()
+}
 
 
 # filter: logger ----------------------------------------------------------
@@ -192,7 +192,10 @@ function(req,
          endpoint = NULL
 ) {
   # function
-  out = stx_filter(dt = dat,
+  out = stx_filter(test = stx_test,
+                   chem = stx_chem,
+                   taxa = stx_taxa,
+                   refs = stx_refs,
                    cas_ = cas,
                    concentration_unit_ = concentration_unit,
                    concentration_type_ = concentration_type,
@@ -214,7 +217,7 @@ function(req,
     
     jsonlite::toJSON(msg)
   } else {
-    tmp = 'tmp/data'
+    tmp = '/tmp/data'
     fst::write_fst(out, tmp, compress = 100) # write compressed
     readBin(tmp, "raw", n = file.size(tmp)) # read to serve API request
   }

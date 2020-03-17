@@ -1,11 +1,11 @@
 # function to check if supplied value is in catalog
 
-in_catalog = function(x, catalog) {
-  if (is.null(x) || is.null(catalog)) {
+in_catalog = function(x, catal) {
+  if (is.null(x) || is.null(catal)) {
     stop('Parameters are NULL.')
   }
-  catalog = tolower(catalog)
-  res = x[ which(!tolower(x) %in% catalog) ]
+  catal = tolower(catal)
+  res = x[ which(!tolower(x) %in% catal) ]
   if (length(res) == 0) {
     res = NULL
   }
