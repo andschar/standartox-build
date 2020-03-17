@@ -45,9 +45,10 @@ sidebar = dashboardSidebar(
       'Chemical',
       tabName = 'chemical',
       selectizeInput(inputId = 'cas',
-                     label = 'CAS or chemical name',
-                     choices = catalog$casnr$variable,
-                     selected = 'Atrazine',
+                     label = 'CAS input',
+                     choices = c(catalog$casnr$variable,
+                                 casconv(catalog$casnr$variable, 'tocas')),
+                     selected = NULL,
                      multiple = TRUE,
                      options = list(create = FALSE)),
       ### OLD file upload CAS ------------
@@ -299,17 +300,13 @@ ui = dashboardPagePlus(header, sidebar, body,
                        skin = 'purple')
 # server ------------------------------------------------------------------
 server = function(input, output, session) {
-  
   # renderUI ----------------------------------------------------------------
+  cas_input = reactive({
+    handle_input_multiple(input$cas)
+  })
   # handle multiple inputs
   taxa_input = reactive({
-    input_tax = input$tax
-    if (!is.null(input_tax)) {
-      input_tax = na.omit(trimws(unlist(strsplit(input_tax, ","))))
-      input_tax = input_tax[ input_tax != '' ]
-    }
-    
-    return(input_tax)
+    handle_input_multiple(input$tax)
   })
   # read csv + action button ------------------------------------------------
   # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
@@ -334,38 +331,42 @@ server = function(input, output, session) {
   # filter ------------------------------------------------------------------
   data_fil = reactive({
     stx_filter(
-      dt = dat,
-      concentration_unit = input$concentration_unit,
-      concentration_type = input$concentration_type,
-      chemical_role = input$chemical_role,
-      chemical_class = input$chemical_class,
-      taxa = taxa_input(),
-      habitat = input$habitat,
-      region = input$region,
-      duration = c(input$dur1, input$dur2),
-      effect = input$effect,
-      endpoint = input$endpoint,
-      # cas = rv$data OLD CAS FILE UPLOAD
-      cas = input$cas
+      test = stx_test,
+      chem = stx_chem,
+      taxa = stx_taxa,
+      refs = stx_refs,
+      concentration_unit_ = input$concentration_unit,
+      concentration_type_ = input$concentration_type,
+      chemical_role_ = input$chemical_role,
+      chemical_class_ = input$chemical_class,
+      taxa_ = taxa_input(),
+      habitat_ = input$habitat,
+      region_ = input$region,
+      duration_ = c(input$dur1, input$dur2),
+      effect_ = input$effect,
+      endpoint_ = input$endpoint,
+      cas_ = cas_input()
     )
   })
   # aggregate ---------------------------------------------------------------
   data_agg = reactive({
     stx_aggregate(
       dt = stx_filter(
-        dt = dat,
-        concentration_unit = input$concentration_unit,
-        concentration_type = input$concentration_type,
-        chemical_role = input$chemical_role,
-        chemical_class = input$chemical_class,
-        tax = taxa_input(),
-        habitat = input$habitat,
-        region = input$region,
-        duration = c(input$dur1, input$dur2),
-        effect = input$effect,
-        endpoint = input$endpoint,
-        # cas = rv$data OLD CAS FILE UPLOAD
-        cas = input$cas
+        test = stx_test,
+        chem = stx_chem,
+        taxa = stx_taxa,
+        refs = stx_refs,
+        concentration_unit_ = input$concentration_unit,
+        concentration_type_ = input$concentration_type,
+        chemical_role_ = input$chemical_role,
+        chemical_class_ = input$chemical_class,
+        taxa_ = taxa_input(),
+        habitat_ = input$habitat,
+        region_ = input$region,
+        duration_ = c(input$dur1, input$dur2),
+        effect_ = input$effect,
+        endpoint_ = input$endpoint,
+        cas_ = cas_input()
       ),
       agg = input$agg,
       comp = input$chemical,
