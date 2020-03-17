@@ -30,7 +30,6 @@ if (!require('pacman')) {
 }
 
 pkg_cran = c(
-  'base', # only for citation
   'devtools',
   'RCurl',
   'stringr',
@@ -42,7 +41,6 @@ pkg_cran = c(
   'readxl',
   'openxlsx',
   'purrr',
-  'data.tree',
   'data.table',
   'RPostgreSQL',
   'DBI',
@@ -66,12 +64,10 @@ pkg_cran = c(
   'fst',
   'DT',
   'knitr'
-  # TODO check if all packages are still needed!
 )
 pkg_gith = c('ropensci/bib2df',
              'ropensci/webchem',
-             'andschar/standartox',
-             'andschar/dbreport') # , 'NIVANorge/chemspideR') # no citation available!
+             'andschar/dbreport')
 
 ## install via CRAN
 pacman::p_load(char = pkg_cran)
@@ -166,6 +162,12 @@ source(file.path(src, 'fun_as_true.R'))
 # database ----------------------------------------------------------------
 csapikey = read_char(file.path(cred, 'chemspider_apikey.txt'))
 
+# units -------------------------------------------------------------------
+gal = 3.785411784 # liters
+
+
+
+
 # library dependencies ----------------------------------------------------
 # libsodium - for JS module fs - fun_scrape_phantomjs.R
 # phantomjs - headless browser - fun_scrape_phantomjs.R
@@ -180,25 +182,30 @@ source(file.path(src, 'ggplot_theme_etox_base.R'))
 theme_set(theme_minimal_etox_base_sans)
 
 # cite packages -----------------------------------------------------------
-# TODO turn on for final paper draft
-# pkg = c('pacman', pkg_cran)
-# fl_bib = file.path(article, 'refs', 'references-standartox-build.bib')
-# fl_tex = file.path(article, 'supplement', 'r-package-list.tex')
-# file.remove(fl_bib)
-# file.remove(fl_tex)
-# for (i in pkg) {
-#   capture.output(
-#     print(citation(i), style = "Bibtex"),
-#     file = fl_bib,
-#     append = TRUE
-#   )
-#   capture.output(
-#     print(citation(i), style = 'latex'),
-#     cat('\\newline '), # HACK
-#     file = fl_tex,
-#     append = TRUE
-#   )
-# }
+pkg = sort(c('pacman', pkg_cran))#, pkg_gith))
+fl_bib = file.path(article, 'refs', 'references-standartox-build.bib')
+fl_tex = file.path(article, 'appendix', 'r-package-list.tex')
+file.remove(fl_bib)
+file.remove(fl_tex)
 
+print(citation(i), style = "Bibtex")[1] = 'sadf'
+entry = toBibtex(citation(i)[1]) # = 'sadf'
+entry[1] = sub("\\{,$", sprintf("{%s%s,", prefix, pkg), 
+               entry[1])
+
+entry$year
+for (i in pkg) {
+  capture.output(
+    print(citation(i), style = "Bibtex"),
+    file = fl_bib,
+    append = TRUE
+  )
+  capture.output(
+    print(citation(i), style = 'latex'),
+    cat('\\newline '), # HACK
+    file = fl_tex,
+    append = TRUE
+  )
+}
 
 
