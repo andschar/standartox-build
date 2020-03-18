@@ -1,126 +1,126 @@
-unit,word,si,multiplier,conv,unit_conv,remove,group
-s,second,yes,0.00027778,yes,h,no,duration
-mi,minute,yes,0.0166667,yes,h,no,duration
-h,hour,yes,1,yes,h,no,duration
-d,day,yes,24,yes,h,no,duration
-wk,week,yes,168,yes,h,no,duration
-mo,month,yes,730.001,yes,h,no,duration
-yr,year,yes,8760,yes,h,no,duration
-BLM,bloom stage,no,1,no,BLM,yes,duration
-LSI,larval stage index,no,1,no,LSI,yes,duration
-ZGS,zadoks growth stage,no,1,no,ZGS,yes,duration
-abs,until abscission,no,1,no,abs,yes,duration
-alv,alevin,no,1,no,alv,yes,duration
-ant,until anthesis,no,1,no,ant,yes,duration
-brd,brood or litter,no,1,no,brd,yes,duration
-brs,breeding season,no,1,no,brs,yes,duration
-bt,to boot stage,no,1,no,bt,yes,duration
-cd,colony diameter,no,1,no,cd,yes,duration
-clv,cleavage,no,1,no,clv,yes,duration
-crs,crab stage,no,1,no,crs,yes,duration
-cs,cell stage,no,1,no,cs,yes,duration
-dapu,days after pupation,yes,24,yes,h,no,duration
-dbh,days before hatch,yes,24,yes,h,no,duration
-dd,degree days,yes,24,yes,h,no,duration
-dge,days gestation,yes,24,yes,h,no,duration
-dla,days lactation,yes,24,yes,h,no,duration
-dpe,days post-emergence,yes,24,yes,h,no,duration
-dpel,days post egg laying,yes,24,yes,h,no,duration
-dpf,days post fertilization,yes,24,yes,h,no,duration
-dpfl,days post flowering,yes,24,yes,h,no,duration
-dpgm,days post germination,yes,24,yes,h,no,duration
-dph,days post hatch,yes,24,yes,h,no,duration
-dphv,days post harvest,yes,24,yes,h,no,duration
-dpm,days post-moult,yes,24,yes,h,no,duration
-dpn,days post-natal,yes,24,yes,h,no,duration
-dpo,days post oviposition,yes,24,yes,h,no,duration
-dpp,days post planting/sowing,yes,24,yes,h,no,duration
-dps,days post spawn,yes,24,yes,h,no,duration
-dpu,days post swim-up,yes,24,yes,h,no,duration
-dpys,days post yolk sac absorption,yes,24,yes,h,no,duration
-ea,to earing or heading,no,1,no,ea,yes,duration
-ej,egg to juvenile,no,1,no,ej,yes,duration
-el,nth egg laid,no,1,no,el,yes,duration
-em,to emergence,no,1,no,em,yes,duration
-ep,egg to pupation,no,1,no,ep,yes,duration
-epa,egg to pre-adult,no,1,no,epa,yes,duration
-eslk,to early silk stage,no,1,no,eslk,yes,duration
-ey,time to eyed stage fish,no,1,no,ey,yes,duration
-f5,50% flowering,no,1,no,f5,yes,duration
-fb,full bloom stage,no,1,no,fb,yes,duration
-fi,flower initiation,no,1,no,fi,yes,duration
-fl,flower stage,no,1,no,fl,yes,duration
-flg,fleding,no,1,no,flg,yes,duration
-fr,to fruit stage,no,1,no,fr,yes,duration
-frt,to fertilization,no,1,no,frt,yes,duration
-fry,fry,no,1,no,fry,yes,duration
-fs,flowering stage,no,1,no,fs,yes,duration
-gds,gallien and durocher stage,no,1,no,gds,yes,duration
-ge,generation,no,1,no,ge,yes,duration
-ges,gestiation,no,1,no,ges,yes,duration
-gm,to germination,no,1,no,gm,yes,duration
-go,gosner stage,no,1,no,go,yes,duration
-gs,growing season,no,1,no,gs,yes,duration
-gts,gastrula stage,no,1,no,gts,yes,duration
-dh,degree hours,no,1,yes,h,no,duration
-hbf,hours pre-fertilization,no,1,yes,h,no,duration
-hpe,hours post emergence,no,1,yes,h,no,duration
-hpel,hours post egg laying,no,1,yes,h,no,duration
-hpf,hour post fertilization,no,1,yes,h,no,duration
-hph,hours post hatch,no,1,yes,h,no,duration
-hpp,hours post planting,no,1,yes,h,no,duration
-ht,until hatch,no,1,yes,h,no,duration
-hv,harvest,no,1,no,hv,yes,duration
-i2,intermolt to second molt,no,1,no,i2,yes,duration
-ins,instar,no,1,no,ins,yes,duration
-inst,instantaneous,no,1,no,inst,yes,duration
-it,intermolt to molt,no,1,no,it,yes,duration
-lf,lifetime,no,1,no,lf,yes,duration
-lfd,leaf drop,no,1,no,lfd,yes,duration
-lgp,to lag phase,no,1,no,lgp,yes,duration
-log,to log phase,no,1,no,log,yes,duration
-ls,leaf stage,no,1,no,ls,yes,duration
-lva,larva to adult,no,1,no,lva,yes,duration
-lvp,larva to pupa,no,1,no,lvp,yes,duration
-lvsa,,no,1,no,lvsa,yes,duration
-ma,to maturity,no,1,no,ma,yes,duration
-mmph,until metamorphosis,no,1,no,mmph,yes,duration
-mopf,months post-fertilization,yes,1,yes,h,no,duration
-moph,months post-hatch,yes,1,yes,h,no,duration
-mopm,months post-metamorphosis,yes,1,yes,h,no,duration
-mpf,minutes post-gertilization,yes,1,yes,h,no,duration
-mph,minutes post hatch,yes,1,yes,h,no,duration
-nf,Nieuwkoop-faber-stage,no,1,no,nf,yes,duration
-pa,pupa to adult,no,1,no,pa,yes,duration
-pan,panicling stage,no,1,no,pan,yes,duration
-pgm,post germination,no,1,no,pgm,yes,duration
-pm,post molt,no,1,no,pm,yes,duration
-pro,propagation stage,no,1,no,pro,yes,duration
-so,shooting stage,no,1,no,so,yes,duration
-sst,substage,no,1,no,sst,yes,duration
-stg,stage,no,1,no,stg,yes,duration
-su,summer,no,1,no,su,yes,duration
-swm,Swim-up,no,1,no,swm,yes,duration
-tls,tiller stage,no,1,no,tls,yes,duration
-ubi,until birth,no,1,no,ubi,yes,duration
-vg,vegetative stage,no,1,no,vg,yes,duration
-wkpm,weeks post metamorphosis,yes,1,yes,h,no,duration
-wpe,weeks post emergence,yes,1,yes,h,no,duration
-wph,weeks post hatch,yes,1,yes,h,no,duration
-wphv,weels pre harvest,yes,1,yes,h,no,duration
-wpp,weels post planting,yes,1,yes,h,no,duration
-zm,Zoeae-megalop,no,1,no,zm,yes,duration
-cfs,to comercial flower stage,no,1,no,cfs,yes,duration
-eb,early bloom stage,no,1,no,eb,yes,duration
-lhv15-20,leaf harvest 15-20cm,no,1,no,lhv15-20,yes,duration
-lhv20-25,leaf harvest 20-25cm,no,1,no,lhv20-25,yes,duration
-ls6,6 leaf stage,no,1,no,ls6,yes,duration
-MULT,multiple durations,no,1,no,MULT,yes,duration
-myp,mysis to post-larvare,no,1,no,myp,yes,duration
-pr,Priming – harvest of ripened tobacco leaves,no,1,no,pr,yes,duration
-rhv3,"root harvest, 3 grams",no,1,no,rhv3,yes,duration
-wbh,weeks pre-hatch,yes,1,yes,h,no,duration
-zmy,zoeae to mysis,no,1,no,zmy,yes,duration
-b0.25,0.25 bloom stage,no,1,no,b0.25,yes,duration
---,no data,no,1,no,--,yes,nodata
-NR,no data,no,1,no,NR,yes,nodata
+"unit","word","si","multiplier","conv","unit_conv","group"
+"s","second",TRUE,0.00027778,TRUE,"h","duration"
+"mi","minute",TRUE,0.0166667,TRUE,"h","duration"
+"h","hour",TRUE,1,TRUE,"h","duration"
+"d","day",TRUE,24,TRUE,"h","duration"
+"wk","week",TRUE,168,TRUE,"h","duration"
+"mo","month",TRUE,730.001,TRUE,"h","duration"
+"yr","year",TRUE,8760,TRUE,"h","duration"
+"BLM","bloom stage",FALSE,1,FALSE,"BLM","duration"
+"LSI","larval stage index",FALSE,1,FALSE,"LSI","duration"
+"ZGS","zadoks growth stage",FALSE,1,FALSE,"ZGS","duration"
+"abs","until abscission",FALSE,1,FALSE,"abs","duration"
+"alv","alevin",FALSE,1,FALSE,"alv","duration"
+"ant","until anthesis",FALSE,1,FALSE,"ant","duration"
+"brd","brood or litter",FALSE,1,FALSE,"brd","duration"
+"brs","breeding season",FALSE,1,FALSE,"brs","duration"
+"bt","to boot stage",FALSE,1,FALSE,"bt","duration"
+"cd","colony diameter",FALSE,1,FALSE,"cd","duration"
+"clv","cleavage",FALSE,1,FALSE,"clv","duration"
+"crs","crab stage",FALSE,1,FALSE,"crs","duration"
+"cs","cell stage",FALSE,1,FALSE,"cs","duration"
+"dapu","days after pupation",TRUE,24,TRUE,"h","duration"
+"dbh","days before hatch",TRUE,24,TRUE,"h","duration"
+"dd","degree days",TRUE,24,TRUE,"h","duration"
+"dge","days gestation",TRUE,24,TRUE,"h","duration"
+"dla","days lactation",TRUE,24,TRUE,"h","duration"
+"dpe","days post-emergence",TRUE,24,TRUE,"h","duration"
+"dpel","days post egg laying",TRUE,24,TRUE,"h","duration"
+"dpf","days post fertilization",TRUE,24,TRUE,"h","duration"
+"dpfl","days post flowering",TRUE,24,TRUE,"h","duration"
+"dpgm","days post germination",TRUE,24,TRUE,"h","duration"
+"dph","days post hatch",TRUE,24,TRUE,"h","duration"
+"dphv","days post harvest",TRUE,24,TRUE,"h","duration"
+"dpm","days post-moult",TRUE,24,TRUE,"h","duration"
+"dpn","days post-natal",TRUE,24,TRUE,"h","duration"
+"dpo","days post oviposition",TRUE,24,TRUE,"h","duration"
+"dpp","days post planting/sowing",TRUE,24,TRUE,"h","duration"
+"dps","days post spawn",TRUE,24,TRUE,"h","duration"
+"dpu","days post swim-up",TRUE,24,TRUE,"h","duration"
+"dpys","days post yolk sac absorption",TRUE,24,TRUE,"h","duration"
+"ea","to earing or heading",FALSE,1,FALSE,"ea","duration"
+"ej","egg to juvenile",FALSE,1,FALSE,"ej","duration"
+"el","nth egg laid",FALSE,1,FALSE,"el","duration"
+"em","to emergence",FALSE,1,FALSE,"em","duration"
+"ep","egg to pupation",FALSE,1,FALSE,"ep","duration"
+"epa","egg to pre-adult",FALSE,1,FALSE,"epa","duration"
+"eslk","to early silk stage",FALSE,1,FALSE,"eslk","duration"
+"ey","time to eyed stage fish",FALSE,1,FALSE,"ey","duration"
+"f5","50% flowering",FALSE,1,FALSE,"f5","duration"
+"fb","full bloom stage",FALSE,1,FALSE,"fb","duration"
+"fi","flower initiation",FALSE,1,FALSE,"fi","duration"
+"fl","flower stage",FALSE,1,FALSE,"fl","duration"
+"flg","fleding",FALSE,1,FALSE,"flg","duration"
+"fr","to fruit stage",FALSE,1,FALSE,"fr","duration"
+"frt","to fertilization",FALSE,1,FALSE,"frt","duration"
+"fry","fry",FALSE,1,FALSE,"fry","duration"
+"fs","flowering stage",FALSE,1,FALSE,"fs","duration"
+"gds","gallien and durocher stage",FALSE,1,FALSE,"gds","duration"
+"ge","generation",FALSE,1,FALSE,"ge","duration"
+"ges","gestiation",FALSE,1,FALSE,"ges","duration"
+"gm","to germination",FALSE,1,FALSE,"gm","duration"
+"go","gosner stage",FALSE,1,FALSE,"go","duration"
+"gs","growing season",FALSE,1,FALSE,"gs","duration"
+"gts","gastrula stage",FALSE,1,FALSE,"gts","duration"
+"dh","degree hours",FALSE,1,TRUE,"h","duration"
+"hbf","hours pre-fertilization",FALSE,1,TRUE,"h","duration"
+"hpe","hours post emergence",FALSE,1,TRUE,"h","duration"
+"hpel","hours post egg laying",FALSE,1,TRUE,"h","duration"
+"hpf","hour post fertilization",FALSE,1,TRUE,"h","duration"
+"hph","hours post hatch",FALSE,1,TRUE,"h","duration"
+"hpp","hours post planting",FALSE,1,TRUE,"h","duration"
+"ht","until hatch",FALSE,1,TRUE,"h","duration"
+"hv","harvest",FALSE,1,FALSE,"hv","duration"
+"i2","intermolt to second molt",FALSE,1,FALSE,"i2","duration"
+"ins","instar",FALSE,1,FALSE,"ins","duration"
+"inst","instantaneous",FALSE,1,FALSE,"inst","duration"
+"it","intermolt to molt",FALSE,1,FALSE,"it","duration"
+"lf","lifetime",FALSE,1,FALSE,"lf","duration"
+"lfd","leaf drop",FALSE,1,FALSE,"lfd","duration"
+"lgp","to lag phase",FALSE,1,FALSE,"lgp","duration"
+"log","to log phase",FALSE,1,FALSE,"log","duration"
+"ls","leaf stage",FALSE,1,FALSE,"ls","duration"
+"lva","larva to adult",FALSE,1,FALSE,"lva","duration"
+"lvp","larva to pupa",FALSE,1,FALSE,"lvp","duration"
+"lvsa",,FALSE,1,FALSE,"lvsa","duration"
+"ma","to maturity",FALSE,1,FALSE,"ma","duration"
+"mmph","until metamorphosis",FALSE,1,FALSE,"mmph","duration"
+"mopf","months post-fertilization",TRUE,1,TRUE,"h","duration"
+"moph","months post-hatch",TRUE,1,TRUE,"h","duration"
+"mopm","months post-metamorphosis",TRUE,1,TRUE,"h","duration"
+"mpf","minutes post-gertilization",TRUE,1,TRUE,"h","duration"
+"mph","minutes post hatch",TRUE,1,TRUE,"h","duration"
+"nf","Nieuwkoop-faber-stage",FALSE,1,FALSE,"nf","duration"
+"pa","pupa to adult",FALSE,1,FALSE,"pa","duration"
+"pan","panicling stage",FALSE,1,FALSE,"pan","duration"
+"pgm","post germination",FALSE,1,FALSE,"pgm","duration"
+"pm","post molt",FALSE,1,FALSE,"pm","duration"
+"pro","propagation stage",FALSE,1,FALSE,"pro","duration"
+"so","shooting stage",FALSE,1,FALSE,"so","duration"
+"sst","substage",FALSE,1,FALSE,"sst","duration"
+"stg","stage",FALSE,1,FALSE,"stg","duration"
+"su","summer",FALSE,1,FALSE,"su","duration"
+"swm","Swim-up",FALSE,1,FALSE,"swm","duration"
+"tls","tiller stage",FALSE,1,FALSE,"tls","duration"
+"ubi","until birth",FALSE,1,FALSE,"ubi","duration"
+"vg","vegetative stage",FALSE,1,FALSE,"vg","duration"
+"wkpm","weeks post metamorphosis",TRUE,1,TRUE,"h","duration"
+"wpe","weeks post emergence",TRUE,1,TRUE,"h","duration"
+"wph","weeks post hatch",TRUE,1,TRUE,"h","duration"
+"wphv","weels pre harvest",TRUE,1,TRUE,"h","duration"
+"wpp","weels post planting",TRUE,1,TRUE,"h","duration"
+"zm","Zoeae-megalop",FALSE,1,FALSE,"zm","duration"
+"cfs","to comercial flower stage",FALSE,1,FALSE,"cfs","duration"
+"eb","early bloom stage",FALSE,1,FALSE,"eb","duration"
+"lhv15-20","leaf harvest 15-20cm",FALSE,1,FALSE,"lhv15-20","duration"
+"lhv20-25","leaf harvest 20-25cm",FALSE,1,FALSE,"lhv20-25","duration"
+"ls6","6 leaf stage",FALSE,1,FALSE,"ls6","duration"
+"MULT","multiple durations",FALSE,1,FALSE,"MULT","duration"
+"myp","mysis to post-larvare",FALSE,1,FALSE,"myp","duration"
+"pr","Priming – harvest of ripened tobacco leaves",FALSE,1,FALSE,"pr","duration"
+"rhv3","root harvest, 3 grams",FALSE,1,FALSE,"rhv3","duration"
+"wbh","weeks pre-hatch",TRUE,1,TRUE,"h","duration"
+"zmy","zoeae to mysis",FALSE,1,FALSE,"zmy","duration"
+"b0.25","0.25 bloom stage",FALSE,1,FALSE,"b0.25","duration"
+"--","no data",FALSE,1,FALSE,"--","nodata"
+"NR","no data",FALSE,1,FALSE,"NR","nodata"

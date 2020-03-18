@@ -1,10 +1,10 @@
 # API script
 
 # setup -------------------------------------------------------------------
-source('setup.R')
+source('app/setup.R')
 
 # data --------------------------------------------------------------------
-source('data.R')
+source('app/data.R')
 
 # description -------------------------------------------------------------
 #* @apiTitle Standartox API
@@ -42,7 +42,7 @@ function(req) {
 #* version path
 #* @filter vers
 function(req, res) {
-  dirs <<- list.dirs('data', recursive = FALSE, full.names = FALSE)
+  dirs <<- list.dirs(file.path(app, 'data'), recursive = FALSE, full.names = FALSE)
   v_req = req$args$vers
   if (is.null(v_req)) {
     v <<- max(as.integer(dirs), na.rm = TRUE)
@@ -65,7 +65,8 @@ function(req, res) {
     req$args$cas = as.integer(gsub('-|\\W', '', req$args$cas))
     chck_catalog = in_catalog(req$args$cas, catalog$casnr$variable)
     if (!is.null(chck_catalog)) {
-      msg = paste0('CAS not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n')) 
+      msg = paste0('CAS not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n')) 
       res$status = 400
       return(list(error = msg))
     }
@@ -73,7 +74,8 @@ function(req, res) {
   if (!is.null(req$args$concentration_type)) {
     chck_catalog = in_catalog(req$args$concentration_type, catalog$concentration_type$variable)
     if (!is.null(chck_catalog)) {
-      msg = paste0('Concentration type not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
+      msg = paste0('Concentration type not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -81,7 +83,8 @@ function(req, res) {
   if (!is.null(req$args$chemical_role)) {
     chck_catalog = in_catalog(req$args$chemical_role, catalog$chemical_role$variable)
     if (!is.null(chck_catalog)) {
-      msg = paste0('Chemical role not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
+      msg = paste0('Chemical role not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -89,7 +92,8 @@ function(req, res) {
   if (!is.null(req$args$chemical_class)) {
     chck_catalog = in_catalog(req$args$chemical_class, catalog$chemical_class$variable)
     if (!is.null(chck_catalog)) {
-      msg = paste0('Chemical class not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
+      msg = paste0('Chemical class not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -97,7 +101,8 @@ function(req, res) {
   if (!is.null(req$args$taxa))  {
     chck_catalog = in_catalog(req$args$taxa, catalog$taxa$variable)
     if (!is.null(chck_catalog)) {
-      msg = paste0('Taxa not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
+      msg = paste0('Taxa not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -105,7 +110,8 @@ function(req, res) {
   if (!is.null(req$args$habitat)) {
     chck_catalog = in_catalog(req$args$habitat, catalog$habitat$variable)
     if (!is.null(chck_catalog)) {
-      msg = paste0('Habitat value not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
+      msg = paste0('Habitat value not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -113,7 +119,8 @@ function(req, res) {
   if (!is.null(req$args$region)) {
     chck_catalog = in_catalog(req$args$region, catalog$region$variable)
     if (!is.null(chck_catalog)) {
-      msg = paste0('Region value not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
+      msg = paste0('Region value not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -128,7 +135,8 @@ function(req, res) {
   if (!is.null(req$args$effect)) {
     chck_catalog = in_catalog(req$args$effect, catalog$effect$variable)
     if (!is.null(chck_catalog)) {
-      msg = paste0('Effect value not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
+      msg = paste0('Effect value not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -136,7 +144,8 @@ function(req, res) {
   if (!is.null(req$args$endpoint)) {
     chck_catalog = in_catalog(req$args$endpoint, catalog$endpoint$variable)
     if (!is.null(chck_catalog)) {
-      msg = paste0('Endpoint value not in Standartox data base:\n', paste0(chck_catalog, collapse = '\n'))
+      msg = paste0('Endpoint value not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -157,9 +166,10 @@ function() {
 #* @get /aggregate
 #* @serializer contentType list(type="application/octet-stream")
 function() {
-
+  l = list(stx_aggregate,
+           flag_outliers)
   tmp = file.path(tempdir(), 'stx_aggregate')
-  saveRDS(stx_aggregate, tmp)
+  saveRDS(l, tmp)
   readBin(tmp, "raw", n = file.info(tmp)$size)
 }
 
@@ -217,7 +227,7 @@ function(req,
     
     jsonlite::toJSON(msg)
   } else {
-    tmp = '/tmp/data'
+    tmp = file.path(tempdir(), 'data')
     fst::write_fst(out, tmp, compress = 100) # write compressed
     readBin(tmp, "raw", n = file.size(tmp)) # read to serve API request
   }

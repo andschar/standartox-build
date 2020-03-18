@@ -10,30 +10,7 @@ stx_taxa = read_fst(file.path(datadir2, 'standartox.taxa.fst'),
                     as.data.table = TRUE)
 stx_refs = read_fst(file.path(datadir2, 'standartox.refs.fst'),
                     as.data.table = TRUE)
-# test =stx_filter(test = test,
-#                  chem = chem,
-#                  taxa = taxa,
-#                  refs = refs,
-#                  #cas = cas,
-#                  #              endpoint = 'XX50',
-#                  # chemical_class = 'organochlorine',
-#                  chemical_role_ = 'herbicide',
-#                  #               taxa = 'Insecta',
-#                  duration_ = c(24, 120))
 Sys.time() - time
-
-
-
-
-
-
-# 0.55 - 0.65 # [1] 134418    115
-
-# time = Sys.time()
-# old = read_fst('/home/scharmueller/Projects/standartox-app/data/standartox.data2_DUMMY_COMPARISON.fst',
-#                as.data.table = TRUE)
-# test_old = stx_filter(old, chemical_role_ = 'pesticide', duration_ = c(24,120))
-# Sys.time() - time
 
 # catalog -----------------------------------------------------------------
 catalog = readRDS(file.path(datadir2, paste0('standartox_catalog.rds')))

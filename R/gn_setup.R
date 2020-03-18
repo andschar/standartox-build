@@ -103,7 +103,7 @@ datadir_ar = file.path(article, 'data')
 ## talk subfolder
 datadir_tk = file.path(prj, 'talk', 'data')
 ## shiny application
-appdata = file.path(gsub('-build', '-app', prj), 'data')
+appdata = file.path(prj, 'app', 'data')
 ## standartox R-package
 ## NORMAN
 normandir = file.path(prj, 'norman')
@@ -187,13 +187,6 @@ fl_bib = file.path(article, 'refs', 'references-standartox-build.bib')
 fl_tex = file.path(article, 'appendix', 'r-package-list.tex')
 file.remove(fl_bib)
 file.remove(fl_tex)
-
-print(citation(i), style = "Bibtex")[1] = 'sadf'
-entry = toBibtex(citation(i)[1]) # = 'sadf'
-entry[1] = sub("\\{,$", sprintf("{%s%s,", prefix, pkg), 
-               entry[1])
-
-entry$year
 for (i in pkg) {
   capture.output(
     print(citation(i), style = "Bibtex"),
@@ -208,4 +201,9 @@ for (i in pkg) {
   )
 }
 
+# 
+# print(citation(i), style = "Bibtex")[1] = 'sadf'
+# entry = toBibtex(citation(i)[1]) # = 'sadf'
+# entry[1] = sub("\\{,$", sprintf("{%s%s,", prefix, pkg), 
+#                entry[1])
 

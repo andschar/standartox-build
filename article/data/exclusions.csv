@@ -1,6 +1,0 @@
-name_fin,name_source,treatment,value
-duration_unit,obs_duration_unit,remove,NA
-duration,obs_duration_mean,remove,NA
-value,conc1_mean,remove,NA
-unit,conc1_unit,remove,NA
-duration,obs_duration_mean,filter to,h;d;mi;yr;wk;mo;hpf;s

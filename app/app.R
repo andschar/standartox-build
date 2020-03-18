@@ -10,13 +10,13 @@ sidewidth = 350
 source('data.R')
 # add name percetnage column
 catalog = lapply(catalog[ names(catalog) != 'meta' ],
-               function(x) {
-                 if (is.data.table(x)) {
-                   x[ , name_perc := paste0(variable, ' (', perc, '%)') ]
-                 } else {
-                   x
-                 }
-               })
+                 function(x) {
+                   if (is.data.table(x)) {
+                     x[ , name_perc := paste0(variable, ' (', perc, '%)') ]
+                   } else {
+                     x
+                   }
+                 })
 
 # header ------------------------------------------------------------------
 header = dashboardHeaderPlus(
@@ -348,6 +348,8 @@ server = function(input, output, session) {
       cas_ = cas_input()
     )
   })
+  # TODO add outlier flaging here
+  # CONTINUE HERE (writte: 19.3.2020)
   # aggregate ---------------------------------------------------------------
   data_agg = reactive({
     stx_aggregate(

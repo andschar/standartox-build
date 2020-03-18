@@ -3,15 +3,12 @@
 # project folder ----------------------------------------------------------
 nodename = Sys.info()[4]
 if (nodename == 'scharmueller-t460s') {
-  prj = '/home/scharmueller/Projects/standartox-app'
+  app = '/home/scharmueller/Projects/standartox-build/app'
 } else if (nodename == 'uwigis') {
-  prj = '/home/scharmueller/Projects/standartox-app'
+  app = '/home/scharmueller/Projects/standartox-build/app'
 } else {
-  stop('New system. Define prj and shinydir variables.')
+  stop('New system. Define app and shinydir variables.')
 }
-
-# cleaning
-rm(nodename)
 
 # packages ----------------------------------------------------------------
 if (!require('pacman'))
@@ -47,11 +44,11 @@ options(stringsAsFactors = FALSE,
         shiny.trace = TRUE)
 
 # variables ---------------------------------------------------------------
-src = file.path(prj, 'R')
-datadir = file.path(prj, 'data')
-logdir = file.path(prj, 'log')
+src = file.path(app, 'R')
+datadir = file.path(app, 'data')
+logdir = file.path(app, 'log')
 # folder for article references
-article = file.path(gsub('-app', '-build', prj), 'article')
+article = file.path(gsub('-app', '-build', app), 'article')
 
 # source ------------------------------------------------------------------
 # functions
@@ -61,6 +58,7 @@ source(file.path(src, 'fun_plotly.R'))
 source(file.path(src, 'fun_outliers.R'))
 source(file.path(src, 'fun_casconv.R'))
 source(file.path(src, 'fun_in_catalog.R'))
+source(file.path(src, 'fun_handle_input_multiple.R'))
 # plot theme
 source(file.path(src, 'gg_theme.R'))
 

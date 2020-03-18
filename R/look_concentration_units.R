@@ -4,199 +4,234 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-q = "SELECT conc1_unit, count(conc1_unit) AS n
+## all units from ECOTOX DB
+q = "SELECT conc1_unit, description, count(conc1_unit) AS n
      FROM ecotox.results
-     GROUP BY conc1_unit
+     LEFT JOIN ecotox.concentration_unit_codes ON conc1_unit = code 
+     GROUP BY conc1_unit, description
      ORDER BY n DESC"
 unit = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
-## lookup
-look_unit = fread(file.path(lookupdir, 'lookup_concentration_unit.csv'), na.strings = '')
-look_str = paste0(look_unit$unit, collapse = '|')
+## result unit conversion table
+unit_result = fread(file.path(lookupdir, 'lookup_unit_result.csv'),
+                    na.strings = '')
+## result unit special symbols table
+unit_symbol = fread(file.path(lookupdir, 'lookup_unit_result_symbols.csv'),
+                    na.strings = '')
 
-# checks ------------------------------------------------------------------
-if (!nrow(look_unit) == nrow(unique(look_unit))) {
-  stop('Duplicates!')
+# helper funcitons --------------------------------------------------------
+## calc
+calc = function(..., fun = '+', na.rm = TRUE) {
+  fun = match.arg(fun, c('+', '-', '*', '/'))
+  l = list(...)
+  if (na.rm)
+    l = l[ !is.na(l) ]
+  Reduce(fun, l)
+}
+## function to extract all numeric strings excetp for m2, m3 etc.
+extr_numeric = function(x) {
+  x = gsub('([A-z]+)([2]{1})', '\\1-square', x) # convert m2, ft2, etc to square
+  x = gsub('([A-z]+)([3]{1})', '\\1-cubic', x) # same for cubic
+  as.numeric(str_extract(x, '[+-]?([0-9]*[.])?[0-9]+'))
+}
+## function to extract special unit additions
+extr_special = function(x, pattern = NULL) {
+  # TODO include optional spaces here?
+  pattern = paste0('\\b', pattern, '\\b') # NOTE word boundary anchors
+  str_extract(
+    x, paste0('(?i)', paste0(pattern, collapse = '|'))
+  )
+}
+## function to extract actual units
+extr_unit = function(x, pattern = NULL) {
+  # remove all numerics from unit extraction (except m2, m3 etc.)
+  # x = c('3.6mg', '5 m2', 'm2', '88m3') # debuging
+  x = gsub('([A-z]+)([2]{1})', '\\1-square', x) # convert m2, ft2, etc to square
+  x = gsub('([A-z]+)([3]{1})', '\\1-cubic', x) # same for cubic
+  x = trimws(gsub('[+-]?([0-9]*[.])?[0-9]+', '', x)) # remove all numeric values
+  x = gsub('-square', '2', x) # convert back to m2 notation
+  x = gsub('-cubic', '3', x)
+  # word boundary anchors (except for some characters)
+  pattern[ !pattern %in% c('%', '‰') ] <- paste0('\\b', pattern[ !pattern %in% c('%', '‰') ], '\\b')
+  str_extract(x, paste0(pattern, collapse = '|'))
 }
 
-# preparation -------------------------------------------------------------
-# info (p.48 code appendix)
-info = c(
-  'diet',
-  'fd',
-  'feed',
-  'food',
-  'dryfd',
-  height = 'ht',
-  'wet',
-  'dry',
-  weight = '\\swt',
-  'bdwt',
-  'wetbdwt',
-  'soil',
-  'ai\\s',
-  'AI\\s',
-  acid_equivalent = 'ae',
-  water_soluble_fraction = 'wsf',
-  'media',
-  bait = 'bt',
-  pellet = 'plt',
-  'caliper',
-  'canopy',
-  '\\segg'
-)
+# dt = copy(unit) # NOTE debug
 
-## vector
-un2 = unit$conc1_unit
-# info variables
-un2_cl = trimws(gsub(paste0('(?i)', info, collapse = '|'), '', un2))
-## errata
-# ac to acres
-un2_cl = gsub('ac$', 'acre', un2_cl)
-# males ML
-un2_cl = gsub('ML', 'males', un2_cl)
-# to not confuse mol with meter: uM, nM, etc. are transfered to umol, nmol
-un2_cl = gsub('moles', 'mol', un2_cl)
-mol = '(M)($|/)'
-un2_cl = gsub(paste0(mol, collapse = '|'), 'mol/l\\2', un2_cl)
-# unbelievably stupid units
-un2_cl = gsub('ppm for 36hr', 'ppm/36h', un2_cl)
-# cc to cm2
-un2_cl = gsub('cc', 'cm2', un2_cl)
-# eu to enzymeunit (to not confuse it with g/eu i.e. experimental unit)
-un2_cl = gsub('^eu$', 'enzymeunit', un2_cl)
-# 0/00 to ‰
-un2_cl = gsub('0/00', '‰', un2_cl)
-# tolower
-un2_cl = tolower(un2_cl) # TODO maybe remove (e.g. Bq needs upper case)
+## function to convert units
+unit_converter = function(dt,
+                          dt_lookup,
+                          col_unit,
+                          col_multiplier,
+                          pattern_special = NULL,
+                          pattern_unit = NULL) {
+  # key
+  setkey(dt_lookup, unit)
+  # copy
+  dt = copy(dt)
+  # max cols
+  u_max = max(lengths(strsplit(dt[ , get(col_unit)], '/')))
+  # split units by /
+  cols_all = paste0('all', 1:u_max)
+  dt[ , (cols_all) := tstrsplit(get(col_unit), '/') ]  
+  # extract numeric constants
+  cols_num = paste0('num', 1:u_max)
+  dt[ , (cols_num) := lapply(.SD, extr_numeric), .SDcols = cols_all ]
+  # fix very special cases
+  dt[ grep('0/00', conc1_unit), (4:ncol(dt)) := NA ][ # NOTE error prone: 4:
+    grep('0/00', conc1_unit), all1 := '0/00'
+    ]
+  dt[ grep('mgdryfd/gwetbdwt/d', conc1_unit), (4:ncol(dt)) := NA ][
+    grep('mgdryfd/gwetbdwt/d', conc1_unit), `:=`
+    (all1 = 'mg dry fd', all2 = 'g wet bdwt', all3 = 'd')
+    ]
+  dt[ grep('% w/w', conc1_unit),  (4:ncol(dt)) := NA ][
+    grep('% w/w', conc1_unit), all1 := '% w/w'
+  ]
+  dt[ grep('% v/v', conc1_unit),  (4:ncol(dt)) := NA ][
+    grep('% v/v', conc1_unit), all1 := '% v/v'
+    ]
+  dt[ grep('% v/w', conc1_unit),  (4:ncol(dt)) := NA ][
+    grep('% v/w', conc1_unit), all1 := '% v/w'
+    ]
+  # extract special additions
+  cols_spe = paste0('spe', 1:u_max)
+  dt[ , (cols_spe) := lapply(.SD, extr_special, pattern = pattern_special), .SDcols = cols_all ]
+  # actual units
+  cols_uni = paste0('uni', 1:u_max)
+  dt[ , (cols_uni) := lapply(.SD, extr_unit, pattern = pattern_unit), .SDcols = cols_all ]
+  # assign multiplier
+  for (j in seq_along(cols_uni)) {
+    col = cols_uni[j]
+    setkeyv(dt, col)
+    dt[dt_lookup, paste0('mul', j) := i.multiplier ]
+  }
+  # convert units?
+  for (j in seq_along(cols_uni)) {
+    col = cols_uni[j]
+    setkeyv(dt, col)
+    dt[dt_lookup, paste0('convl', j) := i.conv ]
+  }
+  # converted units
+  for (j in seq_along(cols_uni)) {
+    col = cols_uni[j]
+    setkeyv(dt, col)
+    dt[dt_lookup, paste0('conv', j) := i.unit_conv ]
+  }
+  # SI-units
+  for (j in seq_along(cols_uni)) {
+    col = cols_uni[j]
+    setkeyv(dt, col)
+    dt[dt_lookup, paste0('si', j) := i.unit_conv_si ]
+  }
+  # unit type
+  for (j in seq_along(cols_uni)) {
+    col = cols_uni[j]
+    setkeyv(dt, col)
+    dt[dt_lookup, paste0('type', j) := i.type ]
+  }
+  ## combine values
+  # TODO make this work to allow a random number of columns to be evaluated
+  # dt[ ,
+  #     # paste_missing(.SD, collapse = '/'),
+  #     paste0(lapply(.SD, function(x) na.omit(c(x))), collapse = '/'),
+  #     by = 1:nrow(dt),
+  #     .SDcols = grep('conv[0-9]+', names(dt)) ]
+  # dt[ ,
+  #     paste0(na.omit(c(conv1, conv2, conv3, conv4)), collapse = '/'),
+  #     by = 1:nrow(dt) ]
+  # dt[ ,
+  #     paste0(.)
+  #     paste0(na.omit(c(conv1, conv2, conv3, conv4)), collapse = '/'),
+  #     by = 1:nrow(dt) ]
+  ## END
+  dt[ ,
+      unit_conv := paste0(na.omit(c(conv1, conv2, conv3, conv4)), collapse = '/'),
+      by = 1:nrow(dt) ]
+  dt[ ,
+      conv := all(na.omit(c(convl1, convl2, convl3, convl4))),
+      by = 1:nrow(dt) ]
+  # TODO make this dynamic
+  dt[ , mulnum1 := apply(.SD, 1, prod, na.rm = TRUE), .SDcols = c('mul1', 'num1') ]
+  dt[ , mulnum2 := apply(.SD, 1, prod, na.rm = TRUE), .SDcols = c('mul2', 'num2') ]
+  dt[ , mulnum3 := apply(.SD, 1, prod, na.rm = TRUE), .SDcols = c('mul3', 'num3') ]
+  dt[ , mulnum4 := apply(.SD, 1, prod, na.rm = TRUE), .SDcols = c('mul4', 'num4') ]
+  dt[ , mulnum12 := calc(mulnum1, mulnum2, fun = '/') ]
+  dt[ , mulnum34 := calc(mulnum3, mulnum4, fun = '/') ]
+  dt[ , multiplier := calc(mulnum12, mulnum34, fun = '/') ]
+  dt[ , multiplier_old := calc(mulnum1, mulnum2, mulnum3, mulnum4, fun = '/', na.rm = TRUE) ]
+  dt[ ,
+      si := all(na.omit(c(si1, si2, si3, si4))),
+      by = 1:nrow(dt) ]
+  dt[ ,
+      type := paste0(na.omit(c(type1, type2, type3, type4)), collapse = '/'),
+      by = 1:nrow(dt) ]
+  # remove
+  dt[ , remove := fifelse(grepl('noscience', type), TRUE, FALSE) ]
+  # return
+  setorder(dt, -n) # TODO remove once it's finished
+  dt
+}
 
-## split
-unit_l2 = strsplit(un2_cl, '/')
-unit_l2[lengths(unit_l2) == 0] = NA_character_ # otherwise character(0) entries are droped
-units = rbindlist(lapply(unit_l2, function(x)
-  as.data.table(t(x))), fill = TRUE)
-setnames(units, paste0('u', 1:4))
-units[, conc1_unit := un2]
-setcolorder(units, 'conc1_unit')
+unit2 = unit_converter(unit,
+                       dt_lookup = unit_result,
+                       col_unit = 'conc1_unit',
+                       col_multiplier = 'multiplier',
+                       pattern_special = unit_symbol$symbol,
+                       pattern_unit = unit_result$unit)
 
-## count
-units[unit, n := i.n, on = 'conc1_unit']
+# exposure ----------------------------------------------------------------
+# TODO put in function?
+unit2[ grep('food|fd', conc1_unit, ignore.case = TRUE), conc1_exposure := 'food' ]
+unit2[ grep('seed|sd', conc1_unit, ignore.case = TRUE), conc1_exposure := 'seed' ]
+unit2[ grep('bdwt', conc1_unit, ignore.case = TRUE), conc1_exposure := 'bdwt' ]
+unit2[ grep('humus', conc1_unit, ignore.case = TRUE), conc1_exposure := 'humus' ]
 
-## clean units
-units[,
-      (paste0('u', 1:4, 'cl')) :=
-        lapply(.SD, extr_vec, ig.case = TRUE,
-               pattern = look_str),
-      .SDcols = paste0('u', 1:4)]
-## retrieve numerical values
-units[,
-      (paste0('u', 1:4, 'num')) :=
-        lapply(.SD, extr_vec, ig.case = TRUE,
-               pattern = '[[:digit:]]+\\.*[[:digit:]]+|^[[:digit:]]+(\\.+)*'),
-      .SDcols = paste0('u', 1:4)]
-# type conversion
-units[, paste0('u', 1:4, 'num')] = lapply(units[, paste0('u', 1:4, 'num')],
-                                          as.numeric)
+# CONTINUE HERE 31.3.2020 - 18:39
 
-## add NA count column
-units[,
-      nas := length(which(is.na(.SD))),
-      by = 1:nrow(units),
-      .SDcols = paste0('u', 1:4)]
-## additional information
-units[, conc1_info := str_extract(conc1_unit, paste0(info, collapse = '|'))]
+# 100 mg/kg/d = 100 mg/kg/24h
 
-# lookup ------------------------------------------------------------------
-# unit types
-units[look_unit, u1type := i.type, on = c(u1cl = 'unit')]
-units[look_unit, u2type := i.type, on = c(u2cl = 'unit')]
-units[look_unit, u3type := i.type, on = c(u3cl = 'unit')]
-units[look_unit, u4type := i.type, on = c(u4cl = 'unit')]
-
-units[nas == 3, conc1_unit_clean := u1cl]
-units[nas == 3, type := u1type]
-units[nas == 2, conc1_unit_clean := paste0(u1cl, '/', u2cl)]
-units[nas == 2, type := paste0(u1type, '/', u2type)]
-units[nas == 1, conc1_unit_clean := paste0(u1cl, '/', u2cl, '/', u3cl)]
-units[nas == 1, type := paste0(u1type, '/', u2type, '/', u3type)]
-units[nas == 0, conc1_unit_clean := paste0(u1cl, '/', u2cl, '/', u3cl, '/', u4cl)]
-units[nas == 0, type := paste0(u1type, '/', u2type, '/', u3type, '/', u4type)]
-
-## upper case for Curie and Becquerel
-units[, conc1_unit_clean := gsub('ci', 'Ci', conc1_unit_clean)] # TODO this could be removed (see TODO above)
-units[, conc1_unit_clean := gsub('bq', 'Bq', conc1_unit_clean)]
-
-# classification ----------------------------------------------------------
-u1 = c(
-  fraction = 'ppb',
-  mass = 'ug',
-  percent = '%',
-  volume = 'ml',
-  length = 'cm'
-)
-u2 = c(
-  `mass/mass` = 'mg/kg',
-  `mass/volume` = 'ug/l',
-  `mass/area` = 'g/m2',
-  `volume/volume` = 'ul/l',
-  `volume/area` = 'ml/m2',
-  `volume/mass` = 'ml/g',
-  `mass/length` = 'g/cm',
-  `mass/time` = 'g/d',
-  `volume/time` = 'ml/d',
-  `volume/length` = 'ml/cm',
-  `radioactivity/volume` = 'Bq/l',
-  `radioactivity/mass` = 'Bq/g',
-  `fraction/time` = 'ppm/d',
-  `mol/volume` = 'mol/l',
-  `mol/mass` = 'mol/g'
-)
-# u3 = c(`mass/mass/time` = 'mg/kg/d', `volume/mass/time` = 'ml/kg/d', `mass/volume/time` = 'ug/l/d', `mass/volume/area` = 'g/l/m2', `mass/mass/mass` = 'ug/g/kg', `mass/area/time` = 'g/m2/d', `mass/volume/area` = 'g/l/m2', `mass/mass/time` = 'g/g/d') # OUT-COMMENTED because it's hard to convert
+# very special cases ------------------------------------------------------
+# units that are too weird for a computer
+# dt2[ conc1_unit == '0/00', (4:ncol(dt2)) := NA ] %>% 
+#   .[ , c('all1', 'uni1') := '0/00' ]
+# dt2[ conc1_unit == '0/00' ] 
+# dt2[ conc1_unit == '0/00', (4:ncol(dt2)) := NA ] %>% 
+#   .[ , c('all1', 'uni1') := '0/00' ]
+# 
+# 'mgdryfd/gwetbdwt/d'
+# '% v/v'
+# '% v/w'
+# 'g/kg*e0.75 bdwt'
+# 'ppm for 36hr'
+# dt2[545]
 
 # conversion --------------------------------------------------------------
-# conversion multiplier
-u = c(u1, u2)
+# dt2[unit_result, mul1 := i.multiplier, on = c(conc1_unit = 'unit') ]
+# dt2[]
+# 
+# iris_dt = copy(iris)
+# iris_dt = data.table(iris_dt)
+# iris_dt[ , test := paste0(c(Sepal.Length, Sepal.Width), collapse = '+'), by = 1:nrow(iris_dt)]
+# 
+# unit_result$multiplier
+# dt2
+# grep('L', dt2$conc1_unit, value = TRUE)
+# 
+# dt2[ conc1_unit == '0/00' ]
 
-for (i in seq_along(u)) {
-  unit_type = names(u)[i]
-  unit_conv_to = u[i]
-  # conversion
-  units[type == unit_type, conv := ud.are.convertible.vector(conc1_unit_clean, unit_conv_to)]
-  units[type == unit_type & conv == TRUE,
-        `:=`
-        (multiplier = ud.convert.vector(1, conc1_unit_clean, unit_conv_to),
-          unit_conv = unit_conv_to)]
-}
-# multiply with constant
-units[nas == 2 & !is.na(u2num), multiplier := multiplier / u2num]
-
-# unconvertable units -----------------------------------------------------
-units[conv == FALSE, .N, .(conc1_unit, conc1_unit_clean)]
-
-# final table -------------------------------------------------------------
-units[is.na(conv),
-      `:=`
-      (conv = FALSE,
-        unit_conv = NA) ]
-
-# character class for convert column
-units[ , conv := as.character(conv) ]
-units[ conv == 'TRUE', conv := 'yes' ]
-units[ conv == 'FALSE', conv := 'no' ]
-
-# mol ---------------------------------------------------------------------
-# NOTE mol conversion is done by sql/fun_molconv.sql since no molecular weights are included here
+# debug -------------------------------------------------------------------
+# fwrite(unit2, file.path(lookupdir, 'units_NEW_APPROACH.csv')) # TODO remove
 
 # check -------------------------------------------------------------------
-# TODO build more checking for units
-chck_dupl(units, 'conc1_unit')
+chck_dupl(unit2, 'conc1_unit')
 
 # write -------------------------------------------------------------------
 ## csv
-fwrite(units, file.path(summdir, 'concentration_unit_lookup_summary.csv'))
+fwrite(unit2, file.path(summdir, 'concentration_unit_lookup_summary.csv'))
 
 ## postgres
-write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+write_tbl(unit2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'lookup', tbl = 'concentration_unit_lookup',
           key = 'conc1_unit',
           comment = 'Lookup table for concentration units')

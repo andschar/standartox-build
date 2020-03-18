@@ -11,95 +11,105 @@ SELECT
 	tests.reference_number,
 	tests.test_cas AS casnr,
 	coalesce(substring(results.conc1_mean, '<|>'), '=') AS conc1_qualifier,
-	results.conc1_mean AS conc1_mean,
-	results.conc1_unit AS conc1_unit,
+	-- unit conversion is done in sql/conv_unit_result.sql
+	results.conc1_mean, -- original results
+	results.conc1_unit,
+	results2.conc1_mean2, -- converted
+	results2.conc1_unit2,
+	results2.conc1_mean3, -- removed /time
+	results2.conc1_unit3,
+	results2.conc1_mean4, -- converted mol
+	results2.conc1_unit4,
 	CASE
-	  WHEN concentration_unit_lookup.conv = 'yes'
-	  THEN
-	    CASE
-		  WHEN concentration_unit_lookup.unit_conv = 'mol/l'
-		  THEN molconv(clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier::numeric, chem_prop.molecularweight::numeric) * 1e6 -- mol/l to g/l to ug/l
-		  WHEN concentration_unit_lookup.unit_conv = 'mol/g'
-		  THEN molconv(clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier::numeric, chem_prop.molecularweight::numeric) * 1e6 -- mol/g to g/g to mg/kg
-	      ELSE clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier
-	    -- TODO include day multiplication  
-		END
-      ELSE clean(results.conc1_mean)::numeric
-  	END AS conc1_mean2,
-	CASE
-	  WHEN concentration_unit_lookup.conv = 'yes'
-	  	THEN 
-	  	CASE
-		  WHEN concentration_unit_lookup.unit_conv = 'mol/l' -- see conversion above
-		  THEN 'ug/l'
-		  WHEN concentration_unit_lookup.unit_conv = 'mol/g' -- see conversion above
-		  THEN 'mg/kg'
-		  ELSE concentration_unit_lookup.unit_conv
-		END
-	  ELSE 'other'
-	END AS conc1_unit2,
-	concat_ws('/', concentration_unit_lookup.type) AS conc1_unit_type,
-	CASE
-	  WHEN conc1_type IN ('A')
+	  	WHEN conc1_type IN ('A')
 	  	THEN 'active ingredient'
-	  WHEN conc1_type IN ('F')
+	  	WHEN conc1_type IN ('F')
 	  	THEN 'formulation'
-	  WHEN conc1_type IN ('T')
+	  	WHEN conc1_type IN ('T')
 	    THEN 'total'
-	  WHEN conc1_type IN ('D')
+	  	WHEN conc1_type IN ('D')
 	    THEN 'dissolved'
-	  WHEN conc1_type IN ('U')
+	  	WHEN conc1_type IN ('U')
 	    THEN 'unionized'
-	  WHEN conc1_type IN ('L')
+	  	WHEN conc1_type IN ('L')
 	    THEN 'labile'
-	  ELSE 'not reported'
+	    ELSE 'not reported'
 	END AS conc1_type2,
+	results2.conc1_conv,
+	results2.conc1_si,
+	results2.conc1_unit_type,
+	results2.conc1_remove,
  	results.obs_duration_mean,
 	results.obs_duration_unit,
 	CASE
-	  WHEN duration_unit_lookup.conv = 'yes'
-	  	THEN clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier
-	  ELSE clean(results.obs_duration_mean)::numeric
+	  	WHEN duration_unit_lookup.conv = 'yes'
+	  	THEN clean_num(results.obs_duration_mean) * duration_unit_lookup.multiplier
+	    ELSE clean_num(results.obs_duration_mean)
 	END AS obs_duration_mean2,
 	CASE
-	  WHEN duration_unit_lookup.conv = 'yes'
+	  	WHEN duration_unit_lookup.conv = 'yes'
 	  	THEN duration_unit_lookup.unit_conv
-  	  ELSE results.obs_duration_unit
+  	    ELSE results.obs_duration_unit
   	END AS obs_duration_unit2,
 	CASE
-	  WHEN tests.test_type IN ('ACUTE', 'ACTELS', 'SBACUTE')
+	  	WHEN tests.test_type IN ('ACUTE', 'ACTELS', 'SBACUTE')
 	    THEN 'acute'
-	  WHEN tests.test_type IN ('CHRONIC', 'SBCHRON', 'CHRELS', 'ELS', 'FLC', 'GEN', 'PLC')
+	  	WHEN tests.test_type IN ('CHRONIC', 'SBCHRON', 'CHRELS', 'ELS', 'FLC', 'GEN', 'PLC')
 	    THEN 'chronic'
-	  ELSE 'not reported'
+	    ELSE 'not reported'
 	END AS test_type,
+	clean(results.measurement) AS measurement_code,
+	measurement_codes.description AS measurement,
+	clean(results.effect) AS effect_code,
 	effect_codes.description AS effect,
 	clean(results.endpoint) endpoint,
 	CASE
-	  WHEN clean(results.endpoint) IN ('NOEL', 'NOEC')
+	  	WHEN clean(results.endpoint) IN ('NOEL', 'NOEC')
 	  	THEN 'NOEX'
-	  WHEN clean(results.endpoint) IN ('LOEL', 'LOEC')
+	    WHEN clean(results.endpoint) IN ('LOEL', 'LOEC')
 	    THEN 'LOEX'
-	  WHEN clean(results.endpoint) IN ('LC50', 'LD50', 'EC50', 'ED50', 'IC50', 'ID50', 'ET50', 'LT50')
+	  	WHEN clean(results.endpoint) IN ('LC50', 'LD50', 'EC50', 'ED50', 'IC50', 'ID50', 'ET50', 'LT50')
 	    THEN 'XX50'
-	  ELSE clean(results.endpoint)
+	    ELSE clean(results.endpoint)
 	END AS endpoint2,
 	CASE
-	  WHEN clean(tests.test_location) IN ('LAB')
+	  	WHEN clean(tests.test_location) IN ('LAB')
 	  	THEN 'lab'
-	  WHEN clean(tests.test_location) IN ('FIELDN', 'FIELDA', 'FIELDU')
+	  	WHEN clean(tests.test_location) IN ('FIELDN', 'FIELDA', 'FIELDU')
 	  	THEN 'field'
-	  ELSE 'not reported'
+	    ELSE 'not reported'
 	END AS test_location,
+	clean(tests.exposure_type) AS exposure_type_code,
 	CASE
-	  WHEN clean(exposure_type_codes.description) IS NULL
+	  	WHEN clean(exposure_type_codes.description) IS NULL
+  		THEN 'not reported'
+  	    WHEN clean(exposure_type_codes.description) IN ('', ' ', '--')
       	THEN 'not reported'
-      WHEN clean(exposure_type_codes.description) IN ('', ' ', '--')
-      	THEN 'not reported'
-      ELSE clean(exposure_type_codes.description)  
+    	ELSE clean(exposure_type_codes.description)  
 	END AS exposure_type,
+	CASE -- according to codeappendix (p.34)
+	    WHEN clean(tests.exposure_type) IN ('CH', 'DR', 'DT', 'FD', 'GE', 'GV', 'IG', 'LC', 'OR')
+	  	THEN 'diet'
+	  	WHEN clean(tests.exposure_type) IN ('IA', 'IAC', 'IB', 'IC', 'ICL', 'ID', 'IE', 'IF', 'IH', 'II', 'IJ', 'IK', 'ILP', 'IM', 'IO', 'IP', 'IQ', 'IS', 'IU', 'IV', 'IY', 'IZ', 'OP', 'SC', 'SD', 'YK')
+	  	THEN 'injection'
+		WHEN clean(tests.exposure_type) IN ('MU')
+		THEN 'multiple'
+		WHEN clean(tests.exposure_type) IN ('AQUA', 'AQUA – NR', 'F', 'L', 'P', 'R', 'S')
+		THEN 'aquatic' --actually aquatic_lab
+		WHEN clean(tests.exposure_type) IN ('B', 'E', 'O')
+		THEN 'aquatic' --actually aquatic_field
+		WHEN clean(tests.exposure_type) IN ('DM', 'FC', 'MM', 'OC', 'PC', 'SA', 'SH', 'TP')
+		THEN 'topical'
+		WHEN clean(tests.exposure_type) IN ('AE', 'AG', 'AS', 'CM', 'DA', 'DU', 'DW', 'EN', 'FS', 'FU', 'GG', 'GM', 'GS', 'HP', 'HS', 'IN', 'MI', 'MT', 'PR', 'PT', 'PU', 'SO', 'SP', 'SS', 'TER-NR', 'TER', 'WA')
+		THEN 'environmental'
+		WHEN clean(tests.exposure_type) IN ('IVT')
+		THEN 'invitro'
+		WHEN clean(tests.exposure_type) IS NULL AND tests.media_type IN ('FW', 'SW') -- assuming that media_type FW & SW equal exposure_type
+		THEN 'aquatic'
+	END AS exposure_group,
 	response_site_codes.description AS response_site,
 	test_method_codes.description AS test_method,
+	tests.media_type AS media_type_code,
 	media_type_codes.description AS media_type,
 	substrate_codes.description AS substrate_type,
 	tests.organism_habitat,
@@ -114,8 +124,8 @@ FROM
 LEFT JOIN ecotox.results ON tests.test_id = results.test_id
 	LEFT JOIN ecotox.response_site_codes ON results.response_site = response_site_codes.code
 	LEFT JOIN ecotox.measurement_codes ON results.measurement = measurement_codes.code
+LEFT JOIN ecotox.results2 USING (result_id)
 LEFT JOIN lookup.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
-LEFT JOIN lookup.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
 LEFT JOIN ecotox.exposure_type_codes ON tests.exposure_type = exposure_type_codes.code
 LEFT JOIN ecotox.effect_codes ON results.effect = effect_codes.code
 LEFT JOIN ecotox.lifestage_codes ON tests.organism_lifestage = lifestage_codes.code
@@ -126,41 +136,11 @@ LEFT JOIN ecotox.substrate_codes on tests.substrate = substrate_codes.code
 LEFT JOIN chem.chem_prop ON tests.test_cas = chem_prop.casnr -- for molecularweight
 
 WHERE
-	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT LIKE '%ca%'
+	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT IN ('NR') AND
+	results.conc1_mean NOT LIKE '%ca%' AND results.conc1_unit NOT IN ('NR')
 ;
 
 ALTER TABLE standartox.tests ADD PRIMARY KEY (result_id);
-
--------------------------------------------------------------------------------
--- tests fin
-DROP TABLE IF EXISTS standartox.tests_fin;
-
-CREATE TABLE standartox.tests_fin AS
-
-SELECT
-	result_id,
-	species_number,
-	reference_number,
-	casnr,
-	conc1_mean2 AS concentration,
-	conc1_unit2 AS concentration_unit,
-	conc1_type2 AS concentration_type,
-	obs_duration_mean2 AS duration,
-	obs_duration_unit2 AS duration_unit, 
- 	effect,
- 	endpoint2 AS endpoint
-
-FROM standartox.tests
-WHERE
-	conc1_qualifier = '='
-    AND conc1_mean2 IS NOT NULL AND conc1_unit2 IS NOT NULL 
-    AND obs_duration_mean2 IS NOT NULL AND obs_duration_unit2 IS NOT NULL AND obs_duration_unit2 = 'h'
-    AND effect IS NOT NULL
-    AND endpoint2 IN ('NOEX', 'LOEX', 'XX50')
-;
-
-ALTER TABLE standartox.tests_fin ADD PRIMARY KEY (result_id);
-
 
 -------------------------------------------------------------------------------
 -- chemical names
@@ -309,3 +289,69 @@ FROM ecotox.refs
 WHERE refs.publication_year != '19xx';
 
 ALTER TABLE standartox.refs ADD PRIMARY KEY (reference_number);
+
+-------------------------------------------------------------------------------
+-- tests fin
+DROP TABLE IF EXISTS standartox.tests_fin;
+
+CREATE TABLE standartox.tests_fin AS
+
+SELECT
+	result_id,
+	species_number,
+	reference_number,
+	casnr,
+	CASE
+		WHEN conc1_unit4 = 'g/l'
+		THEN conc1_mean4 * 1e-6
+		WHEN conc1_unit4 = 'g/m2'
+		THEN conc1_mean4
+		WHEN conc1_unit4 = 'ppdb'
+		THEN conc1_mean4
+		WHEN conc1_unit4 = 'g/g'
+		THEN conc1_mean4 * 1e6
+		WHEN conc1_unit4 = 'l/l'
+		THEN conc1_mean4 * 1e6
+		WHEN conc1_unit4 = 'l/m2'
+		THEN conc1_mean4 * 1e6
+		ELSE conc1_mean4
+	END AS concentration,
+	CASE
+		WHEN conc1_unit4 = 'g/l'
+		THEN 'ug/l'
+		WHEN conc1_unit4 = 'g/m2'
+		THEN 'g/m2'
+		WHEN conc1_unit4 = 'ppb'
+		THEN 'ppb'
+		WHEN conc1_unit4 = 'g/g'
+		THEN 'mg/kg'
+		WHEN conc1_unit4 = 'l/l'
+		THEN 'ul/l'
+		WHEN conc1_unit4 = 'l/m2'
+		THEN 'ul/m2'
+		ELSE conc1_unit4
+	END AS concentration_unit,
+	conc1_type2 AS concentration_type,
+	obs_duration_mean2 AS duration,
+	obs_duration_unit2 AS duration_unit, 
+ 	effect,
+ 	endpoint2 AS endpoint,
+ 	exposure_group AS exposure
+
+FROM standartox.tests
+WHERE
+	conc1_qualifier = '='
+    AND conc1_mean2 IS NOT NULL AND conc1_unit2 IS NOT NULL
+    AND conc1_unit4 IN ('g/l', 'g/m2', 'ppb', 'g/g', 'l/l', 'l/m2')
+    AND obs_duration_mean2 IS NOT NULL AND obs_duration_unit2 IS NOT NULL AND obs_duration_unit2 = 'h'
+    AND effect IS NOT NULL
+    AND endpoint2 IN ('NOEX', 'LOEX', 'XX50')
+    AND exposure_group IS NOT NULL
+    AND conc1_remove IS NOT TRUE
+;
+
+ALTER TABLE standartox.tests_fin ADD PRIMARY KEY (result_id);
+
+
+
+

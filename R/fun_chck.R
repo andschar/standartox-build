@@ -65,5 +65,10 @@ chck_numeric = function(x) {
   }
 }
 
-
+# function to check if a value equals a value -----------------------------
+chck_equals = function(x, expected, msg = NULL) {
+  if (x != expected) {
+    log_chck(msg)
+  }
+}
 

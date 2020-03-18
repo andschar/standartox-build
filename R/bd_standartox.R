@@ -4,8 +4,7 @@
 source(file.path(src, 'gn_setup.R'))
 
 # scripts -----------------------------------------------------------------
-q2 = read_char(file.path(sql, 'standartox_data2.sql'))
-# TODO remove? q2_fin = read_char(file.path(sql, 'standartox_data2_fin.sql'))
+q = read_char(file.path(sql, 'standartox_compile.sql'))
 explanation = fread(file.path(lookupdir, 'lookup_explanation.csv'), na.strings = '')
 
 # query -------------------------------------------------------------------
@@ -15,8 +14,8 @@ con = dbConnect(drv, user = DBuser, dbname = DBetox, host = DBhost, port = DBpor
 dbSendQuery(con, "DROP SCHEMA IF EXISTS standartox CASCADE;")
 dbSendQuery(con, "CREATE SCHEMA standartox;")
 
-dbSendQuery(con, q2) # converted data
-# TODO remove? dbSendQuery(con, q2_fin) # combined data
+dbSendQuery(con, q)
+
 dbWriteTable(con, value = explanation, name = c('standartox', 'data2_explanation'),
              row.names = FALSE,
              overwrite = TRUE)

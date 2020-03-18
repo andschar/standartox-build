@@ -279,7 +279,7 @@ FROM
   		LEFT JOIN ecotox.dose_responses ON tests.test_id = dose_responses.test_id
   		LEFT JOIN ecotox.dose_response_details ON dose_responses.dose_resp_id = dose_response_details.dose_resp_id AND doses.dose_id = dose_response_details.dose_id
   		LEFT JOIN ecotox.effect_codes ON dose_responses.effect_code = effect_codes.code 
-  		LEFT JOIN ecotox.concentration_unit_lookup ON doses.dose_conc_unit = concentration_unit_lookup.conc1_unit 
+  		LEFT JOIN lookup.concentration_unit_lookup ON doses.dose_conc_unit = concentration_unit_lookup.conc1_unit 
   		WHERE 
         -- with response
         dose_response_details.response_mean_cl IS NOT NULL
@@ -362,15 +362,15 @@ FROM
 
 ----------------------------------------------
   -- lookup tables
-  LEFT JOIN ecotox.media_type_lookup ON tests.media_type = media_type_lookup.code
+  LEFT JOIN lookup.media_type_lookup ON tests.media_type = media_type_lookup.code
   LEFT JOIN lookup.lookup_norman_use_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
-  LEFT JOIN ecotox.test_location_lookup ON tests.test_location = test_location_lookup.code
-  LEFT JOIN ecotox.ecotox_group_lookup ON species.species_number = ecotox_group_lookup.species_number
-  LEFT JOIN ecotox.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
-  LEFT JOIN ecotox.effect_lookup ON results.effect = effect_lookup.code
-  LEFT JOIN ecotox.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
-  LEFT JOIN ecotox.endpoint_lookup ON endpoint_lookup.code = results.endpoint
-  LEFT JOIN ecotox.chemical_analysis_lookup ON chemical_analysis_lookup.code = results.chem_analysis_method
+  LEFT JOIN lookup.test_location_lookup ON tests.test_location = test_location_lookup.code
+  LEFT JOIN lookup.ecotox_group_lookup ON species.species_number = ecotox_group_lookup.species_number
+  LEFT JOIN lookup.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
+  LEFT JOIN lookup.effect_lookup ON results.effect = effect_lookup.code
+  LEFT JOIN lookup.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
+  LEFT JOIN lookup.endpoint_lookup ON endpoint_lookup.code = results.endpoint
+  LEFT JOIN lookup.chemical_analysis_lookup ON chemical_analysis_lookup.code = results.chem_analysis_method
   LEFT JOIN lookup.norman_id_cas ON tests.test_cas = norman_id_cas.casnr
   
 ----------------------------------------------
@@ -410,4 +410,4 @@ WHERE
   AND clean(results.effect) IS NOT NULL
   AND duration_unit_lookup.remove != 'yes'
   AND media_type_lookup.description_norman IN ('freshwater', 'saltwater')
-  AND norman_id_cas.normanid IS NOT NULL
+  -- AND norman_id_cas.normanid IS NOT NULL
