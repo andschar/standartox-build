@@ -21,8 +21,10 @@ cols = c('casnr',
          grep('reg_', cols_db$column_name, value = TRUE),
          'duration',
          'effect',
-         'endpoint')
+         'endpoint',
+         'exposure')
 cols_db = cols_db[ column_name %in% cols ]
+
 # query -------------------------------------------------------------------
 con = DBI::dbConnect(RPostgreSQL::PostgreSQL(),
                      dbname = DBetox,
@@ -86,6 +88,8 @@ duration = range(l$duration$variable) # TODO
 effect = l$effect
 # endpoint
 endpoint = l$endpoint
+# exposure
+exposure = l$exposure
 # meta
 meta = transpose(data.table(n_results = l$casnr$n_total[1],
                             n_casnr = nrow(l$casnr),
@@ -98,7 +102,8 @@ meta = transpose(data.table(n_results = l$casnr$n_total[1],
                             n_habitat = nrow(habitat),
                             n_region = nrow(region),
                             n_effect = nrow(l$effect),
-                            n_endpoints = nrow(l$endpoint)),
+                            n_endpoints = nrow(l$endpoint),
+                            n_exposure = nrow(l$exposure)),
                  keep.names = 'variable')
 
 # list --------------------------------------------------------------------
@@ -114,6 +119,7 @@ catalog_l = list(casnr = casnr,
                  duration = duration,
                  effect = effect,
                  endpoint = endpoint,
+                 exposure = exposure,
                  meta = meta)
 
 # write -------------------------------------------------------------------

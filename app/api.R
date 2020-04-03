@@ -150,6 +150,15 @@ function(req, res) {
       return(list(error = msg))
     }
   }
+  if (!is.null(req$args$exposure)) {
+    chck_catalog = in_catalog(req$args$exposure, catalog$exposure$variable)
+    if (!is.null(chck_catalog)) {
+      msg = paste0('Exposure value not in Standartox data base:\n',
+                   paste0(chck_catalog, collapse = '\n'))
+      res$status = 400
+      return(list(error = msg))
+    }
+  }
 
   plumber::forward()
 }
@@ -185,6 +194,7 @@ function() {
 #* @param:int duration Test duration (e.g. ????)
 #* @param:character effect
 #* @param:character endpoint
+#* @param:character exposure
 #* @post /filter
 #* @serializer contentType list(type="application/octet-stream")
 function(req,
@@ -199,7 +209,8 @@ function(req,
          region = NULL,
          duration = NULL,
          effect = NULL,
-         endpoint = NULL
+         endpoint = NULL,
+         exposure = NULL
 ) {
   # function
   out = stx_filter(test = stx_test,
@@ -216,7 +227,8 @@ function(req,
                    region_ = region,
                    duration_ = duration,
                    effect_ = effect,
-                   endpoint_ = endpoint)
+                   endpoint_ = endpoint,
+                   exposure_ = exposure)
   # return
   if (nrow(out) == 0) {
     # TODO this should not be needed anymore once fst0.9.2 is released

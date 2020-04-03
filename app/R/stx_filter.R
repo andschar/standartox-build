@@ -14,7 +14,8 @@ stx_filter = function(test = NULL,
                       region_ = NULL,
                       duration_ = NULL,
                       effect_ = NULL,
-                      endpoint_ = NULL) {
+                      endpoint_ = NULL,
+                      exposure_ = NULL) {
   # test --------------------------------------------------------------------
   if (!is.null(concentration_unit_)) {
     test = test[concentration_unit %in% concentration_unit_]
@@ -28,8 +29,11 @@ stx_filter = function(test = NULL,
   if (!is.null(endpoint_)) {
     test = test[endpoint %in% endpoint_]
   }
+  if (!is.null(exposure_)) {
+    test = test[exposure %in% exposure_]
+  }
   if (is.null(duration_)) {
-    dur = range(dt$duration)
+    dur = range(test$duration)
   } else if (length(duration_) == 1) {
     dur = rep(duration_, 2)
   } else {

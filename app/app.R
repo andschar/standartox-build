@@ -155,13 +155,6 @@ sidebar = dashboardSidebar(
       #     choiceValues = c('acute', 'chronic', 'nc'),
       #     choiceNames = c('acute', 'chronic', 'not classified')
       #   ),
-      #   prettyCheckboxGroup(
-      #     inputId = 'exposure', # exposure_type
-      #     label = 'TODO! Exposure',
-      #     choiceValues = c('diet', 'static'),
-      #     choiceNames = c('diet', 'static')
-      #   )
-      # ),
       # prettyRadioButtons(
       #   inputId = 'test_location',
       #   label = 'Test location',
@@ -171,11 +164,11 @@ sidebar = dashboardSidebar(
       ### END TODO
       splitLayout(
         prettyCheckboxGroup(
-          inputId = 'effect',
-          label = 'Effect group',
-          choiceValues = catalog$effect$variable,
-          choiceNames = catalog$effect$name_perc,
-          selected = c('MOR', 'POP', 'GRO', 'ITX')
+          inputId = 'exposure',
+          label = 'Exposure group',
+          choiceValues = catalog$exposure$variable,
+          choiceNames = catalog$exposure$name_perc,
+          selected = 'aquatic'
         ),
         prettyRadioButtons(
           inputId = 'endpoint',
@@ -184,6 +177,13 @@ sidebar = dashboardSidebar(
           choiceNames = catalog$endpoint$name_perc,
           selected = c('XX50')
         )
+      ),
+      prettyCheckboxGroup(
+        inputId = 'effect',
+        label = 'Effect group',
+        choiceValues = catalog$effect$variable,
+        choiceNames = catalog$effect$name_perc,
+        selected = c('MOR', 'POP', 'GRO', 'ITX')
       )
     )
   ),
@@ -345,6 +345,7 @@ server = function(input, output, session) {
       duration_ = c(input$dur1, input$dur2),
       effect_ = input$effect,
       endpoint_ = input$endpoint,
+      exposure_ = input$exposure,
       cas_ = cas_input()
     )
   })
@@ -368,6 +369,7 @@ server = function(input, output, session) {
         duration_ = c(input$dur1, input$dur2),
         effect_ = input$effect,
         endpoint_ = input$endpoint,
+        exposure_ = input$exposure,
         cas_ = cas_input()
       ),
       agg = input$agg,
