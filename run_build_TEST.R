@@ -19,10 +19,36 @@ if (sink_console) {
 # source(file.path(src, 'rep_query_prep.R'), max.deparse.length = mdl)
 # source(file.path(src, 'qu_taxa_fin.R'), max.deparse.length = mdl) # TODO error  GREATEST(wo.brack, epa_habi.brackish)::boolean AS brack
 # source(file.path(src, 'qu_phch_fin.R'), max.deparse.length = mdl)
+# source(file.path(src, 'look_concentration_units.R'), max.deparse.length = mdl)
+# source(file.path(src, 'look_duration_units.R'), max.deparse.length = mdl)
+source(file.path(src, 'look_concentration_units.R'), max.deparse.length = mdl)
+source(file.path(src, 'conv_unit_result.R'), max.deparse.length = mdl) # converts result units
 source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
-source(file.path(src, 'rep_standartox.R'), max.deparse.length = mdl)
 source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
 source(file.path(src, 'exp_standartox_catalog.R'), max.deparse.length = mdl)
+source(file.path(src, 'gn_setup.R'))
+con = DBI::dbConnect(RPostgreSQL::PostgreSQL(), #RPostgres::Postgres(),
+                     dbname = DBetox,
+                     host = DBhost,
+                     port = DBport,
+                     user = DBuser,
+                     password = DBpassword)
+tbl = c('tests', 'tests_fin') #, 'chemicals', 'taxa', 'refs')
+mapply(dbreport::dbreport,
+       tbl = tbl,
+       output_file = tbl,
+       title = paste0('standartox', '.', tbl),
+       MoreArgs = list(con = con,
+                       schema = 'standartox',
+                       output_dir = file.path(summdir, 'standartox'),
+                       output_format = 'html_document',
+                       verbose = TRUE,
+                       exit = FALSE))
+DBI::dbDisconnect(con)
+
+# source(file.path(src, 'rep_standartox.R'), max.deparse.length = mdl)
+# source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)
+# source(file.path(src, 'exp_standartox_catalog.R'), max.deparse.length = mdl)
 
 # end ---------------------------------------------------------------------
 source(file.path(src, 'gn_end.R'), max.deparse.length = mdl)

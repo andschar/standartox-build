@@ -81,6 +81,9 @@ if (lookup) {
   source(file.path(src, 'look_duration_units.R'), max.deparse.length = mdl)
 }
 
+# unit conversion ---------------------------------------------------------
+source(file.path(src, 'conv_unit_result.R'), max.deparse.length = mdl) # converts result units
+
 # Standartox --------------------------------------------------------------
 if (build_standartox) {
   source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
