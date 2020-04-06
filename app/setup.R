@@ -16,7 +16,6 @@ if (!require('pacman'))
 
 pkg_cran = c(
   'data.table',
-  'feather',
   'fst',
   'shiny',
   'shinyjs',
