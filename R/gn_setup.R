@@ -30,42 +30,57 @@ if (!require('pacman')) {
 }
 
 pkg_cran = c(
+  # convenience
   'devtools',
-  'RCurl',
-  'stringr',
+  'countrycode',
   'R.utils',
   'udunits2',
+  # string handling
+  'stringi',
+  'stringr',
+  # web API & scraping
   'rvest',
   'httr',
-  'jsonlite',
+  'rgbif',
+  'taxize',
+  # i/o
   'readxl',
   'openxlsx',
-  'purrr',
+  'jsonlite',
+  'fst',
+  # data handling
   'data.table',
+  # database
   'RPostgreSQL',
   'DBI',
-  'vegan',
-  'plyr',
-  'outliers',
-  'feather',
+  # parallel programing
+  'foreach',
+  'parallel',
+  'doParallel',
+  # documentation
+  'knitr',
+  # ploting
   'ggplot2',
-  'ggrepel',
-  'ggridges',
   'scales',
   'treemapify',
   'cowplot',
   'RColorBrewer',
   'treemap',
-  'rgbif',
-  'taxize',
-  'countrycode',
-  'foreach',
-  'doParallel',
-  'fst',
+  # APP
+  'shiny',
+  'shinyjs',
+  'shinyWidgets', # pretty stuff
+  'shinydashboard',
+  'shinydashboardPlus',
+  'knitr',
   'DT',
-  'knitr'
+  'plotly',
+  'ssdtools',
+  'reactlog',
+  # API
+  'plumber'
 )
-pkg_gith = c('ropensci/bib2df',
+pkg_gith = c('ropensci/bib2df', # TODO remove?
              'ropensci/webchem',
              'andschar/dbreport')
 
@@ -158,15 +173,10 @@ source(file.path(src, 'fun_filename.R'))
 source(file.path(src, 'fun_sort_vec.R'))
 source(file.path(src, 'fun_read_char.R'))
 source(file.path(src, 'fun_as_true.R'))
+# source(file.path(src, 'fun_better_citekey.R'))
 
 # database ----------------------------------------------------------------
 csapikey = read_char(file.path(cred, 'chemspider_apikey.txt'))
-
-# units -------------------------------------------------------------------
-gal = 3.785411784 # liters
-
-
-
 
 # library dependencies ----------------------------------------------------
 # libsodium - for JS module fs - fun_scrape_phantomjs.R
@@ -182,28 +192,8 @@ source(file.path(src, 'ggplot_theme_etox_base.R'))
 theme_set(theme_minimal_etox_base_sans)
 
 # cite packages -----------------------------------------------------------
-pkg = sort(c('pacman', pkg_cran))#, pkg_gith))
-fl_bib = file.path(article, 'refs', 'references-standartox-build.bib')
-fl_tex = file.path(article, 'appendix', 'r-package-list.tex')
-file.remove(fl_bib)
-file.remove(fl_tex)
-for (i in pkg) {
-  capture.output(
-    print(citation(i), style = "Bibtex"),
-    file = fl_bib,
-    append = TRUE
-  )
-  capture.output(
-    print(citation(i), style = 'latex'),
-    cat('\\newline '), # HACK
-    file = fl_tex,
-    append = TRUE
-  )
-}
+knitr::write_bib(c(pkg_cran,
+                   gsub('(.+)/(.+)', '\\2', pkg_gith)),
+                 file = file.path(article, 'refs', 'references-standartox-rpackages.bib'))
 
-# 
-# print(citation(i), style = "Bibtex")[1] = 'sadf'
-# entry = toBibtex(citation(i)[1]) # = 'sadf'
-# entry[1] = sub("\\{,$", sprintf("{%s%s,", prefix, pkg), 
-#                entry[1])
 
