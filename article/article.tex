@@ -83,6 +83,8 @@
                 backgrounds,
                 fit}
 \usepackage{rotating}
+% check references
+\usepackage{refcheck}
 
 %=================================================================
 %% Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition, Notation, Assumption
@@ -485,8 +487,10 @@ WoRMS & World Register of Marine Species \\
 % References, variant B: external bibliography
 %=====================================
 \reftitle{References}
+\nocite{*}
 \externalbibliography{yes}
-\bibliography{refs/references-standartox.bib}
+\bibliography{refs/references-standartox.bib,
+              refs/references-standartox-build.bib}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% optional
