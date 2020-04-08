@@ -303,10 +303,10 @@ SELECT
 	casnr,
 	CASE
 		WHEN conc1_unit4 = 'g/l'
-		THEN conc1_mean4 * 1e-6
+		THEN conc1_mean4 * 1e6
 		WHEN conc1_unit4 = 'g/m2'
 		THEN conc1_mean4
-		WHEN conc1_unit4 = 'ppdb'
+		WHEN conc1_unit4 = 'ppb'
 		THEN conc1_mean4
 		WHEN conc1_unit4 = 'g/g'
 		THEN conc1_mean4 * 1e6
