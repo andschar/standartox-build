@@ -75,7 +75,6 @@ pkg_cran = c(
   'knitr',
   'DT',
   'plotly',
-  'ssdtools',
   'reactlog',
   # API
   'plumber'
@@ -192,8 +191,9 @@ source(file.path(src, 'ggplot_theme_etox_base.R'))
 theme_set(theme_minimal_etox_base_sans)
 
 # cite packages -----------------------------------------------------------
-knitr::write_bib(c(pkg_cran,
-                   gsub('(.+)/(.+)', '\\2', pkg_gith)),
-                 file = file.path(article, 'refs', 'references-standartox-rpackages.bib'))
+# TODO uncomment after article acceptance
+# knitr::write_bib(c(pkg_cran,
+#                    gsub('(.+)/(.+)', '\\2', pkg_gith)),
+#                  file = file.path(article, 'refs', 'references-standartox-rpackages.bib'))
 
 
