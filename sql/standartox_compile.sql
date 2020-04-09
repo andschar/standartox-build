@@ -320,9 +320,9 @@ SELECT
 		WHEN conc1_unit4 = 'g/l'
 		THEN 'ug/l'
 		WHEN conc1_unit4 = 'g/m2'
-		THEN 'g/m2'
+		THEN conc1_unit4
 		WHEN conc1_unit4 = 'ppb'
-		THEN 'ppb'
+		THEN conc1_unit4
 		WHEN conc1_unit4 = 'g/g'
 		THEN 'mg/kg'
 		WHEN conc1_unit4 = 'l/l'

@@ -21,7 +21,7 @@ if (sink_console) {
 # source(file.path(src, 'qu_phch_fin.R'), max.deparse.length = mdl)
 # source(file.path(src, 'look_concentration_units.R'), max.deparse.length = mdl)
 # source(file.path(src, 'look_duration_units.R'), max.deparse.length = mdl)
-source(file.path(src, 'look_concentration_units.R'), max.deparse.length = mdl)
+source(file.path(src, 'look_unit_result.R'), max.deparse.length = mdl)
 source(file.path(src, 'conv_unit_result.R'), max.deparse.length = mdl) # converts result units
 source(file.path(src, 'bd_standartox.R'), max.deparse.length = mdl)
 source(file.path(src, 'exp_standartox.R'), max.deparse.length = mdl)

@@ -17,7 +17,7 @@ q2 = "SELECT study_duration_unit, count(study_duration_unit) AS n
 unit_study = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                         query = q2)
 ## lookup csv
-look_dur = fread(file.path(lookupdir, 'lookup_duration.csv'), na.strings = '')
+look_dur = fread(file.path(lookupdir, 'lookup_unit_duration.csv'), na.strings = '')
 
 # prepare -----------------------------------------------------------------
 unit = merge(unit_test, unit_study, by.x = 'obs_duration_unit', by.y = 'study_duration_unit',

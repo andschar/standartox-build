@@ -5,29 +5,30 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 fl = file.path(normandir, 'data', 'report_matched.xlsx')
-dat_old = read_excel(fl)
-setDT(dat_old)
-fl = file.path(normandir, 'data', 'susdat_id_cas.xlsx')
 dat = read_excel(fl)
 setDT(dat)
-setnames(dat, c('name', 'cas_rn', 'cas', 'casnr', 'susdat_id'))
+setnames(dat,
+         c('chemical_name', 'MATCH_NormanID'),
+         c('name', 'normanid'))
+dat = dat[ , .SD, .SDcols = c('name', 'cas_fixed', 'normanid') ]
+# TODO new data from Peter (doesn't work)
+# fl = file.path(normandir, 'data', 'susdat_id_cas.xlsx')
+# dat = read_excel(fl)
+# setDT(dat)
+# setnames(dat, c('name', 'cas_rn', 'cas', 'casnr', 'susdat_id'))
 
 # preparation -------------------------------------------------------------
-# dat[ , cas_fixed2 := gsub('CAS_RN:\\s', '', cas_fixed) ]
-cols = c('name', 'cas', 'casnr', 'susdat_id')
-dat2 = dat[ , .SD, .SDcols = cols ]
-dat2[ , casnr := as.integer(gsub('-', '', casnr)) ]
-setcolorder(dat2, 'casnr')
+dat[ , cas := gsub('CAS_RN:\\s', '', cas_fixed) ]
+dat[ , casnr := as.integer(casconv(cas, direction = 'tocasnr')) ]
+setcolorder(dat, 'casnr')
 
 # chck --------------------------------------------------------------------
-chck_dupl(dat2, 'cas')
-
-dat2[ , .N, cas][ order(-N)]
+chck_dupl(dat, 'casnr')
 
 # write -------------------------------------------------------------------
-write_tbl(dat2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
+write_tbl(dat, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
           dbname = DBetox, schema = 'lookup', tbl = 'norman_id_cas',
-          key = 'cas',
+          key = 'casnr',
           comment = 'NORMAN ID lookup table')
 
 # log ---------------------------------------------------------------------

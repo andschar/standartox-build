@@ -8,16 +8,10 @@ source(file.path(src, 'gn_setup.R'))
 q = "SELECT table_schema, table_name, column_name
      FROM information_schema.columns
      WHERE table_schema = 'standartox'
-       AND table_name IN ('tests', 'chem_role', 'chem_class', 'taxa')"
-# AND table_name = 'data2'
-#      AND (column_name IN ('endpoint', 'effect', 'tax_order') OR
-#           column_name LIKE 'ccl_%' OR
-#           column_name LIKE 'cro_%' OR
-#           column_name LIKE 'hab_%' OR
-#           column_name LIKE 'reg_%')"
+       AND table_name IN ('tests', 'chemicals', 'taxa')"
 cols = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
-pattern = c('effect', 'tax_order', 'cro', 'ccl_', 'hab_', 'reg_')
+pattern = c('effect', 'tax_order', 'cro_', 'ccl_', 'hab_', 'reg_')
 
 cols = cols[ grep(paste0(pattern, collapse = '|'), column_name) ]
 

@@ -1,3 +1,4 @@
+norman
 .Rproj.user
 .Rhistory
 .RData
@@ -5,41 +6,16 @@
 # self defined:
 *.Rproj
 *.log
-*.html
+IDEAS
 /data
-/plots
 TODO.*
 /DEPRECATED*
-R/TODO*
-R/DEPRECATED*
-# cache -> is done via /cache/.gitignore
-# commit .gitignore files to also commit the folders (work around)
-# https://stackoverflow.com/questions/115983/how-can-i-add-an-empty-directory-to-a-git-repository
-# missing -> is done via /missing/.gitignore
-# Tex
-TeX/*
-!TeX/organigram1.tex
-!TeX/organigram2.tex
-# /functions
-functions/ppdb*
-# talk
-presentation/*
-# !presentation/talk_internal.html
-# missing directory
-missing/*
-# misc
 misc/*
-# notes
-notes/*
-# summary
 summary/*
-# credentials
 cred/credentials.R
-# deprecated
-# ag
 ag/*
-# log
-log
+# log files
+*.log
 # sync scripts
 sync_to_server.R
 sync_from_server.R

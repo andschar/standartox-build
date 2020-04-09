@@ -11,7 +11,7 @@
 48162,1113921,10099748,331,1.7,"ug/100g/d",7.08333333333334E-10,"g/g/h",840,"h",5.95000000000001E-07,"g/g",5.95000000000001E-07,"g/g","TRUE","TRUE","mass/mass/time","FALSE",7.08333333333334E-10,"g/g/h",,,"FALSE","TRUE"
 51768,1185275,32598133,292,0.29,"mg/kg/L",2.9E-07,"g/g/l",,"h",2.9E-07,"g/g/l",2.9E-07,"g/g/l","TRUE","TRUE","mass/mass/volume","FALSE",2.9E-07,"g/g/l",,,"FALSE","TRUE"
 55416,1106332,88302,207.11,1.17,"ul/L",1.17E-06,"l/l",24,"h",1.17E-06,"l/l",1.17E-06,"l/l","TRUE","TRUE","volume/volume","FALSE",1.17E-06,"l/l",,,"FALSE","TRUE"
-64318,1122806,1344098,122.0632,210,"ug-atoms/L",0.00021,"g/l",672,"h",0.00021,"g/l",0.00021,"g/l","TRUE","TRUE","mass/volume","FALSE",210,"Ug-atoms/l",,,"FALSE","FALSE"
+64318,1122806,1344098,122.0632,210,"ug-atoms/L",0.00021,"g/l",672,"h",0.00021,"g/l",0.00021,"g/l","TRUE","TRUE","mass/volume","FALSE",210,"ug-atoms/l",,,"FALSE","FALSE"
 68525,1040797,76744,226.27,3,"ml/25 ml",0.12,"l/l",0.2000004,"h",0.12,"l/l",0.12,"l/l","TRUE","TRUE","volume/volume","FALSE",0.12,"l/l",,,"TRUE","TRUE"
 79308,1050001,14124675,126.97,66,"kBq/ml",66000000,"Bq/l",7632,"h",66000000,"Bq/l",66000000,"Bq/l","TRUE","TRUE","radioactivity/volume","FALSE",66000000,"Bq/l",,,"FALSE","TRUE"
 80548,1044443,3383968,466.5,485,"g/km",0.485,"g/m",24,"h",0.485,"g/m",0.485,"g/m","TRUE","TRUE","mass/length","FALSE",0.485,"g/m",,,"TRUE","TRUE"
@@ -52,10 +52,10 @@
 137405,1001810,7646857,136.3,4.9,"cpm/L",4.9,"cpm/l",1512,"h",4.9,"cpm/l",4.9,"cpm/l","TRUE","FALSE","radioactivity/volume","FALSE",4.9,"cpm/l",,,"TRUE","TRUE"
 137423,1057565,2921882,350.6,45,"gal",170.34353028,"l",4380.006,"h",170.34353028,"l",170.34353028,"l","TRUE","TRUE","volume","FALSE",170.34353028,"l",,,"TRUE","TRUE"
 138752,1044994,37223737,,1,"gal/gal",1,"l/l",2190.003,"h",1,"l/l",1,"l/l","TRUE","TRUE","volume/volume","FALSE",1,"l/l",,,"TRUE","TRUE"
-138922,1113089,11097691,326.4,50,"mg/g/d",0.002083333333333,"g/g/h",408,"h",0.850000000000001,"g/g",0.850000000000001,"g/g","TRUE","TRUE","mass/mass/time","FALSE",50000,"mg/kg/d",,,"FALSE","FALSE"
+138922,1113089,11097691,326.4,50,"mg/g/d",0.002083333333333,"g/g/h",408,"h",0.850000000000001,"g/g",0.850000000000001,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.002083333333333,"g/g/h",,,"FALSE","FALSE"
 139639,1053115,7440462,132.905452,160,"Bq/g",160,"Bq/g",1512,"h",160,"Bq/g",160,"Bq/g","TRUE","TRUE","radioactivity/mass","FALSE",160,"Bq/g",,,"TRUE","TRUE"
 143226,1164185,94757,221.03,1168,"dpm/ml",19466.67056,"Bq/l",336,"h",19466.67056,"Bq/l",19466.67056,"Bq/l","TRUE","TRUE","radioactivity/volume","FALSE",19466.6666667056,"Bq/l",,,"FALSE","TRUE"
-144116,1158955,688733,291.06072,4.8,"ug/g/d",2E-07,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4.8,"mg/kg/d",,,"FALSE","FALSE"
+144116,1158955,688733,291.06072,4.8,"ug/g/d",2E-07,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2E-07,"g/g/h",,,"FALSE","FALSE"
 152836,1192520,7440246,87.6,37000,"Bq/L",37000,"Bq/l",336,"h",37000,"Bq/l",37000,"Bq/l","TRUE","TRUE","radioactivity/volume","FALSE",37000,"Bq/l",,,"TRUE","TRUE"
 156085,1194816,1746016,322,0.084,"nmol/kg bdwt",8.4E-14,"mol/g",336,"h",8.4E-14,"mol/g",2.7048E-11,"g/g","TRUE","TRUE","mol/mass","FALSE",8.4E-14,"mol/g",,,"FALSE","TRUE"
 157626,1135855,77474,272.8,38.35,"ug/fish",38.35,"ug/fish",,"h",38.35,"ug/fish",38.35,"ug/fish","FALSE","TRUE","mass/noscience","TRUE",0.03835,"mg/fish",,,"FALSE","FALSE"
@@ -88,9 +88,9 @@
 200265,1217621,35065271,360.9,4630808,"dpm/EU",4630808,"dpm/EU",168,"h",4630808,"dpm/EU",4630808,"dpm/EU","FALSE","TRUE","radioactivity/noscience","TRUE",77180.1333334877,"dpm/eu",,,"FALSE","FALSE"
 203282,1230171,7647145,58.44,175,"mOsm",0.175,"Osm/l",24,"h",0.175,"Osm/l",0.175,"Osm/l","TRUE","FALSE","osmolarity","FALSE",,,,,,
 204436,1180663,109739,73.14,0.012,"ug/cell",0.012,"ug/cell",3,"h",0.012,"ug/cell",0.012,"ug/cell","FALSE","TRUE","mass/noscience","TRUE",0.012,"ug/cell",,,"TRUE","TRUE"
-204713,1213688,36088229,,7,"pg/dm3",7E-09,"g/m3",,"h",7E-09,"g/m3",7E-09,"g/m3","TRUE","TRUE","mass/volume","FALSE",7E-12,"g/l",,,"FALSE","FALSE"
+204713,1213688,36088229,,7,"pg/dm3",7E-09,"g/m3",,"h",7E-09,"g/m3",7E-09,"g/m3","TRUE","TRUE","mass/volume","FALSE",7E-09,"g/m3",,,"FALSE","FALSE"
 204863,1207962,109333348,578.7,4.92,"ng/g",4.92E-09,"g/g",,"h",4.92E-09,"g/g",4.92E-09,"g/g","TRUE","TRUE","mass/mass","FALSE",4.92E-09,"g/g",,,"FALSE","TRUE"
-206500,1229691,7758954,278,15,"mg/kg bdwt/d",6.25E-07,"g/g/h",720,"h",0.00045,"g/g",0.00045,"g/g","TRUE","TRUE","mass/mass/time","FALSE",15,"mg/kg/d",,,"FALSE","FALSE"
+206500,1229691,7758954,278,15,"mg/kg bdwt/d",6.25E-07,"g/g/h",720,"h",0.00045,"g/g",0.00045,"g/g","TRUE","TRUE","mass/mass/time","FALSE",6.25E-07,"g/g/h",,,"FALSE","FALSE"
 206665,1215847,61949766,391.3,1400,"ng/cm",0.00014,"g/m",960,"h",0.00014,"g/m",0.00014,"g/m","TRUE","TRUE","mass/length","FALSE",0.00014,"g/m",,,"TRUE","TRUE"
 210401,1232685,50471448,286.11,1,"ug/mg food",0.001,"g/g",720,"h",0.001,"g/g",0.001,"g/g","TRUE","TRUE","mass/mass","FALSE",0.001,"g/g",,,"TRUE","TRUE"
 211043,1229988,7664939,98.08,0.2,"N",0.2,"N",,"h",0.2,"N",0.2,"N","FALSE","TRUE","noscience","TRUE",,,,,,
@@ -98,24 +98,24 @@
 212891,1235426,57636,296.4,5,"ug/10 g bdwt",5E-07,"g/g",4380.006,"h",5E-07,"g/g",5E-07,"g/g","TRUE","TRUE","mass/mass","FALSE",5E-07,"g/g",,,"FALSE","TRUE"
 215022,1225469,1336363,,2600,"ng/g dry wt",2.6E-06,"g/g",1344,"h",2.6E-06,"g/g",2.6E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",2.6E-06,"g/g",,,"FALSE","TRUE"
 216100,1235909,110543,86.18,3.03,"ml/g food",0.00303,"l/g",336,"h",0.00303,"l/g",0.00303,"l/g","TRUE","TRUE","volume/mass","FALSE",0.00303,"l/g",,,"TRUE","TRUE"
-216144,1236310,57636,296.4,10,"ug/g org/wk",5.95238095238095E-08,"g/g/h",168,"h",1E-05,"g/g",1E-05,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.01,"mg/g/wk",,,"FALSE","FALSE"
-216163,1225121,688733,291.06072,4,"mg/cm2/d",1.66666666666667,"g/m2/h",4380.006,"h",7300.01000000001,"g/m2",7300.01000000001,"g/m2","TRUE","TRUE","mass/area/time","FALSE",4000,"ug/cm2/d",,,"FALSE","FALSE"
-216248,1236243,50237,362.5,100,"ng/ml blood/d",4.16666666666667E-06,"g/l/h",,"h",,"g/l",,"g/l","TRUE","TRUE","mass/volume/time","FALSE",100,"ug/l/d",,,"FALSE","FALSE"
-216474,1235539,50237,362.5,4.2,"ug/h/100 g",4.2E-08,"g/h/g",240,"h",4.2E-08,"g/h/g",4.2E-08,"g/h/g","TRUE","TRUE","mass/time/mass","FALSE",,,,,,
-216938,1223549,50328,252.3,50,"mg/kg dw org/d",2.08333333333334E-06,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",50,"mg/kg/d",,,"FALSE","FALSE"
-217262,1237374,50282,272.4,0.5,"ug/g bdwt/wk",2.97619047619048E-09,"g/g/h",600,"h",1.78571428571429E-06,"g/g",1.78571428571429E-06,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.5,"mg/kg/wk",,,"FALSE","FALSE"
+216144,1236310,57636,296.4,10,"ug/g org/wk",5.95238095238095E-08,"g/g/h",168,"h",1E-05,"g/g",1E-05,"g/g","TRUE","TRUE","mass/mass/time","FALSE",5.95238095238095E-08,"g/g/h",,,"FALSE","FALSE"
+216163,1225121,688733,291.06072,4,"mg/cm2/d",1.66666666666667,"g/m2/h",4380.006,"h",7300.01000000001,"g/m2",7300.01000000001,"g/m2","TRUE","TRUE","mass/area/time","FALSE",1.66666666666667,"g/m2/h",,,"FALSE","FALSE"
+216248,1236243,50237,362.5,100,"ng/ml blood/d",4.16666666666667E-06,"g/l/h",,"h",,"g/l",,"g/l","TRUE","TRUE","mass/volume/time","FALSE",4.16666666666667E-06,"g/l/h",,,"FALSE","FALSE"
+216474,1235539,50237,362.5,4.2,"ug/h/100 g",4.2E-08,"g/h/g",240,"h",4.2E-08,"g/h/g",4.2E-08,"g/h/g","TRUE","TRUE","mass/time/mass","FALSE",4.2E-08,"g/h/g",,,,
+216938,1223549,50328,252.3,50,"mg/kg dw org/d",2.08333333333334E-06,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.08333333333334E-06,"g/g/h",,,"FALSE","FALSE"
+217262,1237374,50282,272.4,0.5,"ug/g bdwt/wk",2.97619047619048E-09,"g/g/h",600,"h",1.78571428571429E-06,"g/g",1.78571428571429E-06,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.97619047619048E-09,"g/g/h",,,"FALSE","FALSE"
 217556,1237242,14265442,94.971,0.025,"mmol/g dry wt",2.5E-05,"mol/g",1008,"h",2.5E-05,"mol/g",0.002374275,"g/g","TRUE","TRUE","mol/mass","FALSE",2.5E-05,"mol/g",,,"FALSE","TRUE"
 217899,1237504,140669,206.32,25,"mg/kg wt",2.5E-05,"g/g",216,"h",2.5E-05,"g/g",2.5E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",2.5E-05,"g/g",,,"FALSE","TRUE"
-220548,1238014,688733,291.06072,4,"ug/cm2/d",0.001666666666667,"g/m2/h",672,"h",1.12,"g/m2",1.12,"g/m2","TRUE","TRUE","mass/area/time","FALSE",4,"ug/cm2/d",,,"FALSE","FALSE"
+220548,1238014,688733,291.06072,4,"ug/cm2/d",0.001666666666667,"g/m2/h",672,"h",1.12,"g/m2",1.12,"g/m2","TRUE","TRUE","mass/area/time","FALSE",0.001666666666667,"g/m2/h",,,"FALSE","FALSE"
 223060,1235721,7647145,58.44,0.1,"ml/d",4.16666666666667E-06,"l/h",240,"h",0.001,"l",0.001,"l","TRUE","TRUE","volume/time","FALSE",,,,,,
 223977,1206465,7440508,63.55,5E-07,"kmol/m3",0.0005,"mol/m3",,"h",0.0005,"mol/m3",0.0005,"mol/m3","TRUE","TRUE","mol/volume","FALSE",0.0005,"mol/m3",,,"FALSE","TRUE"
-225281,1233292,330541,233.09,80,"AI uM",8E-05,"mol/l",72,"h",8E-05,"mol/l",0.0186472,"g/g","TRUE","TRUE","mol/volume","FALSE",,,,,,
+225281,1233292,330541,233.09,80,"AI uM",8E-05,"mol/l",72,"h",8E-05,"mol/l",0.0186472,"g/g","TRUE","TRUE","mol/volume","FALSE",8E-05,"mol/l",,,,
 226443,1233596,14124675,126.97,0.4,"uCi/L",14800,"Bq/l",96,"h",14800,"Bq/l",14800,"Bq/l","TRUE","TRUE","radioactivity/volume","FALSE",14800,"Bq/l",,,"TRUE","TRUE"
-226645,1144895,10099748,331,10,"mg/kg org/d",4.16666666666667E-07,"g/g/h",720,"h",0.0003,"g/g",0.0003,"g/g","TRUE","TRUE","mass/mass/time","FALSE",10,"mg/kg/d",,,"FALSE","FALSE"
-227789,1233007,301042,325,20,"cm3/4L",5E-06,"m3/l",,"h",5E-06,"m3/l",5E-06,"m3/l","TRUE","TRUE","volume/volume","FALSE",,,,,,
+226645,1144895,10099748,331,10,"mg/kg org/d",4.16666666666667E-07,"g/g/h",720,"h",0.0003,"g/g",0.0003,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4.16666666666667E-07,"g/g/h",,,"FALSE","FALSE"
+227789,1233007,301042,325,20,"cm3/4L",5E-06,"m3/l",,"h",5E-06,"m3/l",5E-06,"m3/l","TRUE","TRUE","volume/volume","FALSE",5E-06,"m3/l",,,,
 227797,1233462,7761888,169.873,0.089,"mg/h",8.9E-05,"g/h",24,"h",0.002136,"g",0.002136,"g","TRUE","TRUE","mass/time","FALSE",8.9E-05,"g/h",,,"FALSE","TRUE"
 229358,1236672,1308389,151.99,0.66,"mCi/kg",24420,"Bq/g",6,"h",24420,"Bq/g",24420,"Bq/g","TRUE","TRUE","radioactivity/mass","FALSE",24420,"Bq/g",,,"TRUE","TRUE"
-233349,1192163,72435,345.6,6000,"ug/dm3",6,"g/m3",336,"h",6,"g/m3",6,"g/m3","TRUE","TRUE","mass/volume","FALSE",6000,"ug/dm3",,,"FALSE","FALSE"
+233349,1192163,72435,345.6,6000,"ug/dm3",6,"g/m3",336,"h",6,"g/m3",6,"g/m3","TRUE","TRUE","mass/volume","FALSE",6,"g/m3",,,"FALSE","FALSE"
 235022,1081663,10099748,331,15,"pM",1.5E-11,"mol/l",,"h",1.5E-11,"mol/l",4.965E-09,"g/g","TRUE","TRUE","mol/volume","FALSE",1.5E-11,"mol/l",,,"FALSE","TRUE"
 235986,1246871,298124,74.04,0.002,"mol/dm3",2,"mol/m3",0.333334,"h",2,"mol/m3",2,"mol/m3","TRUE","TRUE","mol/volume","FALSE",2,"mol/m3",,,"TRUE","TRUE"
 236066,1249312,471341,100.09,61,"mg/g",0.061,"g/g",1008,"h",0.061,"g/g",0.061,"g/g","TRUE","TRUE","mass/mass","FALSE",6.1E-08,"g/g",,,"FALSE","TRUE"
@@ -130,7 +130,7 @@
 251226,1205680,1746016,322,717,"pg/g wet wt",7.17E-10,"g/g",,"h",7.17E-10,"g/g",7.17E-10,"g/g","TRUE","TRUE","mass/mass","FALSE",7.17E-10,"g/g",,,"FALSE","TRUE"
 702797,1254071,120068373,437.1,1478.5,"nmol",1.4785E-06,"mol",48,"h",1.4785E-06,"mol",1.4785E-06,"mol","TRUE","TRUE","mol","FALSE",1.4785E-06,"mol",,,"FALSE","TRUE"
 704869,1255616,40596698,,4,"eu",4,"eu",96,"h",4,"eu",4,"eu","FALSE","TRUE","noscience","TRUE",4,"eu",,,"TRUE","TRUE"
-706131,1256714,121755,330.4,2,"lit",2,"l",24,"h",2,"l",2,"l","TRUE","TRUE","volume","FALSE",,,,,,
+706131,1256714,121755,330.4,2,"lit",2,"l",24,"h",2,"l",2,"l","TRUE","TRUE","volume","FALSE",2,"l",,,,
 706463,1257022,1912249,215.68,150,"units/l",150,"units/l",480,"h",150,"units/l",150,"units/l","FALSE","TRUE","noscience/volume","TRUE",150,"units/l",,,"TRUE","TRUE"
 709806,1259649,2921882,350.6,34,"ug/3.5L",9.71428571428572E-06,"g/l",48,"h",9.71428571428572E-06,"g/l",9.71428571428572E-06,"g/l","TRUE","TRUE","mass/volume","FALSE",9.71428571428572E-06,"g/l",,,"FALSE","TRUE"
 713315,1262548,129000,202.25,0.16,"pmol/ml",1.6E-10,"mol/l",672,"h",1.6E-10,"mol/l",3.236E-08,"g/g","TRUE","TRUE","mol/volume","FALSE",1.6E-10,"mol/l",,,"FALSE","TRUE"
@@ -144,12 +144,12 @@
 724626,1273326,7440666,65.4,10,"uCI/g org",10,"g",1680,"h",10,"g",10,"g","TRUE","TRUE","mass","FALSE",370000,"Bq/g",,,"FALSE","FALSE"
 725809,1274486,10043013,342.151,187.9,"pmol/cell",187.9,"pmol/cell",120,"h",187.9,"pmol/cell",187.9,"pmol/cell","FALSE","TRUE","mol/noscience","TRUE",1.88E-10,"mol/cell",,,"FALSE","FALSE"
 726583,1275256,7646857,136.3,144,"ug/g dry wt",0.000144,"g/g",504,"h",0.000144,"g/g",0.000144,"g/g","TRUE","TRUE","mass/mass","FALSE",0.000144,"g/g",,,"TRUE","TRUE"
-727522,1264268,83794,394.4,3,"ppm-hour",3000,"ppb",48,"h",3000,"ppb",3000,"ppb","TRUE","FALSE","fraction","FALSE",,,,,,
-728083,1264606,60515,229.3,100,"uM/L",0.0001,"mol/l/l",2,"h",0.0001,"mol/l/l",0.0001,"mol/l/l","TRUE","TRUE","mol/volume/volume","FALSE",,,,,,
+727522,1264268,83794,394.4,3,"ppm-hour",3000,"ppb",48,"h",3000,"ppb",3000,"ppb","TRUE","FALSE","fraction","FALSE",3000,"ppb/h",,,,
+728083,1264606,60515,229.3,100,"uM/L",0.0001,"mol/l/l",2,"h",0.0001,"mol/l/l",0.0001,"mol/l/l","TRUE","TRUE","mol/volume/volume","FALSE",0.0001,"mol/l/l",,,,
 728673,1276575,7720787,151.91,3000,"kg/d",125000,"g/h",336,"h",42000000,"g",42000000,"g","TRUE","TRUE","mass/time","FALSE",125000,"g/h",,,"TRUE","TRUE"
 730566,1277376,8002059,,1.2,"L/m2",1.2,"l/m2",168,"h",1.2,"l/m2",1.2,"l/m2","TRUE","TRUE","volume/area","FALSE",1.2,"l/m2",,,"TRUE","TRUE"
 731442,1278195,7646857,136.3,6,"uCi",222000,"Bq",63,"h",222000,"Bq",222000,"Bq","TRUE","TRUE","radioactivity","FALSE",222000,"Bq",,,"TRUE","TRUE"
-735241,1281702,115322,370.5,0.1,"um",1E-07,"m",120,"h",1E-07,"m",1E-07,"m","TRUE","TRUE","length","FALSE",,,,,,
+735241,1281702,115322,370.5,0.1,"um",1E-07,"m",120,"h",1E-07,"m",1E-07,"m","TRUE","TRUE","length","FALSE",1E-07,"m",,,,
 735516,1281948,8002059,,0.1,"% WSF",1000000,"ppb",0.166667,"h",1000000,"ppb",1000000,"ppb","TRUE","FALSE","fraction","FALSE",,,,,,
 738058,1284106,2008391,266.12,0.74,"AI mg/kg",7.4E-07,"g/g",168,"h",7.4E-07,"g/g",7.4E-07,"g/g","TRUE","TRUE","mass/mass","FALSE",7.4E-07,"g/g",,,"FALSE","TRUE"
 739238,1285168,7440224,107.868,29.6,"amol/cell",29.6,"amol/cell",96,"h",29.6,"amol/cell",29.6,"amol/cell","FALSE","TRUE","mol/noscience","TRUE",2.96E-17,"mol/cell",,,"FALSE","FALSE"
@@ -159,7 +159,7 @@
 742467,1288107,197715858,,1.2,"granules/kg bwt",1.2,"granules/kg bwt",,"h",1.2,"granules/kg bwt",1.2,"granules/kg bwt","FALSE","TRUE","noscience/mass","TRUE",,,,,,
 742907,1288494,86073883,1212.3,1,"ug/250 g bdwt",4E-09,"g/g",3,"h",4E-09,"g/g",4E-09,"g/g","TRUE","TRUE","mass/mass","FALSE",4E-09,"g/g",,,"FALSE","TRUE"
 742935,1288515,86073883,1212.3,10,"pmol/g bdwt",1E-11,"mol/g",0.2500005,"h",1E-11,"mol/g",1.2123E-08,"g/g","TRUE","TRUE","mol/mass","FALSE",1E-11,"mol/g",,,"FALSE","TRUE"
-743271,1288832,11097691,326.4,2,"ug/g bdwt/d",8.33333333333334E-08,"g/g/h",336,"h",2.8E-05,"g/g",2.8E-05,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2,"mg/kg/d",,,"FALSE","FALSE"
+743271,1288832,11097691,326.4,2,"ug/g bdwt/d",8.33333333333334E-08,"g/g/h",336,"h",2.8E-05,"g/g",2.8E-05,"g/g","TRUE","TRUE","mass/mass/time","FALSE",8.33333333333334E-08,"g/g/h",,,"FALSE","FALSE"
 744202,1289678,564352,302.4,20,"ug/kg bdwt",2E-08,"g/g",168,"h",2E-08,"g/g",2E-08,"g/g","TRUE","TRUE","mass/mass","FALSE",2E-08,"g/g",,,"FALSE","TRUE"
 744981,1290340,2921882,350.6,2.19,"nmol/g wet wt",2.19E-09,"mol/g",48,"h",2.19E-09,"mol/g",7.67814E-07,"g/g","TRUE","TRUE","mol/mass","FALSE",2.19E-09,"mol/g",,,"FALSE","TRUE"
 746022,1291263,52315078,416.2966,840,"AI ppt",0.84,"ppb",1,"h",0.84,"ppb",0.84,"ppb","TRUE","FALSE","fraction","FALSE",0.84,"ppb",,,"TRUE","TRUE"
@@ -170,7 +170,7 @@
 763841,1306920,7440508,63.55,17,"fg/org",17,"fg/org",24,"h",17,"fg/org",17,"fg/org","FALSE","TRUE","mass/noscience","TRUE",1.7E-11,"mg/org",,,"FALSE","FALSE"
 766763,1309656,7758987,159.61,1.18,"mg/L/h",0.00118,"g/l/h",6.000012,"h",0.00708001416,"g/l",0.00708001416,"g/l","TRUE","TRUE","mass/volume/time","FALSE",1180,"ug/l/h",,,"FALSE","FALSE"
 769696,1312273,7447394,134.45,14,"umol/dm3",0.014,"mol/m3",168,"h",0.014,"mol/m3",0.014,"mol/m3","TRUE","TRUE","mol/volume","FALSE",0.014,"mol/m3",,,,
-770785,1313266,7447394,134.45,2.5,"ng/d",1.04166666666667E-10,"g/h",168,"h",1.75E-08,"g",1.75E-08,"g","TRUE","TRUE","mass/time","FALSE",2.5E-06,"mg/d",,,"FALSE","FALSE"
+770785,1313266,7447394,134.45,2.5,"ng/d",1.04166666666667E-10,"g/h",168,"h",1.75E-08,"g",1.75E-08,"g","TRUE","TRUE","mass/time","FALSE",1.04166666666667E-10,"g/h",,,"FALSE","FALSE"
 770889,1313358,7758987,159.61,401.4,"ug/g diet",0.0004014,"g/g",420,"h",0.0004014,"g/g",0.0004014,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0004014,"g/g",,,"TRUE","TRUE"
 773066,1314926,104405,220.35,4.05,"uM",4.05E-06,"mol/l",8,"h",4.05E-06,"mol/l",0.0008924175,"g/g","TRUE","TRUE","mol/volume","FALSE",0.0008924175,"g/l",,,"FALSE","FALSE"
 775822,1317497,91203,128.17,50,"mg/kg bdwt",5E-05,"g/g",72,"h",5E-05,"g/g",5E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",5E-05,"g/g",,,"FALSE","TRUE"
@@ -187,28 +187,28 @@
 783756,1324555,1746016,322,494,"pg/g diet",4.94E-10,"g/g",,"h",4.94E-10,"g/g",4.94E-10,"g/g","TRUE","TRUE","mass/mass","FALSE",4.94E-10,"g/g",,,,
 784601,1325305,1746016,322,25,"pg/ml",2.5E-08,"g/l",96,"h",2.5E-08,"g/l",2.5E-08,"g/l","TRUE","TRUE","mass/volume","FALSE",2.5E-08,"g/l",,,"FALSE","TRUE"
 785243,1325900,1746016,322,50,"pg/ul",5E-05,"g/l",,"stg",5E-05,"g/l",5E-05,"g/l","TRUE","TRUE","mass/volume","FALSE",5E-05,"g/l",,,"FALSE","TRUE"
-787441,1327951,8076377,584.6,0.15,"mg/g bdwt/d",6.25000000000001E-06,"g/g/h",120,"h",0.00075,"g/g",0.00075,"g/g","TRUE","TRUE","mass/mass/time","FALSE",150,"mg/kg/d",,,"FALSE","FALSE"
+787441,1327951,8076377,584.6,0.15,"mg/g bdwt/d",6.25000000000001E-06,"g/g/h",120,"h",0.00075,"g/g",0.00075,"g/g","TRUE","TRUE","mass/mass/time","FALSE",6.25000000000001E-06,"g/g/h",,,"FALSE","FALSE"
 787760,1328252,52292178,,1,"gal/acre",0.000935391791143,"l/m2",,"h",0.000935391791143,"l/m2",0.000935391791143,"l/m2","TRUE","TRUE","volume/area","FALSE",0.000935396,"l/m2",,,"FALSE","TRUE"
 788951,1329415,83055996,410.4,1,"AI oz/acre",0.007005291029642,"g/m2",1632,"h",0.007005291029642,"g/m2",0.007005291029642,"g/m2","TRUE","TRUE","mass/area","FALSE",0.006993007,"g/m2",,,"FALSE","TRUE"
 790737,1330961,129000,202.25,47.1,"ug/org dry wt",47.1,"ug/org dry wt",16,"h",47.1,"ug/org dry wt",47.1,"ug/org dry wt","FALSE","TRUE","mass/noscience","TRUE",,,,,,
 793130,1333072,674828,84.07,5,"ppmv",5000,"ppb",1.000002,"h",5000,"ppb",5000,"ppb","TRUE","FALSE","fraction","FALSE",5000,"ppb",,,"TRUE","TRUE"
 795471,1335217,60348609,564.7,612,"nmol/g bw",6.12E-07,"mol/g",,"h",6.12E-07,"mol/g",0.0003455964,"g/g","TRUE","TRUE","mol/mass","FALSE",6.12E-07,"mol/g",,,"FALSE","TRUE"
-795790,1335467,13718268,121.929,363.2,"ppm dw fd",363200,"ppb",1848,"h",363200,"ppb",363200,"ppb","TRUE","FALSE","fraction","FALSE",,,,,,
+795790,1335467,13718268,121.929,363.2,"ppm dw fd",363200,"ppb",1848,"h",363200,"ppb",363200,"ppb","TRUE","FALSE","fraction","FALSE",363200,"ppb",,,,
 797437,1336907,5436431,485.79,12.3,"ug/2 org/d",12.3,"ug/2 org/d",504,"h",148780.8,"ug/2 org",148780.8,"ug/2 org","FALSE","TRUE","mass/noscience/time","TRUE",0.00615,"mg/org/d",,,"FALSE","FALSE"
 797744,1337168,60348609,564.7,670,"ng/org/d",670,"ng/org/d",1488,"h",23927040,"ng/org",23927040,"ng/org","FALSE","TRUE","mass/noscience/time","TRUE",0.00067,"mg/org/d",,,"FALSE","FALSE"
 798111,1337494,67970,384.63766,120,"IU/g diet",120,"IU/g diet",864,"h",120,"IU/g diet",120,"IU/g diet","FALSE","TRUE","noscience/mass","TRUE",120000,"iu/kg",,,"FALSE","FALSE"
 798121,1337501,67970,384.63766,37500,"U/kg dry diet",37500,"U/kg dry diet",672,"h",37500,"U/kg dry diet",37500,"U/kg dry diet","FALSE","TRUE","noscience/mass","TRUE",,,,,,
-798637,1337893,8002651,,250,"ml/10 L/100 m2",0.00025,"l/l/m2",24,"h",0.00025,"l/l/m2",0.00025,"l/l/m2","TRUE","TRUE","volume/volume/area","FALSE",,,,,,
+798637,1337893,8002651,,250,"ml/10 L/100 m2",0.00025,"l/l/m2",24,"h",0.00025,"l/l/m2",0.00025,"l/l/m2","TRUE","TRUE","volume/volume/area","FALSE",0.00025,"l/l/m2",,,,
 798810,1338044,99129212,359.911,0.03,"kg/ha",0.003,"g/m2",,"ea",0.003,"g/m2",0.003,"g/m2","TRUE","TRUE","mass/area","FALSE",0.003,"g/m2",,,"TRUE","TRUE"
 800472,1339548,39600425,,572,"ae ppb",572,"ppb",667.2,"h",572,"ppb",572,"ppb","TRUE","FALSE","fraction","FALSE",572,"ppb",,,"TRUE","TRUE"
-800586,1339653,50282,272.4,8.615,"ng eq/ml",8.615E-06,"g/l",2880,"h",8.615E-06,"g/l",8.615E-06,"g/l","TRUE","TRUE","mass/volume","FALSE",,,,,,
+800586,1339653,50282,272.4,8.615,"ng eq/ml",8.615E-06,"g/l",2880,"h",8.615E-06,"g/l",8.615E-06,"g/l","TRUE","TRUE","mass/volume","FALSE",8.615,"ng eq/ml",,,,
 800592,1339658,51401,,0.1,"ml/g bdwt",0.0001,"l/g",,"h",0.0001,"l/g",0.0001,"l/g","TRUE","TRUE","volume/mass","FALSE",0.0001,"l/g",,,"FALSE","TRUE"
 800614,1339680,7647145,58.44,100,"ul/100 g bdwt",1E-06,"l/g",1,"h",1E-06,"l/g",1E-06,"l/g","TRUE","TRUE","volume/mass","FALSE",1E-06,"l/g",,,"FALSE","TRUE"
 800880,1339922,9002602,4541.066,2,"IU/100 g bdwt",2,"IU/100 g bdwt",1,"h",2,"IU/100 g bdwt",2,"IU/100 g bdwt","FALSE","TRUE","noscience/mass","TRUE",0.02,"iu/kg",,,"FALSE","FALSE"
 803631,1342388,608935,250.3,1,"nmol/ml",1E-06,"mol/l",144,"h",1E-06,"mol/l",0.0002503,"g/g","TRUE","TRUE","mol/volume","FALSE",1E-06,"mol/l",0.0002503,"g/l",,
 1000409,427936,3691358,374.8,0.01,"% wght/org",0.01,"% wght/org",1464,"h",0.01,"% wght/org",0.01,"% wght/org","FALSE","FALSE","fraction/noscience","TRUE",,,,,,
 1000765,400607,102851069,502.9,69.04,"AI ng/cm2",0.0006904,"g/m2",24,"h",0.0006904,"g/m2",0.0006904,"g/m2","TRUE","TRUE","mass/area","FALSE",0.0006904,"g/m2",,,"TRUE","TRUE"
-1002224,408074,54115,162.23,0.2,"mg/100g bw/d",8.33333333333334E-08,"g/g/h",360,"h",3E-05,"g/g",3E-05,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2,"mg/kg/d",,,"FALSE","FALSE"
+1002224,408074,54115,162.23,0.2,"mg/100g bw/d",8.33333333333334E-08,"g/g/h",360,"h",3E-05,"g/g",3E-05,"g/g","TRUE","TRUE","mass/mass/time","FALSE",8.33333333333334E-08,"g/g/h",,,"FALSE","FALSE"
 1002454,410375,63252,201.22,10,"g/ml/eu",10,"g/ml/eu",24,"h",10,"g/ml/eu",10,"g/ml/eu","FALSE","TRUE","mass/volume/noscience","TRUE",,,,,,
 1002605,410485,121755,330.4,0.001,"v/v",0.001,"v/v",0.166667,"h",0.001,"v/v",0.001,"v/v","FALSE","TRUE","volume/volume","FALSE",,,,,,
 1002667,,,,,,,,,,,,,,,,,,,,,,,
@@ -216,14 +216,14 @@
 1003574,417950,6515384,198.43,1110,"ug/em",1110,"ug/em",336,"h",1110,"ug/em",1110,"ug/em","FALSE","TRUE","mass/noscience","TRUE",1110,"ug/em",,,"TRUE","TRUE"
 1004335,425143,298044,274.4,3.6,"ai oz/bu sd",2.80621048114974,"g/l",6024,"h",2.80621048114974,"g/l",2.80621048114974,"g/l","TRUE","TRUE","mass/volume","FALSE",2.89616364,"g/l",,,"FALSE","TRUE"
 1005014,445305,7681494,41.98817,50,"ug/50 ml",0.001,"g/l",360,"h",0.001,"g/l",0.001,"g/l","TRUE","TRUE","mass/volume","FALSE",0.001,"g/l",,,,
-1005213,443285,2425061,349.061,0.54,"g/kg/d",2.25E-05,"g/g/h",2016,"h",0.04536,"g/g",0.04536,"g/g","TRUE","TRUE","mass/mass/time","FALSE",540,"mg/kg/d",,,"FALSE","FALSE"
-1006017,448743,10108642,183.32,500,"ug/kg/d",2.08333333333334E-08,"g/g/h",168,"h",3.5E-06,"g/g",3.5E-06,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.5,"mg/kg/d",,,"FALSE","FALSE"
+1005213,443285,2425061,349.061,0.54,"g/kg/d",2.25E-05,"g/g/h",2016,"h",0.04536,"g/g",0.04536,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.25E-05,"g/g/h",,,"FALSE","FALSE"
+1006017,448743,10108642,183.32,500,"ug/kg/d",2.08333333333334E-08,"g/g/h",168,"h",3.5E-06,"g/g",3.5E-06,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.08333333333334E-08,"g/g/h",,,"FALSE","FALSE"
 1006161,442968,333415,304.35,0.52,"ml/500 ml",0.00104,"l/l",10,"h",0.00104,"l/l",0.00104,"l/l","TRUE","TRUE","volume/volume","FALSE",0.00104,"l/l",,,"TRUE","TRUE"
 1006903,450537,77929,192.12,100,"mg/100g soil",0.001,"g/g",1512,"h",0.001,"g/g",0.001,"g/g","TRUE","TRUE","mass/mass","FALSE",0.001,"g/g",,,"TRUE","TRUE"
 1007413,451657,124389,44.009,200,"umol/mol",0.0002,"mol/mol",840,"h",0.0002,"mol/mol",0.0002,"mol/mol","TRUE","TRUE","mol/mol","FALSE",0.0002,"mol/mol",,,,
-1008575,470430,88671890,288.77,13.8,"mg/kg fd/d",5.75E-07,"g/g/h",2160,"h",0.001242,"g/g",0.001242,"g/g","TRUE","TRUE","mass/mass/time","FALSE",1.38E-05,"g/g",,,"FALSE","FALSE"
+1008575,470430,88671890,288.77,13.8,"mg/kg fd/d",5.75E-07,"g/g/h",2160,"h",0.001242,"g/g",0.001242,"g/g","TRUE","TRUE","mass/mass/time","FALSE",5.75E-07,"g/g/h",,,"FALSE","FALSE"
 1008715,477678,10043353,61.84,7.2,"kg/9.9 m2",727.272727272727,"g/m2",360,"h",727.272727272727,"g/m2",727.272727272727,"g/m2","TRUE","TRUE","mass/area","FALSE",727.272727272727,"g/m2",,,"TRUE","TRUE"
-1008778,475811,7761888,169.873,65,"umol/kg/d",2.70833333333334E-09,"mol/g/h",36,"h",9.75000000000001E-08,"mol/g",1.65626175E-05,"g/g","TRUE","TRUE","mol/mass/time","FALSE",,,,,,
+1008778,475811,7761888,169.873,65,"umol/kg/d",2.70833333333334E-09,"mol/g/h",36,"h",9.75000000000001E-08,"mol/g",1.65626175E-05,"g/g","TRUE","TRUE","mol/mass/time","FALSE",2.70833333333334E-09,"mol/g/h",,,,
 1009098,477895,9034406,,100,"ug/100 g bdwt",1E-06,"g/g",4,"h",1E-06,"g/g",1E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",1E-06,"g/g",,,"FALSE","TRUE"
 1011150,490359,2032657,225.31,20,"g/2 L",10,"g/l",144,"h",10,"g/l",10,"g/l","TRUE","TRUE","mass/volume","FALSE",10,"g/l",,,,
 1011260,493345,107452095,829.8,6,"oz/1000 ft2",1.83097027717976,"g/m2",456,"h",1.83097027717976,"g/m2",1.83097027717976,"g/m2","TRUE","TRUE","mass/area","FALSE",1.830910362,"g/m2",,,"FALSE","TRUE"
@@ -245,19 +245,19 @@
 1023881,444505,141662,237.19,2,"AI oz/100 lb sd",0.001250001019639,"g/g",456,"h",0.001250001019639,"g/g",0.001250001019639,"g/g","TRUE","TRUE","mass/mass","FALSE",0.00125,"g/g",,,"FALSE","TRUE"
 1023971,476364,1582098,335.28,950,"cm3/feddan",2.26190476190476E-07,"m3/m2",720,"h",2.26190476190476E-07,"m3/m2",2.26190476190476E-07,"m3/m2","TRUE","TRUE","volume/area","FALSE",0.00022619044,"dm3/m2",,,"FALSE","FALSE"
 1025986,4934,7758987,159.61,1.29,"umol/g soil",1.29E-06,"mol/g",1008,"h",1.29E-06,"mol/g",0.0002058969,"g/g","TRUE","TRUE","mol/mass","FALSE",1.29E-06,"mol/g",,,"FALSE","TRUE"
-1026030,50837,60571,380.90752,16,"ug/g org/d",6.66666666666667E-07,"g/g/h",576,"h",0.000384,"g/g",0.000384,"g/g","TRUE","TRUE","mass/mass/time","FALSE",16,"mg/kg/d",,,"FALSE","FALSE"
-1026526,57423,103577453,369.4,30,"umol",3E-05,"mol",96,"h",3E-05,"mol",3E-05,"mol","TRUE","TRUE","mol","FALSE",,,,,,
+1026030,50837,60571,380.90752,16,"ug/g org/d",6.66666666666667E-07,"g/g/h",576,"h",0.000384,"g/g",0.000384,"g/g","TRUE","TRUE","mass/mass/time","FALSE",6.66666666666667E-07,"g/g/h",,,"FALSE","FALSE"
+1026526,57423,103577453,369.4,30,"umol",3E-05,"mol",96,"h",3E-05,"mol",3E-05,"mol","TRUE","TRUE","mol","FALSE",3E-05,"mol",,,,
 1026914,56312,2921882,350.6,60,"AI ng/mg bdwt",6E-05,"g/g",24,"h",6E-05,"g/g",6E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",6E-05,"g/g",,,"FALSE","TRUE"
 1027184,47590,91203,128.17,18,"g/m2",18,"g/m2",192,"h",18,"g/m2",18,"g/m2","TRUE","TRUE","mass/area","FALSE",18,"g/m2",,,"TRUE","TRUE"
 1027837,403826,67762394,,400,"ml/gal",0.105668820943259,"l/l",1680,"h",0.105668820943259,"l/l",0.105668820943259,"l/l","TRUE","TRUE","volume/volume","FALSE",0.105668820943259,"l/l",,,"TRUE","TRUE"
 1027919,450460,137406,96.06,400,"mg/100ml diet",4,"g/l",108,"h",4,"g/l",4,"g/l","TRUE","TRUE","mass/volume","FALSE",4,"g/l",,,"TRUE","TRUE"
 1029011,48584,10108642,183.32,159,"ug/kg org",1.59E-07,"g/g",672,"h",1.59E-07,"g/g",1.59E-07,"g/g","TRUE","TRUE","mass/mass","FALSE",1.59E-07,"g/g",,,"FALSE","TRUE"
-1029125,250381,553264,156.18,0.73,"mol/m3",0.73,"mol/m3",72,"h",0.73,"mol/m3",0.73,"mol/m3","TRUE","TRUE","mol/volume","FALSE",,,,,,
+1029125,250381,553264,156.18,0.73,"mol/m3",0.73,"mol/m3",72,"h",0.73,"mol/m3",0.73,"mol/m3","TRUE","TRUE","mol/volume","FALSE",0.73,"mol/m3",,,,
 1029996,52823,60571,380.90752,7.24,"d",173.76,"h",312,"h",173.76,"h",173.76,"h","TRUE","TRUE","time","FALSE",7.24,"d",,,"FALSE","FALSE"
 1031147,963,11097691,326.4,49,"org",49,"org",1512,"h",49,"org",49,"org","FALSE","TRUE","noscience","TRUE",49,"org",,,"TRUE","TRUE"
 1031366,46595,7440439,112.411,26,"nmol/g",2.6E-08,"mol/g",,"h",2.6E-08,"mol/g",2.922686E-06,"g/g","TRUE","TRUE","mol/mass","FALSE",2.6E-08,"mol/g",,,"FALSE","TRUE"
 1031373,48679,7758954,278,517.1,"mg/kg litter",0.0005171,"g/g",504,"h",0.0005171,"g/g",0.0005171,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0005171,"g/g",,,"TRUE","TRUE"
-1033020,49430,50328,252.3,4,"umoles/l agar",4E-06,"mol/l",1320,"h",4E-06,"mol/l",0.0010092,"g/g","TRUE","TRUE","mol/volume","FALSE",,,,,,
+1033020,49430,50328,252.3,4,"umoles/l agar",4E-06,"mol/l",1320,"h",4E-06,"mol/l",0.0010092,"g/g","TRUE","TRUE","mol/volume","FALSE",4E-06,"mol/l",,,,
 1033040,56500,7761888,169.873,6.47,"mg/org/d",6.47,"mg/org/d",48,"h",7453.44,"mg/org",7453.44,"mg/org","FALSE","TRUE","mass/noscience/time","TRUE",6.47,"mg/org/d",,,"TRUE","TRUE"
 1035370,55551,8065416,,5,"mg/500 ml",0.01,"g/l",,"fi",0.01,"g/l",0.01,"g/l","TRUE","TRUE","mass/volume","FALSE",0.01,"g/l",,,"FALSE","FALSE"
 1035490,52414,87821,551.5,53,"ng/mg fd",5.3E-05,"g/g",1608,"h",5.3E-05,"g/g",5.3E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",5.3E-05,"g/g",,,,
@@ -270,16 +270,16 @@
 1041178,415488,1897456,265.9,1.25,"AI ml/L",0.00125,"l/l",2904,"h",0.00125,"l/l",0.00125,"l/l","TRUE","TRUE","volume/volume","FALSE",0.00125,"l/l",,,"TRUE","TRUE"
 1041226,429859,2921882,350.6,0.01,"AI g/3 ml/m",3.33333333333333,"g/l/m",648,"h",3.33333333333333,"g/l/m",3.33333333333333,"g/l/m","TRUE","TRUE","mass/volume/length","FALSE",,,,,,
 1041390,483880,57837191,279.33,2,"AI g/m2 canopy",2,"g/m2",29200.04,"h",2,"g/m2",2,"g/m2","TRUE","TRUE","mass/area","FALSE",2,"g/m2",,,,
-1041455,510320,1490046,,8,"g/wk",0.047619047619048,"g/h",864,"h",41.1428571428571,"g",41.1428571428571,"g","TRUE","TRUE","mass/time","FALSE",8000,"mg/wk",,,"FALSE","FALSE"
+1041455,510320,1490046,,8,"g/wk",0.047619047619048,"g/h",864,"h",41.1428571428571,"g",41.1428571428571,"g","TRUE","TRUE","mass/time","FALSE",0.047619047619048,"g/h",,,"FALSE","FALSE"
 1041591,548473,52623888,607.7,0.566,"g/4719 cm3 soil",566000,"g/m3",696,"h",566000,"g/m3",566000,"g/m3","TRUE","TRUE","mass/volume","FALSE",,,,,,
 1041706,585249,81812,,111.1,"AI mg/kg bdwt",0.0001111,"g/g",720,"h",0.0001111,"g/g",0.0001111,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0001111,"g/g",,,"TRUE","TRUE"
 1041838,506589,63252,201.22,84.175,"umol/kg",8.4175E-08,"mol/g",240,"h",8.4175E-08,"mol/g",1.69376935E-05,"g/g","TRUE","TRUE","mol/mass","FALSE",8.4175E-08,"mol/g",1.69376935E-05,"g/g","FALSE","TRUE"
 1042317,414840,133062,300.6,73,"AI g/100 kg",0.00073,"g/g",672,"h",0.00073,"g/g",0.00073,"g/g","TRUE","TRUE","mass/mass","FALSE",0.00073,"g/g",,,"TRUE","TRUE"
-1042482,446100,7681494,41.98817,5,"mg/kg/d",2.08333333333333E-07,"g/g/h",1080,"h",0.000225,"g/g",0.000225,"g/g","TRUE","TRUE","mass/mass/time","FALSE",5,"mg/kg/d",,,"FALSE","FALSE"
+1042482,446100,7681494,41.98817,5,"mg/kg/d",2.08333333333333E-07,"g/g/h",1080,"h",0.000225,"g/g",0.000225,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.08333333333333E-07,"g/g/h",,,"FALSE","FALSE"
 1042823,418573,2921882,350.6,8,"oz/1000 ft3",8.00930709146376,"g/m3",,"hv",8.00930709146376,"g/m3",8.00930709146376,"g/m3","TRUE","TRUE","mass/volume","FALSE",2.441213816,"g/m2",,,"FALSE","FALSE"
 1042870,469088,1002626,194.25,1,"uM/kg",1E-09,"mol/l/g",0.1333336,"h",1E-09,"mol/l/g",1E-09,"mol/l/g","TRUE","TRUE","mol/volume/mass","FALSE",,,,,,
 1043381,573906,144627,90.03,6,"ae mmol/kg soil",6E-06,"mol/g",720,"h",6E-06,"mol/g",0.00054018,"g/g","TRUE","TRUE","mol/mass","FALSE",6E-06,"mol/g",,,"FALSE","TRUE"
-1044022,464285,8002059,,3,"ml/100g bdwt/d",1.25E-06,"l/g/h",2400,"h",0.003,"l/g",0.003,"l/g","TRUE","TRUE","volume/mass/time","FALSE",0.03,"ml/g/d",,,"FALSE","FALSE"
+1044022,464285,8002059,,3,"ml/100g bdwt/d",1.25E-06,"l/g/h",2400,"h",0.003,"l/g",0.003,"l/g","TRUE","TRUE","volume/mass/time","FALSE",1.25E-06,"l/g/h",,,"FALSE","FALSE"
 1045060,478761,9002704,,1200,"IU",1200,"IU",96,"h",1200,"IU",1200,"IU","FALSE","TRUE","noscience","TRUE",1200,"iu",,,"TRUE","FALSE"
 1045209,555790,133073,296.6,80,"g/ml/100 L",800,"g/l/l",2352,"h",800,"g/l/l",800,"g/l/l","TRUE","TRUE","mass/volume/volume","FALSE",,,,,,
 1045371,493468,64175,46.07,3.025,"mmol/kg egg",3.025E-06,"mol/g",264,"h",3.025E-06,"mol/g",0.00013936175,"g/g","TRUE","TRUE","mol/mass","FALSE",3.025E-06,"mol/g",,,"FALSE","TRUE"
@@ -303,7 +303,7 @@
 1055246,416205,2921882,350.6,8,"oz/305 m",0.743594049180328,"g/m",,"hv",0.743594049180328,"g/m",0.743594049180328,"g/m","TRUE","TRUE","mass/length","FALSE",0.7435940488,"g/m",,,"FALSE","TRUE"
 1055420,467623,1912249,215.68,0.58,"AI mg/g wet wt fd",0.00058,"g/g",504,"h",0.00058,"g/g",0.00058,"g/g","TRUE","TRUE","mass/mass","FALSE",0.00058,"g/g",,,"TRUE","TRUE"
 1055789,427137,60515,229.3,1,"ml/50 kg seed",2E-08,"l/g",,"hv",2E-08,"l/g",2E-08,"l/g","TRUE","TRUE","volume/mass","FALSE",2E-08,"l/g",,,,
-1055998,463911,7446095,64.07,141,"nmol/mol",1.41E-07,"mol/mol",336,"h",1.41E-07,"mol/mol",1.41E-07,"mol/mol","TRUE","TRUE","mol/mol","FALSE",,,,,,
+1055998,463911,7446095,64.07,141,"nmol/mol",1.41E-07,"mol/mol",336,"h",1.41E-07,"mol/mol",1.41E-07,"mol/mol","TRUE","TRUE","mol/mol","FALSE",1.41E-07,"mol/mol",,,,
 1056251,473332,7761888,169.873,0.5,"u-atoms/egg",0.5,"u-atoms/egg",432,"h",0.5,"u-atoms/egg",0.5,"u-atoms/egg","FALSE","TRUE","noscience/noscience","TRUE",,,,,,
 1057759,495847,64175,46.07,4,"AI g/kg bdwt",0.004,"g/g",,"ubi",0.004,"g/g",0.004,"g/g","TRUE","TRUE","mass/mass","FALSE",0.004,"g/g",,,"TRUE","TRUE"
 1058279,546853,88824,499.81,20,"g/acre",0.004942087384507,"g/m2",,"hv",0.004942087384507,"g/m2",0.004942087384507,"g/m2","TRUE","TRUE","mass/area","FALSE",0.004942087860933,"g/m2",,,"FALSE","TRUE"
@@ -316,7 +316,7 @@
 1059707,518923,33089611,293.4,100,"AI g/kg",0.1,"g/g",1200,"h",0.1,"g/g",0.1,"g/g","TRUE","TRUE","mass/mass","FALSE",0.1,"g/g",,,"TRUE","TRUE"
 1059880,573587,141517217,408.3711,0.045,"g/200 ml",0.225,"g/l",1344,"h",0.225,"g/l",0.225,"g/l","TRUE","TRUE","mass/volume","FALSE",0.225,"g/l",,,"TRUE","TRUE"
 1060368,477828,1596845,160.17,600,"mg/3 L soil",0.2,"g/l",264,"h",0.2,"g/l",0.2,"g/l","TRUE","TRUE","mass/volume","FALSE",0.2,"g/l",,,"TRUE","TRUE"
-1060789,430301,149575,144.21,3.5,"mmol/kg/d",1.45833333333333E-07,"mol/g/h",192,"h",2.8E-05,"mol/g",0.00403788,"g/g","TRUE","TRUE","mol/mass/time","FALSE",,,,,,
+1060789,430301,149575,144.21,3.5,"mmol/kg/d",1.45833333333333E-07,"mol/g/h",192,"h",2.8E-05,"mol/g",0.00403788,"g/g","TRUE","TRUE","mol/mass/time","FALSE",1.45833333333333E-07,"mol/g/h",,,,
 1061057,590846,30560191,183.17,200,"mg/2.5 cm dia",8,"g/m",6570.009,"h",8,"g/m",8,"g/m","TRUE","TRUE","mass/length","FALSE",,,,,,
 1061556,434672,62737,220.97,88.4,"umol/kg bdwt",8.84E-08,"mol/g",3,"h",8.84E-08,"mol/g",1.9533748E-05,"g/g","TRUE","TRUE","mol/mass","FALSE",8.84E-08,"mol/g",1.9533748E-05,"g/g","FALSE","TRUE"
 1062163,508701,7758987,159.61,0.25,"g/kg soil",0.00025,"g/g",600,"h",0.00025,"g/g",0.00025,"g/g","TRUE","TRUE","mass/mass","FALSE",0.00025,"g/g",,,"TRUE","TRUE"
@@ -334,7 +334,7 @@
 1065556,527529,101213,213.66,0.36,"AI %/ha",360,"ppb/m2",24,"h",360,"ppb/m2",360,"ppb/m2","TRUE","FALSE","fraction/area","FALSE",,,,,,
 1065818,581435,67970,384.63766,80000,"IU/kg",80000,"IU/kg",840,"h",80000,"IU/kg",80000,"IU/kg","FALSE","TRUE","noscience/mass","TRUE",80,"iu/kg",,,"FALSE","FALSE"
 1065969,575119,87392129,283.794,2,"mg/kg soil",2E-06,"g/g",504,"h",2E-06,"g/g",2E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",2E-06,"g/g",,,"FALSE","TRUE"
-1066114,539222,68085858,449.8,5,"ppm/d/kg bdwt",0.208333333333334,"ppb/h/g",3,"ge",0.208333333333334,"ppb/h/g",0.208333333333334,"ppb/h/g","TRUE","FALSE","fraction/time/mass","FALSE",5,"ppb/g/d",,,"FALSE","FALSE"
+1066114,539222,68085858,449.8,5,"ppm/d/kg bdwt",0.208333333333334,"ppb/h/g",3,"ge",0.208333333333334,"ppb/h/g",0.208333333333334,"ppb/h/g","TRUE","FALSE","fraction/time/mass","FALSE",0.208333333333334,"ppb/h/g",,,"FALSE","FALSE"
 1067100,419552,2921882,350.6,181.6,"g/305 m",0.595409836065573,"g/m",,"hv",0.595409836065573,"g/m",0.595409836065573,"g/m","TRUE","TRUE","mass/length","FALSE",0.5954098360656,"g/m",,,"FALSE","TRUE"
 1067240,466615,115322,370.5,1,"Tbsp/gal",1,"Tbsp/gal",1848,"h",1,"Tbsp/gal",1,"Tbsp/gal","FALSE","TRUE","noscience/volume","TRUE",,,,,,
 1068299,556226,29232937,305.34,8,"AI oz/100 gal",0.599132136584483,"g/l",2136,"h",0.599132136584483,"g/l",0.599132136584483,"g/l","TRUE","TRUE","mass/volume","FALSE",0.599128,"g/l",,,"FALSE","TRUE"
@@ -353,7 +353,7 @@
 1077665,473240,7647010,36.46,0.23,"AI mol/kg",0.00023,"mol/g",648,"h",0.00023,"mol/g",0.0083858,"g/g","TRUE","TRUE","mol/mass","FALSE",0.00023,"mol/g",,,"TRUE","TRUE"
 1078048,593257,2032657,225.31,1,"granules",1,"granules",360,"h",1,"granules",1,"granules","FALSE","TRUE","noscience","TRUE",1,"granules",,,"TRUE","TRUE"
 1078161,451610,3810740,1457.4,2417,"units/g diet",2417,"units/g diet",1008,"h",2417,"units/g diet",2417,"units/g diet","FALSE","TRUE","noscience/mass","TRUE",,,,,,
-1079070,448388,50215,90.08,341,"mmol/d",0.014208333333333,"mol/h",504,"h",7.16100000000001,"mol",7.16100000000001,"mol","TRUE","TRUE","mol/time","FALSE",,,,,,
+1079070,448388,50215,90.08,341,"mmol/d",0.014208333333333,"mol/h",504,"h",7.16100000000001,"mol",7.16100000000001,"mol","TRUE","TRUE","mol/time","FALSE",0.014208333333333,"mol/h",,,,
 1080375,534157,82657043,422.86749,6.37,"AI mg/L",0.00637,"g/l",48,"h",0.00637,"g/l",0.00637,"g/l","TRUE","TRUE","mass/volume","FALSE",6370,"mg/l",,,"FALSE","FALSE"
 1080981,414613,121755,330.4,227,"AI g/378 L",0.600529100529102,"g/l",600,"h",0.600529100529102,"g/l",0.600529100529102,"g/l","TRUE","TRUE","mass/volume","FALSE",0.600529100529102,"g/l",,,"TRUE","TRUE"
 1082210,474303,57636,296.4,6,"ng/g egg",6E-09,"g/g",1680,"h",6E-09,"g/g",6E-09,"g/g","TRUE","TRUE","mass/mass","FALSE",6E-09,"g/g",,,"FALSE","TRUE"
@@ -375,7 +375,7 @@
 1090247,446127,156627,80.102,0.75,"tons/ha",75,"g/m2",1008,"h",75,"g/m2",75,"g/m2","TRUE","TRUE","mass/area","FALSE",68.0388555,"g/m2",,,"FALSE","TRUE"
 1090417,505018,63252,201.22,454,"g/1600 org",454,"g/1600 org",1848,"h",454,"g/1600 org",454,"g/1600 org","FALSE","TRUE","mass/noscience","TRUE",283.75,"mg/org",,,"FALSE","FALSE"
 1090631,563504,298022,260.4,0.5,"lb/cwt sd",0.004999911816579,"g/g",192,"h",0.004999911816579,"g/g",0.004999911816579,"g/g","TRUE","TRUE","mass/mass","FALSE",,,,,,
-1090876,460382,8002059,,2.48,"ml/kg org/d",1.03333333333333E-07,"l/g/h",240,"h",2.48E-05,"l/g",2.48E-05,"l/g","TRUE","TRUE","volume/mass/time","FALSE",0.00248,"ml/g/d",,,"FALSE","FALSE"
+1090876,460382,8002059,,2.48,"ml/kg org/d",1.03333333333333E-07,"l/g/h",240,"h",2.48E-05,"l/g",2.48E-05,"l/g","TRUE","TRUE","volume/mass/time","FALSE",1.03333333333333E-07,"l/g/h",,,"FALSE","FALSE"
 1091703,462755,950378,302.3,1.68,"AI kg/1122 L/ha",0.000149732620321,"g/l/m2",72,"h",0.000149732620321,"g/l/m2",0.000149732620321,"g/l/m2","TRUE","TRUE","mass/volume/area","FALSE",,,,,,
 1092319,558665,7803512,33.998,30,"g/1000 ft3",1.05944997595049,"g/m3",168,"h",1.05944997595049,"g/m3",1.05944997595049,"g/m3","TRUE","TRUE","mass/volume","FALSE",,,,,,
 1092622,589834,74839,94.94,21,"mg h/L",0.021,"g/l",,"em",0.021,"g/l",0.021,"g/l","TRUE","TRUE","mass/volume","FALSE",,,,,,
@@ -404,13 +404,13 @@
 1102064,442418,298022,260.4,5,"AI kg/ha soil",0.5,"g/m2",1680,"h",0.5,"g/m2",0.5,"g/m2","TRUE","TRUE","mass/area","FALSE",0.5,"g/m2",,,"TRUE","TRUE"
 1102492,578367,67970,384.63766,7500000,"IU/d",7500000,"IU/d",216,"h",38880000000,"IU",38880000000,"IU","FALSE","TRUE","noscience/time","TRUE",7500000,"iu/d",,,"TRUE","FALSE"
 1102809,407214,333415,304.35,0.9,"AI kg/0.4 ha",0.225,"g/m2",3024,"h",0.225,"g/m2",0.225,"g/m2","TRUE","TRUE","mass/area","FALSE",0.225,"g/m2",,,"TRUE","TRUE"
-1103489,447539,52645531,391.2871,0.5,"ul/d",2.08333333333334E-08,"l/h",360,"h",7.50000000000001E-06,"l",7.50000000000001E-06,"l","TRUE","TRUE","volume/time","FALSE",0.0005,"ml/d",,,"FALSE","FALSE"
+1103489,447539,52645531,391.2871,0.5,"ul/d",2.08333333333334E-08,"l/h",360,"h",7.50000000000001E-06,"l",7.50000000000001E-06,"l","TRUE","TRUE","volume/time","FALSE",2.08333333333334E-08,"l/h",,,"FALSE","FALSE"
 1104342,485880,2921882,350.6,0.12,"AI kg/100 L",1.2,"g/l",26280,"h",1.2,"g/l",1.2,"g/l","TRUE","TRUE","mass/volume","FALSE",,,,,,
 1105582,419353,2921882,350.6,250,"AI g/10kg sd",0.025,"g/g",504,"h",0.025,"g/g",0.025,"g/g","TRUE","TRUE","mass/mass","FALSE",0.025,"g/g",,,"TRUE","TRUE"
 1105666,444402,3810740,1457.4,0.1,"mg/10 g soil",1E-05,"g/g",720,"h",1E-05,"g/g",1E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",1E-05,"g/g",,,"FALSE","TRUE"
 1107819,553685,8018017,541.1,30,"g/10 L",3,"g/l",1176,"h",3,"g/l",3,"g/l","TRUE","TRUE","mass/volume","FALSE",3,"g/l",,,"FALSE","FALSE"
 1108116,477687,10043353,61.84,3.6,"kg/9.3 m2",387.096774193548,"g/m2",360,"h",387.096774193548,"g/m2",387.096774193548,"g/m2","TRUE","TRUE","mass/area","FALSE",387.096774193548,"g/m2",,,,
-1109094,589086,74884,141.939,2.4,"mol/1000 ft3",0.084755998076039,"mol/m3",168,"h",0.084755998076039,"mol/m3",0.084755998076039,"mol/m3","TRUE","TRUE","mol/volume","FALSE",,,,,,
+1109094,589086,74884,141.939,2.4,"mol/1000 ft3",0.084755998076039,"mol/m3",168,"h",0.084755998076039,"mol/m3",0.084755998076039,"mol/m3","TRUE","TRUE","mol/volume","FALSE",0.084755998076039,"mol/m3",,,,
 1109301,483711,7664417,17.031,55,"uM/kg/mi",3.2999934000132E-06,"mol/l/g/h",3.000006,"h",9.9E-06,"mol/l/g",9.9E-06,"mol/l/g","TRUE","TRUE","mol/volume/mass/time","FALSE",,,,,,
 1109320,530721,21564170,238.4,3,"ml/kg sd",3E-06,"l/g",168,"h",3E-06,"l/g",3E-06,"l/g","TRUE","TRUE","volume/mass","FALSE",3E-06,"l/g",,,"FALSE","TRUE"
 1109575,407202,116063,190.27,13.5,"AI mL/eu",13.5,"AI mL/eu",4536,"h",13.5,"AI mL/eu",13.5,"AI mL/eu","FALSE","TRUE","volume/noscience","TRUE",13.5,"ml/eu",,,"TRUE","FALSE"
@@ -433,13 +433,13 @@
 1114406,543825,137428,129.182,60,"ul/g dry soil",6E-05,"l/g",840,"h",6E-05,"l/g",6E-05,"l/g","TRUE","TRUE","volume/mass","FALSE",6E-05,"l/g",,,"FALSE","TRUE"
 1114514,467220,298000,263.21,13.5,"ai mg/kg org",1.35E-05,"g/g",264,"h",1.35E-05,"g/g",1.35E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",1.35E-05,"g/g",,,"FALSE","TRUE"
 1115457,428948,39148248,354.1045,0.148,"AI g",0.148,"g",1224,"h",0.148,"g",0.148,"g","TRUE","TRUE","mass","FALSE",0.148,"g",,,"TRUE","TRUE"
-1115944,589635,74839,94.94,4.8,"mol/9.29 m2",0.516684607104413,"mol/m2",1080,"h",0.516684607104413,"mol/m2",0.516684607104413,"mol/m2","TRUE","TRUE","mol/area","FALSE",,,,,,
+1115944,589635,74839,94.94,4.8,"mol/9.29 m2",0.516684607104413,"mol/m2",1080,"h",0.516684607104413,"mol/m2",0.516684607104413,"mol/m2","TRUE","TRUE","mol/area","FALSE",0.516684607104413,"mol/m2",,,,
 1116951,494595,64175,46.07,590,"mg/100ml",5.9,"g/l",48,"h",5.9,"g/l",5.9,"g/l","TRUE","TRUE","mass/volume","FALSE",5.9,"g/l",,,"TRUE","TRUE"
 1116999,428853,56359,596.1,30,"mM/kg",3E-05,"mol/l/g",144,"h",3E-05,"mol/l/g",3E-05,"mol/l/g","TRUE","TRUE","mol/volume/mass","FALSE",,,,,,
 1117290,518922,52918635,505.2,2.75,"AI ug/100 cm2",0.000275,"g/m2",24,"h",0.000275,"g/m2",0.000275,"g/m2","TRUE","TRUE","mass/area","FALSE",0.000275,"g/m2",,,"TRUE","TRUE"
 1117335,548603,7758987,159.61,100,"mg/kg food",0.0001,"g/g",336,"h",0.0001,"g/g",0.0001,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0001,"g/g",,,"FALSE","TRUE"
 1117448,560164,79622596,465.09,250,"AI ml/t",2.5E-07,"l/g",,"hv",2.5E-07,"l/g",2.5E-07,"l/g","TRUE","TRUE","volume/mass","FALSE",2.5E-07,"l/g",,,"FALSE","TRUE"
-1117844,476209,1928434,,100,"ae mg/kg/d",4.16666666666667E-06,"g/g/h",2184,"h",0.0091,"g/g",0.0091,"g/g","TRUE","TRUE","mass/mass/time","FALSE",100,"mg/kg/d",,,"FALSE","FALSE"
+1117844,476209,1928434,,100,"ae mg/kg/d",4.16666666666667E-06,"g/g/h",2184,"h",0.0091,"g/g",0.0091,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4.16666666666667E-06,"g/g/h",,,"FALSE","FALSE"
 1118624,450143,62737,220.97,0.3,"oz/2.5 gal",0.898698204876726,"g/l",,"fl",0.898698204876726,"g/l",0.898698204876726,"g/l","TRUE","TRUE","mass/volume","FALSE",0.898698,"g/l",,,"FALSE","TRUE"
 1119040,430326,117817,390.6,3,"g/kg bdwt",0.003,"g/g",312,"h",0.003,"g/g",0.003,"g/g","TRUE","TRUE","mass/mass","FALSE",0.003,"g/g",,,"TRUE","TRUE"
 1119042,568341,69327760,305.4,150,"L/10 ac",0.00370656553838,"l/m2",648,"h",0.00370656553838,"l/m2",0.00370656553838,"l/m2","TRUE","TRUE","volume/area","FALSE",,,,,,
@@ -469,7 +469,7 @@
 1129962,510191,64175,46.07,710,"mg/%",7.1E-08,"g/ppb",48,"h",7.1E-08,"g/ppb",7.1E-08,"g/ppb","TRUE","FALSE","mass/fraction","FALSE",,,,,,
 1130187,513744,52645531,391.2871,8.8E-06,"AI g/ml",0.0088,"g/l",24,"h",0.0088,"g/l",0.0088,"g/l","TRUE","TRUE","mass/volume","FALSE",0.0088,"g/l",,,"TRUE","TRUE"
 1130283,519032,52645531,391.2871,283,"AI ug/g eu",0.000283,"g/g",38,"h",0.000283,"g/g",0.000283,"g/g","TRUE","TRUE","mass/mass","FALSE",0.000283,"g/g",,,"TRUE","TRUE"
-1130541,465574,7440666,65.4,12,"mg/wk",7.14285714285714E-05,"g/h",168,"h",0.012,"g",0.012,"g","TRUE","TRUE","mass/time","FALSE",12,"mg/wk",,,"FALSE","FALSE"
+1130541,465574,7440666,65.4,12,"mg/wk",7.14285714285714E-05,"g/h",168,"h",0.012,"g",0.012,"g","TRUE","TRUE","mass/time","FALSE",7.14285714285714E-05,"g/h",,,"FALSE","FALSE"
 1131210,523039,121755,330.4,458.6,"ul/m2",0.0004586,"l/m2",,"hv",0.0004586,"l/m2",0.0004586,"l/m2","TRUE","TRUE","volume/area","FALSE",0.0004586,"l/m2",,,"TRUE","TRUE"
 1131964,436386,7440508,63.55,3.18,"umol/g diet",3.18E-06,"mol/g",504,"h",3.18E-06,"mol/g",0.000202089,"g/g","TRUE","TRUE","mol/mass","FALSE",3.18E-06,"mol/g",0.000202089,"g/g","FALSE","TRUE"
 1132789,445243,75150,76.15,80,"ul/kg",8E-08,"l/g",24,"h",8E-08,"l/g",8E-08,"l/g","TRUE","TRUE","volume/mass","FALSE",8E-08,"l/g",,,"FALSE","TRUE"
@@ -499,23 +499,23 @@
 1146964,461094,298000,263.21,1,"AI oz/40 gal",0.187228792682651,"g/l",48,"h",0.187228792682651,"g/l",0.187228792682651,"g/l","TRUE","TRUE","mass/volume","FALSE",0.1872287,"g/l",,,"FALSE","TRUE"
 1148322,484354,116063,190.27,1.2,"g/eu",1.2,"g/eu",168,"h",1.2,"g/eu",1.2,"g/eu","FALSE","TRUE","mass/noscience","TRUE",1200,"mg/eu",,,"FALSE","FALSE"
 1148704,440559,525666,259.34,0.5,"ug/kg/mi",2.999994000012E-08,"g/g/h",0.2500005,"h",7.5E-09,"g/g",7.5E-09,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.0005,"mg/kg/mi",,,"FALSE","FALSE"
-1149340,491442,64175,46.07,0.46,"g/100g BW/d",0.000191666666667,"g/g/h",2016,"h",0.3864,"g/g",0.3864,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4600,"mg/kg/d",,,"FALSE","FALSE"
+1149340,491442,64175,46.07,0.46,"g/100g BW/d",0.000191666666667,"g/g/h",2016,"h",0.3864,"g/g",0.3864,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.000191666666667,"g/g/h",,,"FALSE","FALSE"
 1149544,476411,79622596,465.09,0.5,"pt/acre",5.84619869464645E-05,"l/m2",2856,"h",5.84619869464645E-05,"l/m2",5.84619869464645E-05,"l/m2","TRUE","TRUE","volume/area","FALSE",,,,,,
 1149729,595013,30560191,183.17,0.181,"kg/cwt sd",0.003990299823633,"g/g",384,"h",0.003990299823633,"g/g",0.003990299823633,"g/g","TRUE","TRUE","mass/mass","FALSE",,,,,,
 1150245,462758,950378,302.3,2.24,"AI kg/2338 L/ha",9.58083832335329E-05,"g/l/m2",18,"h",9.58083832335329E-05,"g/l/m2",9.58083832335329E-05,"g/l/m2","TRUE","TRUE","mass/volume/area","FALSE",,,,,,
 1150361,595375,116063,190.27,0.25,"lb/eu",0.25,"lb/eu",26280,"h",0.25,"lb/eu",0.25,"lb/eu","FALSE","TRUE","mass/noscience","TRUE",113398.1,"mg/eu",,,"FALSE","FALSE"
 1151301,488375,124389,44.009,754,"mg/m3",0.754,"g/m3",1344,"h",0.754,"g/m3",0.754,"g/m3","TRUE","TRUE","mass/volume","FALSE",0.000754,"g/l",,,"FALSE","FALSE"
-1151319,495364,64175,46.07,148,"kJ/kg bdwt/d",148,"kJ/kg bdwt/d",8760.012,"h",31115562.624,"kJ/kg bdwt",31115562.624,"kJ/kg bdwt","FALSE","TRUE","energy/mass/time","FALSE",148,"kJ/kg/d",,,"TRUE","FALSE"
+1151319,495364,64175,46.07,148,"kJ/kg bdwt/d",148,"kJ/kg bdwt/d",8760.012,"h",31115562.624,"kJ/kg bdwt",31115562.624,"kJ/kg bdwt","FALSE","TRUE","energy/mass/time","FALSE",6.16666666666667,"J/g/h",,,"TRUE","FALSE"
 1151749,469282,300765,380.78,8,"lb/gal/acre",0.236876876686246,"g/l/m2",6,"h",0.236876876686246,"g/l/m2",0.236876876686246,"g/l/m2","TRUE","TRUE","mass/volume/area","FALSE",0.236876876686246,"g/l/m2",,,"TRUE","TRUE"
 1151896,445490,75150,76.15,0.33,"mmol/100 g bdwt",3.3E-06,"mol/g",24,"h",3.3E-06,"mol/g",0.000251295,"g/g","TRUE","TRUE","mol/mass","FALSE",3.3E-06,"mol/g",,,"FALSE","TRUE"
-1152196,410247,10265926,141.13,0.79,"AI mg/kg/d",3.29166666666667E-08,"g/g/h",2184,"h",7.18900000000001E-05,"g/g",7.18900000000001E-05,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.79,"mg/kg/d",,,"FALSE","FALSE"
+1152196,410247,10265926,141.13,0.79,"AI mg/kg/d",3.29166666666667E-08,"g/g/h",2184,"h",7.18900000000001E-05,"g/g",7.18900000000001E-05,"g/g","TRUE","TRUE","mass/mass/time","FALSE",3.29166666666667E-08,"g/g/h",,,"FALSE","FALSE"
 1152764,575341,144627,90.03,2.08,"ml/1000 org",2.08,"ml/1000 org",144,"h",2.08,"ml/1000 org",2.08,"ml/1000 org","FALSE","TRUE","volume/noscience","TRUE",0.00208,"ml/org",,,"FALSE","FALSE"
 1152808,412766,133062,300.6,0.005,"RA",0.005,"RA",24,"h",0.005,"RA",0.005,"RA","FALSE","TRUE","noscience","TRUE",,,,,,
 1152881,447809,8002651,,0.3,"ml/org/d",0.3,"ml/org/d",120,"h",864,"ml/org",864,"ml/org","FALSE","TRUE","volume/noscience/time","TRUE",,,,,,
 1153085,430707,1314132,81.4,1589,"mg/d",0.066208333333333,"g/h",504,"h",33.369,"g",33.369,"g","TRUE","TRUE","mass/time","FALSE",0.066208333333333,"g/h",,,"FALSE","TRUE"
 1153151,447898,52645531,391.2871,72,"pg/cm2",7.2E-07,"g/m2",24,"h",7.2E-07,"g/m2",7.2E-07,"g/m2","TRUE","TRUE","mass/area","FALSE",7.2E-07,"g/m2",,,"FALSE","TRUE"
 1153334,493589,6484522,80.044,500,"g/org/yr",500,"g/org/yr",8760,"h",38368800000,"g/org",38368800000,"g/org","FALSE","TRUE","mass/noscience/time","TRUE",,,,,,
-1153551,402873,7440382,74.92159,70.4,"ug/100g org/d",2.93333333333334E-08,"g/g/h",8760.012,"h",0.000256960352,"g/g",0.000256960352,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.704,"mg/g/d",,,"FALSE","FALSE"
+1153551,402873,7440382,74.92159,70.4,"ug/100g org/d",2.93333333333334E-08,"g/g/h",8760.012,"h",0.000256960352,"g/g",0.000256960352,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.93333333333334E-08,"g/g/h",,,"FALSE","FALSE"
 1153817,487910,1310732,39.997,0.1,"mM",0.0001,"mol/l",672,"h",0.0001,"mol/l",0.0039997,"g/g","TRUE","TRUE","mol/volume","FALSE",0.0039997,"g/l",,,"FALSE","FALSE"
 1153833,493768,64175,46.07,1,"g/kg bdwt/h",0.001,"g/g/h",6,"h",0.006,"g/g",0.006,"g/g","TRUE","TRUE","mass/mass/time","FALSE",1000,"m/kg/h",,,"FALSE","FALSE"
 1154257,421253,120127,178.23,0.000112,"mol/kg",1.12E-07,"mol/g",48,"h",1.12E-07,"mol/g",1.996176E-05,"g/g","TRUE","TRUE","mol/mass","FALSE",1.12E-07,"mol/g",,,"FALSE","TRUE"
@@ -537,7 +537,7 @@
 1160043,402256,26628228,65.01,0.86,"mg/kg/h",8.6E-07,"g/g/h",672,"h",0.00057792,"g/g",0.00057792,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.86,"mg/kg/h",,,"FALSE","FALSE"
 1160236,446294,128030,159.32,0.43,"mmol/kg fd",4.3E-07,"mol/g",48,"h",4.3E-07,"mol/g",6.85076E-05,"g/g","TRUE","TRUE","mol/mass","FALSE",4.3E-07,"mol/g",,,"FALSE","TRUE"
 1160797,409631,59669260,354.5,0.88,"AI kg/100 kg sd",0.0088,"g/g",96,"h",0.0088,"g/g",0.0088,"g/g","TRUE","TRUE","mass/mass","FALSE",,,,,,
-1161229,564117,7784465,129.91,0.4,"ppm/100g bdwt/d",0.166666666666667,"ppb/g/h",672,"h",112,"ppb/g",112,"ppb/g","TRUE","FALSE","fraction/mass/time","FALSE",4,"ppb/g/d",,,"FALSE","FALSE"
+1161229,564117,7784465,129.91,0.4,"ppm/100g bdwt/d",0.166666666666667,"ppb/g/h",672,"h",112,"ppb/g",112,"ppb/g","TRUE","FALSE","fraction/mass/time","FALSE",0.166666666666667,"ppb/g/h",,,"FALSE","FALSE"
 1162129,483399,58082,194.19,30,"mg%",0.03,"g",2016,"h",0.03,"g",0.03,"g","TRUE","TRUE","mass","FALSE",0.3,"g/l",,,"FALSE","FALSE"
 1162139,505646,63252,201.22,22.7,"g/3.78 L",6.00529100529102,"g/l",48,"h",6.00529100529102,"g/l",6.00529100529102,"g/l","TRUE","TRUE","mass/volume","FALSE",6.00529100529101,"g/l",,,"FALSE","TRUE"
 1162278,578324,67970,384.63766,4000,"ICU/kg diet",4000,"ICU/kg diet",672,"h",4000,"ICU/kg diet",4000,"ICU/kg diet","FALSE","TRUE","noscience/mass","TRUE",,,,,,
@@ -550,7 +550,7 @@
 1165810,482865,2921882,350.6,28.8,"AI ng/eu",28.8,"AI ng/eu",24,"h",28.8,"AI ng/eu",28.8,"AI ng/eu","FALSE","TRUE","mass/noscience","TRUE",2.88E-05,"mg/eu",,,"FALSE","FALSE"
 1165988,409250,116063,190.27,592,"AI ppm food",592000,"ppb",120,"h",592000,"ppb",592000,"ppb","TRUE","FALSE","fraction","FALSE",592000,"ppb",,,"TRUE","TRUE"
 1166183,513294,12167769,293.5,3,"mg %",0.003,"g",1460.002,"h",0.003,"g",0.003,"g","TRUE","TRUE","mass","FALSE",0.03,"g/l",,,"FALSE","FALSE"
-1166442,495796,64175,46.07,4,"g/kg bdwt/d",0.000166666666667,"g/g/h",1632,"h",0.272,"g/g",0.272,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4000,"mg/kg/d",,,"FALSE","FALSE"
+1166442,495796,64175,46.07,4,"g/kg bdwt/d",0.000166666666667,"g/g/h",1632,"h",0.272,"g/g",0.272,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.000166666666667,"g/g/h",,,"FALSE","FALSE"
 1166882,479592,9002613,,50,"USP/org",50,"USP/org",96,"h",50,"USP/org",50,"USP/org","FALSE","TRUE","noscience","TRUE",,,,,,
 1167199,581371,134203,151.16,2.6,"uM/h",2.6E-06,"mol/l/h",24,"h",6.24E-05,"mol/l",0.009432384,"g/g","TRUE","TRUE","mol/volume/time","FALSE",,,,,,
 1167440,568165,7758987,159.61,500,"ug/g food",0.0005,"g/g",4380.006,"h",0.0005,"g/g",0.0005,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0005,"g/g",,,"FALSE","TRUE"
@@ -560,7 +560,7 @@
 1169646,575221,144627,90.03,1.45,"g/50 ml",29,"g/l",96,"h",29,"g/l",29,"g/l","TRUE","TRUE","mass/volume","FALSE",29,"g/l",,,"TRUE","TRUE"
 1169944,505992,141786,88.11,2.5,"g/100g diet",0.025,"g/g",96,"h",0.025,"g/g",0.025,"g/g","TRUE","TRUE","mass/mass","FALSE",0.025,"g/g",,,"TRUE","TRUE"
 1170520,591070,120068373,437.1,0.03,"AI oz/lb seed",0.001875001529458,"g/g",1368,"h",0.001875001529458,"g/g",0.001875001529458,"g/g","TRUE","TRUE","mass/mass","FALSE",0.001875,"g/g",,,"FALSE","TRUE"
-1171663,402254,26628228,65.01,0.06,"mmol/kg/h",6E-08,"mol/g/h",48,"h",2.88E-06,"mol/g",0.0001872288,"g/g","TRUE","TRUE","mol/mass/time","FALSE",,,,,,
+1171663,402254,26628228,65.01,0.06,"mmol/kg/h",6E-08,"mol/g/h",48,"h",2.88E-06,"mol/g",0.0001872288,"g/g","TRUE","TRUE","mol/mass/time","FALSE",6E-08,"mol/g/h",,,,
 1171952,495141,64175,46.07,10,"mg/egg",10,"mg/egg",408,"h",10,"mg/egg",10,"mg/egg","FALSE","TRUE","mass/noscience","TRUE",10,"mg/egg",,,"TRUE","TRUE"
 1171976,508879,64175,46.07,0.52,"g/d",0.021666666666667,"g/h",1680,"h",36.4,"g",36.4,"g","TRUE","TRUE","mass/time","FALSE",,,,,,
 1172177,574224,8002139,,30,"g/L",30,"g/l",,"hv",30,"g/l",30,"g/l","TRUE","TRUE","mass/volume","FALSE",30,"g/l",,,"TRUE","TRUE"
@@ -568,7 +568,7 @@
 1174029,487349,52918635,505.2,5.5,"AI ml/100 gal",1.45294628796981E-05,"l/l",1008,"h",1.45294628796981E-05,"l/l",1.45294628796981E-05,"l/l","TRUE","TRUE","volume/volume","FALSE",1.45294628796981E-05,"l/l",,,"FALSE","TRUE"
 1175663,484809,52918635,505.2,70,"ml/100 L",0.0007,"l/l",96,"h",0.0007,"l/l",0.0007,"l/l","TRUE","TRUE","volume/volume","FALSE",0.0007,"l/l",,,"FALSE","TRUE"
 1176457,485055,1563662,221.25,1.5,"g/m",1.5,"g/m",1716,"h",1.5,"g/m",1.5,"g/m","TRUE","TRUE","mass/length","FALSE",1.5,"g/m",,,"TRUE","TRUE"
-1176927,436297,129909906,241.29,29.5,"AI mg/kg bdwt/d",1.22916666666667E-06,"g/g/h",504,"h",0.0006195,"g/g",0.0006195,"g/g","TRUE","TRUE","mass/mass/time","FALSE",29.5,"mg/kg/d",,,"FALSE","FALSE"
+1176927,436297,129909906,241.29,29.5,"AI mg/kg bdwt/d",1.22916666666667E-06,"g/g/h",504,"h",0.0006195,"g/g",0.0006195,"g/g","TRUE","TRUE","mass/mass/time","FALSE",1.22916666666667E-06,"g/g/h",,,"FALSE","FALSE"
 1176964,445359,4602840,222.37,40,"mg/cm",4,"g/m",168,"h",4,"g/m",4,"g/m","TRUE","TRUE","mass/length","FALSE",4,"g/m",,,"TRUE","TRUE"
 1177076,484902,2921882,350.6,9.8,"AI g/10 L",0.98,"g/l",,"gs",0.98,"g/l",0.98,"g/l","TRUE","TRUE","mass/volume","FALSE",0.98,"g/l",,,"TRUE","TRUE"
 1177400,586643,138261413,255.66,0.0298,"ai mg/ml",0.0298,"g/l",24,"h",0.0298,"g/l",0.0298,"g/l","TRUE","TRUE","mass/volume","FALSE",0.0298,"g/l",,,"TRUE","TRUE"
@@ -577,7 +577,7 @@
 1177875,537969,102851069,502.9,10,"AI %",100000000,"ppb",1536,"h",100000000,"ppb",100000000,"ppb","TRUE","FALSE","fraction","FALSE",100000000,"ppb",,,"FALSE","TRUE"
 1178344,478236,10043353,61.84,1,"% bt",10000000,"ppb",1752,"h",10000000,"ppb",10000000,"ppb","TRUE","FALSE","fraction","FALSE",,,,,,
 1179029,473873,112410238,352.5,72.1,"ug/g om",7.21E-05,"g/g",1680,"h",7.21E-05,"g/g",7.21E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",,,,,,
-1179091,424319,7632000,68.995,70,"mg/kg/wk",4.16666666666667E-07,"g/g/h",8760.012,"h",0.003650005,"g/g",0.003650005,"g/g","TRUE","TRUE","mass/mass/time","FALSE",70,"mg/kg/wk",,,"FALSE","FALSE"
+1179091,424319,7632000,68.995,70,"mg/kg/wk",4.16666666666667E-07,"g/g/h",8760.012,"h",0.003650005,"g/g",0.003650005,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4.16666666666667E-07,"g/g/h",,,"FALSE","FALSE"
 1179417,400865,333415,304.35,43,"mg/kg wet wt",4.3E-05,"g/g",168,"h",4.3E-05,"g/g",4.3E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",4.3E-05,"g/g",,,"FALSE","TRUE"
 1179655,469283,52686,257.43,1,"lb/5 gal/acre",0.005921921917156,"g/l/m2",24,"h",0.005921921917156,"g/l/m2",0.005921921917156,"g/l/m2","TRUE","TRUE","mass/volume/area","FALSE",0.005921921917156,"g/l/m2",,,"FALSE","TRUE"
 1180327,468228,7646857,136.3,4,"uM/100g",4E-08,"mol/l/g",192,"h",4E-08,"mol/l/g",4E-08,"mol/l/g","TRUE","TRUE","mol/volume/mass","FALSE",,,,,,
@@ -627,19 +627,19 @@
 1215434,583941,709988,218.08,750,"ppmw",750000,"ppb",,"h",750000,"ppb",750000,"ppb","TRUE","FALSE","fraction","FALSE",750000,"ppb",,,"TRUE","TRUE"
 1216248,39936,93765,255.5,0.1,"g/yd2",0.119599056124249,"g/m2",1296,"h",0.119599056124249,"g/m2",0.119599056124249,"g/m2","TRUE","TRUE","mass/area","FALSE",0.119599,"g/m2",,,"FALSE","TRUE"
 1216332,40047,107062,98.96,0.5,"pt",0.2365882365,"l",624,"h",0.2365882365,"l",0.2365882365,"l","TRUE","TRUE","volume","FALSE",,,,,,
-1216454,40242,525791,215.21,15,"mumol/0.5 ul",30000000,"l",16,"h",30000000,"l",30000000,"l","TRUE","TRUE","volume","FALSE",,,,,,
+1216454,40242,525791,215.21,15,"mumol/0.5 ul",30000000,"l",16,"h",30000000,"l",30000000,"l","TRUE","TRUE","volume","FALSE",0.03,"mol/l",,,,
 1219968,44305,64902723,357.77,0.0001,"M/dm3",0.1,"mol/l/m3",0.24,"h",0.1,"mol/l/m3",0.1,"mol/l/m3","TRUE","TRUE","mol/volume/volume","FALSE",,,,,,
 1219972,44327,74851,28.05,25,"ppm for 36hr",900000,"ppb",37.92,"h",900000,"ppb",900000,"ppb","TRUE","FALSE","fraction","FALSE",,,,,,
 1219977,44332,64902723,357.77,10,"ug/org",10,"ug/org",72,"h",10,"ug/org",10,"ug/org","FALSE","TRUE","mass/noscience","TRUE",0.01,"mg/org",,,"FALSE","FALSE"
 1220296,44728,127208,164.95,1,"g/100ml",10,"g/l",24,"h",10,"g/l",10,"g/l","TRUE","TRUE","mass/volume","FALSE",10,"g/l",,,"TRUE","TRUE"
 1223417,47210,7439896,55.84,0.008,"mol/g soil",0.008,"mol/g",48,"h",0.008,"mol/g",0.44672,"g/g","TRUE","TRUE","mol/mass","FALSE",0.008,"mol/g",,,"TRUE","TRUE"
-1224770,51955,7429905,26.981538,0.01,"mmol/L soil",1E-05,"mol/l",888,"h",1E-05,"mol/l",0.00026981538,"g/g","TRUE","TRUE","mol/volume","FALSE",,,,,,
+1224770,51955,7429905,26.981538,0.01,"mmol/L soil",1E-05,"mol/l",888,"h",1E-05,"mol/l",0.00026981538,"g/g","TRUE","TRUE","mol/volume","FALSE",1E-05,"mol/l",,,,
 1225513,,,,,,,,,,,,,,,,,,,,,,,
 1229970,,,,,,,,,,,,,,,,,,,,,,,
 1233334,429477,7786814,154.76,2.7,"g/kg fd",0.0027,"g/g",864,"h",0.0027,"g/g",0.0027,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0027,"g/g",,,"TRUE","TRUE"
 1233628,52086,7646799,129.84,1,"mg/10 ml",0.1,"g/l",840,"h",0.1,"g/l",0.1,"g/l","TRUE","TRUE","mass/volume","FALSE",100000,"ug/l",,,"FALSE","FALSE"
-1234058,567140,7758987,159.61,0.1,"mg/kg wt/d",4.16666666666667E-09,"g/g/h",480,"h",2E-06,"g/g",2E-06,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.1,"mg/kg/d",,,"FALSE","FALSE"
-1234430,567407,298000,263.21,1.68,"nmol/cm2",1.68E-05,"mol/m2",24,"h",1.68E-05,"mol/m2",1.68E-05,"mol/m2","TRUE","TRUE","mol/area","FALSE",,,,,,
+1234058,567140,7758987,159.61,0.1,"mg/kg wt/d",4.16666666666667E-09,"g/g/h",480,"h",2E-06,"g/g",2E-06,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4.16666666666667E-09,"g/g/h",,,"FALSE","FALSE"
+1234430,567407,298000,263.21,1.68,"nmol/cm2",1.68E-05,"mol/m2",24,"h",1.68E-05,"mol/m2",1.68E-05,"mol/m2","TRUE","TRUE","mol/area","FALSE",1.68E-05,"mol/m2",,,,
 1234636,57568,1912249,215.68,1.27,"ng/mg",1.27E-06,"g/g",,"h",1.27E-06,"g/g",1.27E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",1.27E-06,"g/g",,,"FALSE","TRUE"
 1234934,577417,83121180,381.1,0.377,"AI mg/cm2",3.77,"g/m2",288,"h",3.77,"g/m2",3.77,"g/m2","TRUE","TRUE","mass/area","FALSE",3.77,"g/m2",,,"TRUE","TRUE"
 1235198,462787,7439921,207,120,"nM/g",1.2E-07,"mol/l/g",336,"h",1.2E-07,"mol/l/g",1.2E-07,"mol/l/g","TRUE","TRUE","mol/volume/mass","FALSE",,,,,,
@@ -654,7 +654,7 @@
 1242360,538001,7727379,28.014,300,"ml/mi",17.999964000072,"l/h",5,"h",89.99982000036,"l",89.99982000036,"l","TRUE","TRUE","volume/time","FALSE",,,,,,
 1243049,544111,20859738,57.9553,6,"g/ton",6E-06,"g/g",24,"h",6E-06,"g/g",6E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",6E-06,"g/g",,,"FALSE","TRUE"
 2000350,2000226,608935,250.3,20,"mg/org",20,"mg/org",120,"h",20,"mg/org",20,"mg/org","FALSE","TRUE","mass/noscience","TRUE",20,"mg/org",,,"TRUE","TRUE"
-2000842,2000481,608935,250.3,0.1,"mmol/kg bdwt/d",4.16666666666667E-09,"mol/g/h",1344,"h",5.60000000000001E-06,"mol/g",0.00140168,"g/g","TRUE","TRUE","mol/mass/time","FALSE",,,,,,
+2000842,2000481,608935,250.3,0.1,"mmol/kg bdwt/d",4.16666666666667E-09,"mol/g/h",1344,"h",5.60000000000001E-06,"mol/g",0.00140168,"g/g","TRUE","TRUE","mol/mass/time","FALSE",4.16666666666667E-09,"mol/g/h",,,,
 2001742,2001022,82688,295.3,0.03,"AI g/500g soil",6E-05,"g/g",648,"h",6E-05,"g/g",6E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",6E-05,"g/g",,,"FALSE","TRUE"
 2002843,2001538,16672870,144.49,10,"AI ul/ml",0.01,"l/l",360,"h",0.01,"l/l",0.01,"l/l","TRUE","TRUE","volume/volume","FALSE",0.01,"l/l",,,"TRUE","TRUE"
 2003962,2002148,50237,362.5,3,"% of bdwt",30000000,"ppb",1,"h",30000000,"ppb",30000000,"ppb","TRUE","FALSE","fraction","FALSE",,,,,,
@@ -667,7 +667,7 @@
 2030177,2018302,1897456,265.9,0.1,"AI % fd",1000000,"ppb",504,"h",1000000,"ppb",1000000,"ppb","TRUE","FALSE","fraction","FALSE",,,,,,
 2030984,2018787,1464422,196.10638,73.39,"ug/g eu",7.339E-05,"g/g",,"h",7.339E-05,"g/g",7.339E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",7.339E-05,"g/g",,,"FALSE","TRUE"
 2031080,2018799,7718549,129.6,35.7,"mg/kg media",3.57E-05,"g/g",336,"h",3.57E-05,"g/g",3.57E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",3.57E-05,"g/g",,,"FALSE","TRUE"
-2031159,2018817,7440439,112.411,248.3,"umol/mol C",0.0002483,"mol/mol",96,"h",0.0002483,"mol/mol",0.0002483,"mol/mol","TRUE","TRUE","mol/mol","FALSE",,,,,,
+2031159,2018817,7440439,112.411,248.3,"umol/mol C",0.0002483,"mol/mol",96,"h",0.0002483,"mol/mol",0.0002483,"mol/mol","TRUE","TRUE","mol/mol","FALSE",0.0002483,"mol/mol",,,,
 2034573,2020329,7704349,32.066,10,"g/kg dry fd",0.01,"g/g",4704,"h",0.01,"g/g",0.01,"g/g","TRUE","TRUE","mass/mass","FALSE",0.01,"g/g",,,"TRUE","TRUE"
 2037169,2022270,82657043,422.86749,2.4,"fl oz/10 gal",0.001875000027738,"l/l",960,"h",0.001875000027738,"l/l",0.001875000027738,"l/l","TRUE","TRUE","volume/volume","FALSE",1.8014256,"l/l",,,"FALSE","TRUE"
 2037536,2022548,82657043,422.86749,24,"oz",680.388555,"g",504,"h",680.388555,"g",680.388555,"g","TRUE","TRUE","mass","FALSE",680.388,"g",,,"FALSE","TRUE"
@@ -679,7 +679,7 @@
 2038219,2023034,82657043,422.86749,1,"L/1041 L/ha",9.60614793467819E-08,"l/l/m2",,"h",9.60614793467819E-08,"l/l/m2",9.60614793467819E-08,"l/l/m2","TRUE","TRUE","volume/volume/area","FALSE",,,,,,
 2038384,2023206,82657043,422.86749,0.86,"ng/mg bdwt",8.6E-07,"g/g",24,"h",8.6E-07,"g/g",8.6E-07,"g/g","TRUE","TRUE","mass/mass","FALSE",8.6E-07,"g/g",,,"FALSE","TRUE"
 2038532,2023308,82657043,422.86749,0.302,"AI kg/378 L",0.7989417989418,"g/l",4015.0055,"h",0.7989417989418,"g/l",0.7989417989418,"g/l","TRUE","TRUE","mass/volume","FALSE",0.7989417989418,"g/l",,,"TRUE","TRUE"
-2039271,2023805,57636,296.4,1,"AI ug/kg bdwt/d",4.16666666666667E-11,"g/g/h",120,"h",5E-09,"g/g",5E-09,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.001,"mg/kg/d",,,"FALSE","FALSE"
+2039271,2023805,57636,296.4,1,"AI ug/kg bdwt/d",4.16666666666667E-11,"g/g/h",120,"h",5E-09,"g/g",5E-09,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4.16666666666667E-11,"g/g/h",,,"FALSE","FALSE"
 2045005,2028245,51489,776.87006,0.5,"ug/50 g bdwt",1E-08,"g/g",24,"h",1E-08,"g/g",1E-08,"g/g","TRUE","TRUE","mass/mass","FALSE",1E-08,"g/g",,,"FALSE","TRUE"
 2045043,2028284,52918635,505.2,48,"pg/L",4.8E-11,"g/l",672,"h",4.8E-11,"g/l",4.8E-11,"g/l","TRUE","TRUE","mass/volume","FALSE",4.8E-11,"g/l",,,"FALSE","TRUE"
 2045576,2028726,52918635,505.2,0.1281,"ng/ul",0.0001281,"g/l",48,"h",0.0001281,"g/l",0.0001281,"g/l","TRUE","TRUE","mass/volume","FALSE",0.0001281,"g/l",,,"TRUE","TRUE"
@@ -699,7 +699,7 @@
 2056459,2034708,7487947,271.5,7.11,"ug/100ml",7.11E-05,"g/l",24,"h",7.11E-05,"g/l",7.11E-05,"g/l","TRUE","TRUE","mass/volume","FALSE",7.11E-05,"g/l",,,"FALSE","TRUE"
 2056621,2034765,13071799,288.4,0.6,"AI oz/1000 ft",0.055806147883858,"g/m",576,"h",0.055806147883858,"g/m",0.055806147883858,"g/m","TRUE","TRUE","mass/length","FALSE",0.0558061479,"g/m",,,"FALSE","TRUE"
 2056673,,,,,,,,,,,,,,,,,,"TODO check with mosm",,,,,
-2057766,2035166,56724,362.8,28,"g/45.4 kg bdwt/d",2.5697503671072E-05,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",616.74004,"mg/kg/d",,,"FALSE","FALSE"
+2057766,2035166,56724,362.8,28,"g/45.4 kg bdwt/d",2.5697503671072E-05,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.5697503671072E-05,"g/g/h",,,"FALSE","FALSE"
 2057934,2035313,210880925,249.678,0.45,"AI mg/sd",0.45,"AI mg/sd",840,"h",0.45,"AI mg/sd",0.45,"AI mg/sd","FALSE","TRUE","mass/noscience","TRUE",0.45,"mg/sd",,,"TRUE","FALSE"
 2057942,2035318,13071799,288.4,68,"AI g/304.8 m",0.223097112860892,"g/m",840,"h",0.223097112860892,"g/m",0.223097112860892,"g/m","TRUE","TRUE","mass/length","FALSE",0.2230971128609,"g/m",,,"FALSE","TRUE"
 2058550,2035596,13071799,288.4,227,"g/30.5 m",7.44262295081966,"g/m",,"hv",7.44262295081966,"g/m",7.44262295081966,"g/m","TRUE","TRUE","mass/length","FALSE",7.4426229508197,"g/m",,,"FALSE","TRUE"
@@ -738,7 +738,7 @@
 2124389,2067891,68359375,434.3,0.17,"ppt",0.00017,"ppb",672,"h",0.00017,"ppb",0.00017,"ppb","TRUE","FALSE","fraction","FALSE",0.00017,"ppb",,,"TRUE","TRUE"
 2126050,2066366,114261,209.24,80,"ppm",80000,"ppb",1512,"h",80000,"ppb",80000,"ppb","TRUE","FALSE","fraction","FALSE",80000,"ppb",,,"TRUE","TRUE"
 2133877,2076074,117395,302.23,10,"g/kg",0.01,"g/g",2280,"h",0.01,"g/g",0.01,"g/g","TRUE","TRUE","mass/mass","FALSE",0.01,"g/g",,,"TRUE","TRUE"
-2134383,2076116,25154523,,100,"ug/100 g bdwt/d",4.16666666666667E-08,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",1,"mg/kg/d",,,"FALSE","FALSE"
+2134383,2076116,25154523,,100,"ug/100 g bdwt/d",4.16666666666667E-08,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4.16666666666667E-08,"g/g/h",,,"FALSE","FALSE"
 2135315,2076494,333415,304.35,4.7,"g/1.8kg sd",0.002611111111111,"g/g",,"hv",0.002611111111111,"g/g",0.002611111111111,"g/g","TRUE","TRUE","mass/mass","FALSE",,,,,,
 2136350,2076815,84371653,429.6,0.1,"mg/g bdwt",0.0001,"g/g",216,"h",0.0001,"g/g",0.0001,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0001,"g/g",,,"FALSE","TRUE"
 2136482,2076840,9002602,4541.066,223,"units",223,"units",24,"h",223,"units",223,"units","FALSE","TRUE","noscience","TRUE",,,,,,
@@ -747,7 +747,7 @@
 2142323,2078556,123331,112.09,20,"umol/kg dry soil",2E-08,"mol/g",48,"h",2E-08,"mol/g",2.2418E-06,"g/g","TRUE","TRUE","mol/mass","FALSE",2E-08,"mol/g",,,"FALSE","TRUE"
 2144511,2079576,38641940,228.18,106.4,"ae mg/L",0.1064,"g/l",672,"h",0.1064,"g/l",0.1064,"g/l","TRUE","TRUE","mass/volume","FALSE",0.1064,"g/l",,,"TRUE","TRUE"
 2144672,2079619,1071836,169.0731,100000,"ae ug/L",0.1,"g/l",24,"h",0.1,"g/l",0.1,"g/l","TRUE","TRUE","mass/volume","FALSE",0.1,"g/l",,,"TRUE","TRUE"
-2146204,2080346,38641940,228.18,1.58,"AI mmol/dm3",1.58,"mol/m3",504,"h",1.58,"mol/m3",1.58,"mol/m3","TRUE","TRUE","mol/volume","FALSE",,,,,,
+2146204,2080346,38641940,228.18,1.58,"AI mmol/dm3",1.58,"mol/m3",504,"h",1.58,"mol/m3",1.58,"mol/m3","TRUE","TRUE","mol/volume","FALSE",1.58,"mol/m3",,,,
 2147778,2081357,10043524,110.9834,0.1,"0/00",0.1,,480,"h",0.1,,0.1,,"TRUE","TRUE",,"FALSE",,,,,,
 2148129,2081506,732116,317.3,100,"ug/m2",0.0001,"g/m2",48,"h",0.0001,"g/m2",0.0001,"g/m2","TRUE","TRUE","mass/area","FALSE",0.0001,"g/m2",,,"FALSE","TRUE"
 2153417,2083945,144558,84.007,3000,"neq/g",3E-06,"eq/g",,"h",3E-06,"eq/g",3E-06,"eq/g","TRUE","FALSE","noscience/mass","TRUE",,,,,,
@@ -761,10 +761,10 @@
 2156375,2085229,60515,229.3,0.16,"AI ug/ul",0.16,"g/l",144,"h",0.16,"g/l",0.16,"g/l","TRUE","TRUE","mass/volume","FALSE",0.16,"g/l",,,"TRUE","TRUE"
 2158149,2086485,54910893,309.33,10,"ng",1E-08,"g",48,"h",1E-08,"g",1E-08,"g","TRUE","TRUE","mass","FALSE",1E-08,"g",,,"FALSE","TRUE"
 2158596,2086816,86479063,461.1,50,"AI mg/L fd",0.05,"g/l",,"h",0.05,"g/l",0.05,"g/l","TRUE","TRUE","mass/volume","FALSE",0.05,"g/l",,,"TRUE","TRUE"
-2159415,2087331,51434,183.2,1.34,"nmol/kg/mi",8.03998392003216E-11,"mol/g/h",1.000002,"h",8.04E-11,"mol/g",1.472928E-08,"g/g","TRUE","TRUE","mol/mass/time","FALSE",,,,,,
+2159415,2087331,51434,183.2,1.34,"nmol/kg/mi",8.03998392003216E-11,"mol/g/h",1.000002,"h",8.04E-11,"mol/g",1.472928E-08,"g/g","TRUE","TRUE","mol/mass/time","FALSE",8.03998392003216E-11,"mol/g/h",,,,
 2160180,2087849,50237,362.5,5,"mg/300 g",1.66666666666667E-05,"g/g",240,"h",1.66666666666667E-05,"g/g",1.66666666666667E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",1.66666666666667E-05,"g/g",,,"FALSE","TRUE"
 2160205,2087860,51434,183.2,200,"ug/300 g bdwt",6.66666666666666E-07,"g/g",96,"h",6.66666666666666E-07,"g/g",6.66666666666666E-07,"g/g","TRUE","TRUE","mass/mass","FALSE",6.66666666666666E-07,"g/g",,,"FALSE","TRUE"
-2161453,2088420,67641,58.08,1.5,"ml/kg/d",6.25000000000001E-08,"l/g/h",96,"h",6E-06,"l/g",6E-06,"l/g","TRUE","TRUE","volume/mass/time","FALSE",0.0015,"ml/g/d",,,"FALSE","FALSE"
+2161453,2088420,67641,58.08,1.5,"ml/kg/d",6.25000000000001E-08,"l/g/h",96,"h",6E-06,"l/g",6E-06,"l/g","TRUE","TRUE","volume/mass/time","FALSE",6.25000000000001E-08,"l/g/h",,,"FALSE","FALSE"
 2166045,2090989,60311,181.66,100,"nmol/kg",1E-10,"mol/g",0.166667,"h",1E-10,"mol/g",1.8166E-08,"g/g","TRUE","TRUE","mol/mass","FALSE",1E-10,"mol/g",,,"FALSE","TRUE"
 2167027,2091444,22248799,365.96062,454,"g/1000 org",454,"g/1000 org",1848,"h",454,"g/1000 org",454,"g/1000 org","FALSE","TRUE","mass/noscience","TRUE",454,"mg/org",,,"TRUE","FALSE"
 2167171,2091522,5221169,238.71,548,"ae mg/m2",0.548,"g/m2",672,"h",0.548,"g/m2",0.548,"g/m2","TRUE","TRUE","mass/area","FALSE",0.548,"g/m2",,,"TRUE","TRUE"
@@ -790,7 +790,7 @@
 2192250,2105026,13463677,79.87,10000,"ng/ml",0.01,"g/l",96,"h",0.01,"g/l",0.01,"g/l","TRUE","TRUE","mass/volume","FALSE",0.01,"g/l",,,"TRUE","TRUE"
 2193160,2105596,122453730,407.61,320,"ml/acre",7.9073398152104E-05,"l/m2",240,"h",7.9073398152104E-05,"l/m2",7.9073398152104E-05,"l/m2","TRUE","TRUE","volume/area","FALSE",7.9073405774921E-05,"l/m2",,,"FALSE","TRUE"
 2196088,2107446,1071836,169.0731,430,"ae g/ha",0.043,"g/m2",336,"h",0.043,"g/m2",0.043,"g/m2","TRUE","TRUE","mass/area","FALSE",0.043,"g/m2",,,"TRUE","TRUE"
-2196761,2108003,1327419,,0.1,"g/dm3",100,"g/m3",120,"h",100,"g/m3",100,"g/m3","TRUE","TRUE","mass/volume","FALSE",0.1,"g/l",,,"FALSE","FALSE"
+2196761,2108003,1327419,,0.1,"g/dm3",100,"g/m3",120,"h",100,"g/m3",100,"g/m3","TRUE","TRUE","mass/volume","FALSE",100,"g/m3",,,"FALSE","FALSE"
 2196974,2108096,112410238,352.5,0.06,"AI lb/gal/acre",0.001776576575147,"g/l/m2",10848,"h",0.001776576575147,"g/l/m2",0.001776576575147,"g/l/m2","TRUE","TRUE","mass/volume/area","FALSE",0.001776576575147,"g/l/m2",,,"FALSE","TRUE"
 2202123,2110820,298022,260.4,2.1,"AI g/10 m",0.21,"g/m",840,"h",0.21,"g/m",0.21,"g/m","TRUE","TRUE","mass/length","FALSE",0.21,"g/m",,,"TRUE","TRUE"
 2202587,2111061,7647145,58.44,1.8,"mg/g dry wt",0.0018,"g/g",504,"h",0.0018,"g/g",0.0018,"g/g","TRUE","TRUE","mass/mass","FALSE",,,,,,
@@ -841,7 +841,7 @@
 2248927,2134447,116063,190.27,10,"g/10 ft",3.28083989501312,"g/m",,"hv",3.28083989501312,"g/m",3.28083989501312,"g/m","TRUE","TRUE","mass/length","FALSE",3.2808398950131,"g/m",,,"FALSE","TRUE"
 2249215,2134691,116063,190.27,2,"g/10 L soil",0.2,"g/l",1680,"h",0.2,"g/l",0.2,"g/l","TRUE","TRUE","mass/volume","FALSE",0.2,"g/l",,,"TRUE","TRUE"
 2249546,2134918,116063,190.27,3.5,"lb",1587.572,"g",,"hv",1587.572,"g",1587.572,"g","TRUE","TRUE","mass","FALSE",1587.573295,"g",,,"FALSE","TRUE"
-2251253,2135745,1344703,79.55,40,"mmol/kg dry bdwt/d",1.66666666666667E-06,"mol/g/h",144,"h",0.00024,"mol/g",0.019092,"g/g","TRUE","TRUE","mol/mass/time","FALSE",,,,,,
+2251253,2135745,1344703,79.55,40,"mmol/kg dry bdwt/d",1.66666666666667E-06,"mol/g/h",144,"h",0.00024,"mol/g",0.019092,"g/g","TRUE","TRUE","mol/mass/time","FALSE",1.66666666666667E-06,"mol/g/h",,,,
 2252962,2136586,66230044,419.89982,2.3,"AI umol/kg dry soil",2.3E-09,"mol/g",1344,"h",2.3E-09,"mol/g",9.65769586E-07,"g/g","TRUE","TRUE","mol/mass","FALSE",2.3E-09,"mol/g",,,"FALSE","TRUE"
 2254395,2137131,173221197,,20,"ppm/g bdwt",20000,"ppb/g",72,"h",20000,"ppb/g",20000,"ppb/g","TRUE","FALSE","fraction/mass","FALSE",20000,"ppb/g",,,"TRUE","TRUE"
 2254502,2137164,63741,172.21,0.036,"g food",0.036,"g",384,"h",0.036,"g",0.036,"g","TRUE","TRUE","mass","FALSE",36,"mg",,,"FALSE","FALSE"
@@ -850,8 +850,8 @@
 2255018,2137384,138261413,255.66,4.375,"AI ml/1000 L",4.375E-06,"l/l",24,"h",4.375E-06,"l/l",4.375E-06,"l/l","TRUE","TRUE","volume/volume","FALSE",4.375E-06,"l/l",,,"FALSE","TRUE"
 2255019,2137385,23103982,238.29,4.375,"AI g/1000 L",0.004375,"g/l",24,"h",0.004375,"g/l",0.004375,"g/l","TRUE","TRUE","mass/volume","FALSE",0.004375,"g/l",,,"TRUE","TRUE"
 2256112,2137840,64175,46.07,2,"% soln",20000000,"ppb",360,"h",20000000,"ppb",20000000,"ppb","TRUE","FALSE","fraction","FALSE",,,,,,
-2256813,2138005,138261413,255.66,50,"mg/L/d",0.002083333333333,"g/l/h",432,"h",0.900000000000001,"g/l",0.900000000000001,"g/l","TRUE","TRUE","mass/volume/time","FALSE",50000,"ug/l/d",,,"FALSE","FALSE"
-2256826,2138013,138261413,255.66,100,"ug/L/d",4.16666666666667E-06,"g/l/h",792,"h",0.0033,"g/l",0.0033,"g/l","TRUE","TRUE","mass/volume/time","FALSE",100,"ug/l/d",,,"FALSE","FALSE"
+2256813,2138005,138261413,255.66,50,"mg/L/d",0.002083333333333,"g/l/h",432,"h",0.900000000000001,"g/l",0.900000000000001,"g/l","TRUE","TRUE","mass/volume/time","FALSE",0.002083333333333,"g/l/h",,,"FALSE","FALSE"
+2256826,2138013,138261413,255.66,100,"ug/L/d",4.16666666666667E-06,"g/l/h",792,"h",0.0033,"g/l",0.0033,"g/l","TRUE","TRUE","mass/volume/time","FALSE",4.16666666666667E-06,"g/l/h",,,"FALSE","FALSE"
 2257299,2138222,131860338,403.4,150,"cm3/100 L",1.5E-06,"m3/l",168,"h",1.5E-06,"m3/l",1.5E-06,"m3/l","TRUE","TRUE","volume/volume","FALSE",1.5E-06,"m3/l",,,"FALSE","TRUE"
 2258209,2138646,30560191,183.17,525,"AI mg/m2",0.525,"g/m2",672,"h",0.525,"g/m2",0.525,"g/m2","TRUE","TRUE","mass/area","FALSE",0.525,"g/m2",,,"TRUE","TRUE"
 2258446,2138782,138261413,255.66,0.03,"AI g/in dia",1.18110236220473,"g/m",2520,"h",1.18110236220473,"g/m",1.18110236220473,"g/m","TRUE","TRUE","mass/length","FALSE",1.1811024,"g/m",,,"FALSE","TRUE"
@@ -874,7 +874,7 @@
 2266914,2141800,138261413,255.66,0.2,"ml/3.75 L",5.33333333333334E-05,"l/l",48,"h",5.33333333333334E-05,"l/l",5.33333333333334E-05,"l/l","TRUE","TRUE","volume/volume","FALSE",5.33333333333334E-05,"l/l",,,"FALSE","TRUE"
 2267424,2142045,138261413,255.66,0.7,"ai g/L",0.7,"g/l",4,"gs",0.7,"g/l",0.7,"g/l","TRUE","TRUE","mass/volume","FALSE",0.7,"g/l",,,"TRUE","TRUE"
 2267600,2142138,165252700,202.21,13.9,"g/1000 ft",0.045603674540682,"g/m",2712,"h",0.045603674540682,"g/m",0.045603674540682,"g/m","TRUE","TRUE","mass/length","FALSE",0.0456036745407,"g/m",,,"FALSE","TRUE"
-2267831,2142220,7440508,63.55,40,"mmol/kg dry fd/d",1.66666666666667E-06,"mol/g/h",144,"h",0.00024,"mol/g",0.015252,"g/g","TRUE","TRUE","mol/mass/time","FALSE",,,,,,
+2267831,2142220,7440508,63.55,40,"mmol/kg dry fd/d",1.66666666666667E-06,"mol/g/h",144,"h",0.00024,"mol/g",0.015252,"g/g","TRUE","TRUE","mol/mass/time","FALSE",1.66666666666667E-06,"mol/g/h",,,,
 2267875,2142232,138261413,255.66,13.3,"AI g/hl",0.133,"g/l",,"h",0.133,"g/l",0.133,"g/l","TRUE","TRUE","mass/volume","FALSE",0.133,"g/l",,,"TRUE","TRUE"
 2268003,2142320,138261413,255.66,90,"AI g/100000 sd",90,"AI g/100000 sd",,"ls",90,"AI g/100000 sd",90,"AI g/100000 sd","FALSE","TRUE","mass/noscience","TRUE",900,"ug/sd",,,"FALSE","FALSE"
 2270155,2142841,330552,249.09,9545,"ug/kg dry wt org",9.545E-06,"g/g",504,"h",9.545E-06,"g/g",9.545E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",9.545E-06,"g/g",,,"FALSE","TRUE"
@@ -886,7 +886,7 @@
 2282080,2148013,15630894,,10,"lb/1000 ft2",48.8258342303552,"g/m2",1344,"h",48.8258342303552,"g/m2",48.8258342303552,"g/m2","TRUE","TRUE","mass/area","FALSE",,,,,,
 2282359,2148141,319925569,,2.3,"mg/g org",0.0023,"g/g",240,"h",0.0023,"g/g",0.0023,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0023,"g/g",,,"TRUE","TRUE"
 2283114,2148269,1332407,,1000,"g/250 L",4,"g/l",24,"h",4,"g/l",4,"g/l","TRUE","TRUE","mass/volume","FALSE",4,"g/l",,,"TRUE","TRUE"
-2284963,2148986,7487947,271.5,1.74E-05,"mol",1.74E-05,"mol",1008,"h",1.74E-05,"mol",1.74E-05,"mol","TRUE","TRUE","mol","FALSE",,,,,,
+2284963,2148986,7487947,271.5,1.74E-05,"mol",1.74E-05,"mol",1008,"h",1.74E-05,"mol",1.74E-05,"mol","TRUE","TRUE","mol","FALSE",1.74E-05,"mol",,,,
 2286966,2149783,55852841,1729,50,"g/1000 kg food",5E-05,"g/g",336,"h",5E-05,"g/g",5E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",5E-05,"g/g",,,"FALSE","TRUE"
 2287429,2149866,7758987,159.61,720,"ppm food",720000,"ppb",1344,"h",720000,"ppb",720000,"ppb","TRUE","FALSE","fraction","FALSE",720000,"ppb",,,"TRUE","TRUE"
 2292361,2153076,1332407,,10,"ug/bee",10,"ug/bee",24,"h",10,"ug/bee",10,"ug/bee","FALSE","TRUE","mass/noscience","TRUE",10,"ug/bee",,,"TRUE","TRUE"
@@ -894,11 +894,11 @@
 2294703,2154042,10102188,172.93774,0.5,"ug/org/d",0.5,"ug/org/d",168,"h",2016,"ug/org",2016,"ug/org","FALSE","TRUE","mass/noscience/time","TRUE",0.0005,"mg/org/d",,,"FALSE","FALSE"
 2294901,2154163,67641,58.08,1,"ml/8 L",0.000125,"l/l",144,"h",0.000125,"l/l",0.000125,"l/l","TRUE","TRUE","volume/volume","FALSE",0.000125,"l/l",,,"TRUE","TRUE"
 2295969,2154661,3614082,167.06,1.25,"mg/kg diet",1.25E-06,"g/g",2160,"h",1.25E-06,"g/g",1.25E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",1.25E-06,"g/g",,,"FALSE","TRUE"
-2297034,2155064,85687,312.4,0.1,"mgdryfd/gwetbdwt/d",4.16666666666667E-06,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",100,"mg/kg/d",,,"FALSE","FALSE"
-2297726,2155323,104405,220.35,200,"ug/g/wk",1.19047619047619E-06,"g/g/h",168,"h",0.0002,"g/g",0.0002,"g/g","TRUE","TRUE","mass/mass/time","FALSE",200,"ug/g/wk",,,"FALSE","FALSE"
+2297034,2155064,85687,312.4,0.1,"mgdryfd/gwetbdwt/d",4.16666666666667E-06,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",4.16666666666667E-06,"g/g/h",,,"FALSE","FALSE"
+2297726,2155323,104405,220.35,200,"ug/g/wk",1.19047619047619E-06,"g/g/h",168,"h",0.0002,"g/g",0.0002,"g/g","TRUE","TRUE","mass/mass/time","FALSE",1.19047619047619E-06,"g/g/h",,,"FALSE","FALSE"
 2300312,2156502,3211765,196.12,4.54,"mg/kg wet fd",4.54E-06,"g/g",3024,"h",4.54E-06,"g/g",4.54E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",4.54E-06,"g/g",,,"FALSE","TRUE"
 2307078,2156366,1464422,196.10638,10,"ppm wet wt fd",10000,"ppb",2688,"h",10000,"ppb",10000,"ppb","TRUE","FALSE","fraction","FALSE",10000,"ppb",,,"TRUE","TRUE"
-2308685,2159669,80057,228.29,50000,"ug/kg bdwt/d",2.08333333333334E-06,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",50,"mg/kg/d",,,"FALSE","FALSE"
+2308685,2159669,80057,228.29,50000,"ug/kg bdwt/d",2.08333333333334E-06,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.08333333333334E-06,"g/g/h",,,"FALSE","FALSE"
 2309539,2160041,13410010,188.95,0.033,"g/7 kg",4.71428571428572E-06,"g/g",730.001,"h",4.71428571428572E-06,"g/g",4.71428571428572E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",4.71428571428572E-06,"g/g",,,"FALSE","TRUE"
 2311423,2160761,584792,302.4,10.25,"ug/ul",10.25,"g/l",48,"h",10.25,"g/l",10.25,"g/l","TRUE","TRUE","mass/volume","FALSE",10.25,"g/l",,,"TRUE","TRUE"
 2311601,2160862,10485708,250.38,9,"ug/org/wk",9,"ug/org/wk",1512,"h",2286144,"ug/org",2286144,"ug/org","FALSE","TRUE","mass/noscience/time","TRUE",0.009,"mg/org/wk",,,"FALSE","FALSE"
@@ -918,7 +918,7 @@
 2319698,2164445,15498870,,40,"mg/60 ml",0.666666666666668,"g/l",672,"h",0.666666666666668,"g/l",0.666666666666668,"g/l","TRUE","TRUE","mass/volume","FALSE",0.666666666666668,"g/l",,,"TRUE","TRUE"
 2321583,2165815,1929824,230.9,10,"AI ppmw/soil vol",10000,"ppb",1176,"h",10000,"ppb",10000,"ppb","TRUE","FALSE","fraction","FALSE",10000,"ppb",,,"TRUE","TRUE"
 2322131,2165918,1929824,230.9,3,"L/80 kg N/ha",3.75E-09,"l/g/m2",,"hv",3.75E-09,"l/g/m2",3.75E-09,"l/g/m2","TRUE","TRUE","volume/mass/area","FALSE",,,,,,
-2322832,2166134,78513,398.5,21.93,"ng/g org/d",9.13750000000001E-10,"g/g/h",504,"h",4.6053E-07,"g/g",4.6053E-07,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.02193,"mg/kg/d",,,"FALSE","FALSE"
+2322832,2166134,78513,398.5,21.93,"ng/g org/d",9.13750000000001E-10,"g/g/h",504,"h",4.6053E-07,"g/g",4.6053E-07,"g/g","TRUE","TRUE","mass/mass/time","FALSE",9.13750000000001E-10,"g/g/h",,,"FALSE","FALSE"
 2323406,2166365,63252,201.22,0.05,"AI lb/ga",5.99131647866185,"g/l",3650.005,"h",5.99131647866185,"g/l",5.99131647866185,"g/l","TRUE","TRUE","mass/volume","FALSE",,,,,,
 2326713,2167351,63252,201.22,227,"g/37.9L/0.1 ha",0.00598944591029,"g/l/m2",264,"h",0.00598944591029,"g/l/m2",0.00598944591029,"g/l/m2","TRUE","TRUE","mass/volume/area","FALSE",,,,,,
 2328153,2167765,732116,317.3,340.2,"g/189.25 L",1.79762219286658,"g/l",,"gs",1.79762219286658,"g/l",1.79762219286658,"g/l","TRUE","TRUE","mass/volume","FALSE",1.79762219286658,"g/l",,,"TRUE","TRUE"
@@ -937,17 +937,17 @@
 2334608,2170161,7487947,271.5,110,"ng/g wet wt diet",1.1E-07,"g/g",6000,"h",1.1E-07,"g/g",1.1E-07,"g/g","TRUE","TRUE","mass/mass","FALSE",1.1E-07,"g/g",,,"FALSE","TRUE"
 2334740,2170223,120068373,437.1,13.4,"AI mg/kg bdwt EU",1.34E-05,"g/g",24,"h",1.34E-05,"g/g",1.34E-05,"g/g","TRUE","TRUE","mass/mass","FALSE",1.34E-05,"g/g",,,"FALSE","TRUE"
 2334742,2170222,7439976,200.59,1408.7,"ng/g dry fd",1.4087E-06,"g/g",,"h",1.4087E-06,"g/g",1.4087E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",,,,,,
-2334920,2170272,7487947,271.5,80,"pmol",8E-11,"mol",2.000004,"h",8E-11,"mol",8E-11,"mol","TRUE","TRUE","mol","FALSE",,,,,,
+2334920,2170272,7487947,271.5,80,"pmol",8E-11,"mol",2.000004,"h",8E-11,"mol",8E-11,"mol","TRUE","TRUE","mol","FALSE",8E-11,"mol",,,,
 2336061,2170607,10043013,342.151,2.7,"g/170 ml",15.8823529411765,"g/l",2400,"h",15.8823529411765,"g/l",15.8823529411765,"g/l","TRUE","TRUE","mass/volume","FALSE",15.8823529411765,"g/l",,,"TRUE","TRUE"
-2336100,2170622,7718549,129.6,0.043,"mmol/dm3",0.043,"mol/m3",144,"h",0.043,"mol/m3",0.043,"mol/m3","TRUE","TRUE","mol/volume","FALSE",,,,,,
+2336100,2170622,7718549,129.6,0.043,"mmol/dm3",0.043,"mol/m3",144,"h",0.043,"mol/m3",0.043,"mol/m3","TRUE","TRUE","mol/volume","FALSE",0.043,"mol/m3",,,,
 2336938,2171032,97530,164.2,31,"ug/mg org",0.031,"g/g",168,"h",0.031,"g/g",0.031,"g/g","TRUE","TRUE","mass/mass","FALSE",0.031,"g/g",,,"TRUE","TRUE"
 2338785,2171803,115093,251.08,0.83,"ug/g wet fd/d",3.45833333333334E-08,"g/g/h",672,"h",2.324E-05,"g/g",2.324E-05,"g/g","TRUE","TRUE","mass/mass/time","FALSE",,,,,,
 2338796,2171437,17804352,290.32,50,"g/100kg",0.0005,"g/g",720,"h",0.0005,"g/g",0.0005,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0005,"g/g",,,"FALSE","TRUE"
 2339791,2172128,106934,187.86,1,"L/1.5 cm3 soil",1000000,"l/m3",1440,"h",1000000,"l/m3",1000000,"l/m3","TRUE","TRUE","volume/volume","FALSE",,,,,,
 2339802,2172133,106934,187.86,1,"L/160 m soil",0.00625,"l/m",2952,"h",0.00625,"l/m",0.00625,"l/m","TRUE","TRUE","volume/length","FALSE",0.0625,"ml/cm",,,"FALSE","FALSE"
-2340912,2172732,10061026,110.97,2.7,"ppm/d",112.5,"ppb/h",168,"h",18900,"ppb",18900,"ppb","TRUE","FALSE","fraction/time","FALSE",0.0027,"ppb/d",,,"FALSE","FALSE"
+2340912,2172732,10061026,110.97,2.7,"ppm/d",112.5,"ppb/h",168,"h",18900,"ppb",18900,"ppb","TRUE","FALSE","fraction/time","FALSE",112.5,"ppb/h",,,"FALSE","FALSE"
 2341698,2173149,106934,187.86,1.28,"ml/m",0.00128,"l/m",1680,"h",0.00128,"l/m",0.00128,"l/m","TRUE","TRUE","volume/length","FALSE",0.0128,"ml/cm",,,"FALSE","FALSE"
-2342255,2173446,106934,187.86,1800,"AI g/dm3",1800000,"g/m3",1848,"h",1800000,"g/m3",1800000,"g/m3","TRUE","TRUE","mass/volume","FALSE",1800,"g/l",,,"FALSE","FALSE"
+2342255,2173446,106934,187.86,1800,"AI g/dm3",1800000,"g/m3",1848,"h",1800000,"g/m3",1800000,"g/m3","TRUE","TRUE","mass/volume","FALSE",1800000,"g/m3",,,"FALSE","FALSE"
 2342778,2173814,96128,236.33,1.2,"cm3/ft",3.93700787401574E-06,"m3/m",,"hv",3.93700787401574E-06,"m3/m",3.93700787401574E-06,"m3/m","TRUE","TRUE","volume/length","FALSE",0.039370078740157,"ml/cm",,,"FALSE","FALSE"
 2342950,2173937,8003198,,3,"ml/ft",0.009842519685039,"l/m",,"h",0.009842519685039,"l/m",0.009842519685039,"l/m","TRUE","TRUE","volume/length","FALSE",0.098425196850394,"ml/cm",,,"FALSE","FALSE"
 2342958,2173944,111911,173.03,25,"ml/25 ft",0.003280839895013,"l/m",,"h",0.003280839895013,"l/m",0.003280839895013,"l/m","TRUE","TRUE","volume/length","FALSE",,,,,,
@@ -998,7 +998,7 @@
 2363088,2182732,69327760,305.4,0.65,"g/3.75 L",0.173333333333334,"g/l",480,"h",0.173333333333334,"g/l",0.173333333333334,"g/l","TRUE","TRUE","mass/volume","FALSE",,,,,,
 2363201,2182750,69327760,305.4,0.4,"kg/2000 L",0.2,"g/l",48,"h",0.2,"g/l",0.2,"g/l","TRUE","TRUE","mass/volume","FALSE",,,,,,
 2365670,2183357,39600425,,996,"AI ug/kg soil",9.96E-07,"g/g",48,"h",9.96E-07,"g/g",9.96E-07,"g/g","TRUE","TRUE","mass/mass","FALSE",0.996,"mg/kg",,,"FALSE","FALSE"
-2366739,2183600,155569918,1008.2,50,"ug/kg org/d",2.08333333333333E-09,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.05,"mg/kg/d",,,"FALSE","FALSE"
+2366739,2183600,155569918,1008.2,50,"ug/kg org/d",2.08333333333333E-09,"g/g/h",,"h",,"g/g",,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.08333333333333E-09,"g/g/h",,,"FALSE","FALSE"
 2367469,2183801,1464422,196.10638,0.67,"Bq",0.67,"Bq",,"h",0.67,"Bq",0.67,"Bq","TRUE","TRUE","radioactivity","FALSE",0.67,"Bq",,,"TRUE","TRUE"
 2369724,2184688,155569918,1008.2,25,"ppm/g fd",25000,"ppb/g",2190.003,"h",25000,"ppb/g",25000,"ppb/g","TRUE","FALSE","fraction/mass","FALSE",,,,,,
 2370399,2185027,5902512,216.66,100,"ug/g wet soil",0.0001,"g/g",3650.005,"h",0.0001,"g/g",0.0001,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0001,"g/g",,,"FALSE","TRUE"
@@ -1040,7 +1040,7 @@
 2390748,2194639,93652,214.64,10.91,"AI ppm soil",10910,"ppb",48,"h",10910,"ppb",10910,"ppb","TRUE","FALSE","fraction","FALSE",10910,"ppb",,,"TRUE","TRUE"
 2391300,2194993,8003198,,3.5,"ml/ft2",0.03767491926803,"l/m2",,"hv",0.03767491926803,"l/m2",0.03767491926803,"l/m2","TRUE","TRUE","volume/area","FALSE",0.037673686458484,"l/m2",,,"FALSE","TRUE"
 2391482,2195122,106934,187.86,0.03,"ml/ft3",0.00105944997595,"l/m3",,"h",0.00105944997595,"l/m3",0.00105944997595,"l/m3","TRUE","TRUE","volume/volume","FALSE",,,,,,
-2391742,2195312,1746016,322,0.5,"ug/kg/wk",2.97619047619048E-12,"g/g/h",336,"h",1E-09,"g/g",1E-09,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.0005,"mg/kg/wk",,,"FALSE","FALSE"
+2391742,2195312,1746016,322,0.5,"ug/kg/wk",2.97619047619048E-12,"g/g/h",336,"h",1E-09,"g/g",1E-09,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.97619047619048E-12,"g/g/h",,,"FALSE","FALSE"
 2391839,2195374,8069496,275.3,1.4,"m3/ha",0.00014,"m3/m2",5688,"h",0.00014,"m3/m2",0.00014,"m3/m2","TRUE","TRUE","volume/area","FALSE",,,,,,
 2391906,2195418,8003198,,10,"AI gal/acre",0.009353917911434,"l/m2",2184,"h",0.009353917911434,"l/m2",0.009353917911434,"l/m2","TRUE","TRUE","volume/area","FALSE",0.00935396,"l/m2",,,"FALSE","TRUE"
 2393526,2196373,29091212,350.29,10.4,"g/1000 ft2",0.111948331539289,"g/m2",1488,"h",0.111948331539289,"g/m2",0.111948331539289,"g/m2","TRUE","TRUE","mass/area","FALSE",0.111944668333781,"g/m2",,,"FALSE","TRUE"
@@ -1103,7 +1103,7 @@
 2423499,2209813,148798,201.25,12,"oz/100 lb seed",0.007500006117833,"g/g",1,"gs",0.007500006117833,"g/g",0.007500006117833,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0075,"g/g",,,"FALSE","TRUE"
 2424734,2210163,148798,201.25,2,"g/800 ml",2.5,"g/l",1,"gs",2.5,"g/l",2.5,"g/l","TRUE","TRUE","mass/volume","FALSE",2.5,"g/l",,,"TRUE","TRUE"
 2424987,2210207,882097,214.64,0.781,"umol/ml",0.000781,"mol/l",120,"h",0.000781,"mol/l",0.16763384,"g/g","TRUE","TRUE","mol/volume","FALSE",0.16763384,"g/l",,,"FALSE","FALSE"
-2425580,2210339,25637994,,800,"ng/g wet wt/d/pair",3.33333333333334E-08,"g/g/h",3432,"h",0.0001144,"g/g",0.0001144,"g/g","TRUE","TRUE","mass/mass/time","FALSE",8E-07,"g/g",,,"FALSE","FALSE"
+2425580,2210339,25637994,,800,"ng/g wet wt/d/pair",3.33333333333334E-08,"g/g/h",3432,"h",0.0001144,"g/g",0.0001144,"g/g","TRUE","TRUE","mass/mass/time","FALSE",3.33333333333334E-08,"g/g/h",,,"FALSE","FALSE"
 2426708,2210703,10102064,396.05,120,"nmol/g dry wt",1.2E-07,"mol/g",168,"h",1.2E-07,"mol/g",4.7526E-05,"g/g","TRUE","TRUE","mol/mass","FALSE",1.2E-07,"mol/g",,,"FALSE","TRUE"
 2429768,2211402,87683,260.8,4500,"ng/45 ml",0.0001,"g/l",360,"h",0.0001,"g/l",0.0001,"g/l","TRUE","TRUE","mass/volume","FALSE",0.0001,"g/l",,,"FALSE","TRUE"
 2432136,2211863,57885,386.7,19.3988,"g/10 kg food",0.00193988,"g/g",1440,"h",0.00193988,"g/g",0.00193988,"g/g","TRUE","TRUE","mass/mass","FALSE",0.00193988,"g/g",,,"TRUE","TRUE"
@@ -1118,7 +1118,7 @@
 2440008,2214071,58220,288.4,0.1,"% of diet",1000000,"ppb",1344,"h",1000000,"ppb",1000000,"ppb","TRUE","FALSE","fraction","FALSE",1000000,"ppb",,,"FALSE","TRUE"
 2440030,2214082,5234684,235.3,2.5,"g/3 kg seed",0.000833333333333,"g/g",3650.005,"h",0.000833333333333,"g/g",0.000833333333333,"g/g","TRUE","TRUE","mass/mass","FALSE",0.000833333333333,"g/g",,,"FALSE","TRUE"
 2440326,2214192,102676471,259.73,100,"AI mg/kg food",0.0001,"g/g",2160,"h",0.0001,"g/g",0.0001,"g/g","TRUE","TRUE","mass/mass","FALSE",0.0001,"g/g",,,"FALSE","TRUE"
-2440505,2214243,60348609,564.7,50.7,"ng/g bdwt/d",2.1125E-09,"g/g/h",2208,"h",4.6644E-06,"g/g",4.6644E-06,"g/g","TRUE","TRUE","mass/mass/time","FALSE",0.0507,"mg/kg/d",,,"FALSE","FALSE"
+2440505,2214243,60348609,564.7,50.7,"ng/g bdwt/d",2.1125E-09,"g/g/h",2208,"h",4.6644E-06,"g/g",4.6644E-06,"g/g","TRUE","TRUE","mass/mass/time","FALSE",2.1125E-09,"g/g/h",,,"FALSE","FALSE"
 2440847,2214298,107868304,296.4,2,"AI ug/g dry fd",2E-06,"g/g",1680,"h",2E-06,"g/g",2E-06,"g/g","TRUE","TRUE","mass/mass","FALSE",2E-06,"g/g",,,"FALSE","TRUE"
 2442734,2214855,1691992,571.25,0.172,"nmol/g soil",1.72E-10,"mol/g",720,"h",1.72E-10,"mol/g",9.8255E-08,"g/g","TRUE","TRUE","mol/mass","FALSE",1.72E-10,"mol/g",,,"FALSE","TRUE"
 2442829,2214885,2593159,247.5,1.66,"g/5 L",0.332,"g/l",1680,"h",0.332,"g/l",0.332,"g/l","TRUE","TRUE","mass/volume","FALSE",0.332,"g/l",,,"TRUE","TRUE"

@@ -173,15 +173,18 @@ unit_converter = function(dt,
   dt
 }
 
-unit2 = unit_converter(unit,
+unit2 = unit_converter(dt = unit,
                        dt_lookup = unit_result,
                        col_unit = 'conc1_unit',
                        col_multiplier = 'multiplier',
                        pattern_special = unit_symbol$symbol,
                        pattern_unit = unit_result$unit)
 
+unit2[ conc1_unit == 'AI cm3/eu' ]
+
 # exposure ----------------------------------------------------------------
 # TODO put in function?
+# TODOprobably not needed since this is coded in exposure EPA data
 unit2[ grep('food|fd', conc1_unit, ignore.case = TRUE), conc1_exposure := 'food' ]
 unit2[ grep('seed|sd', conc1_unit, ignore.case = TRUE), conc1_exposure := 'seed' ]
 unit2[ grep('bdwt', conc1_unit, ignore.case = TRUE), conc1_exposure := 'bdwt' ]
