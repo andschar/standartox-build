@@ -70,8 +70,8 @@ if (report) {
 
 # merge tables ------------------------------------------------------------
 if (build) {
-  source(file.path(src, 'qu_phch_fin.R'), max.deparse.length = mdl)
-  source(file.path(src, 'qu_taxa_fin.R'), max.deparse.length = mdl)
+  source(file.path(src, 'qu_phch_compile.R'), max.deparse.length = mdl)
+  source(file.path(src, 'qu_taxa_compile.R'), max.deparse.length = mdl)
 }
 
 # Lookup ------------------------------------------------------------------
@@ -82,7 +82,7 @@ if (lookup) {
 }
 
 # unit conversion ---------------------------------------------------------
-source(file.path(src, 'conv_unit_result.R'), max.deparse.length = mdl) # converts result units
+source(file.path(src, 'conv_unit_result_duration.R'), max.deparse.length = mdl)
 
 # Standartox --------------------------------------------------------------
 if (build_standartox) {

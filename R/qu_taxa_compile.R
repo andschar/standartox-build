@@ -1,10 +1,10 @@
-# script to build application data
+# script aggregates organism data from 3rd party data bases
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
 
 # scripts -----------------------------------------------------------------
-q = read_char(file.path(sql, 'conv_unit_result.sql')) # WORK IN PROGRESS
+q = read_char(file.path(sql, 'taxa_compile.sql'))
 
 # query -------------------------------------------------------------------
 drv = dbDriver("PostgreSQL")
@@ -16,8 +16,7 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # log ---------------------------------------------------------------------
-log_msg('CONV: Unit conversion scripts run.')
+log_msg('QUERY: taxa final table created.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
-

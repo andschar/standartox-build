@@ -261,14 +261,14 @@ FROM
   		effect_codes.description AS effect,
   		string_agg(
   			CASE 
-  			WHEN concentration_unit_lookup.conv = 'yes' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
-  			THEN CAST(doses.dose1_mean_cl AS numeric) * concentration_unit_lookup.multiplier
-  			WHEN concentration_unit_lookup.conv = 'no' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
+  			WHEN lookup_unit_result.conv = 'yes' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
+  			THEN CAST(doses.dose1_mean_cl AS numeric) * lookup_unit_result.multiplier
+  			WHEN lookup_unit_result.conv = 'no' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
   			THEN CAST(doses.dose1_mean_cl AS numeric)
   			END || ' ' || 
   			CASE 
-  			WHEN concentration_unit_lookup.conv = 'yes'
-  			THEN concentration_unit_lookup.unit_conv
+  			WHEN lookup_unit_result.conv = 'yes'
+  			THEN lookup_unit_result.unit_conv
   			ELSE doses.dose_conc_unit
   			END || ' (' || dose_responses.obs_duration_mean_cl || ' ' ||dose_responses.obs_duration_unit || ')' || ' - '|| 
   			dose_response_details.response_mean_cl || ' ' || dose_responses.response_unit,
@@ -279,7 +279,7 @@ FROM
   		LEFT JOIN ecotox.dose_responses ON tests.test_id = dose_responses.test_id
   		LEFT JOIN ecotox.dose_response_details ON dose_responses.dose_resp_id = dose_response_details.dose_resp_id AND doses.dose_id = dose_response_details.dose_id
   		LEFT JOIN ecotox.effect_codes ON dose_responses.effect_code = effect_codes.code 
-  		LEFT JOIN lookup.concentration_unit_lookup ON doses.dose_conc_unit = concentration_unit_lookup.conc1_unit 
+  		LEFT JOIN lookup.lookup_unit_result ON doses.dose_conc_unit = lookup_unit_result.conc1_unit 
   		WHERE 
         -- with response
         dose_response_details.response_mean_cl IS NOT NULL
@@ -366,9 +366,9 @@ FROM
   LEFT JOIN lookup.lookup_norman_use_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
   LEFT JOIN lookup.test_location_lookup ON tests.test_location = test_location_lookup.code
   LEFT JOIN lookup.ecotox_group_lookup ON species.species_number = ecotox_group_lookup.species_number
-  LEFT JOIN lookup.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
+  LEFT JOIN lookup.lookup_unit_result ON results.conc1_unit = lookup_unit_result.conc1_unit
   LEFT JOIN lookup.effect_lookup ON results.effect = effect_lookup.code
-  LEFT JOIN lookup.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
+  LEFT JOIN lookup.lookup_unit_duration ON results.obs_duration_unit = lookup_unit_duration.obs_duration_unit
   LEFT JOIN lookup.endpoint_lookup ON endpoint_lookup.code = results.endpoint
   LEFT JOIN lookup.chemical_analysis_lookup ON chemical_analysis_lookup.code = results.chem_analysis_method
   LEFT JOIN lookup.norman_id_cas ON tests.test_cas = norman_id_cas.casnr
@@ -408,6 +408,6 @@ WHERE
   AND results.conc1_mean != '' AND results.conc1_mean NOT IN ('NR', '+ NR') AND results.conc1_mean !~* 'ca|x' AND results.conc1_max NOT LIKE '%er%'
   AND clean(results.endpoint) IS NOT NULL
   AND clean(results.effect) IS NOT NULL
-  AND duration_unit_lookup.remove != 'yes'
+  AND lookup_unit_duration.remove != 'yes'
   AND media_type_lookup.description_norman IN ('freshwater', 'saltwater')
   -- AND norman_id_cas.normanid IS NOT NULL

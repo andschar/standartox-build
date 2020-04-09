@@ -31,7 +31,7 @@ chck_dupl(units, 'obs_duration_unit')
 
 # write -------------------------------------------------------------------
 write_tbl(units, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'lookup', tbl = 'duration_unit_lookup',
+          dbname = DBetox, schema = 'lookup', tbl = 'lookup_unit_duration',
           key = 'obs_duration_unit',
           comment = 'Lookup table for duration units')
 

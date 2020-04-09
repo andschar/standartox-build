@@ -38,9 +38,9 @@ q_ppdb = "SELECT
 ppdb = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q_ppdb)
 # Read across
-q_rx = "select cas, lc50_dm_rx
-        from phch.phch_variables
-        left join phch.phch_variables_prop using (variable_id)"
+q_rx = "SELECT cas, lc50_dm_rx
+        FROM phch.phch_variables
+        LEFT join phch.phch_variables_prop using (variable_id)"
 rx = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = 'bfg_monitoring',
                 query = q_rx)
 

@@ -9,38 +9,41 @@ SELECT
 	results.conc1_mean::text,
 	results.conc1_unit::text,
 	CASE
-	  WHEN concentration_unit_lookup.conv IS TRUE
-	  THEN clean_num(results.conc1_mean) * concentration_unit_lookup.multiplier::numeric
+	  WHEN lookup_unit_result.conv IS TRUE
+	  THEN clean_num(results.conc1_mean) * lookup_unit_result.multiplier::numeric
 	  ELSE clean_num(results.conc1_mean)
 	END AS conc1_mean2,
 	CASE
-	  WHEN concentration_unit_lookup.conv IS TRUE
-	  THEN concentration_unit_lookup.unit_conv::text
+	  WHEN lookup_unit_result.conv IS TRUE
+	  THEN lookup_unit_result.unit_conv::text
 	  ELSE results.conc1_unit::text
 	END AS conc1_unit2,
-	CASE
-	  WHEN duration_unit_lookup.conv IS TRUE
-	  THEN clean_num(results.obs_duration_mean) * duration_unit_lookup.multiplier::numeric
-	  ELSE clean_num(results.obs_duration_mean)
-	END AS obs_duration_mean2,
-	CASE
-	  WHEN duration_unit_lookup.conv IS TRUE
-	  THEN duration_unit_lookup.unit_conv::text
-	  ELSE results.obs_duration_unit::text
-	END AS obs_duration_unit2,
 	-- empty column for conversion of units of pattern mg/kg/d (time)
 	NULL::numeric AS conc1_mean3,
 	NULL::text AS conc1_unit3,
 	NULL::numeric AS conc1_mean4,
 	NULL::text AS conc1_unit4,
-	concentration_unit_lookup.conv AS conc1_conv,
-	concentration_unit_lookup.si AS conc1_si,
-	concentration_unit_lookup.type AS conc1_unit_type,
-	concentration_unit_lookup.remove AS conc1_remove
+	lookup_unit_result.conv AS conc1_conv,
+	lookup_unit_result.si AS conc1_si,
+	lookup_unit_result.type AS conc1_unit_type,
+	lookup_unit_result.remove AS conc1_remove,
+		results.obs_duration_mean::text,
+	results.obs_duration_unit::text,
+	CASE
+	  WHEN lookup_unit_duration.conv IS TRUE
+	  THEN clean_num(results.obs_duration_mean) * lookup_unit_duration.multiplier::numeric
+	  ELSE clean_num(results.obs_duration_mean)
+	END AS obs_duration_mean2,
+	CASE
+	  WHEN lookup_unit_duration.conv IS TRUE
+	  THEN lookup_unit_duration.unit_conv::text
+	  ELSE results.obs_duration_unit::text
+	END AS obs_duration_unit2,
+	lookup_unit_duration.remove AS obs_duration_remove
 FROM
 	ecotox.results
-	LEFT JOIN lookup.duration_unit_lookup USING (obs_duration_unit)
-	LEFT JOIN lookup.concentration_unit_lookup USING (conc1_unit)
+	LEFT JOIN lookup.lookup_unit_duration USING (obs_duration_unit)
+	LEFT JOIN lookup.lookup_unit_result USING (conc1_unit)
 	LEFT JOIN ecotox.tests USING (test_id)
 	LEFT JOIN chem.chem_prop ON chem_prop.casnr = tests.test_cas
 WHERE
@@ -118,7 +121,7 @@ oz = 28.3495 g
 
 
 /*
-TODO for summary
+TODO for summary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SELECT conc1_unit4,
 		string_agg(distinct(conc1_unit::text), ', ') AS units_combined,
 		string_agg(distinct(conc1_unit2::text), ', ') AS time_conversion,

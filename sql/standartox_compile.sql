@@ -10,8 +10,8 @@ SELECT
 	tests.species_number,
 	tests.reference_number,
 	tests.test_cas AS casnr,
-	coalesce(substring(results.conc1_mean, '<|>'), '=') AS conc1_qualifier,
-	-- unit conversion is done in sql/conv_unit_result.sql
+	coalesce(substring(results.conc1_mean, '<|>'), '=') AS conc1_qualifier, -- TODO move this to ~/conv_unit_result_duration.sql
+	-- unit conversion is done in sql/conv_unit_result_duration.sql
 	results.conc1_mean, -- original results
 	results.conc1_unit,
 	results2.conc1_mean2, -- converted
@@ -41,16 +41,9 @@ SELECT
 	results2.conc1_remove,
  	results.obs_duration_mean,
 	results.obs_duration_unit,
-	CASE
-	  	WHEN duration_unit_lookup.conv = 'yes'
-	  	THEN clean_num(results.obs_duration_mean) * duration_unit_lookup.multiplier
-	    ELSE clean_num(results.obs_duration_mean)
-	END AS obs_duration_mean2,
-	CASE
-	  	WHEN duration_unit_lookup.conv = 'yes'
-	  	THEN duration_unit_lookup.unit_conv
-  	    ELSE results.obs_duration_unit
-  	END AS obs_duration_unit2,
+	results2.obs_duration_mean2,
+	results2.obs_duration_unit2,
+	results2.obs_duration_remove,
 	CASE
 	  	WHEN tests.test_type IN ('ACUTE', 'ACTELS', 'SBACUTE')
 	    THEN 'acute'
@@ -125,7 +118,7 @@ LEFT JOIN ecotox.results ON tests.test_id = results.test_id
 	LEFT JOIN ecotox.response_site_codes ON results.response_site = response_site_codes.code
 	LEFT JOIN ecotox.measurement_codes ON results.measurement = measurement_codes.code
 LEFT JOIN ecotox.results2 USING (result_id)
-LEFT JOIN lookup.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
+LEFT JOIN lookup.lookup_unit_duration ON results.obs_duration_unit = lookup_unit_duration.obs_duration_unit
 LEFT JOIN ecotox.exposure_type_codes ON tests.exposure_type = exposure_type_codes.code
 LEFT JOIN ecotox.effect_codes ON results.effect = effect_codes.code
 LEFT JOIN ecotox.lifestage_codes ON tests.organism_lifestage = lifestage_codes.code

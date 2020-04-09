@@ -84,14 +84,14 @@ SELECT
   END AS "nor36", --Effect measurement 
   coalesce(clean(results.endpoint), 'nor reported') AS "nor37", --Endpoint
   CASE
-    WHEN duration_unit_lookup.unit_conv = 'h'
+    WHEN lookup_unit_duration.unit_conv = 'h'
       THEN
         CASE
-          WHEN clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier >= 168
-          THEN clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier  / 24 || ' ' || 'd'
-          ELSE coalesce(clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier || ' ' || duration_unit_lookup.unit_conv, 'n.r.')
+          WHEN clean(results.obs_duration_mean)::numeric * lookup_unit_duration.multiplier >= 168
+          THEN clean(results.obs_duration_mean)::numeric * lookup_unit_duration.multiplier  / 24 || ' ' || 'd'
+          ELSE coalesce(clean(results.obs_duration_mean)::numeric * lookup_unit_duration.multiplier || ' ' || lookup_unit_duration.unit_conv, 'n.r.')
         END
-    ELSE coalesce(clean(results.obs_duration_mean)::numeric * duration_unit_lookup.multiplier || ' ' || duration_unit_lookup.unit_conv, 'n.r.')
+    ELSE coalesce(clean(results.obs_duration_mean)::numeric * lookup_unit_duration.multiplier || ' ' || lookup_unit_duration.unit_conv, 'n.r.')
   END AS "nor38",
   CASE -- TODO maybe change in future
     WHEN tests.study_duration_mean IN ('NR', 'NC', '', ' ', '--')
@@ -536,13 +536,13 @@ SELECT
 /* Biological effect */
   coalesce(nullif(results.conc1_mean_op, ''), '=') AS "nor121", --Effect concentration qualifier", 
   CASE
-    WHEN concentration_unit_lookup.conv = 'yes'
-      THEN clean(results.conc1_mean)::numeric * concentration_unit_lookup.multiplier
+    WHEN lookup_unit_result.conv = 'yes'
+      THEN clean(results.conc1_mean)::numeric * lookup_unit_result.multiplier
     ELSE clean(results.conc1_mean)::numeric
   END AS "nor122", -- Effect concentration
   CASE
-    WHEN concentration_unit_lookup.conv = 'yes'
-      THEN concentration_unit_lookup.unit_conv
+    WHEN lookup_unit_result.conv = 'yes'
+      THEN lookup_unit_result.unit_conv
     ELSE results.conc1_unit
   END AS "nor123",
   CASE
@@ -556,9 +556,9 @@ SELECT
       THEN ''
     ELSE
       CASE
-      WHEN concentration_unit_lookup.conv = 'yes'
-        THEN (clean(results.conc1_min)::numeric * concentration_unit_lookup.multiplier)::text
-      WHEN concentration_unit_lookup.conv = 'no'
+      WHEN lookup_unit_result.conv = 'yes'
+        THEN (clean(results.conc1_min)::numeric * lookup_unit_result.multiplier)::text
+      WHEN lookup_unit_result.conv = 'no'
         THEN clean(results.conc1_min)
       END
     END
@@ -568,24 +568,24 @@ SELECT
       THEN ''
     ELSE    
       CASE
-      WHEN concentration_unit_lookup.conv = 'yes'
-        THEN (clean(results.conc1_max)::numeric * concentration_unit_lookup.multiplier)::text
-      WHEN concentration_unit_lookup.conv = 'no'
+      WHEN lookup_unit_result.conv = 'yes'
+        THEN (clean(results.conc1_max)::numeric * lookup_unit_result.multiplier)::text
+      WHEN lookup_unit_result.conv = 'no'
         THEN clean(results.conc1_max)
       END
     END
       || ' ' ||
       CASE
-        WHEN concentration_unit_lookup.conv = 'yes'
-          THEN concentration_unit_lookup.unit_conv
-        WHEN concentration_unit_lookup.conv = 'no'
+        WHEN lookup_unit_result.conv = 'yes'
+          THEN lookup_unit_result.unit_conv
+        WHEN lookup_unit_result.conv = 'no'
           THEN results.conc1_unit
       END
   END AS "nor124",
   /*
   CASE
-    WHEN concentration_unit_lookup.conv = 'yes'
-      THEN clean(results.conc1_min) * concentration_unit_lookup.multiplier || '-' || clean(results.conc1_max) * concentration_unit_lookup.multiplier
+    WHEN lookup_unit_result.conv = 'yes'
+      THEN clean(results.conc1_min) * lookup_unit_result.multiplier || '-' || clean(results.conc1_max) * lookup_unit_result.multiplier
     ELSE results.conc1_min || '-' || results.conc1_max
   END AS "nor124", --Estimate of variability for LC and EC data"
   */
@@ -712,14 +712,14 @@ FROM
       effect_codes.description AS effect,
       string_agg(
         CASE 
-        WHEN concentration_unit_lookup.conv = 'yes' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
-        THEN CAST(doses.dose1_mean_cl AS numeric) * concentration_unit_lookup.multiplier
-        WHEN concentration_unit_lookup.conv = 'no' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
+        WHEN lookup_unit_result.conv = 'yes' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
+        THEN CAST(doses.dose1_mean_cl AS numeric) * lookup_unit_result.multiplier
+        WHEN lookup_unit_result.conv = 'no' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
         THEN CAST(doses.dose1_mean_cl AS numeric)
         END || ' ' || 
         CASE 
-        WHEN concentration_unit_lookup.conv = 'yes'
-        THEN concentration_unit_lookup.unit_conv
+        WHEN lookup_unit_result.conv = 'yes'
+        THEN lookup_unit_result.unit_conv
         ELSE doses.dose_conc_unit
         END || ' (' || dose_responses.obs_duration_mean_cl || ' ' ||dose_responses.obs_duration_unit || ')' || ' - '|| 
         dose_response_details.response_mean_cl || ' ' || dose_responses.response_unit,
@@ -730,7 +730,7 @@ FROM
       LEFT JOIN ecotox.dose_responses ON tests.test_id = dose_responses.test_id
       LEFT JOIN ecotox.dose_response_details ON dose_responses.dose_resp_id = dose_response_details.dose_resp_id AND doses.dose_id = dose_response_details.dose_id
       LEFT JOIN ecotox.effect_codes ON dose_responses.effect_code = effect_codes.code 
-      LEFT JOIN lookup.concentration_unit_lookup ON doses.dose_conc_unit = concentration_unit_lookup.conc1_unit 
+      LEFT JOIN lookup.lookup_unit_result ON doses.dose_conc_unit = lookup_unit_result.conc1_unit 
       WHERE 
         -- with response
         dose_response_details.response_mean_cl IS NOT NULL
@@ -817,8 +817,8 @@ FROM
   LEFT JOIN lookup.lookup_norman_use_acute_chronic_standard ac_cr ON results.result_id = ac_cr.result_id
   LEFT JOIN lookup.test_location_lookup ON tests.test_location = test_location_lookup.code
   LEFT JOIN lookup.ecotox_group_lookup ON species.species_number = ecotox_group_lookup.species_number
-  LEFT JOIN lookup.concentration_unit_lookup ON results.conc1_unit = concentration_unit_lookup.conc1_unit
-  LEFT JOIN lookup.duration_unit_lookup ON results.obs_duration_unit = duration_unit_lookup.obs_duration_unit
+  LEFT JOIN lookup.lookup_unit_result ON results.conc1_unit = lookup_unit_result.conc1_unit
+  LEFT JOIN lookup.lookup_unit_duration ON results.obs_duration_unit = lookup_unit_duration.obs_duration_unit
   LEFT JOIN lookup.endpoint_lookup ON endpoint_lookup.code = results.endpoint
   LEFT JOIN lookup.chemical_analysis_lookup ON chemical_analysis_lookup.code = results.chem_analysis_method
   LEFT JOIN lookup.norman_id_cas ON tests.test_cas = norman_id_cas.casnr
@@ -859,7 +859,7 @@ WHERE
   AND results.conc1_mean != '' AND results.conc1_mean NOT IN ('NR', '+ NR') AND results.conc1_mean !~* 'ca|x' AND results.conc1_max NOT LIKE '%er%'
   AND clean(results.endpoint) IS NOT NULL
   AND clean(results.effect) IS NOT NULL
-  AND duration_unit_lookup.remove != 'yes'
+  AND lookup_unit_duration.remove != 'yes'
   AND media_type_lookup.description_norman IN ('freshwater', 'saltwater')
   -- AND norman_id_cas.normanid IS NOT NULL
   AND ecotox_group_lookup.ecotox_group_conv NOT IN ('Plants', 'Birds')
@@ -868,11 +868,11 @@ WHERE
 effect_lookup.description_norman NOT LIKE 'remove' 
 AND endpoint_lookup.code_norman NOT LIKE 'remove' 
 AND media_type_lookup.description_norman NOT LIKE 'remove'
-AND duration_unit_lookup.remove NOT LIKE 'yes'
+AND lookup_unit_duration.remove NOT LIKE 'yes'
   AND CAST(TRIM(TRAILING '*' FROM TRIM(LEADING '+ ' FROM results.conc1_mean)) AS numeric) NOTNULL   -- results conversion successful
-  AND concentration_unit_lookup.conv = 'yes'
+  AND lookup_unit_result.conv = 'yes'
   -- = skip uM currently
-  AND  concentration_unit_lookup.unit_conv IN ('ug/L', 'ug/kg')
+  AND  lookup_unit_result.unit_conv IN ('ug/L', 'ug/kg')
   AND COALESCE(test_location_lookup.description_norman, 'n.r.') NOT LIKE 'n.r.'
   AND norman_sid_lookup.norman_id IS NOT NULL
   AND tests.exposure_duration_mean NOT LIKE '0'

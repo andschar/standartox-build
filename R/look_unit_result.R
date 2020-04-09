@@ -231,16 +231,16 @@ chck_dupl(unit2, 'conc1_unit')
 
 # write -------------------------------------------------------------------
 ## csv
-fwrite(unit2, file.path(summdir, 'concentration_unit_lookup_summary.csv'))
+fwrite(unit2, file.path(summdir, 'lookup_result_summary.csv'))
 
 ## postgres
 write_tbl(unit2, user = DBuser, host = DBhost, port = DBport, password = DBpassword,
-          dbname = DBetox, schema = 'lookup', tbl = 'concentration_unit_lookup',
+          dbname = DBetox, schema = 'lookup', tbl = 'lookup_unit_result',
           key = 'conc1_unit',
           comment = 'Lookup table for concentration units')
 
 # log ---------------------------------------------------------------------
-log_msg('LOOK: Concentration lookup tables script run.')
+log_msg('LOOK: Result lookup tables script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
