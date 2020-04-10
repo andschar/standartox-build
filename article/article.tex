@@ -62,19 +62,29 @@
 % Add packages and commands here. The following packages are loaded in our class file: fontenc, calc, indentfirst, fancyhdr, graphicx, lastpage, ifthen, lineno, float, amsmath, setspace, enumitem, mathpazo, booktabs, titlesec, etoolbox, amsthm, hyphenat, natbib, hyperref, footmisc, geometry, caption, url, mdframed, tabto, soul, multirow, microtype, tikz
 %% Additional packages
 \usepackage{standalone}
-% code
 \usepackage{listings}
-\lstset{language=R,
-    basicstyle=\small\ttfamily,
-    stringstyle=\color{DarkGreen},
-    otherkeywords={0,1,2,3,4,5,6,7,8,9},
-    morekeywords={TRUE,FALSE},
-    deletekeywords={data,frame,length,as,character},
-    keywordstyle=\color{blue},
-    commentstyle=\color{DarkGreen},
+\usepackage{xcolor}
+\usepackage{rotating}
+\usepackage{tikzpeople}
+\usepackage{makecell}
+\usepackage{refcheck} % debuging
+% code
+\lstset{
+    language = R,
+    basicstyle = \small\ttfamily,
+    stringstyle = \color{orange},
+    % key words
+    otherkeywords = {0,1,2,3,4,5,6,7,8,9},
+    morekeywords = {TRUE,FALSE},
+    keywordstyle = \color{blue},
+    % comments
+    commentstyle = \color{darkgray},
+    morecomment = [f][\color{red}][0]{\#},
+    % frame
+    frame = single,
+    backgroundcolor = \color{white}
 }
 % tikz
-\usepackage{tikzpeople}
 \usetikzlibrary{trees,
                 arrows,
                 shapes.geometric,
@@ -82,9 +92,6 @@
                 calc,
                 backgrounds,
                 fit}
-\usepackage{rotating}
-% check references
-% \usepackage{refcheck} % debuging
 
 %=================================================================
 %% Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition, Notation, Assumption
@@ -123,7 +130,7 @@ D-76829 Landau, Germany; andschar@protonmail.com (A.S.), schreiner-verena@uni-la
 %\conference{} % An extended version of a conference paper
 
 % Abstract (Do not insert blank lines, i.e. \\) 
-\abstract{An increasing number of chemicals such as pharmaceuticals, pesticides and synthetic hormones are in daily use all over the world. In the environment, chemicals can adversely affect populations and communities and in turn related ecosystem functions. To evaluate the risks from chemicals for ecosystems, data on their toxicity, which is typically produced in standardized ecotoxicological laboratory tests, is required. The results from ecotoxicological tests are compiled in (Meta-)databases such as the  United States Environmental Protection Agency ECOTOXicology knowledgebase. However, for many chemicals, multiple ecotoxicity data are available for the same test organism. These  can vary strongly, thereby causing uncertainty of related analyses. Given that most current databases lack aggregation steps or are confined to specific chemicals, we developed Standartox, a tool and database that continuously incorporates the ever-growing number of test results in an automated process workflow that ultimately leads to a single aggregated data point for a specific chemical-organism test combination, representing the toxicity of a chemical. Standartox comes with two front-ends, a web application (standartox.uni-landau.de) and an R package (standartox).}
+\abstract{An increasing number of chemicals such as pharmaceuticals, pesticides and synthetic hormones are in daily use all over the world. In the environment, chemicals can adversely affect populations and communities and in turn related ecosystem functions. To evaluate the risks from chemicals for ecosystems, data on their toxicity, which is typically produced in standardized ecotoxicological laboratory tests, is required. The results from ecotoxicological tests are compiled in (Meta-)databases such as the  United States Environmental Protection Agency ECOTOXicology knowledgebase. However, for many chemicals, multiple ecotoxicity data are available for the same test organism. These  can vary strongly, thereby causing uncertainty of related analyses. Given that most current databases lack aggregation steps or are confined to specific chemicals, we developed Standartox, a tool and database that continuously incorporates the ever-growing number of test results in an automated process workflow that ultimately leads to a single aggregated data point for a specific chemical-organism test combination, representing the toxicity of a chemical. Standartox comes with two front-ends, a web application \url{standartox.uni-landau.de} and an R package \textit{standartox}.}
 
 % Keywords
 \keyword{ecotoxicology; standardization; environmental risk assessment; effect database; database; software; R; API;} % up to 10
@@ -145,6 +152,8 @@ D-76829 Landau, Germany; andschar@protonmail.com (A.S.), schreiner-verena@uni-la
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Only for the journal Data:
 %\dataset{DOI number or link to the deposited data set in cases where the data set is published or set to be published separately. If the data set is submitted and will be published as a supplement to this paper in the journal Data, this field will be filled by the editors of the journal. In this case, please make sure to submit the data set as a supplement when entering your manuscript into our manuscript editorial system.}
+\dataset{\url{ftp://newftp.epa.gov/ecotox/ecotox_ascii_12_12_2019.exe}}
+
 
 %\datasetlicense{license under which the data set is made available (CC0, CC-BY, CC-BY-SA, CC-BY-NC, etc.)}
 \datasetlicense{MIT}
@@ -198,7 +207,7 @@ Typically, species exhibit a differential sensitivity towards chemicals (Figure~
 \end{figure}
 
 \subsection{Accuracy Assessment}
-To validate Standartox results we compared geometric means resulting from the aggregation in Standartox to the corresponding values from other databases, for chemicals where data was available in both resources. The PPDB provides ecotoxicity data on a few selected species from chemical risk assessment that have been manually quality controlled through expert judgement \citep{lewis_international_2016}. The vast majority of aggregated values (91.9~\%) of Standartox lie within one order of magnitude of the corresponding PPDB values (n = 3601). This would increase to 92.6~\%, when restricting the comparison to Standartox values where data from at least five experiments are available. Similarly, we compared Standartox to ecotoxicity values for \textit{D. magna} from the ChemProp \citep{ufzdepartmentofecologicalchemistry_chemprop_2019} software, which estimates LC\textsubscript{50} values via quantitative structure-activity relationship (QSAR) models \citep{schuurmann_quantitative_2011}. We found that 95~\% of Standartox values lie within one order of magnitude of the Chemprop (n = 179) values. However, the diﬀerence is not necessarily an indication of lower quality of Standartox estimates but may also reflect the wider range of experimental conditions for which data are available in the database underlying Standartox as well as inaccurate predictions for QSAR models, respectively (Figure~\ref{fig:standartox_ppdb_diff}).
+To validate Standartox results we compared geometric means resulting from the aggregation in Standartox to the corresponding values from other databases, for chemicals where data was available in both resources. The PPDB provides ecotoxicity data on a few selected species from chemical risk assessment that have been manually quality controlled through expert judgement \citep{lewis_international_2016}. The vast majority of aggregated values (91.9~\%) of Standartox lie within one order of magnitude of the corresponding PPDB values (n~=~3601). This would increase to 92.6~\%, when restricting the comparison to Standartox values where data from at least five experiments are available. Similarly, we compared Standartox to ecotoxicity values for \textit{D. magna} from the ChemProp \citep{ufzdepartmentofecologicalchemistry_chemprop_2019} software, which estimates LC\textsubscript{50} values via quantitative structure-activity relationship (QSAR) models \citep{schuurmann_quantitative_2011}. We found that 95~\% of Standartox values lie within one order of magnitude of the ChemProp (n~=~179) values. However, the diﬀerence is not necessarily an indication of lower quality of Standartox estimates but may also reflect the wider range of experimental conditions for which data are available in the database underlying Standartox as well as inaccurate predictions for QSAR models, respectively (Figure~\ref{fig:standartox_ppdb_diff}).
 
 \begin{figure}[H]
     \centering
@@ -212,9 +221,9 @@ Novel predictive frameworks incorporating chemical mode of action and species tr
 \par
 \textbf{Comptox}, is a web tool published by the EPA which, similar to Standartox allows for filtering test results, the retrieval of additional chemical information as well as predicted toxicity data \citep{martin_prediction_2001}, such as 48 h \textit{Daphnia magna} LC\textsubscript{50} values. However, toxicity estimations are limited to standard test organisms (e.g. \textit{Daphnia magna}), and the tool lacks the possibility for automated data retrieval \citep{williams_comptox_2017}.
 \par
-The \textbf{EnviroTox} database which also uses, amongst others the ECOTOX database as an input has recently been published \citep{healthandenvironmentalsciencesinstitutehesi_envirotox_2019, connors_creation_2019}. In contrast to Standartox, EnviroTox  is restricted to selected aquatic organisms (i.e. fish, amphibians, invertebrates and algae) and experimental durations (at least 24 h) and uses a rule-based algorithm to derive single ecotoxicity values. Besides, EnviroTox provides additional information on toxicity endpoints, such as acute or chronic classifications and mode of action assignments. We intentionally omitted such classifications given that the approach to classification may vary with the purpose of the study. The EnviroTox database allows for an aggregation into single toxicity values for individual taxa, whereas Standartox performs this aggregation for individual taxa-chemical combinations. However, the Standartox results for individual taxa-chemical combinations could easily be aggregated across chemicals in a second step to provide a similar aggregation as that performed in EnviroTox.
+The \textbf{EnviroTox} database which also uses, amongst others the ECOTOX database as an input has recently been published \citep{healthandenvironmentalsciencesinstitutehesi_envirotox_2019, connors_creation_2019}. In contrast to Standartox, EnviroTox  is restricted to selected aquatic organisms (i.e. fish, amphibians, invertebrates and algae) and experimental durations (at least 24 h) and uses a rule-based algorithm to derive single ecotoxicity values. Besides, EnviroTox provides additional information on toxicity endpoints, such as acute or chronic classifications and mode of action assignments. We intentionally omitted such classifications given that the approach to classification may vary with the purpose of the study or because of different classification schemes \citep{kienzler_mode_2017}. The EnviroTox database allows for an aggregation into single toxicity values for individual taxa, whereas Standartox performs this aggregation for individual taxa-chemical combinations. However, the Standartox results for individual taxa-chemical combinations could easily be aggregated across chemicals in a second step to provide a similar aggregation as that performed in EnviroTox.
 \par
-The \textbf{Etox} database collects ecotoxicity test information and provides methods to filter those. Like the ECOTOX database, it also doesn't provide methods to perform aggregations of the ecotoxicity data and the database is not accessible in automated way. In contrast to the ECOTOX database it is not possible to download the whole database.
+The \textbf{Etox} database collects ecotoxicity test information and provides methods to filter those. Like the ECOTOX database, it also lacks methods to perform aggregations of the ecotoxicity data and only provides manual (non-automated) access. In contrast to the ECOTOX database, the Etox database can not be downloaded.
 \par
 The \textbf{PPDB} provides data only on pesticides, and as mentioned before, it provides single quality controlled values only for commonly used taxa, e.g. \textit{D. magna} or \textit{R. subcapitata}.
 \par
@@ -246,7 +255,7 @@ As outlined above, toxicity estimates from different studies can vary strongly d
 An automated processing pipeline downloads the quarterly released ECOTOX database, performs several preparation steps on it and exports a final Standartox data set. This data set is accessible via a web application and an application programming interface (API). An API provides the means for machine communication between a host and a client and thus allows scriptable data queries. To facilitate the API access, the R \citep{rcoreteam_language_2017} package \textit{standartox} is built. All data presented in this paper are derived from the Standartox build based on the ECOTOX release from the 12.12.2019. The code for Standartox is located in two Github repositories \url{https://github.com/andschar/standartox-build} and \url{https://github.com/andschar/standartox}. The former contains code to process the data and to build the web application and the API, the latter contains code to build the R-package. Most of the code is written in R 3.6.1 and associated packages (List: \ref{tab:rpackages}) and SQL for PostgreSQL 9.6.1.
 
 \subsection{Processing}
-Standartox downloads the quarterly released ECOTOX database and builds it into a local PostgreSQL database. Subsequently, Structured Query Language (SQL) functions for further processing the data are implemented. In addition lookup tables that enable the conversion of units such as duration and concentration are created. A meta-table providing information such as the release version of the ECOTOX database is added. Then, provided Chemical Abstracts Service Numbers (CAS) and taxonomic names are used to query additional information from publicly available databases on chemicals and organisms, respectively. This includes the Compendium of Pesticide Common Names \citep{wood_compendium_2019}, the Chemical Entities of Biological Interest (ChEBI) database \citep{hastings_chebi_2016}, the Chemical Identifier Resolver (CIR) service \citep{nationalinstitutesofhealthnih_chemical_2019}, the Pubchem database \citep{kim_pubchem_2016}, Eurostat \citep{europeancommission_eurostat_2019} and Wikidata \citep{vrandecic_wikidata_2014} for chemicals and the World Register of Marine Species (WoRMS) \citep{wormseditorialboard_world_2018} and the Global Biodiversity Information Facility (GBIF) \citep{gbiftheglobalbiodiversityinformationfacility_what_2020} (Table~\ref{tab:data-base-additional}) for habitat and spatial distribution of organisms. Given that taxonomic names can be ambiguous, e.g. the genus \textit{Eisenia} can refer to an algae and a worm, we first match the taxa names against specific database identifiers (e.g. WoRMS \citep{wormseditorialboard_world_2020}) and subsequently check their accordance with the underlying ECOTOX data taxonomy. Then we query the actual data by using the identifiers. In a next step the data is added to Standartox to enable filtering for specific chemical roles (e.g. drug, metal, pesticide, personal care product) and classes (e.g. pyrethroid, carbamate) as well as spatial distribution (i.e. continents) and habitat preferences (e.g. freshwater) of individual taxa. Taxa that were not identified to at least genus level are excluded, because relative toxicity comparisons have been shown to be not meaningful for higher taxonomic levels \citep{rainbow_trace_2002, buchwalter_differences_2005, malaj_physiological_2012}. Finally, the Standartox data set is compiled, which includes the harmonisation of data, e.g. through conversion of test concentration and duration units. 1237 distinct concentration units are converted to six harmonized ones (i.e. g/l, g/m2, ppb, g/g, l/l, l/m2) when conversion is possible. Likewise, the 126 distinct duration units are converted to hours whenever this is unambiguously possible. To guarantee appropriate unit conversion and harmonisation, we compared the results of an automated unit conversion to a manual one for each of the distinct concentration and duration units. Furthermore, the units are cleaned, for example through removing additional information in the field such as \textit{food}, \textit{soil}, \textit{ai} that are also coded in other variables and hinder the processing of units. Concentrations that are given as rates such as per day (e.g. mg/kg/day) are multiplied by the days of the test and then converted. Experimental endpoints are restricted to three groups, namely NOEX, LOEX and XX\textsubscript{50}. Other endpoints, such as Bioconcentration factors, non-half maximal effective concentrations (e.g. IC\textsubscript{10}, EC\textsubscript{25}, LD\textsubscript{99}) or maximum acceptable toxicant concentrations are removed. Along with that, a catalog, listing all distinct entries and value ranges, for categorical and continuous variables, respectively, is created. Finally, we run quality control scripts that check the accuracy of the data. The compiled Standartox data set together with the catalog is exported and accessible via the web application and the API, through the R package.
+Standartox downloads the quarterly released ECOTOX database and builds it into a local PostgreSQL database. Subsequently, Structured Query Language (SQL) functions for further processing the data are implemented. In addition lookup tables that enable the conversion of units such as duration and concentration are created. A meta-table providing information such as the release version of the ECOTOX database is added. Then, provided Chemical Abstracts Service Numbers (CAS) and taxonomic names are used to query additional information from publicly available databases on chemicals and organisms, respectively. This includes the Compendium of Pesticide Common Names \citep{wood_compendium_2019}, the Chemical Entities of Biological Interest (ChEBI) database \citep{hastings_chebi_2016}, the Chemical Identifier Resolver (CIR) service \citep{nationalinstitutesofhealthnih_chemical_2019}, the Pubchem database \citep{kim_pubchem_2016}, Eurostat \citep{europeancommission_eurostat_2019} and Wikidata \citep{vrandecic_wikidata_2014} for chemicals and the World Register of Marine Species (WoRMS) \citep{wormseditorialboard_world_2020} and the Global Biodiversity Information Facility (GBIF) \citep{gbiftheglobalbiodiversityinformationfacility_what_2020} (Table~\ref{tab:data-base-additional}) for habitat and spatial distribution of organisms. Given that taxonomic names can be ambiguous, e.g. the genus \textit{Eisenia} can refer to an algae and a worm, we first match the taxa names against specific database identifiers (e.g. WoRMS \citep{wormseditorialboard_world_2020}) and subsequently check their accordance with the underlying ECOTOX data taxonomy. Then we query the actual data by using the identifiers. In a next step the data is added to Standartox to enable filtering for specific chemical roles (e.g. drug, metal, pesticide, personal care product) and classes (e.g. pyrethroid, carbamate) as well as spatial distribution (i.e. continents) and habitat preferences (e.g. freshwater) of individual taxa. Taxa that were not identified to at least genus level are excluded, because relative toxicity comparisons have been shown to be not meaningful for higher taxonomic levels \citep{rainbow_trace_2002, buchwalter_differences_2005, malaj_physiological_2012}. Finally, the Standartox data set is compiled, which includes the harmonisation of data, e.g. through conversion of test concentration and duration units. 1237 distinct concentration units are converted to six harmonized ones (i.e. g/l, g/m2, ppb, g/g, l/l, l/m2) when conversion is possible. Likewise, the 126 distinct duration units are converted to hours whenever this is unambiguously possible. To guarantee appropriate unit conversion and harmonisation, we compared the results of an automated unit conversion to a manual one for each of the distinct concentration and duration units. Furthermore, the units are cleaned, for example through removing additional information in the field such as \textit{food}, \textit{soil}, \textit{ai} that are also coded in other variables and hinder the processing of units. Concentrations that are given as rates such as per day (e.g. mg/kg/day) are multiplied by the days of the test and then converted. Experimental endpoints are restricted to three groups, namely NOEX, LOEX and XX\textsubscript{50}. Other endpoints, such as Bioconcentration factors, non-half maximal effective concentrations (e.g. IC\textsubscript{10}, EC\textsubscript{25}, LD\textsubscript{99}) or maximum acceptable toxicant concentrations are removed. Along with that, a catalog, listing all distinct entries and value ranges, for categorical and continuous variables, respectively, is created. Finally, we run quality control scripts that check the accuracy of the data. The compiled Standartox data set together with the catalog is exported and accessible via the web application and the API, through the R package.
 
 \begin{figure}[H]
     \centering
@@ -256,10 +265,10 @@ Standartox downloads the quarterly released ECOTOX database and builds it into a
 \end{figure}
 
 \subsection{Application methods}
-When accessed, the web application and the API load the compressed serialized Standartox data into memory and allow the user to interact with it. The user can then call the functions \textit{stx\_filter()} and \textit{stx\_aggregate()} that filter and aggregate the data according to specific parameters (Table~\ref{tab:app-parameters}). The interactive web application is built in R using the shiny framework, which runs with the help of a shiny server \citep{chang_shiny_2018} on \url{standartox.uni-landau.de}. The API is built by using the R package \textit{plumber} \citep{trestletechnologyllc_plumber_2018}, which allows for the creation of Representational State Transfer (REST) APIs from R. REST is a software architectural style that defines web service communication rules. The API is reachable via the URL \url{http://139.14.20.252} and port 8000. Four API-endpoints (\textit{/catalog}, \textit{/filter}, \textit{/aggregate} and \textit{/meta}) can be queried (Table~\ref{tab:api-endpoints}). The \textit{/catalog} API-endpoint returns a JavaScript Object Notation (JSON) file containing a catalog of possible filter parameters to choose from. The \textit{/filter} returns the filtered Standartox table as a compressed serialized binary file created by the R \textit{fst} package \citep{klik_fst_2019}, to reduce size and allow for fast user queries. The \textit{/aggregate} API-endpoint returns an R function allowing the client to aggregate the filtered data locally. Lastly, the \textit{/meta} API-endpoint returns a JSON file with meta information, such as the timestamp of the request and the used Standartox version. The API is designed to be used with the R-package \textit{standartox} and therefore uses serialization methods specific to R (rds() from the R package \textit{base} and fst() from the package \textit{fst}). To facilitate the API usage the R-package \textit{standartox} is created.
+When accessed, the web application and the API load the compressed serialized Standartox data into memory and allow the user to interact with it. The user can then call the functions \textit{stx\_filter()} and \textit{stx\_aggregate()} that filter and aggregate the data according to specific parameters (Table~\ref{tab:app-parameters}). The interactive web application is built in R using the shiny framework, which runs with the help of a shiny server \citep{R-shiny} on \url{standartox.uni-landau.de}. The API is built by using the R package \textit{plumber} \citep{R-plumber}, which allows for the creation of Representational State Transfer (REST) APIs from R. REST is a software architectural style that defines web service communication rules. The API is reachable via the URL \url{http://139.14.20.252} and port 8000. Four API-endpoints (\textit{/catalog}, \textit{/filter}, \textit{/aggregate} and \textit{/meta}) can be queried (Table~\ref{tab:api-endpoints}). The \textit{/catalog} API-endpoint returns a JavaScript Object Notation (JSON) file containing a catalog of possible filter parameters to choose from. The \textit{/filter} returns the filtered Standartox table as a compressed serialized binary file created by the R \textit{fst} package \citep{R-fst}, to reduce size and allow for fast user queries. The \textit{/aggregate} API-endpoint returns an R function allowing the client to aggregate the filtered data locally. Lastly, the \textit{/meta} API-endpoint returns a JSON file with meta information, such as the timestamp of the request and the used Standartox version. The API is designed to be used with the R-package \textit{standartox} and therefore uses serialization methods specific to R (rds() from the R package \textit{base} and fst() from the package \textit{fst}). To facilitate the API usage the R-package \textit{standartox} is created.
 
 \begin{table}[H]
-    \caption{Input parameters for the Standartox web application and the R-package standartox (CAS - Chemical Abstracts Service Registry Number, NOEX and XX\textsubscript{50} - Standartox endpoints \ref{tab:endpoints-conflate}), vers - Standartox version).}
+    \caption{Input parameters for the Standartox web application and the R-package \textit{standartox} (CAS - Chemical Abstracts Service Registry Number, NOEX and XX\textsubscript{50} - Standartox endpoints \ref{tab:endpoints-conflate}), vers - Standartox version).}
     \label{tab:app-parameters}
     \centering
     \begin{tabular}{cc}
@@ -287,6 +296,7 @@ When accessed, the web application and the API load the compressed serialized St
 Users can access Standartox either via the web application \url{standartox.uni-landau.de} or via the R-package \textit{standartox}. By accessing the web application, users can filter and download the resulting data sets as a comma-separated values (csv) file. Users of the R-package can directly load the data within R. The R-package provides the two functions \textit{stx\_catalog()} and \textit{stx\_query()}. The first command queries a catalog of possible Standartox parameters into an R list object. The latter allows users to set the Standartox filter parameters and to fetch the actual data. It returns an R list of three tables (i.e. R \textit{data.frame}s) containing the filtered data set, the aggregated data set and a table with the meta information retrieved from the API endpoints. A short R-code example is given below (Listing \ref{lis:standartox-example}) and a detailed description on the usage of the R package is provided on its Github page: \url{https://github.com/andschar/standartox}.
 
 \begin{lstlisting}[
+    language = R,
     caption = {Sample code to access the Standartox database through the API and the the R-package \textit{standartox}. \textit{stx\_catalog()} returns a catalog of possible filter and aggregation parameters. \textit{stx\_query()} returns the Standartox object, a list of the filtered and the aggregated data as well as a meta data entry. Example for XX\textsubscript{50} tests on the compound glyphosate (CAS: 1071-83-6) and the taxon \textit{Oncorhynchus} lasting 24 h to 120 h.},
     label = {lis:standartox-example}]
 # install
@@ -297,9 +307,9 @@ require(standartox)
 catal = stx_catalog()
 # retrieve data
 l = stx_query(cas = '1071-83-6',
-                endpoint = 'XX50',
-                taxa = 'Oncorhynchus',
-                duration = c(24, 120))
+              endpoint = 'XX50',
+              taxa = 'Oncorhynchus',
+              duration = c(24, 120))
 \end{lstlisting}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -323,10 +333,10 @@ Due to the steady incorporation of new ecotoxicity data, the aggregated values p
 % \authorcontributions{conceptualization, A.S., R.B.S. and V.C.S.; methodology, A.S.; software, A.S.; validation, A.S., Y.Y. and Z.Z.; formal analysis, X.X.; investigation, X.X.; resources, X.X.; data curation, X.X.; writing--original draft preparation, X.X.; writing--review and editing, X.X.; visualization, X.X.; supervision, X.X.; project administration, X.X.; funding acquisition, Y.Y.''}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\funding{Please add: ``This research received no external funding'' or ``This research was funded by NAME OF FUNDER grant number XXX.'' and  and ``The APC was funded by XXX''. Check carefully that the details given are accurate and use the standard spelling of funding agency names at \url{https://search.crossref.org/funding}, any errors may affect your future funding.}
+\funding{This research was funded by the German Environment Agency (UBA) grant number 3714 67 4040/2.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\acknowledgments{The authors want to thank Eduard Szöcs whose blog post (https://edild.github.io/localecotox/) on how to build a local version of the EPA ECOTOX database was the starting point for this project.}
+\acknowledgments{The authors thank Eduard Szöcs for inspiration through a blog post on ho to build a local EPA Ecotox database.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \conflictsofinterest{The authors declare no conflict of interest.} 
@@ -348,7 +358,7 @@ LOEX & Summarizes LOEC/L (Table \ref{tab:endpoints-conflate}) \\
 NOEC/L & No observed effect levels/concentration \\
 NOEX & Summarizes NOEC/L (Table \ref{tab:endpoints-conflate}) \\
 PPDB & Pesticides Properties DataBase \\
-QSAR & Quantitative structure–activity relationship \\
+QSAR & Quantitative structure-activity relationship \\
 REST & Representational state transfer software architectural style \\
 SSD & Species sensitivity distribution \\
 TU & Toxic unit \\
@@ -369,7 +379,7 @@ WoRMS & World Register of Marine Species \\
     \toprule
     \textbf{Database} & \textbf{URL} \\ 
     \midrule
-    \makecell{Chemical Entities of \\ Biological Interest (ChEBI)} & \url{https://www.ebi.ac.uk/chebi}  \\
+    \makecell{Chemical Entities of \\ Biological Interest (ChEBI)} & \url{https://www.ebi.ac.uk/chebi} \\
     Chemical Identifier Resolver & \url{https://cactus.nci.nih.gov/chemical/structure} \\[0.5cm]
     ChemSpider & \url{http://www.chemspider.com}    \\[0.5cm]
     Eurostat & \url{https://ec.europa.eu/eurostat/home} \\[0.5cm]
@@ -411,7 +421,7 @@ WoRMS & World Register of Marine Species \\
     \centering
 \begin{tabular}{cccc}
     \toprule
-    \textbf{Endpoint} & \textbf{Http Method} & \textbf{Request} & \textbf{Response} \\
+    \textbf{Endpoint} & \textbf{HTTP Method} & \textbf{Request} & \textbf{Response} \\
     \midrule
     /catalog & POST & Standartox version string & Catalog object (JSON) \\
     /filter & POST & Standartox filter parameters & Filtered Standartox data (serialized) \\
@@ -502,7 +512,7 @@ webchem & Chemical Information from the Web & \citep{R-webchem} \\
 % References, variant B: external bibliography
 %=====================================
 \reftitle{References}
-% \nocite{*} % debuging
+\nocite{*} % debuging
 \externalbibliography{yes}
 \bibliography{refs/references-standartox.bib,
               refs/references-standartox-rpackages.bib}
