@@ -65,7 +65,7 @@ iv = list(publishing_rate = publishing_rate,
           tax = tax)
 
 # write -------------------------------------------------------------------
-write_json(iv, file.path(article, 'values', 'important_values.json'))
+write_json(iv, file.path('values', 'important_values.json'))
 
 # log ---------------------------------------------------------------------
 log_msg('ARTICLE: important values compiled.')
