@@ -1,5 +1,4 @@
 # script to query information from Pesticide Action Network (PAN)
-#! Pan isn't so reliable, hence it's exclude for now
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
@@ -7,14 +6,14 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 q = "SELECT *
-     FROM standartox.chem_id"
-chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+     FROM phch.phch_id"
+phch = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 # debuging
 if (debug_mode) {
-  chem = chem[1:10]
+  phch = phch[1:10]
 }
-todo_pan = na.omit(chem$cas)
+todo_pan = na.omit(phch$cas)
 
 # query -------------------------------------------------------------------
 pan_l = pan_query(todo_pan)

@@ -27,92 +27,92 @@ tax[ class == 'Dinophyceae', `:=` (algae = TRUE, autotroph = TRUE, mixotroph = T
 tax[ class == 'Chloromonadophyceae', `:=` (algae = TRUE, autotroph = TRUE, mixotroph = TRUE, ecotox_group2 = 'Algae') ]
 
 # plants ------------------------------------------------------------------
-tax[ kingdom == 'Plantae', `:=` (plants = TRUE, autotroph = TRUE, ecotox_group2 = 'Plantae') ]
+tax[ kingdom == 'Plantae', `:=` (plant = TRUE, autotroph = TRUE, ecotox_group2 = 'Plantae') ]
 
 # mollusca ----------------------------------------------------------------
-tax[ phylum_division == 'Annelida', `:=` (annelida = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Annelida') ]
+tax[ phylum_division == 'Annelida', `:=` (annelida = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Annelida') ]
 
 # Brachiopoda -------------------------------------------------------------
-tax[ phylum_division == 'Brachiopoda', `:=` (brachiopoda = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Brachiopoda') ]
+tax[ phylum_division == 'Brachiopoda', `:=` (brachiopoda = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Brachiopoda') ]
 
 # mollusca ----------------------------------------------------------------
-tax[ phylum_division == 'Mollusca', `:=` (mollusca = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Mollusca') ]
+tax[ phylum_division == 'Mollusca', `:=` (mollusca = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Mollusca') ]
 
 # nemertea ----------------------------------------------------------------
-tax[ phylum_division == 'Nemertea', `:=` (nemertea = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Nemertea') ]
+tax[ phylum_division == 'Nemertea', `:=` (nemertea = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Nemertea') ]
 
 # platyhelminthes ---------------------------------------------------------
-tax[ phylum_division == 'Platyhelminthes', `:=` (nemertea = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Platyhelminthes') ]
+tax[ phylum_division == 'Platyhelminthes', `:=` (nemertea = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Platyhelminthes') ]
 
 # nematoda ----------------------------------------------------------------
-tax[ phylum_division == 'Nematoda', `:=` (nematoda = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Nematoda') ]
-tax[ phylum_division == 'Nemata', `:=` (nematoda = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Nematoda') ]
-tax[ class == 'Secernentea', `:=` (nematoda = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Nematoda') ]
-tax[ class == 'Adenophorea', `:=` (nematoda = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Nematoda') ]
+tax[ phylum_division == 'Nematoda', `:=` (nematoda = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Nematoda') ]
+tax[ phylum_division == 'Nemata', `:=` (nematoda = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Nematoda') ]
+tax[ class == 'Secernentea', `:=` (nematoda = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Nematoda') ]
+tax[ class == 'Adenophorea', `:=` (nematoda = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Nematoda') ]
 
 # bryozoa -----------------------------------------------------------------
-tax[ phylum_division == 'Bryozoa', `:=` (bryozoa = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Bryozoa') ]
-tax[ phylum_division == 'Ectoprocta', `:=` (bryozoa = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Bryozoa') ]
-tax[ class == 'Phylactolaemata', `:=` (bryozoa = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, freshwater = TRUE, ecotox_group2 = 'Bryozoa') ]
+tax[ phylum_division == 'Bryozoa', `:=` (bryozoa = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Bryozoa') ]
+tax[ phylum_division == 'Ectoprocta', `:=` (bryozoa = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Bryozoa') ]
+tax[ class == 'Phylactolaemata', `:=` (bryozoa = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, freshwater = TRUE, ecotox_group2 = 'Bryozoa') ]
 
 # Kamptozoa ---------------------------------------------------------------
-tax[ phylum_division == 'Kamptozoa', `:=` (kamptozoa = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Kamptozoa') ]
+tax[ phylum_division == 'Kamptozoa', `:=` (kamptozoa = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Kamptozoa') ]
 
 # Cercozoa ----------------------------------------------------------------
-tax[ phylum_division == 'Cercozoa', `:=` (cercozoa = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Cercozoa') ]
-tax[ class == 'Phytomyxea', `:=` (cercozoa = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, parasites = TRUE, ecotox_group2 = 'Cercozoa') ]
+tax[ phylum_division == 'Cercozoa', `:=` (cercozoa = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Cercozoa') ]
+tax[ class == 'Phytomyxea', `:=` (cercozoa = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, parasites = TRUE, ecotox_group2 = 'Cercozoa') ]
 
 # chaetognatha ------------------------------------------------------------
-tax[ phylum_division == 'Chaetognatha', `:=` (chaetognatha = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Chaetognatha') ]
+tax[ phylum_division == 'Chaetognatha', `:=` (chaetognatha = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Chaetognatha') ]
 
 # ciliophora --------------------------------------------------------------
-tax[ phylum_division == 'Ciliophora', `:=` (ciliophora = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Ciliophora') ]
+tax[ phylum_division == 'Ciliophora', `:=` (ciliophora = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Ciliophora') ]
 
 # gastrotricha ------------------------------------------------------------
-tax[ phylum_division == 'Gastrotricha', `:=` (gastrotricha = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Gastrotricha') ]
+tax[ phylum_division == 'Gastrotricha', `:=` (gastrotricha = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Gastrotricha') ]
 
 # rotifera ----------------------------------------------------------------
-tax[ phylum_division == 'Rotifera', `:=` (rotifera = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Rotifera') ]
+tax[ phylum_division == 'Rotifera', `:=` (rotifera = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Rotifera') ]
 
 # cnidaria ----------------------------------------------------------------
-tax[ phylum_division == 'Cnidaria', `:=` (cnidaria = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Cnidaria') ]
-tax[ class == 'Myxosporea', `:=` (cnidaria = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, parasites = TRUE, ecotox_group2 = 'Cnidaria') ]
+tax[ phylum_division == 'Cnidaria', `:=` (cnidaria = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Cnidaria') ]
+tax[ class == 'Myxosporea', `:=` (cnidaria = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, parasites = TRUE, ecotox_group2 = 'Cnidaria') ]
 
 # Nematomorpha ------------------------------------------------------------
-tax[ phylum_division == 'Nematomorpha', `:=` (nematomorpha = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, ecotox_group2 = 'Nematomorpha') ]
+tax[ phylum_division == 'Nematomorpha', `:=` (nematomorpha = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, ecotox_group2 = 'Nematomorpha') ]
 
 # echinodermata -----------------------------------------------------------
-tax[ phylum_division == 'Echinodermata', `:=` (echinodermata = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Echinodermata') ]
+tax[ phylum_division == 'Echinodermata', `:=` (echinodermata = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Echinodermata') ]
 
 # porifera ----------------------------------------------------------------
-tax[ phylum_division == 'Porifera', `:=` (porifera = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Porifera') ]
+tax[ phylum_division == 'Porifera', `:=` (porifera = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Porifera') ]
 
 # mollusca ----------------------------------------------------------------
-tax[ phylum_division == 'Mollusca', `:=` (mollusca = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Mollusca') ]
+tax[ phylum_division == 'Mollusca', `:=` (mollusca = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Mollusca') ]
 
 # crustacea ---------------------------------------------------------------
-tax[ subphylum_div == 'Crustacea', `:=` (crustacea = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Crustacea') ]
+tax[ subphylum_div == 'Crustacea', `:=` (crustacea = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Crustacea') ]
 
 # arachnida ---------------------------------------------------------------
-tax[ subphylum_div == 'Myriapoda', `:=` (myriapoda = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, terrestrial = TRUE, ecotox_group2 = 'Myriapoda') ]
-tax[ class == 'Merostomata', `:=` (xiphosura = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Xiphosura') ]
-tax[ class == 'Arachnida', `:=` (arachnida = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Arachnida') ]
-tax[ tax_order == 'Araneae', `:=` (araneae = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Araneae') ]
+tax[ subphylum_div == 'Myriapoda', `:=` (myriapoda = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, terrestrial = TRUE, ecotox_group2 = 'Myriapoda') ]
+tax[ class == 'Merostomata', `:=` (xiphosura = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Xiphosura') ]
+tax[ class == 'Arachnida', `:=` (arachnida = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Arachnida') ]
+tax[ tax_order == 'Araneae', `:=` (araneae = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Araneae') ]
 
 # Priapulida --------------------------------------------------------------
 tax[ class == 'Priapulida', `:=` (priapulida = TRUE, heterotroph = TRUE, marine = TRUE, ecotox_group2 = 'Priapulida') ] # penis worms
 
 # Sipuncula ---------------------------------------------------------------
-tax[ class == 'Sipunculidea', `:=` (sipuncula = TRUE, heterotroph = TRUE, invertebrates_mikro = TRUE, marine = TRUE, ecotox_group2 = 'Sipuncula') ]
+tax[ class == 'Sipunculidea', `:=` (sipuncula = TRUE, heterotroph = TRUE, invertebrate_micro = TRUE, marine = TRUE, ecotox_group2 = 'Sipuncula') ]
 
 # diplopoda ---------------------------------------------------------------
-tax[ class == 'Diplopoda', `:=` (diplopoda = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Diplopoda') ]
+tax[ class == 'Diplopoda', `:=` (diplopoda = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Diplopoda') ]
 
 # entognatha---------------------------------------------------------------
-tax[ class == 'Entognatha', `:=` (entognatha = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Entognatha') ]
+tax[ class == 'Entognatha', `:=` (entognatha = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Entognatha') ]
 
 # insecta -----------------------------------------------------------------
-tax[ class == 'Insecta', `:=` (insecta = TRUE, heterotroph = TRUE, invertebrates_makro = TRUE, ecotox_group2 = 'Insecta') ]
+tax[ class == 'Insecta', `:=` (insecta = TRUE, heterotroph = TRUE, invertebrate_macro = TRUE, ecotox_group2 = 'Insecta') ]
 
 # fish --------------------------------------------------------------------
 tax[ superclass == 'Osteichthyes', `:=` (fish = TRUE, heterotroph = TRUE, ecotox_group2 = 'Fish') ]
@@ -191,9 +191,3 @@ log_msg('QUERY: EPA: taxonomic preparation script run.')
 
 # cleaning ----------------------------------------------------------------
 clean_workspace()
-
-
-
-
-
-

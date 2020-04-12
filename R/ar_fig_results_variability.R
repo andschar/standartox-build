@@ -10,7 +10,7 @@ q = "SELECT result_id, casnr, cname,
             concentration_unit, duration, duration_unit,
             endpoint, effect, exposure
      FROM standartox.tests_fin
-     LEFT JOIN standartox.chemicals USING (casnr)
+     LEFT JOIN standartox.phch USING (casnr)
      LEFT JOIN standartox.taxa USING (species_number)
      WHERE duration_unit = 'h'"
 
@@ -48,12 +48,15 @@ tax[ taxon == 'Raphidocelis subcapitata', taxon := 'R. subcapitata' ] %>%
 tax_gm = tax[ ,
               .(min = min(concentration),
                 gm = gm_mean(concentration),
+                gmsd = EnvStats::geoSD(concentration),
                 max = max(concentration)),
               .(taxon) ]
 
 gg_tax = ggplot(tax, aes(x = taxon, y = concentration)) +
   geom_point(position = position_jitter(seed = 1234)) +
   geom_violin(position = position_dodge(), alpha = 0.5) +
+  geom_errorbar(data = tax_gm, aes(x = taxon, y = gm, ymin = gm - gmsd, ymax = gm + gmsd),
+                size = 1, col = 'red', alpha = 0.5) +
   geom_point(data = tax_gm, aes(x = taxon, y = gm), size = 3, col = 'red') +
   geom_point(data = tax_gm, aes(x = taxon, y = min), size = 1.5, col = 'black') +
   geom_point(data = tax_gm, aes(x = taxon, y = max), size = 1.5, col = 'black') +
@@ -73,12 +76,20 @@ dur = dat2[ taxon == 'Daphnia magna' &
 dur_gm = dur[ ,
               .(min = min(concentration),
                 gm = gm_mean(concentration),
+                gmsd = EnvStats::geoSD(concentration), # TODO replace with own function and in package
+                am = mean(concentration),
+                amsd = sd(concentration),
                 max = max(concentration)),
               .(taxon, duration) ]
 
 gg_dur = ggplot(dur, aes(x = duration, y = concentration)) +
   geom_point(position = position_jitter(seed = 1234)) +
   geom_violin(position = position_dodge(), alpha = 0.5) +
+  geom_errorbar(data = dur_gm, aes(x = duration, y = gm, ymin = gm - gmsd, ymax = gm + gmsd),
+                size = 1, col = 'red', alpha = 0.5) +
+  geom_point(data = dur_gm, aes(x = duration, y = am), size = 3, col = 'blue') +
+  geom_errorbar(data = dur_gm, aes(x = duration, y = am, ymin = am - amsd, ymax = am + amsd),
+                size = 1, col = 'blue', alpha = 0.5) +
   geom_point(data = dur_gm, aes(x = duration, y = gm), size = 3, col = 'red') +
   geom_point(data = dur_gm, aes(x = duration, y = min), size = 1.5, col = 'black') +
   geom_point(data = dur_gm, aes(x = duration, y = max), size = 1.5, col = 'black') +
@@ -99,12 +110,15 @@ lab[ , cname := '  ' ] # HACK
 lab_gm = lab[ ,
               .(min = min(concentration),
                 gm = gm_mean(concentration),
+                gmsd = EnvStats::geoSD(concentration),
                 max = max(concentration)),
               .(taxon, cname) ]
 
 gg_lab = ggplot(lab, aes(x = cname, y = concentration)) +
   geom_point(position = position_jitter(seed = 1234)) +
   geom_violin(position = position_dodge(), alpha = 0.5) +
+  geom_errorbar(data = lab_gm, aes(x = cname, y = gm, ymin = gm - gmsd, ymax = gm + gmsd),
+                size = 1, col = 'red', alpha = 0.5) +
   geom_point(data = lab_gm, aes(x = cname, y = gm), size = 3, col = 'red') +
   geom_point(data = lab_gm, aes(x = cname, y = min), size = 1.5, col = 'black') +
   geom_point(data = lab_gm, aes(x = cname, y = max), size = 1.5, col = 'black') +

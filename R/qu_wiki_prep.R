@@ -13,7 +13,7 @@ wd = wd[ !is.na(type) ]
 wd = wd[ label != 'cas' ]
 # identifiers
 wd_id = dcast(wd[ type == 'identifier' ], cas ~ label, value.var = 'value')
-wd_id[ , chebi := paste0('CHEBI:', chebi) ]
+wd_id[ , chebi := fifelse(!is.na(chebi), paste0('CHEBI:', chebi), NA_character_) ]
 # label
 # TODO rethink label classification
 wd_label = dcast(wd[ type == 'label' & label == 'label'], cas ~ label, value.var = 'value')

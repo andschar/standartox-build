@@ -8,6 +8,7 @@ source(file.path(src, 'gn_setup.R'))
 q = "SELECT conc1_unit, description, count(conc1_unit) AS n
      FROM ecotox.results
      LEFT JOIN ecotox.concentration_unit_codes ON conc1_unit = code 
+     WHERE conc1_unit IS NOT NULL
      GROUP BY conc1_unit, description
      ORDER BY n DESC"
 unit = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,

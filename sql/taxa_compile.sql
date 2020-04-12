@@ -1,15 +1,5 @@
 -- scripts to aggregate organism habitat and occurrence information
 
--- id table --------------------------------------------------------------------
-DROP TABLE IF EXISTS taxa.taxa_id2;
-CREATE TABLE taxa.taxa_id2 AS (
-	SELECT
-		ep.*
-	FROM taxa.taxa_id id
-	LEFT JOIN epa.epa_taxa ep USING (species_number)
-);
-ALTER TABLE taxa.taxa_id2 ADD PRIMARY KEY (species_number);
-
 -- habitat --------------------------------------------------------------------
 DROP TABLE IF EXISTS taxa.taxa_habitat;
 CREATE TABLE taxa.taxa_habitat AS (
@@ -44,23 +34,26 @@ CREATE TABLE taxa.taxa_trophic_lvl AS (
 );
 ALTER TABLE taxa.taxa_trophic_lvl ADD PRIMARY KEY (species_number);
 
--- grouping -------------------------------------------------------------------
+-- group ----------------------------------------------------------------------
 -- convenience ecotoxicological grouping
 DROP TABLE IF EXISTS taxa.taxa_group;
 CREATE TABLE taxa.taxa_group AS (
 	SELECT
-		-- TODO include more?
-		-- TODO morse sources
 		id.species_number,
 		id.taxon,
-		GREATEST(fw.diatom)::boolean AS diatom,
-		GREATEST(fw.invertebrate_macro)::boolean AS invertebrate_macro,
-		GREATEST(fw.fish)::boolean AS fish,
+		GREATEST(ep.fungi)::boolean AS fungi,
+		GREATEST(fw.diatom, fw.phytoplankton, ep.algae)::boolean AS algae,
 		GREATEST(fw.macrophyte)::boolean AS macrophyte,
-		GREATEST(fw.phytoplankton)::boolean AS algae
+		GREATEST(ep.plant)::boolean AS plant,
+		GREATEST(fw.invertebrate_macro, ep.invertebrate_macro, ep.invertebrate_micro)::boolean AS invertebrate,
+		GREATEST(fw.fish, ep.fish)::boolean AS fish,
+		GREATEST(ep.amphibia)::boolean AS amphibia,
+		GREATEST(ep.reptilia)::boolean AS reptilia,
+		GREATEST(ep.aves)::boolean AS aves,
+		GREATEST(ep.mammalia)::boolean AS mammalia
 	FROM taxa.taxa_id id
 	LEFT JOIN fwecology.fwecology_data fw USING(taxon)
-	-- TODO what more
+	LEFT JOIN epa.epa_taxa ep USING (species_number)
 );
 ALTER TABLE taxa.taxa_group ADD PRIMARY KEY (species_number);
 
@@ -83,7 +76,6 @@ LEFT JOIN fwecology.fwecology_data fw USING(taxon)
 ALTER TABLE taxa.taxa_continent ADD PRIMARY KEY (species_number);
 
 -- country --------------------------------------------------------------------
--- TODO include countries from freshwaterecology.info here
 DROP TABLE IF EXISTS taxa.taxa_country;
 CREATE TABLE taxa.taxa_country AS (
 	SELECT 

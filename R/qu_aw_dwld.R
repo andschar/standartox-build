@@ -6,14 +6,14 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 q = "SELECT *
-     FROM standartox.chem_id"
-chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+     FROM phch.phch_id"
+phch = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 # debuging
 if (debug_mode) {
-  chem = chem[1:10]
+  phch = phch[1:10]
 }
-todo_aw = sort(chem$cas)
+todo_aw = sort(phch$cas)
 # todo_aw = c(todo_aw, '1071-83-6') # debuging (+ Glyphosate)
 
 # query -------------------------------------------------------------------

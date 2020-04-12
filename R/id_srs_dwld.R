@@ -6,15 +6,15 @@ source(file.path(src, 'gn_setup.R'))
 
 # query -------------------------------------------------------------------
 q = "SELECT *
-     FROM ecotox.chem_id"
-chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+     FROM phch.phch_data"
+phch = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 # debuging
 if (debug_mode) {
-  chem = chem[1:10]
+  phch = phch[1:10]
 }
 
-todo_srs = chem$cas
+todo_srs = phch$cas
 
 # query -------------------------------------------------------------------
 time = Sys.time()

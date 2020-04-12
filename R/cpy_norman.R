@@ -6,7 +6,7 @@ source(file.path(src, 'gn_setup.R'))
 # copy --------------------------------------------------------------------
 if (nodename == 'scharmueller-t460s') {
   file.copy(from = normandir,
-            to = cloud,
+            to = file.path(cloud, 'norman'),
             recursive = TRUE,
             overwrite = TRUE)
   msg = 'Copy: NORMAN export copied to cloud.'

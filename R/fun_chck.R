@@ -72,3 +72,25 @@ chck_equals = function(x, expected, msg = NULL) {
   }
 }
 
+# function to check all cols of a table -----------------------------------
+chck_final_cols = function(fl) {
+  if (grepl('fst', fl)) {
+    dt = read_fst(fl)
+  }
+  if (grepl('rds', fl)) {
+    dt = readRDS(fl)
+  }
+  stopifnot(is.data.frame(dt))
+  setDT(dt)
+  wrong = names(dt[ , which(sapply(.SD, function(x) any(x == '' | x == 'NR' | x == 'NC' ))) ])
+  msg = paste(paste0(basename(fl), ': The following columns contain wrong entries (\'\', NR or NC): '),
+              paste0(wrong, collapse = '\n'), sep = '\n')
+  warning(msg)
+  log_chck(msg)
+}
+
+
+
+
+
+

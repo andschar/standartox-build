@@ -5,7 +5,7 @@ source(file.path(src, 'gn_setup.R'))
 
 # query ---------------------------------------------------------------
 q = "SELECT cas, ecotox_group
-     FROM ecotox.chem_id"
+     FROM phch.phch_data"
 epa_chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 

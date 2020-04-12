@@ -43,6 +43,7 @@ pkg_cran = c(
   'httr',
   'rgbif',
   'taxize',
+  'rcrossref',
   # i/o
   'readxl',
   'openxlsx',
@@ -81,20 +82,19 @@ pkg_cran = c(
 )
 pkg_gith = c('ropensci/bib2df', # TODO remove?
              'ropensci/webchem',
-             'andschar/dbreport')
+             'andschar/dbreport',
+             'andschar/standartox')
 
 ## install via CRAN
-pacman::p_load(char = pkg_cran)
+pacman::p_load(char = pkg_cran)# , oldPkgs = pkg_cran) # oldPkgs # passed to utils::update.packages()
 
 ## install via Github
 pacman::p_load_gh(char = pkg_gith)
-
-# pacman::p_update()
+# TODO uncomment pacman::p_load_current_gh(char = pkg_gith)
 
 # variables ----------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
 src = file.path(prj, 'R')
-srcrmd = file.path(prj, 'Rmd') # TODO remove once replaced with dbreport::
 data = file.path(prj, 'data')
 data_ecotox = file.path(data, 'ecotox')
 lookupdir = file.path(prj, 'lookup')
@@ -121,7 +121,7 @@ appdata = file.path(prj, 'app', 'data')
 ## standartox R-package
 ## NORMAN
 normandir = file.path(prj, 'norman')
-cloud = file.path('/home/scharmueller/Nextcloud/norman')
+cloud = file.path('/home/scharmueller/Nextcloud')
 
 # debug mode --------------------------------------------------------------
 if (debug_mode) {
@@ -165,13 +165,16 @@ source(file.path(src, 'fun_mail.R'))
 source(file.path(src, 'fun_chck.R'))
 source(file.path(src, 'fun_export_db.R'))
 source(file.path(src, 'fun_geometric_mean.R'))
-source(file.path(src, 'fun_summary_db.R'))
+source(file.path(src, 'fun_summary_db_perc.R'))
 source(file.path(src, 'fun_treemap.R'))
 source(file.path(src, 'fun_firstup.R'))
 source(file.path(src, 'fun_filename.R'))
 source(file.path(src, 'fun_sort_vec.R'))
 source(file.path(src, 'fun_read_char.R'))
 source(file.path(src, 'fun_as_true.R'))
+source(file.path(src, 'fun_word_count.R'))
+source(file.path(src, 'fun_export_stamp.R'))
+source(file.path(src, 'fun_any_true.R'))
 # source(file.path(src, 'fun_better_citekey.R'))
 
 # database ----------------------------------------------------------------

@@ -8,7 +8,7 @@ source(file.path(src, 'gn_setup.R'))
 q = "SELECT table_schema, table_name, column_name
      FROM information_schema.columns
      WHERE table_schema = 'standartox'
-       AND table_name IN ('tests', 'chemicals', 'taxa')"
+       AND table_name IN ('tests', 'phch', 'taxa')"
 cols = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 pattern = c('effect', 'tax_order', 'cro_', 'ccl_', 'hab_', 'reg_')
@@ -80,8 +80,12 @@ for (i in seq_along(l2)) {
 }
 
 ## cowplot
-gg_fin = cowplot::plot_grid(plotlist = gg_l, ncol = 2, labels = 'AUTO')
-tr_fin = cowplot::plot_grid(plotlist = tr_l, ncol = 2, labels = 'AUTO')
+gg_fin = cowplot::plot_grid(plotlist = gg_l, ncol = 2,
+                            labels = 'AUTO')
+tr_fin = cowplot::plot_grid(plotlist = tr_l, ncol = 2,
+                            labels = 'AUTO',
+                            label_size = 22, label_colour = 'white',
+                            hjust = -0.7, vjust = 1.7)
 
 # write -------------------------------------------------------------------
 ggsave(plot = tr_fin, file.path(article, 'figures', 'standartox_parameters.png'),

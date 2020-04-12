@@ -3,7 +3,7 @@
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
 
-# chemicals ---------------------------------------------------------------
+# phch --------------------------------------------------------------------
 source(file.path(src, 'id_cir_prep.R'), max.deparse.length = mdl)
 source(file.path(src, 'id_chebi_prep.R'), max.deparse.length = mdl)
 source(file.path(src, 'id_pc_prep.R'), max.deparse.length = mdl)

@@ -5,7 +5,8 @@ SELECT
 	results.result_id,
 	tests.test_id,
 	tests.test_cas,
-	chem_prop.molecularweight::numeric,
+	phch_prop.molecularweight::numeric,
+	COALESCE(NULLIF(results.conc1_mean_op, ''), '=') AS conc1_mean_op,
 	results.conc1_mean::text,
 	results.conc1_unit::text,
 	CASE
@@ -45,7 +46,7 @@ FROM
 	LEFT JOIN lookup.lookup_unit_duration USING (obs_duration_unit)
 	LEFT JOIN lookup.lookup_unit_result USING (conc1_unit)
 	LEFT JOIN ecotox.tests USING (test_id)
-	LEFT JOIN chem.chem_prop ON chem_prop.casnr = tests.test_cas
+	LEFT JOIN phch.phch_prop ON phch_prop.casnr = tests.test_cas
 WHERE
 	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT IN ('NR')
 	AND results.conc1_mean NOT LIKE '%ca%' AND results.conc1_unit NOT IN ('NR')
@@ -99,7 +100,7 @@ END,
 conc1_unit4 = 
 CASE
 	WHEN conc1_unit3 = 'mol/l'
-	THEN 'g/g'
+	THEN 'g/l'
 	WHEN conc1_unit3 = 'mol/g'
 	THEN 'g/g'
 	ELSE conc1_unit3

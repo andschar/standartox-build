@@ -2,21 +2,24 @@
 # this app allows only uses the newest version of the EPA ECOTOX
 
 # setup -------------------------------------------------------------------
-source('setup.R')
+source('~/Projects/standartox-build/app/setup.R')
 # variables
-sidewidth = 350
+sidewidth = 400
 
 # data --------------------------------------------------------------------
-source('data.R')
-# add name percetnage column
-catalog = lapply(catalog[ names(catalog) != 'meta' ],
-                 function(x) {
-                   if (is.data.table(x)) {
-                     x[ , name_perc := paste0(variable, ' (', perc, '%)') ]
-                   } else {
-                     x
-                   }
-                 })
+source('~/Projects/standartox-build/app/data.R')
+
+# catalog -----------------------------------------------------------------
+catalog = readRDS(file.path(datadir2, paste0('standartox_catalog_app.rds')))
+
+# render here as data.table
+# NOTE much faster than providing as vector
+casnr_dt = catalog$casnr[ , lapply(.SD, casconv, direction = 'tocas'), .SDcols = 'variable' ]
+setnames(casnr_dt, 'CAS')
+cname_dt = catalog$cname[ , .SD, .SDcols = 'variable' ]
+setnames(cname_dt, 'Chemical_name')
+tax_dt = catalog$taxa[ , .SD, .SDcols = 'variable' ]
+setnames(tax_dt, 'Taxon')
 
 # header ------------------------------------------------------------------
 header = dashboardHeaderPlus(
@@ -41,82 +44,100 @@ sidebar = dashboardSidebar(
     'Filters',
     id = 'sidebar_filter',
     menuItem(
-      # TODO include chemical name search as well?
-      'Chemical',
+      'Chemicals',
       tabName = 'chemical',
-      selectizeInput(inputId = 'cas',
-                     label = 'CAS input',
-                     choices = c(catalog$casnr$variable,
-                                 casconv(catalog$casnr$variable, 'tocas')),
-                     selected = NULL,
-                     multiple = TRUE,
-                     options = list(create = FALSE)),
-      ### OLD file upload CAS ------------
-      # splitLayout(
-      #   fileInput(
-      #     inputId = 'file_cas',
-      #     label = 'Upload CAS',
-      #     accept = '.csv',
-      #     placeholder = 'one column .csv'
-      #   ),
-      #   actionButton(
-      #     inputId = 'reset',
-      #     label = 'Reset',
-      #     style = 'margin-top:37px'
-      #   )
-      # ),
-      ### END OLD
-      prettyCheckboxGroup(
-        inputId = 'concentration_unit',
-        label = 'Concentration unit',
-        choiceValues = catalog$concentration_unit$variable,
-        choiceNames = catalog$concentration_unit$name_perc,
-        selected = grep('ug/l|ppb', catalog$concentration_unit$variable, ignore.case = TRUE, value = TRUE)[1]
+      startExpanded = FALSE, # TODO why is app so slow when TRUE
+      selectizeInput(
+        inputId = 'casnr',
+        label = 'CAS input',
+        # choices = list(casnr = casnr_dt$CAS,
+        #                cname = cname_dt$Chemical_name), # TODO allow chemical name as input
+        # TODO allow chemical name as input
+        choices = casnr_dt,
+        selected = NULL,
+        multiple = TRUE,
+        options = list(create = FALSE)
       ),
-      prettyCheckboxGroup(
-        inputId = 'concentration_type',
-        label = 'Concentration type',
-        choiceValues = catalog$concentration_type$variable,
-        choiceNames = catalog$concentration_type$name_perc,
-        selected = grep('active.ingredien', catalog$concentration_type$variable, ignore.case = TRUE, value = TRUE)[1]
+      splitLayout(
+        prettyCheckboxGroup(
+          inputId = 'concentration_unit',
+          label = 'Concentration unit',
+          choiceValues = catalog$concentration_unit$variable,
+          choiceNames = catalog$concentration_unit$name_perc,
+          selected = grep('ug/l|ppb', catalog$concentration_unit$variable,
+                          ignore.case = TRUE, value = TRUE)[1]
+        ),
+        prettyCheckboxGroup(
+          inputId = 'concentration_type',
+          label = 'Concentration type',
+          choiceValues = catalog$concentration_type$variable,
+          choiceNames = catalog$concentration_type$name_perc,
+          selected = grep('active.ingredien', catalog$concentration_type$variable,
+                          ignore.case = TRUE, value = TRUE)[1]
+        )
       ),
       prettyCheckboxGroup(
         inputId = 'chemical_role',
         label = 'Chemical role',
         choiceValues = catalog$chemical_role$variable,
         choiceNames = catalog$chemical_role$name_perc,
-        selected = grep('insecticide', catalog$chemical_role$variable, ignore.case = TRUE, value = TRUE)[1]
+        selected = grep('insecticide', catalog$chemical_role$variable,
+                        ignore.case = TRUE, value = TRUE)[1]
       ),
       prettyCheckboxGroup(
         inputId = 'chemical_class',
         label = 'Chemical class',
         choiceValues = catalog$chemical_class$variable,
         choiceNames = catalog$chemical_class$name_perc,
-        selected = grep('neonicotinoid', catalog$chemical_class$variable, ignore.case = TRUE, value = TRUE)[1]
+        selected = grep('neonicotinoid', catalog$chemical_class$variable,
+                        ignore.case = TRUE, value = TRUE)[1]
       )
     ),
     menuItem(
-      'Taxon',
+      'Taxa',
       tabName = 'taxon',
-      selectizeInput(inputId = 'tax',
-                     label = 'Taxa',
-                     choices = catalog$taxa$variable,
-                     selected = 'Daphnia magna',
-                     multiple = TRUE,
-                     options = list(create = FALSE)),
-      prettyCheckboxGroup(
-        inputId = 'habitat',
-        label = 'Organism hatbitat',
-        choiceValues = catalog$habitat$variable,
-        choiceNames = catalog$habitat$name_perc,
-        selected = grep('fresh', catalog$habitat$variable, ignore.case = TRUE, value = TRUE)[1]
+      selectizeInput(
+        inputId = 'tax',
+        label = 'Taxa',
+        choices = tax_dt,
+        selected = 'Daphnia magna',
+        multiple = TRUE,
+        options = list(create = FALSE)),
+      splitLayout(
+        prettyCheckboxGroup(
+          inputId = 'habitat',
+          label = 'Hatbitat',
+          choiceValues = catalog$habitat$variable,
+          choiceNames = catalog$habitat$name_perc,
+          selected = grep('fresh', catalog$habitat$variable,
+                          ignore.case = TRUE, value = TRUE)[1]
+        ),
+        prettyCheckboxGroup(
+          inputId = 'region',
+          label = 'Region',
+          choiceValues = catalog$region$variable,
+          choiceNames = catalog$region$name_perc,
+          selected = grep('europe', catalog$region$variable,
+                          ignore.case = TRUE, value = TRUE)[1]
+        )
       ),
-      prettyCheckboxGroup(
-        inputId = 'region',
-        label = 'Region',
-        choiceValues = catalog$region$variable,
-        choiceNames = catalog$region$name_perc,
-        selected = grep('europe', catalog$region$variable, ignore.case = TRUE, value = TRUE)[1]
+      splitLayout(
+        prettyCheckboxGroup(
+          inputId = 'trophic_lvl',
+          label = 'Trophic level',
+          choiceValues = catalog$trophic_lvl$variable,
+          choiceNames = catalog$trophic_lvl$name_perc,
+          selected = grep('hetero', catalog$trophic_lvl$variable,
+                          ignore.case = TRUE, value = TRUE)[1]
+        ),
+        prettyCheckboxGroup(
+          inputId = 'ecotox_grp',
+          label = 'Ecotoxicological grouping',
+          choiceValues = catalog$ecotox_grp$variable,
+          choiceNames = catalog$ecotox_grp$name_perc,
+          selected = grep('inverte', catalog$ecotox_grp$variable,
+                          ignore.case = TRUE, value = TRUE)[1],
+        )
       )
     ),
     menuItem(
@@ -134,41 +155,14 @@ sidebar = dashboardSidebar(
           value = 48
         )
       ),
-      # TODO
-      # splitLayout(
-      #   numericInput(
-      #     inputId = 'yr1',
-      #     label = 'Publication year from',
-      #     value = 1900
-      #   ),
-      #   numericInput(
-      #     inputId = 'yr2',
-      #     label = 'to',
-      #     value = substr(Sys.Date(),1,4)
-      #   )
-      # ),
-      # splitLayout(
-      #   prettyCheckboxGroup(
-      #     inputId = 'acch',
-      #     label = 'TODO! Acute / Chronic',
-      #     # TODO take choices programatically!
-      #     choiceValues = c('acute', 'chronic', 'nc'),
-      #     choiceNames = c('acute', 'chronic', 'not classified')
-      #   ),
-      # prettyRadioButtons(
-      #   inputId = 'test_location',
-      #   label = 'Test location',
-      #   choiceValues = catalog$test_location$variable,
-      #   choiceNames = catalog$test_location$variable
-      # ),
-      ### END TODO
       splitLayout(
         prettyCheckboxGroup(
           inputId = 'exposure',
           label = 'Exposure group',
           choiceValues = catalog$exposure$variable,
           choiceNames = catalog$exposure$name_perc,
-          selected = 'aquatic'
+          selected = grep('aquatic', catalog$exposure$variable,
+                          ignore.case = TRUE, value = TRUE)[1]
         ),
         prettyRadioButtons(
           inputId = 'endpoint',
@@ -183,7 +177,8 @@ sidebar = dashboardSidebar(
         label = 'Effect group',
         choiceValues = catalog$effect$variable,
         choiceNames = catalog$effect$name_perc,
-        selected = c('MOR', 'POP', 'GRO', 'ITX')
+        selected = grep('mortality', catalog$effect$variable,
+                        ignore.case = TRUE, value = TRUE)[1]
       )
     )
   ),
@@ -217,7 +212,7 @@ body = dashboardBody(
       status = 'success',
       width = 9,
       collapsible = TRUE,
-      withMathJax(includeMarkdown('README.md')) # https://stackoverflow.com/questions/33499651/rmarkdown-in-shiny-application
+      withMathJax(includeMarkdown('../README.md')) # https://stackoverflow.com/questions/33499651
     ),
     box(
       title = 'Information',
@@ -242,16 +237,14 @@ body = dashboardBody(
       prettyCheckboxGroup(
         inputId = 'chemical',
         label = 'Chemical columns',
-        choiceValues = c('cas', 'cname'),
-        choiceNames = c('CAS', 'Chemical name'),
-        selected = c('cas', 'cname')
+        choices = c('Chemical name', 'CAS'),
+        selected = c('Chemical name', 'CAS')
       ),
       prettyCheckboxGroup(
         inputId = 'infocols',
         label = 'Information columns',
-        choiceValues = c('taxa', 'n'),
-        choiceNames = c('taxa', 'n'),
-        selected = 'n'
+        choices = c('taxa', 'n'),
+        selected = c('taxa', 'n')
       )
     )
   ),
@@ -262,8 +255,6 @@ body = dashboardBody(
       width = 9,
       plotlyOutput(outputId = 'plotly')
     ),
-    #,
-    #height = sprintf('%spx', n_pl * 400))),
     box(
       title = 'Inputs',
       status = 'primary',
@@ -277,9 +268,9 @@ body = dashboardBody(
       prettyRadioButtons(
         inputId = 'yaxis',
         label = 'y-axis',
-        choiceValues = c('cas', 'cname'),
+        choiceValues = c('casnr', 'cname'),
         choiceNames = c('CAS', 'chemical name'),
-        selected = 'cas',
+        selected = 'casnr',
         inline = FALSE
       ),
       prettyRadioButtons(
@@ -301,33 +292,21 @@ ui = dashboardPagePlus(header, sidebar, body,
 # server ------------------------------------------------------------------
 server = function(input, output, session) {
   # renderUI ----------------------------------------------------------------
-  cas_input = reactive({
-    handle_input_multiple(input$cas)
+  casnr_input = reactive({
+    casnr = gsub('-', '', handle_input_multiple(input$casnr), fixed = TRUE)
+    if (length(casnr) == 0) {
+      casnr = NULL
+    }
+    casnr
+    # saveRDS(a, '/tmp/chem_input.rds') # TODO remove
+    # a
+    # gsub('-', '', handle_input_multiple(NULL))
+    # 
   })
   # handle multiple inputs
   taxa_input = reactive({
     handle_input_multiple(input$tax)
   })
-  # read csv + action button ------------------------------------------------
-  # https://stackoverflow.com/questions/49344468/resetting-fileinput-in-shiny-app
-  ### OLD CAS FILE UPLOAD
-  # rv = reactiveValues(data = NULL,
-  #                     reset = FALSE)
-  # observe({
-  #   req(input$cas)
-  #   req(!rv$reset)
-  #   data = read.csv(input$cas$datapath,
-  #                   header = FALSE,
-  #                   stringsAsFactors = FALSE) # $datapath not very intuitive
-  #   data = data[ ,1]
-  #   rv$data = data
-  # })
-  # observeEvent(input$reset, {
-  #   rv$data = NULL
-  #   rv$clear = TRUE
-  #   reset('cas')
-  # }, priority = 1000) # priority?
-  ### END OLD
   # filter ------------------------------------------------------------------
   data_fil = reactive({
     stx_filter(
@@ -340,21 +319,23 @@ server = function(input, output, session) {
       chemical_role_ = input$chemical_role,
       chemical_class_ = input$chemical_class,
       taxa_ = taxa_input(),
+      trophic_lvl_ = input$trophic_lvl,
       habitat_ = input$habitat,
       region_ = input$region,
+      ecotox_grp_ = input$ecotox_grp,
       duration_ = c(input$dur1, input$dur2),
       effect_ = input$effect,
       endpoint_ = input$endpoint,
       exposure_ = input$exposure,
-      cas_ = cas_input()
+      casnr_ = casnr_input()
     )
   })
   # TODO add outlier flaging here
   # CONTINUE HERE (writte: 19.3.2020)
   # aggregate ---------------------------------------------------------------
   data_agg = reactive({
-    stx_aggregate(
-      dt = stx_filter(
+    agg = standartox:::stx_aggregate(
+      stx_filter(
         test = stx_test,
         chem = stx_chem,
         taxa = stx_taxa,
@@ -364,18 +345,23 @@ server = function(input, output, session) {
         chemical_role_ = input$chemical_role,
         chemical_class_ = input$chemical_class,
         taxa_ = taxa_input(),
+        trophic_lvl_ = input$trophic_lvl,
         habitat_ = input$habitat,
         region_ = input$region,
+        ecotox_grp_ = input$ecotox_grp,
         duration_ = c(input$dur1, input$dur2),
         effect_ = input$effect,
         endpoint_ = input$endpoint,
         exposure_ = input$exposure,
-        cas_ = cas_input()
-      ),
-      agg = input$agg,
-      comp = input$chemical,
-      info = input$infocols
-    )
+        casnr_ = casnr_input()
+      )
+    )[ , .SD, .SDcols = c('cname', 'cas', 'gmn', 'n', 'tax_all') ]
+    setnames(agg,
+             c('cname', 'cas', 'gmn', 'tax_all'),
+             c('Chemical name', 'CAS', 'geometric mean', 'taxa'))
+    agg = agg[ , .SD, .SDcols = c(input$chemical, 'geometric mean', input$infocols) ]
+      
+    agg
   })
   # table -------------------------------------------------------------------
   output$tab = DT::renderDataTable({
@@ -393,15 +379,15 @@ server = function(input, output, session) {
   rownames = FALSE,
   callback = JS('table.page(3).draw(false);'))
   # plot --------------------------------------------------------------------
-  output$plotly = renderPlotly({
-    plotly_fin(
-      agg = data_agg(),
-      fil = data_fil(),
-      xaxis = input$xaxis,
-      yaxis = input$yaxis,
-      cutoff = input$cutoff
-    )
-  })
+  # output$plotly = renderPlotly({
+  #   plotly_fin(
+  #     agg = data_agg(),
+  #     fil = data_fil(),
+  #     xaxis = input$xaxis,
+  #     yaxis = input$yaxis,
+  #     cutoff = input$cutoff
+  #   )
+  # })
   # download ----------------------------------------------------------------
   # https://stackoverflow.com/questions/44504759/shiny-r-download-the-result-of-a-table
   output$download_fil = downloadHandler(
@@ -417,7 +403,6 @@ server = function(input, output, session) {
       write.csv(data_fil(), fname, row.names = FALSE)
     }
   )
-  
   output$download_agg = downloadHandler(
     filename = function() {
       paste(input$tax,

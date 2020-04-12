@@ -8,8 +8,8 @@ source(file.path(src, 'gn_setup.R'))
 comp = readRDS(file.path(cachedir, 'chebi', 'chebi_comp.rds'))
 # IDs
 q = "SELECT *
-     FROM chem.chem_id"
-chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+     FROM phch.phch_id"
+phch = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 
 # preparation -------------------------------------------------------------
@@ -32,7 +32,7 @@ formula = formula[ , .(formula = data[1]), by = chebiid ]
 # chemical classes
 ont_par = rbindlist(lapply(comp, '[[', 'parents'), idcol = 'chebiid')
 ont_par = ont_par[ , .SD, .SDcols = c('chebiid', 'chebiName') ]
-ont_par[chem, cas := i.cas, on = 'chebiid' ]
+ont_par[phch, cas := i.cas, on = 'chebiid' ]
 # ont_par[prop, inchikey := i.inchikey, on = 'chebiid' ]
 # ont_par_l = split(ont_par, ont_par$type)
 # names(ont_par_l) = gsub('\\s+', '_', names(ont_par_l))

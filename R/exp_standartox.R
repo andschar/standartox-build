@@ -9,7 +9,6 @@ mkdirs(exportdir)
 q = "SELECT table_schema, table_name 
      FROM information_schema.tables
      WHERE table_schema = 'standartox';"
-
 stx = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                  query = q)
 
@@ -26,6 +25,9 @@ for (i in 1:nrow(stx)) {
              dir = exportdir,
              file_name = paste0(schema, '.', tbl))  
 }
+
+# export stamp ------------------------------------------------------------
+export_stamp()
 
 # log ---------------------------------------------------------------------
 log_msg('EXPORT: application data set exported.')

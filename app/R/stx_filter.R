@@ -4,18 +4,21 @@ stx_filter = function(test = NULL,
                       chem = NULL,
                       taxa = NULL,
                       refs = NULL,
-                      cas_ = NULL,
+                      casnr_ = NULL,
                       concentration_unit_ = NULL,
                       concentration_type_ = NULL,
                       chemical_role_ = NULL,
                       chemical_class_ = NULL,
                       taxa_ = NULL,
+                      trophic_lvl_ = NULL,
                       habitat_ = NULL,
                       region_ = NULL,
+                      ecotox_grp_ = NULL,
                       duration_ = NULL,
                       effect_ = NULL,
                       endpoint_ = NULL,
                       exposure_ = NULL) {
+  # browser()
   # test --------------------------------------------------------------------
   if (!is.null(concentration_unit_)) {
     test = test[concentration_unit %in% concentration_unit_]
@@ -41,8 +44,8 @@ stx_filter = function(test = NULL,
   }
   test = test[duration %between% dur]
   # chem --------------------------------------------------------------------
-  if (!is.null(cas_)) {
-    casnr_todo = gsub('-', '', cas_)
+  if (!is.null(casnr_)) {
+    casnr_todo = gsub('-', '', casnr_)
     chem = chem[casnr %in% casnr_todo]
   }
   if (!is.null(chemical_role_)) {
@@ -54,14 +57,6 @@ stx_filter = function(test = NULL,
     chem = chem[chem[, Reduce(`|`, lapply(.SD, `==`, TRUE)), .SDcols = chemical_class_]]
   }
   # taxa --------------------------------------------------------------------
-  if (!is.null(habitat_)) {
-    habitat_ = paste0('hab_', habitat_)
-    taxa = taxa[taxa[, Reduce(`|`, lapply(.SD, `==`, TRUE)), .SDcols = habitat_]]
-  }
-  if (!is.null(region_)) {
-    region_ = paste0('reg_', region_)
-    taxa = taxa[taxa[, Reduce(`|`, lapply(.SD, `==`, TRUE)), .SDcols = region_]]
-  }
   if (!is.null(taxa_)) {
     col_tax = grep('tax_',
                    names(taxa),
@@ -71,14 +66,26 @@ stx_filter = function(test = NULL,
       taxa_, collapse = '|'
     )))), .SDcols = col_tax]]
   }
+  if (!is.null(trophic_lvl_)) {
+    taxa = taxa[trophic_lvl %in% trophic_lvl_]
+  }
+  if (!is.null(habitat_)) {
+    habitat_ = paste0('hab_', habitat_)
+    taxa = taxa[taxa[, Reduce(`|`, lapply(.SD, `==`, TRUE)), .SDcols = habitat_]]
+  }
+  if (!is.null(region_)) {
+    region_ = paste0('reg_', region_)
+    taxa = taxa[taxa[, Reduce(`|`, lapply(.SD, `==`, TRUE)), .SDcols = region_]]
+  }
+  if (!is.null(ecotox_grp_)) {
+    taxa = taxa[ecotox_grp %in% ecotox_grp_]
+  }
   # merge -------------------------------------------------------------------
   out = test[chem, nomatch = 0L, on = 'casnr']
   out = out[taxa, nomatch = 0L, on = 'species_number']
-  out = out[refs, nomatch = 0L, on = 'reference_number']
-  # outliers ----------------------------------------------------------------
-  out[ , outlier := flag_outliers(concentration) ] # NOTE maybe put into package and let it calculate locally at the user
+  out = out[refs, nomatch = 0L, on = 'ref_number']
   # order -------------------------------------------------------------------
-  setcolorder(out, c('cname', 'cas'))
+  setcolorder(out, c('cname', 'casnr'))
   
   return(out)
 }

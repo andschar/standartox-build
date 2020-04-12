@@ -5,15 +5,15 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 q = "SELECT *
-     FROM standartox.chem_id"
-chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+     FROM phch.phch_id"
+phch = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 # debuging
 if (debug_mode) {
-  chem = chem[1:10]
+  phch = phch[1:10]
 }
 
-todo = na.omit(chem$cid)
+todo = na.omit(phch$cid)
 
 # query -------------------------------------------------------------------
 time = Sys.time()

@@ -1,126 +1,127 @@
 "unit","word","si","multiplier","conv","unit_conv","type","remove"
-"s","second","TRUE",0.00027778,"TRUE","h","time",FALSE
-"mi","minute","TRUE",0.0166667,"TRUE","h","time",FALSE
-"h","hour","TRUE",1,"TRUE","h","time",FALSE
-"d","day","TRUE",24,"TRUE","h","time",FALSE
-"wk","week","TRUE",168,"TRUE","h","time",FALSE
-"mo","month","TRUE",730,"TRUE","h","time",FALSE
-"yr","year","TRUE",8760,"TRUE","h","time",FALSE
-"BLM","bloom stage","FALSE",1,"FALSE","BLM","time",TRUE
-"LSI","larval stage index","FALSE",1,"FALSE","LSI","time",TRUE
-"ZGS","zadoks growth stage","FALSE",1,"FALSE","ZGS","time",TRUE
-"abs","until abscission","FALSE",1,"FALSE","abs","time",TRUE
-"alv","alevin","FALSE",1,"FALSE","alv","time",TRUE
-"ant","until anthesis","FALSE",1,"FALSE","ant","time",TRUE
-"brd","brood or litter","FALSE",1,"FALSE","brd","time",TRUE
-"brs","breeding season","FALSE",1,"FALSE","brs","time",TRUE
-"bt","to boot stage","FALSE",1,"FALSE","bt","time",TRUE
-"cd","colony diameter","FALSE",1,"FALSE","cd","time",TRUE
-"clv","cleavage","FALSE",1,"FALSE","clv","time",TRUE
-"crs","crab stage","FALSE",1,"FALSE","crs","time",TRUE
-"cs","cell stage","FALSE",1,"FALSE","cs","time",TRUE
-"dapu","days after pupation","TRUE",24,"TRUE","h","time",FALSE
-"dbh","days before hatch","TRUE",24,"TRUE","h","time",FALSE
-"dd","degree days","TRUE",24,"TRUE","h","time",FALSE
-"dge","days gestation","TRUE",24,"TRUE","h","time",FALSE
-"dla","days lactation","TRUE",24,"TRUE","h","time",FALSE
-"dpe","days post-emergence","TRUE",24,"TRUE","h","time",FALSE
-"dpel","days post egg laying","TRUE",24,"TRUE","h","time",FALSE
-"dpf","days post fertilization","TRUE",24,"TRUE","h","time",FALSE
-"dpfl","days post flowering","TRUE",24,"TRUE","h","time",FALSE
-"dpgm","days post germination","TRUE",24,"TRUE","h","time",FALSE
-"dph","days post hatch","TRUE",24,"TRUE","h","time",FALSE
-"dphv","days post harvest","TRUE",24,"TRUE","h","time",FALSE
-"dpm","days post-moult","TRUE",24,"TRUE","h","time",FALSE
-"dpn","days post-natal","TRUE",24,"TRUE","h","time",FALSE
-"dpo","days post oviposition","TRUE",24,"TRUE","h","time",FALSE
-"dpp","days post planting/sowing","TRUE",24,"TRUE","h","time",FALSE
-"dps","days post spawn","TRUE",24,"TRUE","h","time",FALSE
-"dpu","days post swim-up","TRUE",24,"TRUE","h","time",FALSE
-"dpys","days post yolk sac absorption","TRUE",24,"TRUE","h","time",FALSE
-"ea","to earing or heading","FALSE",1,"FALSE","ea","time",TRUE
-"ej","egg to juvenile","FALSE",1,"FALSE","ej","time",TRUE
-"el","nth egg laid","FALSE",1,"FALSE","el","time",TRUE
-"em","to emergence","FALSE",1,"FALSE","em","time",TRUE
-"ep","egg to pupation","FALSE",1,"FALSE","ep","time",TRUE
-"epa","egg to pre-adult","FALSE",1,"FALSE","epa","time",TRUE
-"eslk","to early silk stage","FALSE",1,"FALSE","eslk","time",TRUE
-"ey","time to eyed stage fish","FALSE",1,"FALSE","ey","time",TRUE
-"f5","50% flowering","FALSE",1,"FALSE","f5","time",TRUE
-"fb","full bloom stage","FALSE",1,"FALSE","fb","time",TRUE
-"fi","flower initiation","FALSE",1,"FALSE","fi","time",TRUE
-"fl","flower stage","FALSE",1,"FALSE","fl","time",TRUE
-"flg","fleding","FALSE",1,"FALSE","flg","time",TRUE
-"fr","to fruit stage","FALSE",1,"FALSE","fr","time",TRUE
-"frt","to fertilization","FALSE",1,"FALSE","frt","time",TRUE
-"fry","fry","FALSE",1,"FALSE","fry","time",TRUE
-"fs","flowering stage","FALSE",1,"FALSE","fs","time",TRUE
-"gds","gallien and durocher stage","FALSE",1,"FALSE","gds","time",TRUE
-"ge","generation","FALSE",1,"FALSE","ge","time",TRUE
-"ges","gestiation","FALSE",1,"FALSE","ges","time",TRUE
-"gm","to germination","FALSE",1,"FALSE","gm","time",TRUE
-"go","gosner stage","FALSE",1,"FALSE","go","time",TRUE
-"gs","growing season","FALSE",1,"FALSE","gs","time",TRUE
-"gts","gastrula stage","FALSE",1,"FALSE","gts","time",TRUE
-"dh","degree hours","FALSE",1,"TRUE","h","time",FALSE
-"hbf","hours pre-fertilization","FALSE",1,"TRUE","h","time",FALSE
-"hpe","hours post emergence","FALSE",1,"TRUE","h","time",FALSE
-"hpel","hours post egg laying","FALSE",1,"TRUE","h","time",FALSE
-"hpf","hour post fertilization","FALSE",1,"TRUE","h","time",FALSE
-"hph","hours post hatch","FALSE",1,"TRUE","h","time",FALSE
-"hpp","hours post planting","FALSE",1,"TRUE","h","time",FALSE
-"ht","until hatch","FALSE",1,"FALSE","h","time",TRUE
-"hv","harvest","FALSE",1,"FALSE","hv","time",TRUE
-"i2","intermolt to second molt","FALSE",1,"FALSE","i2","time",TRUE
-"ins","instar","FALSE",1,"FALSE","ins","time",TRUE
-"inst","instantaneous","FALSE",1,"FALSE","inst","time",TRUE
-"it","intermolt to molt","FALSE",1,"FALSE","it","time",TRUE
-"lf","lifetime","FALSE",1,"FALSE","lf","time",TRUE
-"lfd","leaf drop","FALSE",1,"FALSE","lfd","time",TRUE
-"lgp","to lag phase","FALSE",1,"FALSE","lgp","time",TRUE
-"log","to log phase","FALSE",1,"FALSE","log","time",TRUE
-"ls","leaf stage","FALSE",1,"FALSE","ls","time",TRUE
-"lva","larva to adult","FALSE",1,"FALSE","lva","time",TRUE
-"lvp","larva to pupa","FALSE",1,"FALSE","lvp","time",TRUE
-"lvsa",,"FALSE",1,"FALSE","lvsa","time",TRUE
-"ma","to maturity","FALSE",1,"FALSE","ma","time",TRUE
-"mmph","until metamorphosis","FALSE",1,"FALSE","mmph","time",TRUE
-"mopf","months post-fertilization","TRUE",730,"TRUE","h","time",FALSE
-"moph","months post-hatch","TRUE",730,"TRUE","h","time",FALSE
-"mopm","months post-metamorphosis","TRUE",730,"TRUE","h","time",FALSE
-"mpf","minutes post-gertilization","TRUE",0.0166667,"TRUE","h","time",FALSE
-"mph","minutes post hatch","TRUE",0.0166667,"TRUE","h","time",FALSE
-"nf","Nieuwkoop-faber-stage","FALSE",1,"FALSE","nf","time",TRUE
-"pa","pupa to adult","FALSE",1,"FALSE","pa","time",TRUE
-"pan","panicling stage","FALSE",1,"FALSE","pan","time",TRUE
-"pgm","post germination","FALSE",1,"FALSE","pgm","time",TRUE
-"pm","post molt","FALSE",1,"FALSE","pm","time",TRUE
-"pro","propagation stage","FALSE",1,"FALSE","pro","time",TRUE
-"so","shooting stage","FALSE",1,"FALSE","so","time",TRUE
-"sst","substage","FALSE",1,"FALSE","sst","time",TRUE
-"stg","stage","FALSE",1,"FALSE","stg","time",TRUE
-"su","summer","FALSE",1,"FALSE","su","time",TRUE
-"swm","Swim-up","FALSE",1,"FALSE","swm","time",TRUE
-"tls","tiller stage","FALSE",1,"FALSE","tls","time",TRUE
-"ubi","until birth","FALSE",1,"FALSE","ubi","time",TRUE
-"vg","vegetative stage","FALSE",1,"FALSE","vg","time",TRUE
-"wkpm","weeks post metamorphosis","TRUE",168,"TRUE","h","time",FALSE
-"wpe","weeks post emergence","TRUE",168,"TRUE","h","time",FALSE
-"wph","weeks post hatch","TRUE",168,"TRUE","h","time",FALSE
-"wphv","weeks pre harvest","TRUE",168,"TRUE","h","time",FALSE
-"wpp","weeks post planting","TRUE",168,"TRUE","h","time",FALSE
-"zm","Zoeae-megalop","FALSE",1,"FALSE","zm","time",TRUE
-"cfs","to comercial flower stage","FALSE",1,"FALSE","cfs","time",TRUE
-"eb","early bloom stage","FALSE",1,"FALSE","eb","time",TRUE
-"lhv15-20","leaf harvest 15-20cm","FALSE",1,"FALSE","lhv15-20","time",TRUE
-"lhv20-25","leaf harvest 20-25cm","FALSE",1,"FALSE","lhv20-25","time",TRUE
-"ls6","6 leaf stage","FALSE",1,"FALSE","ls6","time",TRUE
-"MULT","multiple durations","FALSE",1,"FALSE","MULT","time",TRUE
-"myp","mysis to post-larvare","FALSE",1,"FALSE","myp","time",TRUE
-"pr","Priming – harvest of ripened tobacco leaves","FALSE",1,"FALSE","pr","time",TRUE
-"rhv3","root harvest, 3 grams","FALSE",1,"FALSE","rhv3","time",TRUE
-"wbh","weeks pre-hatch","TRUE",168,"TRUE","h","time",FALSE
-"zmy","zoeae to mysis","FALSE",1,"FALSE","zmy","time",TRUE
-"b0.25","0.25 bloom stage","FALSE",1,"FALSE","b0.25","time",TRUE
-"--","no data","FALSE",1,"FALSE","--","nodata",TRUE
-"NR","no data","FALSE",1,"FALSE","NR","nodata",TRUE
+"s","second","TRUE",0.00027778,"TRUE","h","time","FALSE"
+"mi","minute","TRUE",0.0166667,"TRUE","h","time","FALSE"
+"h","hour","TRUE",1,"TRUE","h","time","FALSE"
+"d","day","TRUE",24,"TRUE","h","time","FALSE"
+"wk","week","TRUE",168,"TRUE","h","time","FALSE"
+"mo","month","TRUE",730,"TRUE","h","time","FALSE"
+"yr","year","TRUE",8760,"TRUE","h","time","FALSE"
+"BLM","bloom stage","FALSE",1,"TRUE","BLM","time","TRUE"
+"LSI","larval stage index","FALSE",1,"TRUE","LSI","time","TRUE"
+"ZGS","zadoks growth stage","FALSE",1,"TRUE","ZGS","time","TRUE"
+"abs","until abscission","FALSE",1,"TRUE","abs","time","TRUE"
+"alv","alevin","FALSE",1,"TRUE","alv","time","TRUE"
+"ant","until anthesis","FALSE",1,"TRUE","ant","time","TRUE"
+"brd","brood or litter","FALSE",1,"TRUE","brd","time","TRUE"
+"brs","breeding season","FALSE",1,"TRUE","brs","time","TRUE"
+"bt","to boot stage","FALSE",1,"TRUE","bt","time","TRUE"
+"cd","colony diameter","FALSE",1,"TRUE","cd","time","TRUE"
+"clv","cleavage","FALSE",1,"TRUE","clv","time","TRUE"
+"crs","crab stage","FALSE",1,"TRUE","crs","time","TRUE"
+"cs","cell stage","FALSE",1,"TRUE","cs","time","TRUE"
+"dapu","days after pupation","TRUE",24,"TRUE","h","time","FALSE"
+"dbh","days before hatch","TRUE",24,"TRUE","h","time","FALSE"
+"dd","degree days","FALSE",1,"TRUE","dd","time","TRUE"
+"dge","days gestation","TRUE",24,"TRUE","h","time","FALSE"
+"dla","days lactation","TRUE",24,"TRUE","h","time","FALSE"
+"dpe","days post-emergence","TRUE",24,"TRUE","h","time","FALSE"
+"dpel","days post egg laying","TRUE",24,"TRUE","h","time","FALSE"
+"dpf","days post fertilization","TRUE",24,"TRUE","h","time","FALSE"
+"dpfl","days post flowering","TRUE",24,"TRUE","h","time","FALSE"
+"dpgm","days post germination","TRUE",24,"TRUE","h","time","FALSE"
+"dph","days post hatch","TRUE",24,"TRUE","h","time","FALSE"
+"dphv","days post harvest","TRUE",24,"TRUE","h","time","FALSE"
+"dpm","days post-moult","TRUE",24,"TRUE","h","time","FALSE"
+"dpmm","days post metamorphosis","TRUE",24,"TRUE","h","time","FALSE"
+"dpn","days post-natal","TRUE",24,"TRUE","h","time","FALSE"
+"dpo","days post oviposition","TRUE",24,"TRUE","h","time","FALSE"
+"dpp","days post planting/sowing","TRUE",24,"TRUE","h","time","FALSE"
+"dps","days post spawn","TRUE",24,"TRUE","h","time","FALSE"
+"dpu","days post swim-up","TRUE",24,"TRUE","h","time","FALSE"
+"dpys","days post yolk sac absorption","TRUE",24,"TRUE","h","time","FALSE"
+"ea","to earing or heading","FALSE",1,"TRUE","ea","time","TRUE"
+"ej","egg to juvenile","FALSE",1,"TRUE","ej","time","TRUE"
+"el","nth egg laid","FALSE",1,"TRUE","el","time","TRUE"
+"em","to emergence","FALSE",1,"TRUE","em","time","TRUE"
+"ep","egg to pupation","FALSE",1,"TRUE","ep","time","TRUE"
+"epa","egg to pre-adult","FALSE",1,"TRUE","epa","time","TRUE"
+"eslk","to early silk stage","FALSE",1,"TRUE","eslk","time","TRUE"
+"ey","time to eyed stage fish","FALSE",1,"TRUE","ey","time","TRUE"
+"f5","50% flowering","FALSE",1,"TRUE","f5","time","TRUE"
+"fb","full bloom stage","FALSE",1,"TRUE","fb","time","TRUE"
+"fi","flower initiation","FALSE",1,"TRUE","fi","time","TRUE"
+"fl","flower stage","FALSE",1,"TRUE","fl","time","TRUE"
+"flg","fleding","FALSE",1,"TRUE","flg","time","TRUE"
+"fr","to fruit stage","FALSE",1,"TRUE","fr","time","TRUE"
+"frt","to fertilization","FALSE",1,"TRUE","frt","time","TRUE"
+"fry","fry","FALSE",1,"TRUE","fry","time","TRUE"
+"fs","flowering stage","FALSE",1,"TRUE","fs","time","TRUE"
+"gds","gallien and durocher stage","FALSE",1,"TRUE","gds","time","TRUE"
+"ge","generation","FALSE",1,"TRUE","ge","time","TRUE"
+"ges","gestiation","FALSE",1,"TRUE","ges","time","TRUE"
+"gm","to germination","FALSE",1,"TRUE","gm","time","TRUE"
+"go","gosner stage","FALSE",1,"TRUE","go","time","TRUE"
+"gs","growing season","FALSE",1,"TRUE","gs","time","TRUE"
+"gts","gastrula stage","FALSE",1,"TRUE","gts","time","TRUE"
+"dh","degree hours","FALSE",1,"TRUE","h","time","FALSE"
+"hbf","hours pre-fertilization","FALSE",1,"TRUE","h","time","FALSE"
+"hpe","hours post emergence","FALSE",1,"TRUE","h","time","FALSE"
+"hpel","hours post egg laying","FALSE",1,"TRUE","h","time","FALSE"
+"hpf","hour post fertilization","FALSE",1,"TRUE","h","time","FALSE"
+"hph","hours post hatch","FALSE",1,"TRUE","h","time","FALSE"
+"hpp","hours post planting","FALSE",1,"TRUE","h","time","FALSE"
+"ht","until hatch","FALSE",1,"TRUE","h","time","TRUE"
+"hv","harvest","FALSE",1,"TRUE","hv","time","TRUE"
+"i2","intermolt to second molt","FALSE",1,"TRUE","i2","time","TRUE"
+"ins","instar","FALSE",1,"TRUE","ins","time","TRUE"
+"inst","instantaneous","FALSE",1,"TRUE","inst","time","TRUE"
+"it","intermolt to molt","FALSE",1,"TRUE","it","time","TRUE"
+"lf","lifetime","FALSE",1,"TRUE","lf","time","TRUE"
+"lfd","leaf drop","FALSE",1,"TRUE","lfd","time","TRUE"
+"lgp","to lag phase","FALSE",1,"TRUE","lgp","time","TRUE"
+"log","to log phase","FALSE",1,"TRUE","log","time","TRUE"
+"ls","leaf stage","FALSE",1,"TRUE","ls","time","TRUE"
+"lva","larva to adult","FALSE",1,"TRUE","lva","time","TRUE"
+"lvp","larva to pupa","FALSE",1,"TRUE","lvp","time","TRUE"
+"lvsa",,"FALSE",1,"TRUE","lvsa","time","TRUE"
+"ma","to maturity","FALSE",1,"TRUE","ma","time","TRUE"
+"mmph","until metamorphosis","FALSE",1,"TRUE","mmph","time","TRUE"
+"mopf","months post-fertilization","TRUE",730,"TRUE","h","time","FALSE"
+"moph","months post-hatch","TRUE",730,"TRUE","h","time","FALSE"
+"mopm","months post-metamorphosis","TRUE",730,"TRUE","h","time","FALSE"
+"mpf","minutes post-gertilization","TRUE",0.0166667,"TRUE","h","time","FALSE"
+"mph","minutes post hatch","TRUE",0.0166667,"TRUE","h","time","FALSE"
+"nf","Nieuwkoop-faber-stage","FALSE",1,"TRUE","nf","time","TRUE"
+"pa","pupa to adult","FALSE",1,"TRUE","pa","time","TRUE"
+"pan","panicling stage","FALSE",1,"TRUE","pan","time","TRUE"
+"pgm","post germination","FALSE",1,"TRUE","pgm","time","TRUE"
+"pm","post molt","FALSE",1,"TRUE","pm","time","TRUE"
+"pro","propagation stage","FALSE",1,"TRUE","pro","time","TRUE"
+"so","shooting stage","FALSE",1,"TRUE","so","time","TRUE"
+"sst","substage","FALSE",1,"TRUE","sst","time","TRUE"
+"stg","stage","FALSE",1,"TRUE","stg","time","TRUE"
+"su","summer","FALSE",1,"TRUE","su","time","TRUE"
+"swm","Swim-up","FALSE",1,"TRUE","swm","time","TRUE"
+"tls","tiller stage","FALSE",1,"TRUE","tls","time","TRUE"
+"ubi","until birth","FALSE",1,"TRUE","ubi","time","TRUE"
+"vg","vegetative stage","FALSE",1,"TRUE","vg","time","TRUE"
+"wkpm","weeks post metamorphosis","TRUE",168,"TRUE","h","time","FALSE"
+"wpe","weeks post emergence","TRUE",168,"TRUE","h","time","FALSE"
+"wph","weeks post hatch","TRUE",168,"TRUE","h","time","FALSE"
+"wphv","weeks pre harvest","TRUE",168,"TRUE","h","time","FALSE"
+"wpp","weeks post planting","TRUE",168,"TRUE","h","time","FALSE"
+"zm","Zoeae-megalop","FALSE",1,"TRUE","zm","time","TRUE"
+"cfs","to comercial flower stage","FALSE",1,"TRUE","cfs","time","TRUE"
+"eb","early bloom stage","FALSE",1,"TRUE","eb","time","TRUE"
+"lhv15-20","leaf harvest 15-20cm","FALSE",1,"TRUE","lhv15-20","time","TRUE"
+"lhv20-25","leaf harvest 20-25cm","FALSE",1,"TRUE","lhv20-25","time","TRUE"
+"ls6","6 leaf stage","FALSE",1,"TRUE","ls6","time","TRUE"
+"MULT","multiple durations","FALSE",1,"TRUE","MULT","time","TRUE"
+"myp","mysis to post-larvare","FALSE",1,"TRUE","myp","time","TRUE"
+"pr","Priming – harvest of ripened tobacco leaves","FALSE",1,"TRUE","pr","time","TRUE"
+"rhv3","root harvest, 3 grams","FALSE",1,"TRUE","rhv3","time","TRUE"
+"wbh","weeks pre-hatch","TRUE",168,"TRUE","h","time","FALSE"
+"zmy","zoeae to mysis","FALSE",1,"TRUE","zmy","time","TRUE"
+"b0.25","0.25 bloom stage","FALSE",1,"TRUE","b0.25","time","TRUE"
+"--","no data","FALSE",1,"TRUE","--","nodata","TRUE"
+"NR","no data","FALSE",1,"TRUE","NR","nodata","TRUE"

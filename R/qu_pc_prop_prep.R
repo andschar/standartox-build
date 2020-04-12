@@ -8,8 +8,8 @@ source(file.path(src, 'gn_setup.R'))
 pc_prop_l = readRDS(file.path(cachedir, 'pubchem', 'pc_prop_l.rds'))
 # ID
 q = "SELECT *
-     FROM standartox.chem_id"
-chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+     FROM phch.phch_id"
+phch = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 
 # preparation -------------------------------------------------------------
@@ -21,7 +21,7 @@ setnames(pc_prop, 'iupacname', 'iupac_name')
 
 # merge -------------------------------------------------------------------
 # merge with CIR to get cas
-pc_prop[chem, cas := i.cas, on = 'inchikey']
+pc_prop[phch, cas := i.cas, on = 'inchikey']
 pc_prop = pc_prop[ !is.na(cas) & !duplicated(cas) ]
 setcolorder(pc_prop, 'cas')
 

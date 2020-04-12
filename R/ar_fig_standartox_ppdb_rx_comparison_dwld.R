@@ -20,7 +20,7 @@ q_stan = "SELECT
             effect,
             exposure
           FROM standartox.tests_fin
-          LEFT JOIN standartox.chemicals USING (casnr)
+          LEFT JOIN standartox.phch USING (casnr)
           LEFT JOIN standartox.taxa USING (species_number)
           WHERE endpoint ILIKE '%50%'"
 stan = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,

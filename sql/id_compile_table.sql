@@ -1,10 +1,8 @@
 -- scripts to create id tables for chemicals and taxa
 
---------------------------- chemicals ---------------------------------------------
-CREATE SCHEMA IF NOT EXISTS chem;
-
-DROP TABLE IF EXISTS chem.chem_id;
-CREATE TABLE chem.chem_id AS (
+-- phch ---------------------------------------------------------------
+DROP TABLE IF EXISTS phch.phch_id;
+CREATE TABLE phch.phch_id AS (
 	SELECT
 		id.casnr::bigint,
 		id.cas,
@@ -28,7 +26,7 @@ CREATE TABLE chem.chem_id AS (
 		-- TODO CASE WHEN srs.internaltrackingnumber IS NOT NULL THEN 'srs' ELSE NULL END AS internaltrackingnumber_src,
 		srs.epaidentificationnumber
 		-- TODO CASE WHEN srs.epaidentificationnumber IS NOT NULL THEN 'srs' ELSE NULL END AS epaidentificationnumber_src
-	FROM ecotox.chem_id id
+	FROM phch.phch_data id
 	LEFT JOIN cir.cir_id cir USING (cas)
 	LEFT JOIN chebi.chebi_id chebi USING (cas)
 	LEFT JOIN pubchem.pubchem_id pubchem USING (cas)
@@ -36,9 +34,9 @@ CREATE TABLE chem.chem_id AS (
 	LEFT JOIN wiki.wiki_wdid wiki USING (cas)
 );
 
-ALTER TABLE chem.chem_id ADD PRIMARY KEY (cas);
+ALTER TABLE phch.phch_id ADD PRIMARY KEY (cas);
 
---------------------------- taxa --------------------------------------------------
+-- taxa ---------------------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS taxa;
 
 DROP TABLE IF EXISTS taxa.taxa_id;
@@ -48,7 +46,7 @@ CREATE TABLE taxa.taxa_id AS (
 		id.*,
 		gbif.usagekey AS gbif_id,
 		worms.aphiaid AS worms_id
-	FROM ecotox.taxa_id id
+	FROM taxa.taxa_data id
 	LEFT JOIN gbif.gbif_id gbif USING (taxon)
 	LEFT JOIN worms.worms_id worms USING (taxon)
 );

@@ -6,15 +6,15 @@ source(file.path(src, 'wikidata2.R')) # TODO intermediate
 
 # data --------------------------------------------------------------------
 q = "SELECT *
-     FROM standartox.chem_id"
-chem = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+     FROM phch.phch_id"
+phch = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 # debuging
 if (debug_mode) {
-  chem = chem[1:10]
+  phch = phch[1:10]
 }
-todo = chem$wdid
-names(todo) = chem$cas
+todo = phch$wdid
+names(todo) = phch$cas
 todo = na.omit(todo)
 
 # query -------------------------------------------------------------------

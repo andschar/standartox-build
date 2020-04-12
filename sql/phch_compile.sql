@@ -2,33 +2,33 @@
 -- TODO rework
 
 -- chemical names -------------------------------------------------------------
-DROP TABLE IF EXISTS chem.chem_id2;
-CREATE TABLE chem.chem_id2 AS (
+DROP TABLE IF EXISTS phch.phch_id2;
+CREATE TABLE phch.phch_id2 AS (
 	SELECT 
 		id.casnr,
 		id.cas,
-		COALESCE(wi.label, wi.name_who, ch.chebiasciiname, aw.cname, srs.epaname, pc.name) AS cname, -- ?? id.chemical_name
-		COALESCE(pc2.molecularformula) AS formula,
-		COALESCE(ch.iupac_name, pc2.iupac_name, aw.iupac_name) AS iupacname,
-		COALESCE(ci.inchi, ch.inchi, pc2.inchi, aw.inchi, wi.inchi) AS inchi,
-		COALESCE(ci.inchikey, ch.inchikey, pc2.inchikey, aw.inchikey, wi.inchikey) AS inchikey,
-		COALESCE(ci.smiles, ch.smiles, pc2.canonicalsmiles, wi.smiles) AS smiles,
-		COALESCE(wi.einecs, pc.einec) AS einec,
-		COALESCE(wi.chebi, pc.chebiid) AS chebi_id,
-		COALESCE(wi.chembl, pc.chembl) AS chembl_id,
-	    COALESCE(wi.kegg) AS kegg,
-		COALESCE(pc2.cid::integer, pc.cid::integer, wi.cid::integer) AS pubchem_id, -- resolve this beforehands
-	    COALESCE(wi.csid) AS chemspider_id,
-		COALESCE(wi.drugbank) AS drugbank_id,
-		COALESCE(wi.unii) AS unii,
-	    COALESCE(wi.zvg) AS zvg,
-	    COALESCE(wi.dsstox) AS dsstox_id, -- TODO resolve different dsstox_id s
-		COALESCE(pc.dsstox_cid) AS dsstox_cid,
-		COALESCE(pc.dsstox_gsid) AS dsstox_gsid,
-		COALESCE(pc.dsstox_rid) AS dsstox_rid,
-	    COALESCE(wi.echa_infocard_id) AS echa_infocard_id,
+		CLEAN_NR(COALESCE(wi.label, wi.name_who, ch.chebiasciiname, aw.cname, srs.epaname, pc.name)) AS cname, -- ?? id.chemical_name
+		CLEAN_NR(COALESCE(pc2.molecularformula)) AS formula,
+		CLEAN_NR(COALESCE(ch.iupac_name, pc2.iupac_name, aw.iupac_name)) AS iupacname,
+		CLEAN_NR(COALESCE(ci.inchi, ch.inchi, pc2.inchi, aw.inchi, wi.inchi)) AS inchi,
+		CLEAN_NR(COALESCE(ci.inchikey, ch.inchikey, pc2.inchikey, aw.inchikey, wi.inchikey)) AS inchikey,
+		CLEAN_NR(COALESCE(ci.smiles, ch.smiles, pc2.canonicalsmiles, wi.smiles)) AS smiles,
+		CLEAN_NR(COALESCE(wi.einecs, pc.einec)) AS einec,
+		CLEAN_NR(COALESCE(wi.chebi, pc.chebiid)) AS chebi_id,
+		CLEAN_NR(COALESCE(wi.chembl, pc.chembl)) AS chembl_id,
+	    CLEAN_NR(COALESCE(wi.kegg)) AS kegg,
+		CLEAN_NR(COALESCE(pc2.cid::text, pc.cid::text, wi.cid::text))::integer AS pubchem_id, -- resolve this beforehands
+	    CLEAN_NR(COALESCE(wi.csid)) AS chemspider_id,
+		CLEAN_NR(COALESCE(wi.drugbank)) AS drugbank_id,
+		CLEAN_NR(COALESCE(wi.unii)) AS unii,
+	    CLEAN_NR(COALESCE(wi.zvg)) AS zvg,
+	    CLEAN_NR(COALESCE(wi.dsstox)) AS dsstox_id, -- TODO resolve different dsstox_id s
+		CLEAN_NR(COALESCE(pc.dsstox_cid)) AS dsstox_cid,
+		CLEAN_NR(COALESCE(pc.dsstox_gsid)) AS dsstox_gsid,
+		CLEAN_NR(COALESCE(pc.dsstox_rid)) AS dsstox_rid,
+	    CLEAN_NR(COALESCE(wi.echa_infocard_id)) AS echa_infocard_id,
 		ch.definition
-	FROM chem.chem_id id
+	FROM phch.phch_id id
 	LEFT JOIN alanwood.alanwood_prop aw USING (cas)
 	LEFT JOIN cir.cir_id ci USING (cas)
 	LEFT JOIN chebi.chebi_prop ch USING (cas)
@@ -39,11 +39,11 @@ CREATE TABLE chem.chem_id2 AS (
 	-- TODO include eurostat
 );
 
-ALTER TABLE chem.chem_id2 ADD PRIMARY KEY (casnr);
+ALTER TABLE phch.phch_id2 ADD PRIMARY KEY (casnr);
 
 -- chemical properties --------------------------------------------------------
-DROP TABLE IF EXISTS chem.chem_prop;
-CREATE TABLE chem.chem_prop AS (
+DROP TABLE IF EXISTS phch.phch_prop;
+CREATE TABLE phch.phch_prop AS (
 	SELECT
 		id.casnr,
 		id.cas,
@@ -52,16 +52,16 @@ CREATE TABLE chem.chem_prop AS (
 	    NULL::double precision AS solubility_water
 	-- COALESCE(pp.solubility_water) solubility_water -- TODO find alternative source pp. is not working anymore
 	    -- TODO search for more
-	FROM chem.chem_id id
+	FROM phch.phch_id id
     LEFT JOIN pubchem.pubchem_prop pc USING (cas)
     LEFT JOIN chebi.chebi_prop ch USING (cas)
 );
 
-ALTER TABLE chem.chem_prop ADD PRIMARY KEY (casnr);
+ALTER TABLE phch.phch_prop ADD PRIMARY KEY (casnr);
 
 -- chemical role --------------------------------------------------------------
-DROP TABLE IF EXISTS chem.chem_role;
-CREATE TABLE chem.chem_role AS (
+DROP TABLE IF EXISTS phch.phch_role;
+CREATE TABLE phch.phch_role AS (
 	SELECT
 		id.casnr,
 		id.cas,
@@ -100,18 +100,18 @@ CREATE TABLE chem.chem_role AS (
 		ch.scabicide,
 		ch.schistosomicide,
 		eu.soil_sterilant
-	FROM chem.chem_id id
+	FROM phch.phch_id id
 	LEFT JOIN epa.epa_prop ep USING (cas)
 	LEFT JOIN alanwood.alanwood_prop aw USING (cas)
 	LEFT JOIN chebi.chebi_role ch USING (cas)
 	LEFT JOIN eurostat.eurostat_role eu USING (cas)
 );
 
-ALTER TABLE chem.chem_role ADD PRIMARY KEY (casnr);
+ALTER TABLE phch.phch_role ADD PRIMARY KEY (casnr);
 
 -- chemical class -------------------------------------------------------------
-DROP TABLE IF EXISTS chem.chem_class;
-CREATE TABLE chem.chem_class AS (
+DROP TABLE IF EXISTS phch.phch_class;
+CREATE TABLE phch.phch_class AS (
 	SELECT
 		id.casnr,
 		id.cas,
@@ -212,11 +212,11 @@ CREATE TABLE chem.chem_class AS (
 		eu.uracil,
 		eu.urea,
 		ch.valinamide
-	FROM chem.chem_id id
+	FROM phch.phch_id id
 	LEFT JOIN epa.epa_prop ep USING (cas)
 	LEFT JOIN alanwood.alanwood_prop aw USING (cas)
 	LEFT JOIN chebi.chebi_class ch USING (cas)
 	LEFT JOIN eurostat.eurostat_class eu USING (cas)
 );
 
-ALTER TABLE chem.chem_class ADD PRIMARY KEY (casnr);
+ALTER TABLE phch.phch_class ADD PRIMARY KEY (casnr);

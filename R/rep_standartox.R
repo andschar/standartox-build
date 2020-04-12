@@ -1,6 +1,7 @@
 # script to create reports from compiled tables
 
 # setup -------------------------------------------------------------------
+src = 'R'
 source(file.path(src, 'gn_setup.R'))
 con = DBI::dbConnect(RPostgreSQL::PostgreSQL(), #RPostgres::Postgres(),
                      dbname = DBetox,
@@ -22,21 +23,21 @@ mapply(dbreport::dbreport,
                        verbose = TRUE,
                        exit = FALSE))
 
-# chemical tables ---------------------------------------------------------
-tbl = c('chem_id', 'chem_id2', 'chem_role', 'chem_class', 'chem_prop')
+# physico-chemical tables -------------------------------------------------
+tbl = c('phch_data', 'phch_id', 'phch_id2', 'phch_role', 'phch_class', 'phch_prop')
 mapply(dbreport::dbreport,
        tbl = tbl,
        output_file = tbl,
-       title = paste0('chem', '.', tbl),
+       title = paste0('phch', '.', tbl),
        MoreArgs = list(con = con,
-                       schema = 'chem',
-                       output_dir = file.path(summdir, 'chem'),
+                       schema = 'phch',
+                       output_dir = file.path(summdir, 'phch'),
                        output_format = 'html_document',
                        verbose = TRUE,
                        exit = FALSE))
 
 # taxa tables -------------------------------------------------------------
-tbl = c('taxa_id', 'taxa_id2', 'taxa_habitat', 'taxa_continent', 'taxa_country')
+tbl = c('taxa_data', 'taxa_id', 'taxa_habitat', 'taxa_continent', 'taxa_country')
 mapply(dbreport::dbreport,
        tbl = tbl,
        output_file = tbl,
@@ -49,7 +50,7 @@ mapply(dbreport::dbreport,
                        exit = FALSE))
 
 # Standartox tables -------------------------------------------------------
-tbl = c('tests', 'tests_fin', 'chemicals', 'taxa', 'refs')
+tbl = c('tests', 'tests_fin', 'phch', 'taxa', 'refs')
 mapply(dbreport::dbreport,
        tbl = tbl,
        output_file = tbl,

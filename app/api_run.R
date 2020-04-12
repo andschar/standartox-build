@@ -7,5 +7,5 @@ if(nodename == 'uwigis') {
   host = '127.0.0.1'
 }
 
-pr = plumber::plumb('app/api.R')
+pr = plumber::plumb('~/Projects/standartox-build/app/api.R')
 pr$run(host = host, port = 8000)

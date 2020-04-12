@@ -27,27 +27,28 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 
 # summary -----------------------------------------------------------------
-output_dir = file.path(normandir, 'summary')
-rmarkdown::render(file.path(srcrmd, 'summary_db_cols_norman.Rmd'),
-                  output_dir = output_dir,
-                  output_file = 'data1',
-                  params = list(
-                    title = 'data1: NORMAN raw data summary',
-                    schema = 'norman',
-                    table = 'data1',
-                    # cols = c('nor88test', 'nor88')
-                    output_dir = output_dir
-                  ))
-rmarkdown::render(file.path(srcrmd, 'summary_db_cols_norman.Rmd'),
-                  output_dir = output_dir, #! strange that output_dir has to be specified 2 times
-                  output_file = 'data2',
-                  params = list(
-                    title = 'data2: NORMAN cleaned data summary',
-                    schema = 'norman',
-                    table = 'data2',
-                    #cols = c('nor84', 'nor84b'),
-                    output_dir = output_dir
-                  ))
+# TODO replace with dbreport
+# output_dir = file.path(normandir, 'summary')
+# rmarkdown::render(file.path(srcrmd, 'summary_db_cols_norman.Rmd'),
+#                   output_dir = output_dir,
+#                   output_file = 'data1',
+#                   params = list(
+#                     title = 'data1: NORMAN raw data summary',
+#                     schema = 'norman',
+#                     table = 'data1',
+#                     # cols = c('nor88test', 'nor88')
+#                     output_dir = output_dir
+#                   ))
+# rmarkdown::render(file.path(srcrmd, 'summary_db_cols_norman.Rmd'),
+#                   output_dir = output_dir, #! strange that output_dir has to be specified 2 times
+#                   output_file = 'data2',
+#                   params = list(
+#                     title = 'data2: NORMAN cleaned data summary',
+#                     schema = 'norman',
+#                     table = 'data2',
+#                     #cols = c('nor84', 'nor84b'),
+#                     output_dir = output_dir
+#                   ))
 
 # log ---------------------------------------------------------------------
 log_msg('NORMAN: data compiled')

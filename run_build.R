@@ -27,7 +27,7 @@ if (download_db) {
 ## build
 if (build_db) {
   # build
-  source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl) # TODO rethink structure
+  source(file.path(src, 'bd_epa_postgres.R'), max.deparse.length = mdl)
   # DB roles
   # TODO source(file.path(src, 'bd_postgres_roles.R'), max.deparse.length = mdl) # TODO  rethink structure
   # Permissions
@@ -36,14 +36,16 @@ if (build_db) {
   source(file.path(src, 'bd_sql_functions.R'), max.deparse.length = mdl)
   # errata
   source(file.path(src, 'bd_epa_errata.R'), max.deparse.length = mdl)
-  # changes
-  source(file.path(src, 'bd_epa_changes.R'), max.deparse.length = mdl) # TODO move to bd_epa_download.R
-  # chemical and taxa IDs
-  source(file.path(src, 'bd_epa_chem_taxa_id.R'), max.deparse.length = mdl)
+  # correct bad units
+  source(file.path(src, 'bd_epa_errata_unit.R'), max.deparse.length = mdl)
+  # phch and taxa data tables
+  source(file.path(src, 'bd_phch_taxa_schema_table.R'), max.deparse.length = mdl)
   # meta files
   source(file.path(src, 'bd_epa_meta.R'), max.deparse.length = mdl) # user guide + codeappendix
   # PPDB
   source(file.path(src, 'bd_ppdb_prep.R'), max.deparse.length = mdl)
+  # freshwaterecology.info
+  source(file.path(src, 'bd_freshwaterecologyinfo.R'), max.deparse.length = mdl)
 }
 
 # identifiers -------------------------------------------------------------
@@ -77,8 +79,8 @@ if (build) {
 # Lookup ------------------------------------------------------------------
 if (lookup) {
   source(file.path(src, 'look_schema.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_concentration_units.R'), max.deparse.length = mdl)
-  source(file.path(src, 'look_duration_units.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_unit_result.R'), max.deparse.length = mdl)
+  source(file.path(src, 'look_unit_duration.R'), max.deparse.length = mdl)
 }
 
 # unit conversion ---------------------------------------------------------
@@ -111,10 +113,13 @@ if (build_norman) {
 
 # check scripts -----------------------------------------------------------
 if (chck) {
-  source(file.path(src, 'chck_unit_conversions_concentration.R'), max.deparse.length = mdl)
-  source(file.path(src, 'chck_unit_conversions_duration.R'), max.deparse.length = mdl)
+  source(file.path(src, 'chck_unit_result_conversion.R'), max.deparse.length = mdl)
+  source(file.path(src, 'chck_unit_duration_conversion.R'), max.deparse.length = mdl)
 }
-  
+
+# reports -----------------------------------------------------------------
+source(file.path(src, 'rep_conv_unit_result_duration.R'), max.deparse.length = mdl)
+
 # backup ------------------------------------------------------------------
 if (general) {
   source(file.path(src, 'gn_backup.R'), max.deparse.length = mdl)

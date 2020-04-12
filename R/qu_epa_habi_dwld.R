@@ -5,6 +5,7 @@ source(file.path(src, 'gn_setup.R'))
 
 # query -------------------------------------------------------------------
 q = "SELECT species.species_number,
+            species.latin_name,
             media_type_codes.description AS media_type,
             tests.organism_habitat,
             habitat_codes.description AS subhabitat

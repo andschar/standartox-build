@@ -69,6 +69,7 @@ ppdb[ taxon == 'Brachydanio reri',
       taxon := 'Danio rerio' ]
 ppdb[ taxon == 'Lepomis machrochinus',
       taxon := 'Lepomis macrochirus' ]
+ppdb[ taxon == 'Eisenia foetida', taxon := 'Eisenia fetida' ]
 
 # merge -------------------------------------------------------------------
 ppdb[general, cas := i.cas, on = 'cname']

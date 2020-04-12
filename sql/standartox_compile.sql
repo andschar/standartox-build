@@ -8,9 +8,9 @@ SELECT
 	tests.test_id,
 	results.result_id,
 	tests.species_number,
-	tests.reference_number,
+	tests.reference_number AS ref_number,
 	tests.test_cas AS casnr,
-	coalesce(substring(results.conc1_mean, '<|>'), '=') AS conc1_qualifier, -- TODO move this to ~/conv_unit_result_duration.sql
+	results2.conc1_mean_op,
 	-- unit conversion is done in sql/conv_unit_result_duration.sql
 	results.conc1_mean, -- original results
 	results.conc1_unit,
@@ -102,15 +102,17 @@ SELECT
 	END AS exposure_group,
 	response_site_codes.description AS response_site,
 	test_method_codes.description AS test_method,
-	tests.media_type AS media_type_code,
+	CLEAN(tests.test_characteristics) AS test_characteristics,
+	CLEAN(tests.media_type) AS media_type_code,
 	media_type_codes.description AS media_type,
 	substrate_codes.description AS substrate_type,
 	tests.organism_habitat,
 	habitat_codes.description AS subhabitat,
-	tests.organism_age_mean_op,
-	tests.organism_age_mean,
-	tests.organism_age_unit,
-	lifestage_codes.description AS lifestage
+	CLEAN(tests.organism_age_mean_op) AS organism_age_mean_op,
+	CLEAN(tests.organism_age_mean) AS organism_age_mean,
+	CLEAN(tests.organism_age_unit) AS organism_age_unit,
+	tests.organism_lifestage AS organism_lifestage_code,
+	lifestage_codes.description AS organism_lifestage
 
 FROM
 	ecotox.tests
@@ -126,7 +128,7 @@ LEFT JOIN ecotox.habitat_codes ON tests.subhabitat = habitat_codes.code
 LEFT JOIN ecotox.test_method_codes ON tests.test_method = test_method_codes.code
 LEFT JOIN ecotox.media_type_codes on tests.media_type = media_type_codes.code
 LEFT JOIN ecotox.substrate_codes on tests.substrate = substrate_codes.code
-LEFT JOIN chem.chem_prop ON tests.test_cas = chem_prop.casnr -- for molecularweight
+LEFT JOIN phch.phch_prop ON tests.test_cas = phch_prop.casnr -- for molecularweight
 
 WHERE
 	results.conc1_mean NOT LIKE '%x%' AND results.conc1_mean NOT IN ('NR') AND
@@ -137,100 +139,100 @@ ALTER TABLE standartox.tests ADD PRIMARY KEY (result_id);
 
 -------------------------------------------------------------------------------
 -- chemical names
-DROP TABLE IF EXISTS standartox.chemicals;
+DROP TABLE IF EXISTS standartox.phch;
 
-CREATE TABLE standartox.chemicals AS
+CREATE TABLE standartox.phch AS
 
 SELECT
 	id.casnr,
-	id.cas,
+	CASCONV(id.casnr, 'cas') AS cas,
 	lower(id.iupacname) AS iupac_name,
 	lower(id.cname) AS cname,
 	id.inchikey,
 	id.inchi,
-	chem_prop.molecularweight::double precision,
-	chem_prop.p_log::double precision,
-	chem_prop.solubility_water::double precision,
-	-- chemical role -----------------------------------------------------------------
-	chem_role.acaricide AS cro_acaricide,
-	chem_role.antibiotic AS cro_antibiotic,
-	chem_role.antifouling AS cro_antifouling,
-	chem_role.avicide AS cro_avicide,
-	chem_role.bactericide AS cro_bactericide,
-	chem_role.biocide AS cro_biocide,
-	chem_role.drug AS cro_drug,
-	chem_role.endocrine_disruptor AS cro_endocrine_disruptor,
-	chem_role.fungicide AS cro_fungicide,
-	chem_role.herbicide AS cro_herbicide,
-	chem_role.insecticide AS cro_insecticide,
-	chem_role.molluscicide AS cro_molluscicide,
-	chem_role.nematicide AS cro_nematicide,
-	chem_role.personal_care_product AS cro_personal_care_product,
-	chem_role.pesticide AS cro_pesticide,
-	chem_role.plant_growth_regulator AS cro_plant_growth_regulator,
-	chem_role.precursor AS cro_precursor,
-	chem_role.repellent AS cro_repellent,
-	chem_role.rodenticide AS cro_rodenticide,
-	chem_role.scabicide AS cro_scabicide,
-	chem_role.schistosomicide AS cro_schistosomicide,
-	chem_role.soil_sterilant AS cro_soil_sterilant,
+	phch_prop.molecularweight::double precision,
+	-- phch_prop.p_log::double precision,
+	-- phch_prop.solubility_water::double precision,
+	-- phchical role -----------------------------------------------------------------
+	phch_role.acaricide AS cro_acaricide,
+	phch_role.antibiotic AS cro_antibiotic,
+	phch_role.antifouling AS cro_antifouling,
+	phch_role.avicide AS cro_avicide,
+	phch_role.bactericide AS cro_bactericide,
+	phch_role.biocide AS cro_biocide,
+	phch_role.drug AS cro_drug,
+	phch_role.endocrine_disruptor AS cro_endocrine_disruptor,
+	phch_role.fungicide AS cro_fungicide,
+	phch_role.herbicide AS cro_herbicide,
+	phch_role.insecticide AS cro_insecticide,
+	phch_role.molluscicide AS cro_molluscicide,
+	phch_role.nematicide AS cro_nematicide,
+	phch_role.personal_care_product AS cro_personal_care_product,
+	phch_role.pesticide AS cro_pesticide,
+	phch_role.plant_growth_regulator AS cro_plant_growth_regulator,
+	phch_role.precursor AS cro_precursor,
+	phch_role.repellent AS cro_repellent,
+	phch_role.rodenticide AS cro_rodenticide,
+	phch_role.scabicide AS cro_scabicide,
+	phch_role.schistosomicide AS cro_schistosomicide,
+	phch_role.soil_sterilant AS cro_soil_sterilant,
 	-- chemical class -----------------------------------------------------------------
-	chem_class.acylamino_acid AS ccl_acylamino_acid,
-	chem_class.aliphatic AS ccl_aliphatic,
-	chem_class.amide AS ccl_amide,
-	chem_class.anilide AS ccl_anilide,
-	chem_class.anilinopyrimidine AS ccl_anilinopyrimidine,
-	chem_class.aromatic AS ccl_aromatic,
-	chem_class.benzamide AS ccl_benzamide,
-	chem_class.benzanilide AS ccl_benzanilide,
-	chem_class.benzimidazole AS ccl_benzimidazole,
-	chem_class.benzoylurea AS ccl_benzoylurea,
-	chem_class.benzothiazole AS ccl_benzothiazole,
-	chem_class.bipyridylium AS ccl_bipyridylium,
-	chem_class.carbamate AS ccl_carbamate,
-	chem_class.conazole AS ccl_conazole,
-	chem_class.cyclohexanedione AS ccl_cyclohexanedione,
-	chem_class.dicarboximide AS ccl_dicarboximide,
-	chem_class.dinitroaniline AS ccl_dinitroaniline,
-	chem_class.dinitrophenol AS ccl_dinitrophenol,
-	chem_class.furamide AS ccl_furamide,
-	chem_class.furanilide AS ccl_furanilide,
-	chem_class.imidazole AS ccl_imidazole,
-	chem_class.isoxazole AS ccl_isoxazole,
-	chem_class.metal AS ccl_metal,
-	chem_class.morpholine AS ccl_morpholine,
-	chem_class.organochlorine AS ccl_organochlorine,
-	chem_class.organofluorine AS ccl_organofluorine,
-	chem_class.organophosphorus AS ccl_organophosphorus,
-	chem_class.organosulfur AS ccl_organosulfur,
-	chem_class.organotin AS ccl_organotin,
-	chem_class.pah AS ccl_pah, -- Polycyclic aromatic hydrocarbon
-	chem_class.pbde AS ccl_pbde, -- Polybrominated Diphenyl Ethers (PBDEs)
-	chem_class.pcb AS ccl_pcb, -- Polychlorinated Biphenyls (PCBs)
-	chem_class.phenoxy AS ccl_phenoxy,
-	chem_class.phenylpyrrole AS ccl_phenylpyrrole,
-	chem_class.phenylsulfamide AS ccl_phenylsulfamide,
-	chem_class.phthalimide AS ccl_phthalimide,
-	chem_class.pyrazole AS ccl_pyrazole,
-	chem_class.pyrimidine AS ccl_pyrimidine,
-	chem_class.pyrethroid AS ccl_pyrethroid,
-	chem_class.pyridine AS ccl_pyridine,
-	chem_class.quinoline AS ccl_quinoline,
-	chem_class.quinone AS ccl_quinone,
-	chem_class.quinoxaline AS ccl_quinoxaline,
-	chem_class.strobilurine AS ccl_strobilurine,
-	chem_class.sulfonamide AS ccl_sulfonamide,
-	chem_class.sulfonylurea AS ccl_sulfonylurea,
-	chem_class.thiourea AS ccl_thiourea,
-	chem_class.triazine AS ccl_triazine,
-	chem_class.triazole AS ccl_triazole,
-	chem_class.urea AS ccl_urea
-FROM chem.chem_id2 id
-LEFT JOIN chem.chem_prop chem_prop USING(casnr)
-LEFT JOIN chem.chem_role chem_role USING (casnr)
-LEFT JOIN chem.chem_class chem_class USING (casnr);
+	phch_class.acylamino_acid AS ccl_acylamino_acid,
+	phch_class.aliphatic AS ccl_aliphatic,
+	phch_class.amide AS ccl_amide,
+	phch_class.anilide AS ccl_anilide,
+	phch_class.anilinopyrimidine AS ccl_anilinopyrimidine,
+	phch_class.aromatic AS ccl_aromatic,
+	phch_class.benzamide AS ccl_benzamide,
+	phch_class.benzanilide AS ccl_benzanilide,
+	phch_class.benzimidazole AS ccl_benzimidazole,
+	phch_class.benzoylurea AS ccl_benzoylurea,
+	phch_class.benzothiazole AS ccl_benzothiazole,
+	phch_class.bipyridylium AS ccl_bipyridylium,
+	phch_class.carbamate AS ccl_carbamate,
+	phch_class.conazole AS ccl_conazole,
+	phch_class.cyclohexanedione AS ccl_cyclohexanedione,
+	phch_class.dicarboximide AS ccl_dicarboximide,
+	phch_class.dinitroaniline AS ccl_dinitroaniline,
+	phch_class.dinitrophenol AS ccl_dinitrophenol,
+	phch_class.furamide AS ccl_furamide,
+	phch_class.furanilide AS ccl_furanilide,
+	phch_class.imidazole AS ccl_imidazole,
+	phch_class.isoxazole AS ccl_isoxazole,
+	phch_class.metal AS ccl_metal,
+	phch_class.morpholine AS ccl_morpholine,
+	phch_class.organochlorine AS ccl_organochlorine,
+	phch_class.organofluorine AS ccl_organofluorine,
+	phch_class.organophosphorus AS ccl_organophosphorus,
+	phch_class.organosulfur AS ccl_organosulfur,
+	phch_class.organotin AS ccl_organotin,
+	phch_class.pah AS ccl_pah, -- Polycyclic aromatic hydrocarbon
+	phch_class.pbde AS ccl_pbde, -- Polybrominated Diphenyl Ethers (PBDEs)
+	phch_class.pcb AS ccl_pcb, -- Polychlorinated Biphenyls (PCBs)
+	phch_class.phenoxy AS ccl_phenoxy,
+	phch_class.phenylpyrrole AS ccl_phenylpyrrole,
+	phch_class.phenylsulfamide AS ccl_phenylsulfamide,
+	phch_class.phthalimide AS ccl_phthalimide,
+	phch_class.pyrazole AS ccl_pyrazole,
+	phch_class.pyrimidine AS ccl_pyrimidine,
+	phch_class.pyrethroid AS ccl_pyrethroid,
+	phch_class.pyridine AS ccl_pyridine,
+	phch_class.quinoline AS ccl_quinoline,
+	phch_class.quinone AS ccl_quinone,
+	phch_class.quinoxaline AS ccl_quinoxaline,
+	phch_class.strobilurine AS ccl_strobilurine,
+	phch_class.sulfonamide AS ccl_sulfonamide,
+	phch_class.sulfonylurea AS ccl_sulfonylurea,
+	phch_class.thiourea AS ccl_thiourea,
+	phch_class.triazine AS ccl_triazine,
+	phch_class.triazole AS ccl_triazole,
+	phch_class.urea AS ccl_urea
+FROM phch.phch_id2 id
+LEFT JOIN phch.phch_prop phch_prop USING(casnr)
+LEFT JOIN phch.phch_role phch_role USING (casnr)
+LEFT JOIN phch.phch_class phch_class USING (casnr);
 
-ALTER TABLE standartox.chemicals ADD PRIMARY KEY (casnr);
+ALTER TABLE standartox.phch ADD PRIMARY KEY (casnr);
 
 
 -------------------------------------------------------------------------------
@@ -240,17 +242,39 @@ DROP TABLE IF EXISTS standartox.taxa;
 CREATE TABLE standartox.taxa AS
 SELECT
 	id.species_number,
-	nullif(id.taxon, '')::text AS tax_taxon,
-	nullif(id.common_name, '')::text AS tax_common_name,
-	nullif(id.genus, '')::text AS tax_genus,
-	nullif(id.family, '')::text AS tax_family,
-	nullif(id.tax_order, '')::text AS tax_order,
-	nullif(id.class, '')::text AS tax_class,
-	nullif(id.superclass, '')::text AS tax_superclass,
-	nullif(id.subphylum_div, '')::text AS tax_subphylum_div,
-	nullif(id.phylum_division, '')::text AS tax_phylum_division,
-	nullif(id.kingdom, '')::text AS tax_kingdom,
-	id.ecotox_group2::text,
+	id.rank::text AS tax_rank,
+	id.taxon::text AS tax_taxon,
+	id.genus::text AS tax_genus,
+	id.family::text AS tax_family,
+	id.tax_order::text AS tax_order,
+	id.class::text AS tax_class,
+	id.superclass::text AS tax_superclass,
+	id.subphylum_div::text AS tax_subphylum_div,
+	id.phylum_division::text AS tax_phylum_division,
+	id.kingdom::text AS tax_kingdom,
+	CASE
+		WHEN grp.fungi IS TRUE
+		THEN 'Fungi'
+		WHEN grp.algae IS TRUE
+		THEN 'Algae'::text
+		WHEN grp.macrophyte IS TRUE
+		THEN 'Macrophyte'::text
+		WHEN grp.plant IS TRUE
+		THEN 'Plant'::text
+		WHEN grp.invertebrate IS TRUE
+		THEN 'Invertebrate'::text
+		WHEN grp.fish IS TRUE
+		THEN 'Fish'::text
+		WHEN grp.amphibia IS TRUE
+		THEN 'Amphibia'::text
+		WHEN grp.reptilia IS TRUE
+		THEN 'Reptilia'::text
+		WHEN grp.aves IS TRUE
+		THEN 'Aves'::text
+		WHEN grp.mammalia IS TRUE
+		THEN 'Mammalia'::text
+		ELSE NULL
+	END AS ecotox_grp,
 	CASE
 		WHEN trop.autotroph IS TRUE
 		THEN 'autotroph'::text
@@ -270,10 +294,12 @@ SELECT
 	cont.asia::boolean AS reg_asia,
 	cont.europe::boolean AS reg_europe,
 	cont.oceania::boolean AS reg_oceania
-FROM taxa.taxa_id2 id
+FROM taxa.taxa_id id
 LEFT JOIN taxa.taxa_trophic_lvl trop USING (species_number)
+LEFT JOIN taxa.taxa_group grp USING (species_number)
 LEFT JOIN taxa.taxa_habitat habi USING (species_number)
-LEFT JOIN taxa.taxa_continent cont USING (species_number);
+LEFT JOIN taxa.taxa_continent cont USING (species_number)
+WHERE id.rank IN ('species', 'genus');
 
 ALTER TABLE standartox.taxa ADD PRIMARY KEY (species_number);
 
@@ -284,14 +310,14 @@ DROP TABLE IF EXISTS standartox.refs;
 CREATE TABLE standartox.refs AS
 
 SELECT
-	refs.reference_number,	
-	refs.title,
-	refs.author,
-	refs.publication_year
+	refs.reference_number AS ref_number,
+	CLEAN_NR(refs.title) AS ref_title,
+	CLEAN_NR(refs.author) AS ref_author,
+	CLEAN_NR(refs.publication_year) AS ref_year
 FROM ecotox.refs
 WHERE refs.publication_year != '19xx';
 
-ALTER TABLE standartox.refs ADD PRIMARY KEY (reference_number);
+ALTER TABLE standartox.refs ADD PRIMARY KEY (ref_number);
 
 -------------------------------------------------------------------------------
 -- tests fin
@@ -302,7 +328,7 @@ CREATE TABLE standartox.tests_fin AS
 SELECT
 	result_id,
 	species_number,
-	reference_number,
+	ref_number,
 	casnr,
 	CASE
 		WHEN conc1_unit4 = 'g/l'
@@ -334,6 +360,8 @@ SELECT
 		THEN 'ul/m2'
 		ELSE conc1_unit4
 	END AS concentration_unit,
+	conc1_mean AS concentration_orig,
+	conc1_unit AS concentration_unit_orig,
 	conc1_type2 AS concentration_type,
 	obs_duration_mean2 AS duration,
 	obs_duration_unit2 AS duration_unit, 
@@ -343,7 +371,7 @@ SELECT
 
 FROM standartox.tests
 WHERE
-	conc1_qualifier = '='
+	conc1_mean_op = '='
     AND conc1_mean2 IS NOT NULL AND conc1_unit2 IS NOT NULL
     AND conc1_unit4 IN ('g/l', 'g/m2', 'ppb', 'g/g', 'l/l', 'l/m2')
     AND obs_duration_mean2 IS NOT NULL AND obs_duration_unit2 IS NOT NULL AND obs_duration_unit2 = 'h'

@@ -1,68 +1,63 @@
 # script to check concentration and duration units
-# TODO rewrite to check with full table
 
 # setup -------------------------------------------------------------------
 source(file.path(src, 'gn_setup.R'))
-# 
-# # query -------------------------------------------------------------------
-# # NOTE query to retrieve a sample of the top50 units
-# # q = '
-# # WITH t1 AS (
-# #   SELECT obs_duration_unit, count(*) n
-# #   FROM ecotox.results
-# #   GROUP BY obs_duration_unit
-# #   HAVING obs_duration_unit IN ('s', 'mi', 'h', 'd', 'wk', 'mo')
-# #   ORDER BY n DESC
-# # )
-# # SELECT DISTINCT ON (obs_duration_unit) result_id, obs_duration_mean, obs_duration_unit
-# # FROM ecotox.results
-# # RIGHT JOIN t1 USING (obs_duration_unit)
-# # WHERE obs_duration_unit IN ('s', 'mi', 'h', 'd', 'wk', 'mo') AND obs_duration_mean NOT IN ('NR')
-# # ORDER BY obs_duration_unit;
-# # '
-# 
-# # sample ------------------------------------------------------------------
-# # 50 most occurring result_id s
-# ids = c(2231908L, 2038088L, 717310L, 2369905L, 756251L, 2318654L)
-# 
-# q = paste0("SELECT stx.result_id, stx.casnr, stx.obs_duration_mean, stx.obs_duration_unit, stx.obs_duration_mean2, stx.obs_duration_unit2
-#             FROM standartox.tests stx
-#             LEFT JOIN standartox.chemicals che ON stx.casnr = che.casnr
-#             WHERE stx.result_id IN (", paste0(ids, collapse = ','), ")
-#               AND conc1_mean != 'NR';")
-# 
-# dur = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-#                  query = q)
-# 
-# # manual comparison -------------------------------------------------------
-# dur[ result_id == 717310L, `:=` (obs_duration_mean3 = 3.500007, obs_duration_unit3 = 'h') ] # * 0,0166667
-# dur[ result_id == 756251L, `:=` (obs_duration_mean3 = 0.0027778, obs_duration_unit3 = 'h') ] # * 0.00027778
-# dur[ result_id == 2038088L, `:=` (obs_duration_mean3 = 48, obs_duration_unit3 = 'h') ]
-# dur[ result_id == 2231908L, `:=` (obs_duration_mean3 = 24, obs_duration_unit3 = 'h') ]
-# dur[ result_id == 2318654L, `:=` (obs_duration_mean3 = 672, obs_duration_unit3 = 'h') ]
-# dur[ result_id == 2369905L, `:=` (obs_duration_mean3 = 10950.015, obs_duration_unit3 = 'h') ] # * 730.001
-# 
-# # chck --------------------------------------------------------------------
-# chck_obs_duration_mean2 = dur[ obs_duration_mean2 != obs_duration_mean3 ]
-# chck_obs_duration_unit2 = dur[ obs_duration_unit2 != obs_duration_unit3 ]
-# 
-# if (nrow(chck_obs_duration_mean2) != 0) {
-#   msg = 'Concentration conversion (obs_duration_mean2) not valid.'
-#   warning(msg)
-#   log_msg(msg)
-# }
-# if (nrow(chck_obs_duration_unit2) != 0) {
-#   msg = 'Concentration conversion (obs_duration_unit2) not valid.'
-#   warning(msg)
-#   log_msg(msg)
-# }
-# 
-# # write -------------------------------------------------------------------
-# fwrite(dur, file.path(article, 'cache', 'chck-units-duration.csv'))
-# 
-# # log ---------------------------------------------------------------------
-# log_msg('CHCK: Duration units conversions check script run.')
-# 
-# # cleaning ----------------------------------------------------------------
-# clean_workspace()
-# 
+
+# chck table --------------------------------------------------------------
+cols = c('result_id',
+         'obs_duration_unit',
+         'obs_duration_mean2_manual', 'obs_duration_unit2_manual')
+dur_chck = fread(file.path(lookupdir, 'chck_unit_duration_conversion.csv'),
+                 select = cols,
+                 na.strings = '')
+
+# chck new units ----------------------------------------------------------
+q = paste0(
+  "SELECT DISTINCT ON (obs_duration_unit) result_id, obs_duration_unit
+    FROM ecotox.results2
+    WHERE obs_duration_unit NOT IN ('", paste0(dur_chck$obs_duration_unit, collapse = "', '"), "')
+      AND obs_duration_unit NOT IN ('', '--', 'NA', 'NC', 'NR');"
+)
+new = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                 query = q)
+# condition
+if (nrow(new) != 0) {
+  log_msg('New units! Add them to chck_unit_result_conversion.csv')
+}
+
+# retrieve specific single result_id s ------------------------------------
+q = paste0(
+  "SELECT result_id, obs_duration_mean, obs_duration_unit, obs_duration_mean2, obs_duration_unit2
+   FROM ecotox.results2
+   WHERE result_id IN (", paste0(dur_chck$result_id, collapse = ', '), ");"
+)
+dur = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                 query = q)
+
+# merge -------------------------------------------------------------------
+dur2 = merge(dur, dur_chck, by = c('result_id', 'obs_duration_unit'), all = TRUE)
+
+# prepare -----------------------------------------------------------------
+dur2[ , chck_mean2 := fifelse(obs_duration_mean2 == obs_duration_mean2_manual, TRUE, FALSE) ]
+dur2[ , chck_unit2 := fifelse(obs_duration_unit2 == obs_duration_unit2_manual, TRUE, FALSE) ]
+
+# manual checking ---------------------------------------------------------
+# TODO out-comment this
+dur2[ , .N, chck_mean2 ] # NA 0; FALSE 2
+# TODO dur2[ chck_mean2 == FALSE ]
+dur2[ , .N, chck_unit2 ] # NA 0; FALSE 2
+dur2[ chck_unit2 == FALSE, .SD, .SDcols = c('result_id', 'obs_duration_unit') ] # TODO
+
+# write -------------------------------------------------------------------
+saveRDS(dur2, file.path(cachedir, 'chck_unit_duration_conversion.rds'))
+
+# chck --------------------------------------------------------------------
+chck_equals(nrow(dur2[ is.na(chck_mean2) | chck_mean2 == FALSE ]), 0)
+chck_equals(nrow(dur2[ is.na(chck_unit2) | chck_unit2 == FALSE ]), 0)
+
+# log ---------------------------------------------------------------------
+log_msg('CHCK: Duration units conversions check script run.')
+
+# cleaning ----------------------------------------------------------------
+clean_workspace()
+
