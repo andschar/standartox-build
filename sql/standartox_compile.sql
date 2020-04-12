@@ -240,17 +240,26 @@ DROP TABLE IF EXISTS standartox.taxa;
 CREATE TABLE standartox.taxa AS
 SELECT
 	id.species_number,
-	nullif(id.taxon, '') AS tax_taxon,
-	nullif(id.common_name, '') AS common_name,
-	nullif(id.genus, '') AS tax_genus,
-	nullif(id.family, '') AS tax_family,
-	nullif(id.tax_order, '') AS tax_order,
-	nullif(id.class, '') AS tax_class,
-	nullif(id.superclass, '') AS tax_superclass,
-	nullif(id.subphylum_div, '') AS subphylum_div,
-	nullif(id.phylum_division, '') AS tax_phylum_division,
-	nullif(id.kingdom, '') AS tax_kingdom,
-	id.ecotox_group2,
+	nullif(id.taxon, '')::text AS tax_taxon,
+	nullif(id.common_name, '')::text AS tax_common_name,
+	nullif(id.genus, '')::text AS tax_genus,
+	nullif(id.family, '')::text AS tax_family,
+	nullif(id.tax_order, '')::text AS tax_order,
+	nullif(id.class, '')::text AS tax_class,
+	nullif(id.superclass, '')::text AS tax_superclass,
+	nullif(id.subphylum_div, '')::text AS tax_subphylum_div,
+	nullif(id.phylum_division, '')::text AS tax_phylum_division,
+	nullif(id.kingdom, '')::text AS tax_kingdom,
+	id.ecotox_group2::text,
+	CASE
+		WHEN trop.autotroph IS TRUE
+		THEN 'autotroph'::text
+		WHEN trop.heterotroph IS TRUE
+		THEN 'heterotroph'::text
+		WHEN trop.mixotroph IS TRUE
+		THEN 'mixotroph'::text
+		ELSE NULL
+	END AS trophic_lvl,
 	habi.marin::boolean AS hab_marine,
 	habi.brack::boolean AS hab_brackish,
 	habi.fresh::boolean AS hab_freshwater,
@@ -262,6 +271,7 @@ SELECT
 	cont.europe::boolean AS reg_europe,
 	cont.oceania::boolean AS reg_oceania
 FROM taxa.taxa_id2 id
+LEFT JOIN taxa.taxa_trophic_lvl trop USING (species_number)
 LEFT JOIN taxa.taxa_habitat habi USING (species_number)
 LEFT JOIN taxa.taxa_continent cont USING (species_number);
 
