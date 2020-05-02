@@ -5,24 +5,31 @@
 source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
-q = "SELECT result_id, casnr, cname,
-            tax_taxon taxon, concentration,
-            concentration_unit, duration, duration_unit,
-            endpoint, effect, exposure
-     FROM standartox.tests_fin
-     LEFT JOIN standartox.phch USING (casnr)
-     LEFT JOIN standartox.taxa USING (species_number)
-     WHERE duration_unit = 'h'"
-
-dat = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
-                 query = q)
+if (download) {
+  q = "SELECT result_id, casnr, cname,
+              tax_taxon taxon, concentration,
+              concentration_unit, duration, duration_unit,
+              endpoint, effect, exposure
+       FROM standartox.tests_fin
+       LEFT JOIN standartox.phch USING (casnr)
+       LEFT JOIN standartox.taxa USING (species_number)
+       WHERE duration_unit = 'h'"
+  
+  dat = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                   query = q)
+  saveRDS(dat, file.path(cachedir, 'fig_results_variability.rds'))
+} else {
+  
+  dat = readRDS(file.path(cachedir, 'fig_results_variability.rds'))
+}
 
 # erros -------------------------------------------------------------------
 # TODO fix this before
 dat[ taxon == 'Pseudokirchneriella subcapitata', taxon := 'Raphidocelis subcapitata' ]
+# TODO fix enopous error
 
 # prepare -----------------------------------------------------------------
-dat2 = dat[ taxon %in% c('Raphidocelis subcapitata', 'Lemna minor', 'Oncorhynchus mykiss', 'Rattus norvegicus', 'Xenopus laevis', 'Daphnia magna', 'Pimephales promelas') &
+dat2 = dat[ taxon %in% c('Raphidocelis subcapitata', 'Lemna minor', 'Oncorhynchus mykiss', 'Rattus norvegicus', 'Xenopus laevis', 'enopus laevis', 'Daphnia magna', 'Pimephales promelas') &
               endpoint == 'XX50' &
               concentration_unit %in% c('ug/l', 'ppb') &
               duration %in% c(24,48,72,96) ]
@@ -43,7 +50,7 @@ tax = dat2[ cname == 'atrazine' &
 tax[ taxon == 'Raphidocelis subcapitata', taxon := 'R. subcapitata' ] %>% 
   .[ taxon == 'Lemna minor', taxon := 'L. minor' ] %>% 
   .[ taxon == 'Oncorhynchus mykiss', taxon := 'O. mykiss' ] %>% 
-  .[ taxon == 'Xenopus laevis', taxon := 'X. laevis' ]
+  .[ taxon %in% c('Xenopus laevis', 'enopus laevis'), taxon := 'X. laevis' ]
 
 tax_gm = tax[ ,
               .(min = min(concentration),
