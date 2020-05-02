@@ -94,9 +94,9 @@ gg_dur = ggplot(dur, aes(x = duration, y = concentration)) +
   geom_violin(position = position_dodge(), alpha = 0.5) +
   geom_errorbar(data = dur_gm, aes(x = duration, y = gm, ymin = gm - gmsd, ymax = gm + gmsd),
                 size = 1, col = 'red', alpha = 0.5) +
-  geom_point(data = dur_gm, aes(x = duration, y = am), size = 3, col = 'blue') +
-  geom_errorbar(data = dur_gm, aes(x = duration, y = am, ymin = am - amsd, ymax = am + amsd),
-                size = 1, col = 'blue', alpha = 0.5) +
+  # geom_point(data = dur_gm, aes(x = duration, y = am), size = 3, col = 'blue') +
+  # geom_errorbar(data = dur_gm, aes(x = duration, y = am, ymin = am - amsd, ymax = am + amsd),
+  #               size = 1, col = 'blue', alpha = 0.5) +
   geom_point(data = dur_gm, aes(x = duration, y = gm), size = 3, col = 'red') +
   geom_point(data = dur_gm, aes(x = duration, y = min), size = 1.5, col = 'black') +
   geom_point(data = dur_gm, aes(x = duration, y = max), size = 1.5, col = 'black') +
