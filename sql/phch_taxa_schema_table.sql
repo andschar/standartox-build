@@ -46,7 +46,7 @@ CREATE SCHEMA taxa;
 CREATE TABLE taxa.taxa_data AS
 SELECT
 	species_number,
-	TRIM(both ' ' from REGEXP_REPLACE(genus, 'X', '')) || ' ' ||
+	TRIM(both ' ' from REGEXP_REPLACE(genus, ' X', '')) || ' ' ||
 		TRIM(both ' ' from REGEXP_REPLACE(species, 'X', '')) AS taxon,
 	REPLACE(COALESCE(species||'species', genus||'genus', family||'family', tax_order||'order', class||'class'), --, superclass||'superclass', subphylum),
 		    COALESCE(species, genus, family, tax_order, class), --, superclass),

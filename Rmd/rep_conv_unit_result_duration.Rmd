@@ -1,0 +1,285 @@
+---
+title: "Unit conversion report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      fig.width = 15, fig.height = 8)
+```
+
+```{r data, echo=FALSE, include=FALSE}
+## converted units
+q = "SELECT *
+     FROM ecotox.results2"
+units = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                   query = q)
+## conversion check
+chck_unit_result_conversion = readRDS(file.path(cachedir, 'chck_unit_result_conversion.rds'))
+chck_unit_duration_conversion = readRDS(file.path(cachedir, 'chck_unit_duration_conversion.rds'))
+```
+
+## Result units
+
+### Distinct units reduction
+```{r}
+res_n = units[ , lapply(.SD, uniqueN), .SDcols = c('conc1_unit', 'conc1_unit2', 'conc1_unit3', 'conc1_unit4')]
+ggplot(melt(res_n), aes(y = value, x = variable)) +
+  geom_bar(stat = 'identity')
+```
+
+
+Number of tests removed b/c of removed units: `r tab = table(units$conc1_remove); round(tab[2] / nrow(units) * 100, 1)`
+
+
+### Number of tests per kept original units
+Area is on `log10` scale.
+
+```{r}
+res_dist = units[ conc1_remove == FALSE, .N, conc1_unit ]
+res_dist[ , label := paste0(conc1_unit, '\n', N) ]
+ggplot(res_dist, aes(area = log10(N), label = label)) +
+  geom_treemap() +
+  geom_treemap_text(col = 'white')
+```
+
+### Number of tests per removed original units
+Area is on `log10` scale.
+
+```{r}
+res_dist = units[ conc1_remove == TRUE, .N, conc1_unit ]
+res_dist[ , label := paste0(conc1_unit, '\n', N) ]
+ggplot(res_dist, aes(area = log10(N), label = label)) +
+  geom_treemap() +
+  geom_treemap_text(col = 'white')
+```
+
+### Number of tests per kept converted units
+Area is on `log10` scale.
+
+```{r}
+res_dist = units[ conc1_remove == FALSE, .N, conc1_unit4 ]
+res_dist[ , label := paste0(conc1_unit4, '\n', N) ]
+ggplot(res_dist, aes(area = log10(N), label = label)) +
+  geom_treemap() +
+  geom_treemap_text(col = 'white')
+```
+
+### Number of tests per removed converted units
+Area is on `log10` scale.
+
+```{r}
+res_dist_rm = units[ conc1_remove == TRUE, .N, conc1_unit4 ]
+res_dist_rm[ , label := paste0(conc1_unit4, '\n', N) ]
+ggplot(res_dist_rm, aes(area = log10(N), label = label)) +
+  geom_treemap() +
+  geom_treemap_text(col = 'white')
+```
+
+### Conversion check
+
+#### All units
+```{r}
+chck_res = chck_unit_result_conversion[ , .N, .(chck_mean2, chck_unit2, chck_mean4, chck_unit4) ]
+m = melt(chck_res, measure.vars = c('chck_mean2', 'chck_unit2', 'chck_mean4', 'chck_unit4'))
+m[ , chck := fifelse(value == TRUE, 'correct', fifelse(value == FALSE, 'wrong', NA_character_)) ]
+m[ is.na(chck), chck := 'no chck\nvalue' ]
+# plot
+ggplot(m, aes(y = N, x = variable, group = chck, fill = chck, label = N)) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  geom_text(position = position_dodge(width = 0.9),
+            hjust = 1.2, col = 'white', size = 4) +
+  scale_fill_manual(values = c('springgreen1', 'salmon1', 'firebrick4')) +
+    labs(title = 'Standartox unit conversion check',
+         subtitle = 'All units',
+         x = NULL) +
+  coord_flip()
+```
+
+#### Only not removed units
+```{r}
+chck_res_nrm = chck_unit_result_conversion[ conc1_remove != TRUE,
+                                            .N,
+                                            .(chck_mean2, chck_unit2, chck_mean4, chck_unit4) ]
+m = melt(chck_res_nrm,
+         measure.vars = c('chck_mean2', 'chck_unit2', 'chck_mean4', 'chck_unit4'))
+m[ , chck := fifelse(value == TRUE, 'correct', fifelse(value == FALSE, 'wrong', NA_character_)) ]
+m[ is.na(chck), chck := 'no chck\nvalue' ]
+# plot
+ggplot(m, aes(y = N, x = variable, group = chck, fill = chck, label = N)) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  geom_text(position = position_dodge(width = 0.9),
+            hjust = 1.2, col = 'white', size = 4) +
+  scale_fill_manual(values = c('springgreen1', 'salmon1', 'firebrick4')) +
+  labs(title = 'Standartox unit conversion check',
+       subtitle = 'Only kept units',
+       x = NULL) +
+  coord_flip()
+```
+
+
+```{r paper-review, eval=FALSE}
+result_id_excl = chck_unit_result_conversion[ conc1_unit4 %in% c('g/l', 'g/g', 'g/m2', 'ppb', 'l/l', 'l/m2') ][ chck_unit2 == FALSE | is.na(chck_unit2), result_id ]
+chck_paper = chck_unit_result_conversion[ conc1_unit4 %in% c('g/l', 'g/g', 'g/m2', 'ppb', 'l/l', 'l/m2') &
+                                            !result_id %in% result_id_excl ,
+                                          .N,
+                                          .(chck_unit2, chck_unit4) ]
+conc1_unit_ = chck_unit_result_conversion[ conc1_unit4 %in% c('g/l', 'g/g', 'g/m2', 'ppb', 'l/l', 'l/m2') &
+                                             !result_id %in% result_id_excl,
+                                           conc1_unit ]
+
+q = "SELECT conc1_unit, count(*) n
+ FROM ecotox.results2
+ GROUP BY conc1_unit
+ ORDER BY n DESC"
+dat = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+                 query = q)
+dat[ , kept := fifelse(conc1_unit %in% conc1_unit_, TRUE, FALSE) ]
+dat2 = dat[ , .(sum(n)), kept]
+dat2$V1[1] / sum(dat2$V1)
+
+m = melt(chck_paper,
+         measure.vars = c('chck_unit2', 'chck_unit4'))
+m[ , chck := fifelse(value == TRUE, 'correct', fifelse(value == FALSE, 'wrong', NA_character_)) ]
+m[ is.na(chck), chck := 'no chck\nvalue' ]
+# plot
+ggplot(m, aes(y = N, x = variable, group = chck, fill = chck, label = N)) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  geom_text(position = position_dodge(width = 0.9),
+            hjust = 1.2, col = 'white', size = 4) +
+  scale_fill_manual(values = c('springgreen1', 'salmon1', 'firebrick4')) +
+  labs(title = 'Standartox unit conversion check',
+       subtitle = 'Only kept units',
+       x = NULL) +
+  coord_flip()
+```
+
+
+## Duration units
+
+```{r}
+dur_n = units[ , lapply(.SD, uniqueN), .SDcols = c('obs_duration_unit', 'obs_duration_unit2') ]
+ggplot(melt(dur_n), aes(y = value, x = variable)) +
+  geom_bar(stat = 'identity')
+```
+
+### Number of tests per kept original units
+Area is on `log10` scale.
+
+```{r}
+dur_dist = units[ conc1_remove == FALSE, .N, obs_duration_unit ]
+dur_dist[ , label := paste0(obs_duration_unit, '\n', N) ]
+ggplot(dur_dist, aes(area = log10(N), label = label)) +
+  geom_treemap() +
+  geom_treemap_text(col = 'white')
+```
+
+### Number of tests per removed original units
+Area is on `log10` scale.
+
+```{r}
+dur_dist = units[ conc1_remove == TRUE, .N, obs_duration_unit ]
+dur_dist[ , label := paste0(obs_duration_unit, '\n', N) ]
+ggplot(dur_dist, aes(area = log10(N), label = label)) +
+  geom_treemap() +
+  geom_treemap_text(col = 'white')
+```
+
+### Number of tests per kept converted units
+Area is on `log10` scale.
+
+```{r}
+dur_dist = units[ conc1_remove == FALSE, .N, obs_duration_unit2 ]
+dur_dist[ , label := paste0(obs_duration_unit2, '\n', N) ]
+ggplot(dur_dist, aes(area = log10(N), label = label)) +
+  geom_treemap() +
+  geom_treemap_text(col = 'white')
+```
+
+### Number of tests per removed converted units
+Area is on `log10` scale.
+
+```{r}
+dur_dist_rm = units[ conc1_remove == TRUE, .N, obs_duration_unit2 ]
+dur_dist_rm[ , label := paste0(obs_duration_unit2, '\n', N) ]
+ggplot(dur_dist_rm, aes(area = log10(N), label = label)) +
+  geom_treemap() +
+  geom_treemap_text(col = 'white')
+```
+
+### Conversion check
+
+#### All units
+```{r}
+chck_dur = chck_unit_duration_conversion[ , .N, .(chck_mean2, chck_unit2) ]
+m = melt(chck_dur, measure.vars = c('chck_mean2', 'chck_unit2'))
+m[ , chck := fifelse(value == TRUE, 'correct', fifelse(value == FALSE, 'wrong', NA_character_)) ]
+m[ is.na(chck), chck := 'no chck\nvalue' ]
+# plot
+ggplot(m, aes(y = N, x = variable, fill = chck, label = N)) +
+  geom_bar(stat = 'identity', position = position_dodge()) +
+  geom_text(position = position_dodge(width = 0.9), hjust = 1.2, col = 'white', size = 4) +
+  scale_fill_manual(values = c('springgreen1', 'salmon1', 'firebrick4')) +
+  labs(x = NULL) +
+  coord_flip()
+```
+
+```{r plot, eval=FALSE, fig.width=10, fig.height=30}
+# TODO plot is way to large
+# ## 1
+# test = units[ , .(n = .N), conc1_unit4 ]
+# ggplot(test, aes(area = n, label = conc1_unit4)) +
+#   geom_treemap() +
+#   geom_treemap_text(col = 'white')
+# 
+# 
+# # ## 2
+# require(ggalluvial)
+# 
+# dat = units[ conc1_remove == TRUE, .N, .(conc1_unit, conc1_unit2, conc1_unit3, conc1_unit4, conc1_remove) ]
+# setorder(dat, -N)
+# 
+# gg_alluvium = ggplot(dat,
+#        aes(axis1 = reorder(conc1_unit, -N),
+#            axis2 = reorder(conc1_unit2, -N), # axis3 = conc1_unit3, axis4 = conc1_unit4,
+#            y = N, fill = conc1_remove)) +
+#   geom_alluvium() +
+#   geom_stratum(width = 1/12, fill = "black", color = "grey") +
+#   geom_label(stat = "stratum", infer.label = TRUE)
+#   
+# ggsave(gg_alluvium, filename = file.path('/tmp/alluvium.svg'),
+#        width = 20, height = 60, dpi = 90, limitsize = FALSE)
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
