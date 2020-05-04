@@ -373,6 +373,7 @@ FROM standartox.tests
 WHERE
 	conc1_mean_op = '='
     AND conc1_mean2 IS NOT NULL AND conc1_unit2 IS NOT NULL
+    AND conc1_mean4 IS NOT NULL AND conc1_unit4 IS NOT NULL
     AND conc1_unit4 IN ('g/l', 'g/m2', 'ppb', 'g/g', 'l/l', 'l/m2')
     AND obs_duration_mean2 IS NOT NULL AND obs_duration_unit2 IS NOT NULL AND obs_duration_unit2 = 'h'
     AND effect IS NOT NULL

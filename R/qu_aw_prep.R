@@ -8,8 +8,7 @@ aw_l = readRDS(file.path(cachedir, 'aw', 'aw_l.rds'))
 
 # preparation -------------------------------------------------------------
 aw_l2 = aw_l[ !is.na(aw_l) ] # remove NAs
-aw = rbindlist(lapply(aw_l2, function(x) data.table(t(x)))) # columns are lists
-aw = aw[, lapply(.SD, as.character) ]
+aw = rbindlist(aw_l2, fill = TRUE)
 n_sa_cols = max(sapply(aw$subactivity, length)) # up to 3 length vectors 
 
 aw[ , paste0('subactivity', n_sa_cols) := sapply(subactivity, `[`, n_sa_cols)]
