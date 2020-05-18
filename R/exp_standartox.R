@@ -23,7 +23,17 @@ for (i in 1:nrow(stx)) {
              compress = 0,
              user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
              dir = exportdir,
-             file_name = paste0(schema, '.', tbl))  
+             file_name = paste0(schema, '.', tbl))
+  # for article
+  # TODO remove, once it's published
+  export_tbl(schema = schema,
+             tbl = tbl,
+             type = 'csv',
+             debug = FALSE,
+             compress = 0,
+             user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
+             dir = exportdir,
+             file_name = paste0(schema, '.', tbl)) 
 }
 
 # export stamp ------------------------------------------------------------

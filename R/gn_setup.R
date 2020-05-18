@@ -2,27 +2,27 @@
 
 # projects ----------------------------------------------------------------
 nodename = Sys.info()[4]
-if (nodename == 'scharmueller-t460s') {
-  prj = '/home/scharmueller/Projects/standartox-build'
-} else if (nodename == 'uwigis') {
-  prj = '/home/scharmueller/Projects/standartox-build'
-} else {
-  stop('New system. Define prj variable.')
-}
+prj = '~/Projects/standartox-build'
 
 # switches ----------------------------------------------------------------
-download_db = TRUE # should database query be run
-build_db = TRUE # build data base?
+# download
+download_db = FALSE # should database query be run
 download = FALSE # run download (dwld) scripts (takes days)? 
+# build
+build_db = TRUE # build data base?
 build = TRUE # run preparation (prep) scripts?
-lookup = F # build lookup_tables
-chck = F # unit check scripts
-build_standartox = F
-build_norman = F
-debug_mode = FALSE # should only 10 input rows for each quering script be run
-sink_console = F # sink console to file
-general = F
+# chck
+chck = FALSE # unit check scripts
+# report
 report = TRUE # should reports be created? dbreport::
+# standartoc
+build_standartox = TRUE
+# NORMAN
+build_norman = FALSE
+# general
+debug_mode = FALSE # should only 10 input rows for each quering script be run
+sink_console = FALSE # sink console to file
+general = TRUE
 
 # packages ----------------------------------------------------------------
 if (!require('pacman')) {
@@ -90,7 +90,7 @@ pacman::p_load(char = pkg_cran)# , oldPkgs = pkg_cran) # oldPkgs # passed to uti
 
 ## install via Github
 pacman::p_load_gh(char = pkg_gith)
-# TODO uncomment pacman::p_load_current_gh(char = pkg_gith)
+# pacman::p_load_current_gh(char = pkg_gith)
 
 # variables ----------------------------------------------------------------
 cachedir = file.path(prj, 'cache')
@@ -105,6 +105,7 @@ DBetox = try(readRDS(file.path(cachedir, 'data_base_name_version.rds')))
 if(inherits(DBetox, 'try-error')) {
   DBetox = 'DBetox not yet defined'
 }
+# DBetox = 'etox20191212' # TODO switched on for NORMAN development - swtich OFF AGIAN
 vers = gsub('etox', '', DBetox)
 ## export/summary
 exportdir = file.path(prj, 'export', vers)
@@ -197,6 +198,6 @@ theme_set(theme_minimal_etox_base_sans)
 # TODO uncomment after article acceptance
 # knitr::write_bib(c(pkg_cran,
 #                    gsub('(.+)/(.+)', '\\2', pkg_gith)),
-#                  file = file.path(article, 'refs', 'references-standartox-rpackages.bib'))
+#                  file = file.path(article, 'refs', 'references-standartox-rpackages2.bib'))
 
 

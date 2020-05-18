@@ -147,7 +147,7 @@ tax[ class == 'Thaliacea', `:=` (tunicata = TRUE, heterotroph = TRUE, marine = T
 tax[ phylum_division == 'Sarcomastigophora', `:=` (sarcomastigophora = TRUE, heterotroph = TRUE, ecotox_group2 = 'Sarcomastigophora') ]
 
 # fungi -------------------------------------------------------------------
-tax[ ecotox_group == 'Fungi', `:=` (fungi = TRUE, heterotroph = TRUE, ecotox_group2 = 'Fungi') ]
+tax[ kingdom == 'Fungi', `:=` (fungi = TRUE, heterotroph = TRUE, ecotox_group2 = 'Fungi') ]
 tax[ class == 'Sordariomycetes', `:=` (fungi = TRUE, heterotroph = TRUE, ecotox_group2 = 'Fungi') ]
 tax[ class == 'Pucciniomycetes', `:=` (fungi = TRUE, heterotroph = TRUE, ecotox_group2 = 'Fungi') ]
 

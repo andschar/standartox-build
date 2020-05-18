@@ -6,7 +6,7 @@ source(file.path(src, 'gn_setup.R'))
 
 # download ----------------------------------------------------------------
 baseurl = 'ftp://newftp.epa.gov/ECOTOX/' # removing the trailing '/' causes an error
-ftp = getURL(baseurl)
+ftp = html_text(read_html(baseurl))
 date_pattern = '[0-9]{2}_[0-9]{2}_[0-9]{4}'
 
 # data.table of ftp files (+ date column)

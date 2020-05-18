@@ -7,7 +7,7 @@ source('~/Projects/standartox-build/app/setup.R')
 sidewidth = 400
 
 # data --------------------------------------------------------------------
-source('~/Projects/standartox-build/app/data.R')
+source(file.path(app, 'data.R'))
 
 # catalog -----------------------------------------------------------------
 catalog = readRDS(file.path(datadir2, paste0('standartox_catalog_app.rds')))
@@ -22,11 +22,11 @@ tax_dt = catalog$taxa[ , .SD, .SDcols = 'variable' ]
 setnames(tax_dt, 'Taxon')
 
 # header ------------------------------------------------------------------
-header = dashboardHeaderPlus(
+header = dashboardHeader(
   title = 'Standartox',
   titleWidth = sidewidth,
   fixed = TRUE,
-  left_menu = tagList(
+  leftUi = tagList(
     dropdownBlock(
       id = 'download_agg',
       title = 'Download data',
@@ -200,10 +200,11 @@ sidebar = dashboardSidebar(
   )
 )
 
-rightsidebar = rightSidebar()
+rightsidebar = dashboardControlbar()
 
 # body --------------------------------------------------------------------
 body = dashboardBody(
+  use_tracking(), # log
   br(),
   br(),
   br(),
@@ -212,7 +213,7 @@ body = dashboardBody(
       status = 'success',
       width = 9,
       collapsible = TRUE,
-      withMathJax(includeMarkdown('../README.md')) # https://stackoverflow.com/questions/33499651
+      withMathJax(includeMarkdown(file.path(rootdir, 'README.md'))) # https://stackoverflow.com/questions/33499651
     ),
     box(
       title = 'Information',
@@ -285,12 +286,17 @@ body = dashboardBody(
   )
 )
 
-# page --------------------------------------------------------------------
-ui = dashboardPagePlus(header, sidebar, body,
-                       title = 'Standartox',
-                       skin = 'purple')
-# server ------------------------------------------------------------------
+ui = dashboardPage(header = header,
+                   sidebar = sidebar,
+                   body = body,
+                   title = 'Standartox',
+                   skin = 'purple')
+
 server = function(input, output, session) {
+  # log ---------------------------------------------------------------------
+  track_usage(
+    storage_mode = store_rds(path = file.path(app, 'log/app'))
+  )
   # renderUI ----------------------------------------------------------------
   casnr_input = reactive({
     casnr = gsub('-', '', handle_input_multiple(input$casnr), fixed = TRUE)
@@ -298,10 +304,6 @@ server = function(input, output, session) {
       casnr = NULL
     }
     casnr
-    # saveRDS(a, '/tmp/chem_input.rds') # TODO remove
-    # a
-    # gsub('-', '', handle_input_multiple(NULL))
-    # 
   })
   # handle multiple inputs
   taxa_input = reactive({
@@ -309,7 +311,7 @@ server = function(input, output, session) {
   })
   # filter ------------------------------------------------------------------
   data_fil = reactive({
-    stx_filter(
+    fil <<- stx_filter(
       test = stx_test,
       chem = stx_chem,
       taxa = stx_taxa,
@@ -329,39 +331,37 @@ server = function(input, output, session) {
       exposure_ = input$exposure,
       casnr_ = casnr_input()
     )
+    fil
   })
   # TODO add outlier flaging here
   # CONTINUE HERE (writte: 19.3.2020)
   # aggregate ---------------------------------------------------------------
   data_agg = reactive({
-    agg = standartox:::stx_aggregate(
-      stx_filter(
-        test = stx_test,
-        chem = stx_chem,
-        taxa = stx_taxa,
-        refs = stx_refs,
-        concentration_unit_ = input$concentration_unit,
-        concentration_type_ = input$concentration_type,
-        chemical_role_ = input$chemical_role,
-        chemical_class_ = input$chemical_class,
-        taxa_ = taxa_input(),
-        trophic_lvl_ = input$trophic_lvl,
-        habitat_ = input$habitat,
-        region_ = input$region,
-        ecotox_grp_ = input$ecotox_grp,
-        duration_ = c(input$dur1, input$dur2),
-        effect_ = input$effect,
-        endpoint_ = input$endpoint,
-        exposure_ = input$exposure,
-        casnr_ = casnr_input()
-      )
-    )[ , .SD, .SDcols = c('cname', 'cas', 'gmn', 'n', 'tax_all') ]
+    fil = stx_filter(
+      test = stx_test,
+      chem = stx_chem,
+      taxa = stx_taxa,
+      refs = stx_refs,
+      concentration_unit_ = input$concentration_unit,
+      concentration_type_ = input$concentration_type,
+      chemical_role_ = input$chemical_role,
+      chemical_class_ = input$chemical_class,
+      taxa_ = taxa_input(),
+      trophic_lvl_ = input$trophic_lvl,
+      habitat_ = input$habitat,
+      region_ = input$region,
+      ecotox_grp_ = input$ecotox_grp,
+      duration_ = c(input$dur1, input$dur2),
+      effect_ = input$effect,
+      endpoint_ = input$endpoint,
+      exposure_ = input$exposure,
+      casnr_ = casnr_input()
+    )
+    agg = standartox:::stx_aggregate(fil)[ , .SD, .SDcols = c('cname', 'cas', 'gmn', 'n', 'tax_all') ]
     setnames(agg,
              c('cname', 'cas', 'gmn', 'tax_all'),
              c('Chemical name', 'CAS', 'geometric mean', 'taxa'))
-    agg = agg[ , .SD, .SDcols = c(input$chemical, 'geometric mean', input$infocols) ]
-      
-    agg
+    agg[ , .SD, .SDcols = c(input$chemical, 'geometric mean', input$infocols) ]
   })
   # table -------------------------------------------------------------------
   output$tab = DT::renderDataTable({
@@ -380,6 +380,7 @@ server = function(input, output, session) {
   callback = JS('table.page(3).draw(false);'))
   # plot --------------------------------------------------------------------
   # output$plotly = renderPlotly({
+  # TODO
   #   plotly_fin(
   #     agg = data_agg(),
   #     fil = data_fil(),
@@ -425,7 +426,3 @@ server = function(input, output, session) {
 
 # app ---------------------------------------------------------------------
 shinyApp(ui = ui, server = server)
-
-
-
-

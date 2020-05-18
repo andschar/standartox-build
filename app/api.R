@@ -4,7 +4,7 @@
 source('~/Projects/standartox-build/app/setup.R')
 
 # data --------------------------------------------------------------------
-source('~/Projects/standartox-build/app/data.R')
+source(file.path(app, 'data.R'))
 
 # catalog -----------------------------------------------------------------
 catalog = readRDS(file.path(datadir2, paste0('standartox_catalog_api.rds')))
@@ -86,7 +86,7 @@ function(req, res) {
     chck_catalog = in_catalog(req$args$chemical_role, catalog$chemical_role$variable)
     if (!is.null(chck_catalog)) {
       msg = paste0('Chemical role has to be one (or more) of:\n',
-                   paste0(na.omit(catalog$chemical_role$variable), collapse = '\n'))
+                   paste0(sort(na.omit(catalog$chemical_role$variable)), collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -95,7 +95,7 @@ function(req, res) {
     chck_catalog = in_catalog(req$args$chemical_class, catalog$chemical_class$variable)
     if (!is.null(chck_catalog)) {
       msg = paste0('Chemical class has to be one (or more) of:\n',
-                   paste0(na.omit(catalog$chemical_class$variable), collapse = '\n'))
+                   paste0(sort(na.omit(catalog$chemical_class$variable)), collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -113,7 +113,7 @@ function(req, res) {
     chck_catalog = in_catalog(req$args$trophic_lvl, catalog$trophic_lvl$variable)
     if (!is.null(chck_catalog)) {
       msg = paste0('Trophic level has to be one (or more) of:\n',
-                   paste0(na.omit(catalog$trophic_lvl$variable), collapse = '\n'))
+                   paste0(sort(na.omit(catalog$trophic_lvl$variable)), collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -122,7 +122,7 @@ function(req, res) {
     chck_catalog = in_catalog(req$args$habitat, catalog$habitat$variable)
     if (!is.null(chck_catalog)) {
       msg = paste0('Habitat has to be one (or more) of:\n',
-                   paste0(na.omit(catalog$habitat$variable), collapse = '\n'))
+                   paste0(sort(na.omit(catalog$habitat$variable)), collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -131,7 +131,7 @@ function(req, res) {
     chck_catalog = in_catalog(req$args$region, catalog$region$variable)
     if (!is.null(chck_catalog)) {
       msg = paste0('Region value has to be one (or more) of:\n',
-                   paste0(na.omit(catalog$region$variable), collapse = '\n'))
+                   paste0(sort(na.omit(catalog$region$variable)), collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -140,7 +140,7 @@ function(req, res) {
     chck_catalog = in_catalog(req$args$ecotox_grp, catalog$ecotox_grp$variable)
     if (!is.null(chck_catalog)) {
       msg = paste0('Ecotox group has to be one (or more) of:\n',
-                   paste0(na.omit(catalog$ecotox_grp$variable), collapse = '\n'))
+                   paste0(sort(na.omit(catalog$ecotox_grp$variable)), collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -156,7 +156,7 @@ function(req, res) {
     chck_catalog = in_catalog(req$args$effect, catalog$effect$variable)
     if (!is.null(chck_catalog)) {
       msg = paste0('Effect value has to be one (or more) of:\n',
-                   paste0(na.omit(catalog$effect$variable), collapse = '\n'))
+                   paste0(sort(na.omit(catalog$effect$variable)), collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -174,7 +174,7 @@ function(req, res) {
     chck_catalog = in_catalog(req$args$exposure, catalog$exposure$variable)
     if (!is.null(chck_catalog)) {
       msg = paste0('Exposure value has to be one (or more) of:\n',
-                   paste0(na.omit(catalog$exposure$variable), collapse = '\n'))
+                   paste0(sort(na.omit(catalog$exposure$variable)), collapse = '\n'))
       res$status = 400
       return(list(error = msg))
     }
@@ -247,16 +247,37 @@ function(req,
   # return
   tmp = file.path(tempdir(), 'data')
   fst::write_fst(out, tmp, compress = 100) # write compressed
-  readBin(tmp, "raw", n = file.size(tmp)) # read to serve API request
+  readBin(tmp, 'raw', n = file.size(tmp)) # read to serve API request
 }
 
 # endpoint: meta ----------------------------------------------------------
 #* @post /meta
 #* @json
 function() {
-  out = data.table(variable = c('accessed', 'standartox_version'),
-                   value = c(as.character(Sys.time()), as.character(v)))
-  
-  return(out) 
+  data.table(variable = c('accessed', 'standartox_version'),
+             value = c(as.character(Sys.time()), as.character(v)))
 }
+
+# endpoint: chem ----------------------------------------------------------
+#* @get /chem
+#* @serializer contentType list(type="application/octet-stream")
+function() {
+  fl = file.path(datadir2, 'standartox.phch.fst')
+  readBin(fl,
+          'raw',
+          n = file.size(fl))
+}
+
+# endpoint: taxa ----------------------------------------------------------
+#* @get /taxa
+#* @serializer contentType list(type="application/octet-stream")
+function() {
+  fl = file.path(datadir2, 'standartox.taxa.fst')
+  readBin(fl,
+          'raw',
+          n = file.size(fl))
+}
+
+
+
 

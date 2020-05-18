@@ -5,7 +5,7 @@ wo_get_aphia = function(taxon, verbose = TRUE) {
   # URL
   baseurl = 'http://www.marinespecies.org/rest/'
   what = 'AphiaIDByName/'
-  taxon2 = gsub('\\s', '%20', taxon) # 20 represents a space in hexadecimal
+  taxon2 = URLencode(taxon)
   marine_only = '?marine_only=false'
   
   # qurl
@@ -24,14 +24,18 @@ wo_get_aphia = function(taxon, verbose = TRUE) {
   }
   if (res$status_code == 204) {
     id = NA
-    message('204: Nothing found')
+    message('204: Nothing found.')
   }
   if (res$status_code == 206) {
     id = content(res)
   }
   if (res$status_code == 400) {
     id = NA
-    message('400: Bad request')
+    message('400: Bad request.')
+  }
+  if (res$status_code == 404) {
+    id = NA
+    message('404: Not found.')
   }
   
   return(id)

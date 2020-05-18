@@ -6,6 +6,7 @@ source(file.path(src, 'gn_setup.R'))
 # scripts -----------------------------------------------------------------
 scripts_chem = c('qu_aw_dwld.R', # NOTE doesn't have IDs query with CAS directly
                  'qu_chebi_dwld.R',
+                 'qu_comptox_webtest_dwld.R',
                  'qu_eurostat_dwld.R',
                  'qu_epa_chem_dwld.R',
                  'qu_pan_dwld.R',

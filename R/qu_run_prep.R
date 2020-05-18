@@ -4,29 +4,20 @@
 source(file.path(src, 'gn_setup.R'))
 
 # chemical scripts --------------------------------------------------------
-scripts_chem = c('qu_aw_prep.R',
-                 'qu_chebi_prep.R',
-                 'qu_eurostat_prep.R',
-                 'qu_epa_chem_prep.R',
-                 'qu_pan_prep.R',
-                 'qu_pc_prop_prep.R',
-                 'qu_wiki_prep.R')
-
-mapply(source,
-       file = file.path(src, scripts_chem),
-       MoreArgs = list(max.deparse.length = mdl),
-       SIMPLIFY = FALSE)
+source(file.path(src, 'qu_aw_prep.R'))
+source(file.path(src, 'qu_comptox_webtest_prep.R'))
+source(file.path(src, 'qu_chebi_prep.R'))
+source(file.path(src, 'qu_eurostat_prep.R'))
+source(file.path(src, 'qu_epa_chem_prep.R'))
+source(file.path(src, 'qu_pan_prep.R'))
+source(file.path(src, 'qu_pc_prop_prep.R'))
+source(file.path(src, 'qu_wiki_prep.R'))
 
 # taxa: habitat and region scripts ----------------------------------------
-scripts_taxa = c('qu_epa_taxa_prep.R',
-                 'qu_epa_habi_prep.R',
-                 'qu_gbif_prep.R',
-                 'qu_worms_prep.R')
-
-mapply(source,
-       file = file.path(src, scripts_taxa),
-       MoreArgs = list(max.deparse.length = mdl),
-       SIMPLIFY = FALSE)
+source(file.path(src, 'qu_epa_taxa_prep.R'))
+source(file.path(src, 'qu_epa_habi_prep.R'))
+source(file.path(src, 'qu_gbif_prep.R'))
+source(file.path(src, 'qu_worms_prep.R'))
 
 # log ---------------------------------------------------------------------
 log_msg('QUERY: Preparation scripts run.')

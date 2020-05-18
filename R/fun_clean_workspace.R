@@ -3,15 +3,16 @@
 
 clean_workspace <- function(not_to_be_removed, envir = .GlobalEnv) {
   
-  not_to_be_removed = c('prj', 'src', 'nodename', 'DBetox', 'time', 'mdl',
+  not_to_be_removed = c('prj', 'src', 'normandir',
+                        'nodename', 'DBetox', 'time', 'mdl',
                         'download_db',
-                        'build_db',
                         'download',
+                        'build_db',
                         'build',
-                        'lookup',
+                        'chck',
+                        'report',
                         'build_standartox',
                         'build_norman',
-                        'build',
                         'debug_mode',
                         'sink_console',
                         'general',

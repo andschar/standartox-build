@@ -1,7 +1,8 @@
 # shiny setup script
 
 # project folder ----------------------------------------------------------
-app = '~/Projects/standartox-build/app'
+rootdir = '~/Projects/standartox-build'
+app = file.path(rootdir, 'app')
 
 # packages ----------------------------------------------------------------
 if (!require('pacman'))
@@ -15,6 +16,7 @@ pkg_cran = c(
   'shinyWidgets', # pretty stuff
   'shinydashboard',
   'shinydashboardPlus',
+  'shinylogs',
   'knitr',
   'DT',
   'plotly',

@@ -6,6 +6,7 @@ CREATE TABLE taxa.taxa_habitat AS (
 	SELECT
 		id.species_number,
 		id.taxon,
+		id.rank,
 		-- NOTE GBIF is not included as many classificaitons seem wrong
 		GREATEST(wo.brack, epa_habi.brackish)::boolean AS brack,
 		GREATEST(fw.freshwater, wo.fresh, epa_habi.freshwater, epa_taxa.freshwater)::boolean AS fresh,

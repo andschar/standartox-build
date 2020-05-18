@@ -4,7 +4,7 @@
 DROP SCHEMA IF EXISTS phch CASCADE;
 CREATE SCHEMA phch;
 
--- cleaned chemical table
+-- cleaned phch.phch_data table
 CREATE TABLE phch.phch_data AS
 SELECT
     cas_number::bigint AS casnr,
@@ -42,15 +42,15 @@ ALTER TABLE phch.phch_data ADD PRIMARY KEY (casnr);
 DROP SCHEMA IF EXISTS taxa CASCADE;
 CREATE SCHEMA taxa;
 
--- cleaned taxa_data table
+-- cleaned taxa.taxa_data table
 CREATE TABLE taxa.taxa_data AS
 SELECT
 	species_number,
-	TRIM(both ' ' from REGEXP_REPLACE(genus, ' X', '')) || ' ' ||
-		TRIM(both ' ' from REGEXP_REPLACE(species, 'X', '')) AS taxon,
-	REPLACE(COALESCE(species||'species', genus||'genus', family||'family', tax_order||'order', class||'class'), --, superclass||'superclass', subphylum),
-		    COALESCE(species, genus, family, tax_order, class), --, superclass),
-		    '') AS rank,
+	TRIM(both ' ' from REPLACE(
+		TRIM(both ' ' from REGEXP_REPLACE(genus, ' X', '')) || ' ' ||
+			TRIM(both ' ' from REGEXP_REPLACE(species, 'X', '')),
+				'sp.', '')) AS taxon,
+	NULL::text AS rank,
 	common_name,
 	latin_name,
 	species,
@@ -83,6 +83,13 @@ SET
 	n = tmp.n
 FROM tmp
 WHERE taxa_data.species_number = tmp.species_number;
+
+-- update rank column
+UPDATE taxa.taxa_data
+SET
+	rank = REPLACE(COALESCE(species||'species', genus||'genus', family||'family', tax_order||'order', class||'class'), --, superclass||'superclass', subphylum),
+				   COALESCE(species, genus, family, tax_order, class), --, superclass),
+		           '');
 
 -- primary key
 ALTER TABLE taxa.taxa_data ADD PRIMARY KEY (species_number);

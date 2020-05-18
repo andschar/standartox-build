@@ -9,7 +9,7 @@ SELECT
 
 ----------------------------------------------
 /* Source */
-  'EPA' || results.result_id AS "nor1", --NORMAN Biotest ID", 
+  cast('EPA' || results.result_id AS text) AS "nor1", --NORMAN Biotest ID", 
   'EPA ECOTOX'::text AS "nor2", --Data source",
   results.result_id AS "nor3", --Data source ID", 
   refs.reference_number AS "nor4", --Data source reference ID",
@@ -599,7 +599,7 @@ SELECT
   CASE 
     WHEN tests.other_effect_comments = '' 
       THEN 'n.r.'
-    ELSE coalesce(lower(tests.other_effect_comments), 'n.r.') 
+    ELSE coalesce(lower(tests.other_effect_comments), 'n.r.')
   END AS "nor126", --Other effects", 
   CASE
     WHEN results.additional_comments = ' ' AND tests.test_characteristics IN (' ', 'NR')
@@ -666,7 +666,7 @@ FROM
   -- JOIN TABLES
   LEFT JOIN ecotox.results ON tests.test_id = results.test_id
   LEFT JOIN ecotox.refs ON tests.reference_number = refs.reference_number
-  LEFT JOIN ecotox.chemicals ON tests.test_cas = chemicals.cas_number
+  LEFT JOIN ecotox.chemicals ON tests.test_cas = chemicals.cas_number::integer
   LEFT JOIN ecotox.species ON tests.species_number = species.species_number
   LEFT JOIN ecotox.media_characteristics ON results.result_id = media_characteristics.result_id
 
@@ -712,18 +712,18 @@ FROM
       effect_codes.description AS effect,
       string_agg(
         CASE 
-        WHEN lookup_unit_result.conv = 'yes' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
-        THEN CAST(doses.dose1_mean_cl AS numeric) * lookup_unit_result.multiplier
-        WHEN lookup_unit_result.conv = 'no' AND CAST(doses.dose1_mean_cl AS numeric) NOTNULL
-        THEN CAST(doses.dose1_mean_cl AS numeric)
+        WHEN lookup_unit_result.conv = 'yes' AND clean_num(doses.dose1_mean) NOTNULL
+        THEN clean_num(doses.dose1_mean) * lookup_unit_result.multiplier
+        WHEN lookup_unit_result.conv = 'no' AND clean_num(doses.dose1_mean) NOTNULL
+        THEN clean_num(doses.dose1_mean)
         END || ' ' || 
         CASE 
         WHEN lookup_unit_result.conv = 'yes'
         THEN lookup_unit_result.unit_conv
         ELSE doses.dose_conc_unit
-        END || ' (' || dose_responses.obs_duration_mean_cl || ' ' ||dose_responses.obs_duration_unit || ')' || ' - '|| 
-        dose_response_details.response_mean_cl || ' ' || dose_responses.response_unit,
-        '; ' ORDER BY CAST(doses.dose1_mean_cl AS numeric) ASC) AS drm_text
+        END || ' (' || dose_responses.obs_duration_mean || ' ' ||dose_responses.obs_duration_unit || ')' || ' - '|| 
+        dose_response_details.response_mean || ' ' || dose_responses.response_unit,
+        '; ' ORDER BY clean_num(doses.dose1_mean) ASC) AS drm_text
       FROM
       ecotox.tests
       LEFT JOIN ecotox.doses on tests.test_id = doses.test_id
@@ -733,7 +733,7 @@ FROM
       LEFT JOIN lookup.lookup_unit_result ON doses.dose_conc_unit = lookup_unit_result.conc1_unit 
       WHERE 
         -- with response
-        dose_response_details.response_mean_cl IS NOT NULL
+        dose_response_details.response_mean IS NOT NULL
         GROUP BY tests.test_id, effect_codes.description
         ) AS tmp
     GROUP BY tmp.test_id
@@ -744,7 +744,7 @@ FROM
       SELECT 
         doses.test_id, 
         -- max per test_id
-        dose_responses.effect_code || ': ' || ROUND(MAX(CAST(dose_response_details.response_mean_cl AS numeric)), 1) || ' ' || dose_responses.response_unit AS control_mortality
+        dose_responses.effect_code || ': ' || round(max(clean_num(dose_response_details.response_mean)), 1) || ' ' || dose_responses.response_unit AS control_mortality
       FROM 
         ecotox.doses, 
         ecotox.dose_responses, 
@@ -759,7 +759,7 @@ FROM
         -- only % 
         dose_responses.response_unit = '%' AND
         -- numeric value
-        CAST(dose_response_details.response_mean_cl AS numeric) IS NOT NULL 
+        clean_num(dose_response_details.response_mean) IS NOT NULL 
       GROUP BY doses.test_id, dose_responses.response_unit, dose_responses.effect_code
     ) AS cm ON tests.test_id = cm.test_id
 
@@ -767,8 +767,8 @@ FROM
     LEFT JOIN (
       SELECT 
         doses.test_id, 
-        -- max per test_id
-        dose_responses.effect_code || ': ' || ROUND(MAX(CAST(dose_response_details.response_mean_cl AS numeric)), 1) || ' ' || dose_responses.response_unit AS vehicle_mortality
+        -- max per tent_id
+        dose_responses.effect_code || ': ' || round(max(clean_num(dose_response_details.response_mean)), 1) || ' ' || dose_responses.response_unit AS vehicle_mortality
       FROM 
         ecotox.doses, 
         ecotox.dose_responses, 
@@ -782,8 +782,8 @@ FROM
         dose_responses.effect_code = 'MOR' AND 
         -- only % 
         dose_responses.response_unit = '%' AND
-        -- ǹumeric value
-        CAST(dose_response_details.response_mean_cl AS numeric) IS NOT NULL
+        -- numeric value
+        clean_num(dose_response_details.response_mean) IS NOT NULL
       GROUP BY doses.test_id, dose_responses.response_unit, dose_responses.effect_code
     ) AS vm ON tests.test_id = vm.test_id
 
@@ -792,7 +792,7 @@ FROM
       SELECT 
         doses.test_id, 
         -- max per test_id
-        dose_responses.effect_code || ': ' || ROUND(MAX(CAST(dose_response_details.response_mean_cl AS numeric)), 1) || ' ' || dose_responses.response_unit AS mortality
+        dose_responses.effect_code || ': ' || round(max(clean_num(dose_response_details.response_mean)), 1) || ' ' || dose_responses.response_unit AS mortality
       FROM 
         ecotox.doses, 
         ecotox.dose_responses, 
@@ -807,7 +807,7 @@ FROM
         -- only % 
         dose_responses.response_unit = '%' AND
         -- numeric value
-        CAST(dose_response_details.response_mean_cl AS numeric) IS NOT NULL 
+        clean_num(dose_response_details.response_mean) IS NOT NULL 
       GROUP BY doses.test_id, dose_responses.response_unit, dose_responses.effect_code
     ) AS pm ON tests.test_id = pm.test_id
 
@@ -869,7 +869,7 @@ effect_lookup.description_norman NOT LIKE 'remove'
 AND endpoint_lookup.code_norman NOT LIKE 'remove' 
 AND media_type_lookup.description_norman NOT LIKE 'remove'
 AND lookup_unit_duration.remove NOT LIKE 'yes'
-  AND CAST(TRIM(TRAILING '*' FROM TRIM(LEADING '+ ' FROM results.conc1_mean)) AS numeric) NOTNULL   -- results conversion successful
+  AND cast(TRIM(TRAILING '*' FROM TRIM(LEADING '+ ' FROM results.conc1_mean)) AS numeric) NOTNULL   -- results conversion successful
   AND lookup_unit_result.conv = 'yes'
   -- = skip uM currently
   AND  lookup_unit_result.unit_conv IN ('ug/L', 'ug/kg')

@@ -52,9 +52,9 @@ SELECT
 	    ELSE 'not reported'
 	END AS test_type,
 	clean(results.measurement) AS measurement_code,
-	measurement_codes.description AS measurement,
+	lower(measurement_codes.description) AS measurement,
 	clean(results.effect) AS effect_code,
-	effect_codes.description AS effect,
+	lower(effect_codes.description) AS effect,
 	clean(results.endpoint) endpoint,
 	CASE
 	  	WHEN clean(results.endpoint) IN ('NOEL', 'NOEC')
@@ -252,27 +252,27 @@ SELECT
 	id.subphylum_div::text AS tax_subphylum_div,
 	id.phylum_division::text AS tax_phylum_division,
 	id.kingdom::text AS tax_kingdom,
-	CASE
+	CASE -- NOTE lower case everywhere for stx_filer() function
 		WHEN grp.fungi IS TRUE
-		THEN 'Fungi'
+		THEN 'fungi'::text
 		WHEN grp.algae IS TRUE
-		THEN 'Algae'::text
+		THEN 'algae'::text
 		WHEN grp.macrophyte IS TRUE
-		THEN 'Macrophyte'::text
+		THEN 'macrophyte'::text
 		WHEN grp.plant IS TRUE
-		THEN 'Plant'::text
+		THEN 'plant'::text
 		WHEN grp.invertebrate IS TRUE
-		THEN 'Invertebrate'::text
+		THEN 'invertebrate'::text
 		WHEN grp.fish IS TRUE
-		THEN 'Fish'::text
+		THEN 'fish'::text
 		WHEN grp.amphibia IS TRUE
-		THEN 'Amphibia'::text
+		THEN 'amphibia'::text
 		WHEN grp.reptilia IS TRUE
-		THEN 'Reptilia'::text
+		THEN 'reptilia'::text
 		WHEN grp.aves IS TRUE
-		THEN 'Aves'::text
+		THEN 'aves'::text
 		WHEN grp.mammalia IS TRUE
-		THEN 'Mammalia'::text
+		THEN 'mammalia'::text
 		ELSE NULL
 	END AS ecotox_grp,
 	CASE

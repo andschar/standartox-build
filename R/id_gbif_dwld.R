@@ -5,7 +5,7 @@ source(file.path(src, 'gn_setup.R'))
 
 # data --------------------------------------------------------------------
 q = "SELECT *
-     FROM ecotox.taxa_id"
+     FROM taxa.taxa_data"
 taxa = read_query(user = DBuser, host = DBhost, port = DBport, password = DBpassword, dbname = DBetox,
                   query = q)
 if (debug_mode) {
